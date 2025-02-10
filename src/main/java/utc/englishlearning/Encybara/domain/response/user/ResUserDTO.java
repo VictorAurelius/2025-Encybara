@@ -1,4 +1,4 @@
-package utc.englishlearning.Encybara.domain.response;
+package utc.englishlearning.Encybara.domain.response.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
