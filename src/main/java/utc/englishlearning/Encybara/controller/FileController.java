@@ -54,31 +54,32 @@ public class FileController {
     @ApiMessage("Upload single file")
     public ResponseEntity<ResUploadFileDTO> upload(
             @RequestParam(name = "file", required = false) MultipartFile file,
-            @RequestParam("folder") String folder
+            @RequestParam("folder") String folder) throws URISyntaxException, IOException, StorageException {
 
-    ) throws URISyntaxException, IOException, StorageException {
-        // skip validate
+        // Kiểm tra file
         if (file == null || file.isEmpty()) {
             throw new StorageException("File is empty. Please upload a file.");
         }
+
         String fileName = file.getOriginalFilename();
         if (fileName == null) {
             throw new StorageException("File name is null. Please upload a valid file.");
         }
-        List<String> allowedExtensions = Arrays.asList("pdf", "jpg", "jpeg", "png", "doc", "docx", "mp3");
+
+        List<String> allowedExtensions = Arrays.asList("pdf", "jpg", "jpeg", "png", "doc", "docx", "mp3", "txt");
         boolean isValid = allowedExtensions.stream().anyMatch(item -> fileName.toLowerCase().endsWith(item));
 
         if (!isValid) {
             throw new StorageException("Invalid file extension. only allows " + allowedExtensions.toString());
         }
-        // create a directory if not exist
+
+        // Tạo thư mục nếu chưa tồn tại
         this.fileService.createDirectory(baseURI + folder);
 
-        // store file
+        // Lưu file
         String uploadFile = this.fileService.store(file, folder);
 
         ResUploadFileDTO res = new ResUploadFileDTO(uploadFile, Instant.now());
-
         return ResponseEntity.ok().body(res);
     }
 
@@ -162,5 +163,12 @@ public class FileController {
         String fileName = this.fileService.getFileNameByQuestionId(id);
 
         return ResponseEntity.ok(fileName);
+    }
+
+    @GetMapping("/lessons/{lessonId}/materials")
+    @ApiMessage("Get all learning materials for a lesson")
+    public ResponseEntity<List<Learning_Material>> getLearningMaterialsByLessonId(@PathVariable Long lessonId) {
+        List<Learning_Material> materials = fileService.getLearningMaterialsByLessonId(lessonId);
+        return ResponseEntity.ok(materials);
     }
 }

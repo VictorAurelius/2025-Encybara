@@ -22,6 +22,8 @@ import utc.englishlearning.Encybara.domain.Learning_Material;
 import utc.englishlearning.Encybara.exception.StorageException;
 import utc.englishlearning.Encybara.repository.LearningMaterialRepository;
 
+import java.util.List;
+
 @Service
 public class FileService {
 
@@ -92,10 +94,16 @@ public class FileService {
                 .orElseThrow(() -> new StorageException("Tệp không tồn tại với ID = " + id));
         return learningMaterial.getMaterLink(); // Giả sử đây là phương thức để lấy tên tệp
     }
+
     public String getFileNameByQuestionId(long id) throws StorageException {
         Learning_Material learningMaterial = learningMaterialRepository.findByQuestionId(id)
                 .orElseThrow(() -> new StorageException("Tệp không tồn tại với ID = " + id));
         return learningMaterial.getMaterLink(); // Giả sử đây là phương thức để lấy tên tệp
+    }
+
+    // Phương thức để lấy tất cả MaterLink của một bài học
+    public List<Learning_Material> getLearningMaterialsByLessonId(Long lessonId) {
+        return learningMaterialRepository.findByLessonId(lessonId);
     }
 
 }
