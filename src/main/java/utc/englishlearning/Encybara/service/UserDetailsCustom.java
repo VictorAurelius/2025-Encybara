@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import utc.englishlearning.Encybara.util.error.IdInvalidException;
+
 
 @Component("userDetailsService")
 public class UserDetailsCustom implements UserDetailsService {
