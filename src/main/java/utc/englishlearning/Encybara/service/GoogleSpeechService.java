@@ -17,7 +17,7 @@ public class GoogleSpeechService {
     public GoogleSpeechService(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.baseUrl("https://speech.googleapis.com/v1").build();
     }
-    public Mono<String> transcribe(MultipartFile file) {
+    public Mono<Map<String, Object>> transcribe(MultipartFile file) {
         try {
             byte[] audioBytes = file.getBytes();
             String bas64Audio = Base64.getEncoder().encodeToString(audioBytes);
@@ -38,14 +38,17 @@ public class GoogleSpeechService {
                     .bodyToMono(Map.class)
                     .map(response -> {
                         var result = (List<Map<String, Object>>) response.get("results");
-                        if (result.isEmpty() || result == null) return "Khong co ket qua";
+                        if (result.isEmpty() || result == null) return Map.of("error", "Không có kết quả");
 
                         var alternatives= (List<Map<String, Object>>) result.get(0).get("alternatives");
-                        if (alternatives.isEmpty() || alternatives == null) return "Khong tìm thấy text";
+                        if (alternatives.isEmpty() || alternatives == null) return Map.of("error", "Không tìm thấy text");
 
                         var transcript = (String) alternatives.get(0).get("transcript");
                         var confidence = alternatives.get(0).get("confidence");
-                        return "Transcript: "+transcript+" \nConfidence: "+confidence;
+                        return Map.of(
+                                "transcript", transcript,
+                                "confidence", confidence
+                        );
                     });
         }catch (Exception e){
             return Mono.error(new RuntimeException("Lỗi xử lí âm thanh"));

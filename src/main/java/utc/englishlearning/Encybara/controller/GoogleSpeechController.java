@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
 import utc.englishlearning.Encybara.service.GoogleSpeechService;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/speech")
 public class GoogleSpeechController {
@@ -20,9 +22,9 @@ public class GoogleSpeechController {
     }
 
     @PostMapping("/convert")
-    public Mono<ResponseEntity<String>> convertSpeechToText(@RequestParam("file") MultipartFile file) {
+    public Mono<ResponseEntity<Map<String, Object>>> convertSpeechToText(@RequestParam("file") MultipartFile file) {
         return  googleSpeechService.transcribe(file)
                 .map(ResponseEntity::ok)
-                .onErrorResume(e -> Mono.just(ResponseEntity.badRequest().body("Invalid file")));
+                .onErrorResume(e -> Mono.just(ResponseEntity.badRequest().body(Map.of("error", "Invalid file"))));
     }
 }
