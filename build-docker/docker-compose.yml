@@ -1,0 +1,48 @@
+services:
+  # nginx:
+  #   image: nginx:1.23
+  #   volumes:
+  #     - ../03-react-vite-jobhunter-final/dist:/usr/share/nginx/html
+  #     - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  db-mysql:
+    image: mysql:5.7.40
+    restart: always
+    environment:
+      - MYSQL_DATABASE=encybara
+      - MYSQL_ROOT_PASSWORD=123456
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p123456" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend-spring:
+    build:
+      context: ../Mobile-app-english-learing
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql:3306/encybara
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=123456
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - englishlearning.upload-file.base-uri=file:///uploads/
+    depends_on:
+      db-mysql:
+        condition: service_healthy
+    volumes:
+      - ../upload-docker/:/uploads/
+
+volumes:
+  mysql_data:
