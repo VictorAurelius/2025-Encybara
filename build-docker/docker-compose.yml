@@ -26,7 +26,7 @@ services:
 
   backend-spring:
     build:
-      context: ../Mobile-app-english-learing
+      context: ../backend-app
       dockerfile: Dockerfile
     restart: always
     ports:
