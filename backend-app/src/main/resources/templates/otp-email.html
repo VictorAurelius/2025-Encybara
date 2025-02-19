@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            font-size: 28px;
+            color: #222222;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .otp {
+            font-size: 32px;
+            color: #1a73e8;
+            font-weight: 700;
+            text-align: center;
+            margin: 20px 0;
+            letter-spacing: 2px;
+        }
+        p {
+            font-size: 16px;
+            color: #555555;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .footer {
+            text-align: center;
+            font-size: 14px;
+            color: #888888;
+            margin-top: 20px;
+        }
+        .footer a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">Your OTP Code</div>
+<!--    <p>Please use the following OTP code :</p>-->
+    <div class="otp" th:text="${otp}">123456</div>
+    <p>This OTP is valid for <strong>1 minutes</strong>.</p>
+    <p>If you did not request this email, please ignore it.</p>
+    <div class="footer">
+        Need help? <a href="mailto:clone1abc.23.11@gmail.com">Contact Support</a>
+    </div>
+</div>
+</body>
+</html>
