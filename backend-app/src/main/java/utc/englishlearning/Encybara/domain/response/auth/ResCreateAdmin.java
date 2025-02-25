@@ -4,6 +4,7 @@ import java.time.Instant;
 
 import lombok.Getter;
 import lombok.Setter;
+import utc.englishlearning.Encybara.util.constant.SpecialFieldEnum;
 
 @Getter
 @Setter
@@ -12,6 +13,6 @@ public class ResCreateAdmin {
     private String name;
     private String email;
     private String password;
-    private Integer field;
+    private SpecialFieldEnum field;
     private Instant createdAt;
 }

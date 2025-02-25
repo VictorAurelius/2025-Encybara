@@ -18,6 +18,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import utc.englishlearning.Encybara.util.SecurityUtil;
+import utc.englishlearning.Encybara.util.constant.SpecialFieldEnum;
 
 @Entity
 @Table(name = "admins")
@@ -30,7 +31,7 @@ public class Admin {
 
     private String name;
     private String password;
-    private Integer field;
+    private SpecialFieldEnum field;
     private String email;
     private Instant createdAt;
     private Instant updatedAt;

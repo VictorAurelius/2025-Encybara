@@ -195,7 +195,7 @@ public class LearningMaterialController {
     @GetMapping("/questions/{questionId}")
     @ApiMessage("Get all learning materials link for a question")
     public ResponseEntity<RestResponse<List<Learning_Material>>> getLearningMaterialsByQuestionId(
-            @PathVariable Long questionId) {
+            @PathVariable("questionId") Long questionId) {
         List<Learning_Material> materials = fileService.getLearningMaterialsByQuestionId(questionId);
         RestResponse<List<Learning_Material>> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -207,7 +207,7 @@ public class LearningMaterialController {
     @GetMapping("/lessons/{lessonId}")
     @ApiMessage("Get all learning materials link for a lesson")
     public ResponseEntity<RestResponse<List<Learning_Material>>> getLearningMaterialsByLessonId(
-            @PathVariable Long lessonId) {
+            @PathVariable("lessonId") Long lessonId) {
         List<Learning_Material> materials = fileService.getLearningMaterialsByLessonId(lessonId);
         RestResponse<List<Learning_Material>> response = new RestResponse<>();
         response.setStatusCode(200);

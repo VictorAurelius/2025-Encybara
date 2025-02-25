@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import utc.englishlearning.Encybara.util.constant.SpecialFieldEnum;
 
 @Getter
 @Setter
@@ -14,7 +15,7 @@ public class ResUpdateAdmin {
     private String email;
     private String password;
     private String name;
-    private Integer field;
+    private SpecialFieldEnum field;
     private Instant createdAt;
     private RoleUser role;
 

@@ -52,8 +52,8 @@ public class ReviewController {
     @GetMapping("/course/{courseId}")
     public ResponseEntity<RestResponse<Page<ResReviewDTO>>> getAllReviewsByCourseId(
             @PathVariable("courseId") Long courseId,
-            @RequestParam(required = false) Integer numStar,
-            @RequestParam(required = false) ReviewStatusEnum status,
+            @RequestParam("numStar") Integer numStar,
+            @RequestParam("status") ReviewStatusEnum status,
             Pageable pageable) {
         Page<ResReviewDTO> reviews = reviewService.getAllReviewsByCourseId(courseId, pageable, numStar, status);
         RestResponse<Page<ResReviewDTO>> response = new RestResponse<>();
@@ -65,7 +65,7 @@ public class ReviewController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<RestResponse<Page<ResReviewDTO>>> getAllReviewsByUserId(
-            @PathVariable("courseId") Long userId, Pageable pageable) {
+            @PathVariable("userId") Long userId, Pageable pageable) {
         Page<ResReviewDTO> reviews = reviewService.getAllReviewsByUserId(userId, pageable);
         RestResponse<Page<ResReviewDTO>> response = new RestResponse<>();
         response.setStatusCode(200);
