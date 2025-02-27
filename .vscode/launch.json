@@ -2,11 +2,11 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Spring Boot-EncybaraApplication<Mobile-app-english-learing>",
+            "name": "Spring Boot-EncybaraApplication<Encybara-backend-app>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "mainClass": "utc.englishlearning.Encybara.EncybaraApplication",
-            "projectName": "Mobile-app-english-learing",
+            "projectName": "Encybara-backend-app",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }
