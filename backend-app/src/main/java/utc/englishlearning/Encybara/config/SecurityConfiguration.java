@@ -102,7 +102,9 @@ public class SecurityConfiguration {
                 "/api/v1/admin/**",
                 "/api/v1/flashcard-groups/**",
                 "/api/v1/flashcards/**",
-                "api/v1/users/**"
+                "api/v1/users/**",
+                "/api/v1/speech/**",
+                "/api/v1/grammar/**"
         };
 
         http
