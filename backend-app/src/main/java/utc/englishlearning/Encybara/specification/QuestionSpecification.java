@@ -3,6 +3,7 @@ package utc.englishlearning.Encybara.specification;
 import org.springframework.data.jpa.domain.Specification;
 import utc.englishlearning.Encybara.domain.Question;
 import utc.englishlearning.Encybara.util.constant.QuestionTypeEnum;
+import utc.englishlearning.Encybara.util.constant.SkillTypeEnum;
 
 public class QuestionSpecification {
     public static Specification<Question> hasKeyword(String keyword) {
@@ -29,6 +30,15 @@ public class QuestionSpecification {
                 return criteriaBuilder.conjunction();
             }
             return criteriaBuilder.equal(root.get("quesType"), quesType);
+        };
+    }
+
+    public static Specification<Question> hasSkillType(SkillTypeEnum skillType) {
+        return (root, query, criteriaBuilder) -> {
+            if (skillType == null) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.equal(root.get("skillType"), skillType);
         };
     }
 

@@ -52,8 +52,8 @@ public class ReviewController {
     @GetMapping("/course/{courseId}")
     public ResponseEntity<RestResponse<Page<ResReviewDTO>>> getAllReviewsByCourseId(
             @PathVariable("courseId") Long courseId,
-            @RequestParam("numStar") Integer numStar,
-            @RequestParam("status") ReviewStatusEnum status,
+            @RequestParam(value = "numStar", required = false) Integer numStar,
+            @RequestParam(value = "status", required = false) ReviewStatusEnum status,
             Pageable pageable) {
         Page<ResReviewDTO> reviews = reviewService.getAllReviewsByCourseId(courseId, pageable, numStar, status);
         RestResponse<Page<ResReviewDTO>> response = new RestResponse<>();

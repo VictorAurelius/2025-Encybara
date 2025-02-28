@@ -14,8 +14,8 @@ public class LikeController {
     private LikeService likeService;
 
     @PostMapping("/review")
-    public ResponseEntity<RestResponse<Void>> likeReview(@RequestParam Long userId,
-            @RequestParam Long reviewId) {
+    public ResponseEntity<RestResponse<Void>> likeReview(@RequestParam("userId") Long userId,
+            @RequestParam("reviewId") Long reviewId) {
         likeService.likeReview(userId, reviewId);
         RestResponse<Void> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -24,8 +24,8 @@ public class LikeController {
     }
 
     @DeleteMapping("/review")
-    public ResponseEntity<RestResponse<Void>> unlikeReview(@RequestParam Long userId,
-            @RequestParam Long reviewId) {
+    public ResponseEntity<RestResponse<Void>> unlikeReview(@RequestParam("userId") Long userId,
+            @RequestParam("reviewId") Long reviewId) {
         likeService.unlikeReview(userId, reviewId);
         RestResponse<Void> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -34,8 +34,8 @@ public class LikeController {
     }
 
     @PostMapping("/discussion")
-    public ResponseEntity<RestResponse<Void>> likeDiscussion(@RequestParam Long userId,
-            @RequestParam Long discussionId) {
+    public ResponseEntity<RestResponse<Void>> likeDiscussion(@RequestParam("userId") Long userId,
+            @RequestParam("discussionId") Long discussionId) {
         likeService.likeDiscussion(userId, discussionId);
         RestResponse<Void> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -44,8 +44,8 @@ public class LikeController {
     }
 
     @DeleteMapping("/discussion")
-    public ResponseEntity<RestResponse<Void>> unlikeDiscussion(@RequestParam Long userId,
-            @RequestParam Long discussionId) {
+    public ResponseEntity<RestResponse<Void>> unlikeDiscussion(@RequestParam("userId") Long userId,
+            @RequestParam("discussionId") Long discussionId) {
         likeService.unlikeDiscussion(userId, discussionId);
         RestResponse<Void> response = new RestResponse<>();
         response.setStatusCode(200);

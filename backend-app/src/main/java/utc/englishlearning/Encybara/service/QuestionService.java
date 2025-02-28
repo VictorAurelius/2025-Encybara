@@ -15,6 +15,7 @@ import utc.englishlearning.Encybara.repository.QuestionRepository;
 import utc.englishlearning.Encybara.repository.QuestionChoiceRepository;
 import utc.englishlearning.Encybara.specification.QuestionSpecification;
 import utc.englishlearning.Encybara.util.constant.QuestionTypeEnum;
+import utc.englishlearning.Encybara.util.constant.SkillTypeEnum;
 
 import java.util.List;
 
@@ -74,11 +75,12 @@ public class QuestionService {
     }
 
     public Page<ResQuestionDTO> getAllQuestions(Pageable pageable, String keyword, String content,
-            QuestionTypeEnum quesType, Integer point) {
+            QuestionTypeEnum quesType, Integer point, SkillTypeEnum skillType) {
         Specification<Question> spec = Specification.where(QuestionSpecification.hasKeyword(keyword))
                 .and(QuestionSpecification.hasQuesContent(content))
                 .and(QuestionSpecification.hasQuesType(quesType))
-                .and(QuestionSpecification.hasPoint(point));
+                .and(QuestionSpecification.hasPoint(point))
+                .and(QuestionSpecification.hasSkillType(skillType));
 
         return questionRepository.findAll(spec, pageable).map(this::convertToDTO);
     }
