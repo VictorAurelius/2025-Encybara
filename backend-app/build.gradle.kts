@@ -45,6 +45,7 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("org.jsoup:jsoup:1.14.3")
 }
 tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-parameters")
