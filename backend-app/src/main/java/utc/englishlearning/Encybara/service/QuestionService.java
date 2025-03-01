@@ -51,13 +51,44 @@ public class QuestionService {
         Question question = questionRepository.findById(questionDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
 
+        // Update the question fields
         question.setQuesContent(questionDTO.getQuesContent());
         question.setKeyword(questionDTO.getKeyword());
         question.setQuesType(questionDTO.getQuesType());
         question.setPoint(questionDTO.getPoint());
         question.setSkillType(questionDTO.getSkillType());
 
+        // Save the updated question
         questionRepository.save(question);
+
+        // Update question choices
+        List<Question_Choice> existingChoices = questionChoiceRepository.findByQuestionId(question.getId());
+
+        // Update existing choices and add new ones
+        for (Question_Choice choice : questionDTO.getQuestionChoices()) {
+            if (choice.getId() > 0) {
+                // Update existing choice
+                Question_Choice existingChoice = existingChoices.stream()
+                        .filter(c -> c.getId() == choice.getId())
+                        .findFirst()
+                        .orElseThrow(() -> new ResourceNotFoundException("Choice not found"));
+                existingChoice.setChoiceContent(choice.getChoiceContent());
+                questionChoiceRepository.save(existingChoice);
+            } else {
+                // Create new choice
+                choice.setQuestion(question);
+                questionChoiceRepository.save(choice);
+            }
+        }
+
+        // Delete choices that are no longer associated
+        for (Question_Choice existingChoice : existingChoices) {
+            if (questionDTO.getQuestionChoices().stream()
+                    .noneMatch(c -> c.getId() > 0 && c.getId() == existingChoice.getId())) {
+                questionChoiceRepository.delete(existingChoice);
+            }
+        }
+
         return convertToDTO(question);
     }
 
