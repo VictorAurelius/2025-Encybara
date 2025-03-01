@@ -47,4 +47,26 @@ public class GlosbeDictionaryController {
             return ResponseEntity.status(500).body(response);
         }
     }
+
+    @GetMapping("/translate/{text}")
+    public ResponseEntity<RestResponse<GlosbeResponseDTO>> translate(@PathVariable("text") String text) {
+        RestResponse<GlosbeResponseDTO> response = new RestResponse<>();
+        try {
+            GlosbeResponseDTO responseDTO = glosbeDictionaryService.translateVietnameseToEnglish(text);
+            response.setStatusCode(200);
+            response.setMessage("Translation retrieved successfully");
+            response.setData(responseDTO);
+            return ResponseEntity.ok(response);
+        } catch (ResourceNotFoundException e) {
+            response.setStatusCode(404);
+            response.setMessage(e.getMessage());
+            response.setData(null); // Không có dữ liệu
+            return ResponseEntity.status(404).body(response);
+        } catch (IOException e) {
+            response.setStatusCode(500);
+            response.setMessage("Error fetching data: " + e.getMessage());
+            response.setData(null); // Không có dữ liệu
+            return ResponseEntity.status(500).body(response);
+        }
+    }
 }

@@ -16,9 +16,15 @@ import java.util.List;
 public class GlosbeDictionaryService {
 
     public GlosbeResponseDTO defineWord(String word) throws IOException {
-        String url = "https://vi.glosbe.com/en/vi/" + word;
-        List<GlosbeResponseDTO.Meaning> meanings = new ArrayList<>();
+        return fetchTranslations("https://vi.glosbe.com/en/vi/" + word);
+    }
 
+    public GlosbeResponseDTO translateVietnameseToEnglish(String text) throws IOException {
+        return fetchTranslations("https://vi.glosbe.com/vi/en/" + text);
+    }
+
+    private GlosbeResponseDTO fetchTranslations(String url) throws IOException {
+        List<GlosbeResponseDTO.Meaning> meanings = new ArrayList<>();
         Document doc = Jsoup.connect(url).get();
         // Cào các thẻ li có data-element="translation"
         Elements translationElements = doc.select("li[data-element='translation']");
@@ -44,9 +50,9 @@ public class GlosbeDictionaryService {
 
         // Nếu không tìm thấy bản dịch nào
         if (meanings.isEmpty()) {
-            throw new ResourceNotFoundException("No valid translations found for the word: " + word);
+            throw new ResourceNotFoundException("No valid translations found for the word: " + url);
         }
 
-        return new GlosbeResponseDTO(word, meanings);
+        return new GlosbeResponseDTO(url, meanings);
     }
 }
