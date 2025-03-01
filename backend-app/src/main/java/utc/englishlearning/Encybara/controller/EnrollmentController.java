@@ -72,4 +72,15 @@ public class EnrollmentController {
         response.setData(result);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/latest/{courseId}")
+    public ResponseEntity<RestResponse<ResEnrollmentDTO>> getLatestEnrollmentByCourseId(
+            @PathVariable("courseId") Long courseId) {
+        ResEnrollmentDTO enrollmentDTO = enrollmentService.getLatestEnrollmentByCourseId(courseId);
+        RestResponse<ResEnrollmentDTO> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Latest enrollment retrieved successfully");
+        response.setData(enrollmentDTO);
+        return ResponseEntity.ok(response);
+    }
 }

@@ -19,6 +19,7 @@ import utc.englishlearning.Encybara.repository.LessonResultRepository;
 import utc.englishlearning.Encybara.repository.QuestionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 import java.time.Instant;
 import java.util.List;
@@ -124,6 +125,16 @@ public class EnrollmentService {
         response.setComLevel(comLevel);
 
         return response;
+    }
+
+    public ResEnrollmentDTO getLatestEnrollmentByCourseId(Long courseId) {
+        List<Enrollment> enrollments = enrollmentRepository.findTopByCourseIdOrderByErrolDateDesc(courseId,
+                PageRequest.of(0, 1));
+        Enrollment enrollment = enrollments.isEmpty() ? null : enrollments.get(0);
+        if (enrollment == null) {
+            throw new ResourceNotFoundException("No enrollment found for this course");
+        }
+        return convertToDTO(enrollment);
     }
 
     private ResEnrollmentDTO convertToDTO(Enrollment enrollment) {
