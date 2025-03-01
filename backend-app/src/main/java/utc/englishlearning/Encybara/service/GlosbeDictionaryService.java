@@ -7,6 +7,7 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 import utc.englishlearning.Encybara.domain.response.dictionary.GlosbeResponseDTO;
 import utc.englishlearning.Encybara.exception.ResourceNotFoundException;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,6 +22,10 @@ public class GlosbeDictionaryService {
 
     public GlosbeResponseDTO translateVietnameseToEnglish(String text) throws IOException {
         return fetchTranslations("https://vi.glosbe.com/vi/en/" + text);
+    }
+
+    public Mono<GlosbeResponseDTO> getWordDefinition(String word) throws IOException {
+        return Mono.fromCallable(() -> defineWord(word));
     }
 
     private GlosbeResponseDTO fetchTranslations(String url) throws IOException {

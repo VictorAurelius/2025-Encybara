@@ -8,6 +8,7 @@ import utc.englishlearning.Encybara.domain.Flashcard;
 import utc.englishlearning.Encybara.domain.FlashcardGroup;
 import utc.englishlearning.Encybara.domain.User;
 import utc.englishlearning.Encybara.domain.response.dictionary.Definition;
+import utc.englishlearning.Encybara.domain.response.dictionary.GlosbeResponseDTO;
 import utc.englishlearning.Encybara.domain.response.dictionary.Meaning;
 import utc.englishlearning.Encybara.domain.response.dictionary.Phonetic;
 import utc.englishlearning.Encybara.domain.response.dictionary.ResWord;
@@ -19,6 +20,7 @@ import utc.englishlearning.Encybara.repository.UserRepository;
 import java.time.Instant;
 import java.util.List;
 import java.lang.StringBuilder;
+import java.io.IOException;
 
 @Service
 public class FlashcardService {
@@ -37,6 +39,9 @@ public class FlashcardService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private GlosbeDictionaryService glosbeDictionaryService;
 
     public ResFlashcardDTO createFlashcardForEnglishDefinition(String word, int partOfSpeechIndex,
             List<Integer> definitionIndices, Long userId) {
@@ -73,6 +78,10 @@ public class FlashcardService {
 
                         if (def.getExample() != null) {
                             selectedExamples.append(def.getExample()).append("");
+
+                            // Dịch ví dụ sang tiếng Việt và lưu vào exampleMeaning
+                            String exampleMeaning = googleTranslateService.translate(def.getExample(), "vi").block();
+                            flashcard.setExampleMeaning(exampleMeaning);
                         }
 
                         // Lấy nghĩa tiếng Việt từ định nghĩa đầu tiên
@@ -134,6 +143,74 @@ public class FlashcardService {
         res.setAddedDate(flashcard.getAddedDate());
         res.setLearnedStatus(flashcard.isLearnedStatus());
         res.setLastReviewed(flashcard.getLastReviewed());
+        res.setExampleMeaning(flashcard.getExampleMeaning());
+
+        return res;
+    }
+
+    public ResFlashcardDTO createFlashcardForVietNameseMeaning(String word, Long userId, int meaningIndex) {
+        Flashcard flashcard = new Flashcard();
+        flashcard.setWord(word);
+        flashcard.setLearnedStatus(false);
+        flashcard.setAddedDate(Instant.now());
+        flashcard.setLastReviewed(flashcard.getAddedDate());
+
+        // Tìm User từ userId
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        flashcard.setUser(user); // Gán đối tượng User
+
+        GlosbeResponseDTO glosbeResponse;
+        try {
+            // Lấy dữ liệu từ GlosbeDictionaryService
+            glosbeResponse = glosbeDictionaryService.getWordDefinition(word).block();
+        } catch (IOException e) {
+            throw new RuntimeException("Error fetching word definition: " + e.getMessage());
+        }
+
+        // Kiểm tra xem có dữ liệu không
+        if (glosbeResponse == null || glosbeResponse.getMeanings().isEmpty()) {
+            throw new RuntimeException("No meanings found for the word: " + word);
+        }
+
+        // Lấy meaning dựa trên meaningIndex
+        if (meaningIndex < 0 || meaningIndex >= glosbeResponse.getMeanings().size()) {
+            throw new RuntimeException("Invalid meaning index: " + meaningIndex);
+        }
+
+        GlosbeResponseDTO.Meaning selectedMeaning = glosbeResponse.getMeanings().get(meaningIndex);
+
+        // Lưu thuộc tính flashcard
+        flashcard.setVietNameseMeaning(selectedMeaning.getTranslateMeaning());
+        flashcard.setPartOfSpeech(selectedMeaning.getPartOfSpeech());
+        flashcard.setExamples(selectedMeaning.getExample());
+        flashcard.setExampleMeaning(selectedMeaning.getExampleMeaning());
+
+        // Lưu phonetics từ DictionaryService
+        List<Phonetic> phonetics = dictionaryService.getWordDefinition(word).block().get(0).getPhonetics();
+        if (phonetics != null && !phonetics.isEmpty()) {
+            Phonetic phonetic = phonetics.get(0);
+            flashcard.setPhoneticText(phonetic.getText());
+            flashcard.setPhoneticAudio(phonetic.getAudio());
+        }
+
+        // Lưu flashcard vào cơ sở dữ liệu
+        flashcardRepository.save(flashcard);
+
+        // Tạo và trả về ResFlashcardDTO
+        ResFlashcardDTO res = new ResFlashcardDTO();
+        res.setId(flashcard.getId());
+        res.setWord(flashcard.getWord());
+        res.setVietNameseMeaning(flashcard.getVietNameseMeaning());
+        res.setDefinitions(flashcard.getDefinitions());
+        res.setExamples(flashcard.getExamples());
+        res.setPartOfSpeech(flashcard.getPartOfSpeech());
+        res.setPhoneticText(flashcard.getPhoneticText());
+        res.setPhoneticAudio(flashcard.getPhoneticAudio());
+        res.setUserId(flashcard.getUser().getId());
+        res.setAddedDate(flashcard.getAddedDate());
+        res.setLearnedStatus(flashcard.isLearnedStatus());
+        res.setLastReviewed(flashcard.getLastReviewed());
+        res.setExampleMeaning(selectedMeaning.getExampleMeaning());
 
         return res;
     }
@@ -173,6 +250,7 @@ public class FlashcardService {
         res.setAddedDate(flashcard.getAddedDate());
         res.setLearnedStatus(flashcard.isLearnedStatus());
         res.setLastReviewed(flashcard.getLastReviewed()); // Thêm lastReviewed vào DTO
+        res.setExampleMeaning(flashcard.getExampleMeaning()); // Add this line
 
         return res;
     }

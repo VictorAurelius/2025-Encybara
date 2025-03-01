@@ -36,6 +36,7 @@ public class Flashcard {
     @Lob
     @Column(columnDefinition = "TEXT")
     private String vietNameseMeaning;
+    private String exampleMeaning;
     private Instant lastReviewed;
     private String partOfSpeech;
     private String phoneticText;
