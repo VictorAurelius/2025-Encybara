@@ -41,7 +41,11 @@ public class Flashcard {
     private String exampleMeaning;
     private Instant lastReviewed;
     private String partOfSpeech;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String phoneticText;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String phoneticAudio;
 
     @ManyToOne
