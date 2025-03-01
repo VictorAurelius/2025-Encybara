@@ -95,7 +95,6 @@ public class FlashcardService {
         for (ResWord definition : definitions) {
             List<Meaning> meanings = definition.getMeanings();
             if (partOfSpeechIndex < meanings.size()) {
-                Meaning selectedMeaning = meanings.get(partOfSpeechIndex);
                 List<Phonetic> phonetics = definition.getPhonetics();
                 if (phonetics != null && !phonetics.isEmpty()) {
                     Phonetic phonetic = phonetics.get(0); // Lấy phonetic đầu tiên

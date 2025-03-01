@@ -33,6 +33,8 @@ public class Flashcard {
     @Lob
     @Column(columnDefinition = "TEXT")
     private String definitions;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String vietNameseMeaning;
     private Instant lastReviewed;
     private String partOfSpeech;
