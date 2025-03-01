@@ -18,7 +18,7 @@ public class DictionaryController {
     }
 
     @GetMapping("/{word}")
-    public ResponseEntity<RestResponse<List<ResWord>>> getWordDefinitions(@PathVariable String word) {
+    public ResponseEntity<RestResponse<List<ResWord>>> getWordDefinitions(@PathVariable("word") String word) {
         List<ResWord> definitions = dictionaryService.getWordDefinition(word).block();
         RestResponse<List<ResWord>> response = new RestResponse<>();
         response.setStatusCode(200);

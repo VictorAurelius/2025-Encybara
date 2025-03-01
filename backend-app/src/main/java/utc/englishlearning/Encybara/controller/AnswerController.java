@@ -18,17 +18,6 @@ public class AnswerController {
     @Autowired
     private AnswerService answerService;
 
-    // @PostMapping
-    // public ResponseEntity<RestResponse<ResAnswerDTO>> createAnswer(@RequestBody
-    // ReqCreateAnswerDTO reqCreateAnswerDTO) {
-    // ResAnswerDTO createdAnswer = answerService.createAnswer(reqCreateAnswerDTO);
-    // RestResponse<ResAnswerDTO> response = new RestResponse<>();
-    // response.setStatusCode(200);
-    // response.setMessage("Answer created successfully");
-    // response.setData(createdAnswer);
-    // return ResponseEntity.ok(response);
-    // }
-
     @PostMapping("/user/{userId}")
     public ResponseEntity<RestResponse<ResAnswerDTO>> createAnswerWithUserId(
             @RequestBody ReqCreateAnswerDTO reqCreateAnswerDTO, @PathVariable("userId") Long userId) {
