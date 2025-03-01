@@ -11,6 +11,7 @@ import utc.englishlearning.Encybara.service.FlashcardService;
 import utc.englishlearning.Encybara.domain.response.RestResponse;
 import utc.englishlearning.Encybara.domain.request.flashcard.ReqFlashcardDTO;
 import org.springframework.http.HttpStatus;
+import utc.englishlearning.Encybara.domain.request.flashcard.ReqVietNameseFlashcardDTO;
 
 @RestController
 @RequestMapping("/api/v1/flashcards")
@@ -20,7 +21,7 @@ public class FlashcardController {
     private FlashcardService flashcardService;
 
     @PostMapping
-    public ResponseEntity<RestResponse<ResFlashcardDTO>> createFlashcard(
+    public ResponseEntity<RestResponse<ResFlashcardDTO>> createFlashcardForEnglishDefinition(
             @RequestBody ReqFlashcardDTO reqFlashcardDTO) {
         ResFlashcardDTO flashcard = flashcardService.createFlashcardForEnglishDefinition(
                 reqFlashcardDTO.getWord(),
@@ -30,6 +31,21 @@ public class FlashcardController {
         RestResponse<ResFlashcardDTO> response = new RestResponse<>();
         response.setStatusCode(200);
         response.setMessage("Flashcard created successfully");
+        response.setData(flashcard);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/vietnamesemeaning")
+    public ResponseEntity<RestResponse<ResFlashcardDTO>> createFlashcardForVietNameseMeaning(
+            @RequestBody ReqVietNameseFlashcardDTO reqVietNameseFlashcardDTO) {
+        ResFlashcardDTO flashcard = flashcardService.createFlashcardForVietNameseMeaning(
+                reqVietNameseFlashcardDTO.getWord(),
+                reqVietNameseFlashcardDTO.getUserId(),
+                reqVietNameseFlashcardDTO.getMeaningIndex());
+
+        RestResponse<ResFlashcardDTO> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Flashcard created successfully for Vietnamese meaning");
         response.setData(flashcard);
         return ResponseEntity.ok(response);
     }
