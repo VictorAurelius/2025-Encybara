@@ -22,11 +22,10 @@ public class FlashcardController {
     @PostMapping
     public ResponseEntity<RestResponse<ResFlashcardDTO>> createFlashcard(
             @RequestBody ReqFlashcardDTO reqFlashcardDTO) {
-        ResFlashcardDTO flashcard = flashcardService.createFlashcard(
+        ResFlashcardDTO flashcard = flashcardService.createFlashcardForEnglishDefinition(
                 reqFlashcardDTO.getWord(),
+                reqFlashcardDTO.getPartOfSpeechIndex(),
                 reqFlashcardDTO.getDefinitionIndices(),
-                reqFlashcardDTO.getMeaningIndices(),
-                reqFlashcardDTO.getPhoneticIndices(),
                 reqFlashcardDTO.getUserId());
         RestResponse<ResFlashcardDTO> response = new RestResponse<>();
         response.setStatusCode(200);

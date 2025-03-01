@@ -38,8 +38,8 @@ public class FlashcardService {
     @Autowired
     private UserRepository userRepository;
 
-    public ResFlashcardDTO createFlashcard(String word, List<Integer> definitionIndices, List<Integer> meaningIndices,
-            List<Integer> phoneticIndices, Long userId) {
+    public ResFlashcardDTO createFlashcardForEnglishDefinition(String word, int partOfSpeechIndex,
+            List<Integer> definitionIndices, Long userId) {
         Flashcard flashcard = new Flashcard();
         flashcard.setWord(word);
         flashcard.setLearnedStatus(false);
@@ -50,10 +50,6 @@ public class FlashcardService {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         flashcard.setUser(user); // Gán đối tượng User
 
-        // Sử dụng GoogleTranslateService để dịch
-        String vietnameseMeaning = googleTranslateService.translate(word, "vi").block();
-        flashcard.setVietNameseMeaning(vietnameseMeaning);
-
         // Sử dụng DictionaryService để lấy các thuộc tính khác
         List<ResWord> definitions = dictionaryService.getWordDefinition(word).block();
 
@@ -62,24 +58,32 @@ public class FlashcardService {
         StringBuilder selectedExamples = new StringBuilder();
         StringBuilder selectedPartOfSpeech = new StringBuilder();
 
-        for (int index : definitionIndices) {
-            if (index < definitions.size()) {
-                ResWord definition = definitions.get(index);
-                // Lấy phần bài phát biểu và định nghĩa
-                for (Meaning meaning : definition.getMeanings()) {
-                    selectedPartOfSpeech.append(meaning.getPartOfSpeech()).append("; ");
-                    for (Definition def : meaning.getDefinitions()) {
-                        selectedDefinitions.append(def.getDefinition()).append("; ");
-                        // Lấy ví dụ nếu có
+        // Tìm phần bài phát biểu theo chỉ số
+        for (ResWord definition : definitions) {
+            List<Meaning> meanings = definition.getMeanings();
+            if (partOfSpeechIndex < meanings.size()) {
+                Meaning selectedMeaning = meanings.get(partOfSpeechIndex);
+                selectedPartOfSpeech.append(selectedMeaning.getPartOfSpeech()).append("");
+
+                // Lưu trữ định nghĩa và ví dụ từ phần bài phát biểu đã chọn
+                for (int index : definitionIndices) {
+                    if (index < selectedMeaning.getDefinitions().size()) {
+                        Definition def = selectedMeaning.getDefinitions().get(index);
+                        selectedDefinitions.append(def.getDefinition()).append("");
+
                         if (def.getExample() != null) {
-                            selectedExamples.append(def.getExample()).append("; ");
+                            selectedExamples.append(def.getExample()).append("");
                         }
-                        // Chỉ cần lấy một định nghĩa
-                        break; // Dừng lại sau khi lấy định nghĩa đầu tiên
+
+                        // Lấy nghĩa tiếng Việt từ định nghĩa đầu tiên
+                        String vietnameseMeaning = googleTranslateService.translate(def.getDefinition(), "vi").block();
+                        flashcard.setVietNameseMeaning(vietnameseMeaning);
+                    } else {
+                        System.out.println("Invalid definition index: " + index);
                     }
                 }
             } else {
-                System.out.println("Invalid definition index: " + index);
+                System.out.println("Invalid part of speech index: " + partOfSpeechIndex);
             }
         }
 
@@ -87,10 +91,14 @@ public class FlashcardService {
         StringBuilder selectedPhoneticsText = new StringBuilder();
         StringBuilder selectedPhoneticsAudio = new StringBuilder();
 
-        for (int index : phoneticIndices) {
-            if (index < definitions.size()) {
-                ResWord definition = definitions.get(index);
-                for (Phonetic phonetic : definition.getPhonetics()) {
+        // Chỉ lấy một phonetic từ phần bài phát biểu đã chọn
+        for (ResWord definition : definitions) {
+            List<Meaning> meanings = definition.getMeanings();
+            if (partOfSpeechIndex < meanings.size()) {
+                Meaning selectedMeaning = meanings.get(partOfSpeechIndex);
+                List<Phonetic> phonetics = definition.getPhonetics();
+                if (phonetics != null && !phonetics.isEmpty()) {
+                    Phonetic phonetic = phonetics.get(0); // Lấy phonetic đầu tiên
                     selectedPhoneticsText.append(phonetic.getText()).append("; ");
                     selectedPhoneticsAudio.append(phonetic.getAudio()).append("; ");
                 }
