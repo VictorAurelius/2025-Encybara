@@ -14,6 +14,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - app-network
 
   backend-spring:
     build:
@@ -23,17 +25,24 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
+      - SERVER_ADDRESS=0.0.0.0
+      - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql:3306/encybara
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=123456
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - englishlearning.upload-file.base-uri=file:///uploads/
+      - englishlearning.upload-file.base-uri=/uploads/
     depends_on:
       db-mysql:
         condition: service_healthy
     volumes:
       - ../upload-docker/:/uploads/
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   mysql_data:
