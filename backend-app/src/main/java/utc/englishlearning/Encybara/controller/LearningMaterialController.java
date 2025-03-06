@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import utc.englishlearning.Encybara.exception.StorageException;
+import utc.englishlearning.Encybara.exception.LearningMaterialNotFoundException;
 import utc.englishlearning.Encybara.service.LearningMaterialService;
 import utc.englishlearning.Encybara.util.annotation.ApiMessage;
 import utc.englishlearning.Encybara.domain.Question;
@@ -123,20 +124,21 @@ public class LearningMaterialController {
     public ResponseEntity<RestResponse<Void>> assignMaterialToQuestion(
             @RequestBody ReqAssignMaterialDTO reqAssignMaterialDTO)
             throws StorageException {
-        // Cập nhật câu hỏi với link tài liệu
         ResQuestionDTO questionDTO = questionService.getQuestionById(reqAssignMaterialDTO.getQuestionId());
-        if (questionDTO != null) {
-            Learning_Material learningMaterial = new Learning_Material();
-            Question question = convertToQuestion(questionDTO);
-
-            learningMaterial.setQuestion(question);
-            learningMaterial.setMaterLink(reqAssignMaterialDTO.getMaterLink());
-            learningMaterial
-                    .setMaterType(reqAssignMaterialDTO.getMaterType() != null ? reqAssignMaterialDTO.getMaterType()
-                            : "application/octet-stream");
-            learningMaterial.setUploadedAt(Instant.now()); // Cập nhật thời gian tải lên
-            learning_MaterialRepository.save(learningMaterial);
+        if (questionDTO == null) {
+            throw new LearningMaterialNotFoundException("Question not found");
         }
+
+        Learning_Material learningMaterial = new Learning_Material();
+        Question question = convertToQuestion(questionDTO);
+
+        learningMaterial.setQuestion(question);
+        learningMaterial.setMaterLink(reqAssignMaterialDTO.getMaterLink());
+        learningMaterial
+                .setMaterType(reqAssignMaterialDTO.getMaterType() != null ? reqAssignMaterialDTO.getMaterType()
+                        : "application/octet-stream");
+        learningMaterial.setUploadedAt(Instant.now());
+        learning_MaterialRepository.save(learningMaterial);
 
         RestResponse<Void> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -166,10 +168,9 @@ public class LearningMaterialController {
 
     @GetMapping("/material/{id}")
     @ApiMessage("Get material link by ID")
-    public ResponseEntity<RestResponse<String>> getMaterialLinkById(@PathVariable("id") Long id)
-            throws StorageException {
+    public ResponseEntity<RestResponse<String>> getMaterialLinkById(@PathVariable("id") Long id) {
         Learning_Material material = learning_MaterialRepository.findById(id)
-                .orElseThrow(() -> new StorageException("Material not found with ID: " + id));
+                .orElseThrow(() -> new LearningMaterialNotFoundException("Material not found"));
 
         RestResponse<String> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -180,9 +181,9 @@ public class LearningMaterialController {
 
     @DeleteMapping("/{id}")
     @ApiMessage("Delete material by ID")
-    public ResponseEntity<RestResponse<Void>> deleteMaterialById(@PathVariable("id") Long id) throws StorageException {
+    public ResponseEntity<RestResponse<Void>> deleteMaterialById(@PathVariable("id") Long id) {
         Learning_Material material = learning_MaterialRepository.findById(id)
-                .orElseThrow(() -> new StorageException("Material not found with ID: " + id));
+                .orElseThrow(() -> new LearningMaterialNotFoundException("Material not found"));
 
         learning_MaterialRepository.delete(material);
 
@@ -197,6 +198,10 @@ public class LearningMaterialController {
     public ResponseEntity<RestResponse<List<Learning_Material>>> getLearningMaterialsByQuestionId(
             @PathVariable("questionId") Long questionId) {
         List<Learning_Material> materials = fileService.getLearningMaterialsByQuestionId(questionId);
+        if (materials.isEmpty()) {
+            throw new LearningMaterialNotFoundException("No materials found for question");
+        }
+
         RestResponse<List<Learning_Material>> response = new RestResponse<>();
         response.setStatusCode(200);
         response.setMessage("Learning materials retrieved successfully");
@@ -209,6 +214,10 @@ public class LearningMaterialController {
     public ResponseEntity<RestResponse<List<Learning_Material>>> getLearningMaterialsByLessonId(
             @PathVariable("lessonId") Long lessonId) {
         List<Learning_Material> materials = fileService.getLearningMaterialsByLessonId(lessonId);
+        if (materials.isEmpty()) {
+            throw new LearningMaterialNotFoundException("No materials found for lesson");
+        }
+
         RestResponse<List<Learning_Material>> response = new RestResponse<>();
         response.setStatusCode(200);
         response.setMessage("Learning materials retrieved successfully");

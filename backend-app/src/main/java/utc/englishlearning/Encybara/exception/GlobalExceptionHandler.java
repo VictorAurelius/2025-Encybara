@@ -57,9 +57,29 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
+    @ExceptionHandler(LearningMaterialNotFoundException.class)
+    public ResponseEntity<RestResponse<String>> handleLearningMaterialNotFoundException(
+            LearningMaterialNotFoundException ex) {
+        RestResponse<String> response = new RestResponse<>();
+        response.setStatusCode(HttpStatus.NOT_FOUND.value());
+        response.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(StorageException.class)
+    public ResponseEntity<RestResponse<String>> handleStorageException(StorageException ex) {
+        RestResponse<String> response = new RestResponse<>();
+        response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        response.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleCustomExceptions(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + ex.getMessage());
+    public ResponseEntity<RestResponse<String>> handleCustomExceptions(Exception ex) {
+        RestResponse<String> response = new RestResponse<>();
+        response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        response.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
