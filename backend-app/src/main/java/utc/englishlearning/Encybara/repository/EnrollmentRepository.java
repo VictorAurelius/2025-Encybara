@@ -21,4 +21,10 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
 
     @Query(value = "SELECT e FROM Enrollment e WHERE e.course.id = :courseId ORDER BY e.errolDate DESC")
     List<Enrollment> findTopByCourseIdOrderByErrolDateDesc(@Param("courseId") Long courseId, Pageable pageable);
+
+    @Query("SELECT e FROM Enrollment e WHERE e.course.id = :courseId AND e.user.id = :userId ORDER BY e.errolDate DESC")
+    List<Enrollment> findTopByCourseIdAndUserIdOrderByErrolDateDesc(
+            @Param("courseId") Long courseId,
+            @Param("userId") Long userId,
+            Pageable pageable);
 }

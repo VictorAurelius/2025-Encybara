@@ -127,12 +127,13 @@ public class EnrollmentService {
         return response;
     }
 
-    public ResEnrollmentDTO getLatestEnrollmentByCourseId(Long courseId) {
-        List<Enrollment> enrollments = enrollmentRepository.findTopByCourseIdOrderByErrolDateDesc(courseId,
+    public ResEnrollmentDTO getLatestEnrollmentByCourseIdAndUserId(Long courseId, Long userId) {
+        List<Enrollment> enrollments = enrollmentRepository.findTopByCourseIdAndUserIdOrderByErrolDateDesc(courseId,
+                userId,
                 PageRequest.of(0, 1));
         Enrollment enrollment = enrollments.isEmpty() ? null : enrollments.get(0);
         if (enrollment == null) {
-            throw new ResourceNotFoundException("No enrollment found for this course");
+            throw new ResourceNotFoundException("No enrollment found for this course and user");
         }
         return convertToDTO(enrollment);
     }
@@ -144,6 +145,8 @@ public class EnrollmentService {
         dto.setCourseId(enrollment.getCourse().getId());
         dto.setErrolDate(enrollment.getErrolDate());
         dto.setProStatus(enrollment.isProStatus());
+        dto.setTotalPoints(enrollment.getTotalPoints());
+        dto.setComLevel(enrollment.getComLevel());
         return dto;
     }
 }
