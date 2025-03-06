@@ -1,5 +1,6 @@
 package utc.englishlearning.Encybara.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -13,16 +14,19 @@ import utc.englishlearning.Encybara.exception.DictionaryException;
 @Service
 public class GoogleTranslateService {
     private final WebClient webClient;
-    private static final String API_KEY = "AIzaSyAWzERmv1eOTgeplOofls-qGgivOj8SEWM";
+    private final String apiKey;
 
-    public GoogleTranslateService(WebClient.Builder webClientBuilder) {
+    public GoogleTranslateService(
+            WebClient.Builder webClientBuilder,
+            @Value("${google.translate.api.key}") String apiKey) {
+        this.apiKey = apiKey;
         this.webClient = webClientBuilder.baseUrl("https://translation.googleapis.com/language/translate/v2").build();
     }
 
     public Mono<String> translate(String text, String language) {
         return webClient.post()
                 .uri(uriBuilder -> uriBuilder
-                        .queryParam("key", API_KEY)
+                        .queryParam("key", apiKey)
                         .build())
                 .bodyValue(Map.of(
                         "q", List.of(text),
