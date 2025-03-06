@@ -1,11 +1,8 @@
 package utc.englishlearning.Encybara.controller;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +20,11 @@ import utc.englishlearning.Encybara.exception.LearningMaterialNotFoundException;
 import utc.englishlearning.Encybara.service.LearningMaterialService;
 import utc.englishlearning.Encybara.util.annotation.ApiMessage;
 import utc.englishlearning.Encybara.domain.Question;
+import utc.englishlearning.Encybara.domain.Lesson;
+import utc.englishlearning.Encybara.repository.LessonRepository;
 import utc.englishlearning.Encybara.domain.Learning_Material;
 import utc.englishlearning.Encybara.repository.LearningMaterialRepository;
-import utc.englishlearning.Encybara.service.QuestionService;
-import utc.englishlearning.Encybara.domain.response.question.ResQuestionDTO;
+import utc.englishlearning.Encybara.repository.QuestionRepository;
 import utc.englishlearning.Encybara.domain.response.RestResponse;
 import utc.englishlearning.Encybara.domain.response.learningmaterial.ResUploadMaterialDTO;
 import utc.englishlearning.Encybara.domain.request.learningmaterial.ReqAssignMaterialDTO;
@@ -35,17 +33,19 @@ import utc.englishlearning.Encybara.domain.request.learningmaterial.ReqAssignMat
 @RequestMapping("/api/v1/material")
 public class LearningMaterialController {
 
-    @Value("${englishlearning.upload-file.base-uri}")
-    private String baseURI;
-
     private final LearningMaterialService fileService;
-    private final QuestionService questionService;
+    private final QuestionRepository questionRepository;
+    private final LessonRepository lessonRepository;
     private final LearningMaterialRepository learning_MaterialRepository;
 
-    public LearningMaterialController(LearningMaterialService fileService, QuestionService questionService,
+    public LearningMaterialController(
+            LearningMaterialService fileService,
+            QuestionRepository questionRepository,
+            LessonRepository lessonRepository,
             LearningMaterialRepository learning_MaterialRepository) {
         this.fileService = fileService;
-        this.questionService = questionService;
+        this.questionRepository = questionRepository;
+        this.lessonRepository = lessonRepository;
         this.learning_MaterialRepository = learning_MaterialRepository;
     }
 
@@ -56,26 +56,30 @@ public class LearningMaterialController {
             @RequestParam("folder") String folder,
             @RequestParam("questionId") Long questionId,
             @RequestParam(value = "materType", required = false) String materType)
-            throws URISyntaxException, IOException, StorageException {
+            throws IOException, StorageException {
 
-        // Kiểm tra file
+        // Validate file
         if (file == null || file.isEmpty()) {
             throw new StorageException("File is empty. Please upload a file.");
         }
 
-        // Lưu file
-        String fileName = fileService.store(file, folder);
+        // Get question to ensure it exists
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new LearningMaterialNotFoundException("Question not found"));
 
-        // Cập nhật tài liệu cho câu hỏi
+        // Save file and get full path
+        String materLink = fileService.store(file, "questions/" + folder);
+
+        // Create material record
         Learning_Material learningMaterial = new Learning_Material();
-        learningMaterial.setMaterLink(fileName);
+        learningMaterial.setMaterLink(materLink);
         learningMaterial.setMaterType(materType != null ? materType : "application/octet-stream");
-        learningMaterial.setUploadedAt(Instant.now()); // Set thời gian tải lên
-        learningMaterial.setQuestionId(questionId); // Gán ID câu hỏi
+        learningMaterial.setUploadedAt(Instant.now());
+        learningMaterial.setQuestion(question);
 
         learning_MaterialRepository.save(learningMaterial);
 
-        ResUploadMaterialDTO res = new ResUploadMaterialDTO(fileName, Instant.now(), learningMaterial.getMaterType(),
+        ResUploadMaterialDTO res = new ResUploadMaterialDTO(materLink, Instant.now(), learningMaterial.getMaterType(),
                 questionId, null);
         RestResponse<ResUploadMaterialDTO> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -91,26 +95,30 @@ public class LearningMaterialController {
             @RequestParam("folder") String folder,
             @RequestParam("lessonId") Long lessonId,
             @RequestParam(value = "materType", required = false) String materType)
-            throws URISyntaxException, IOException, StorageException {
+            throws IOException, StorageException {
 
-        // Kiểm tra file
+        // Validate file
         if (file == null || file.isEmpty()) {
             throw new StorageException("File is empty. Please upload a file.");
         }
 
-        // Lưu file
-        String fileName = fileService.store(file, folder);
+        // Get lesson to ensure it exists
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new LearningMaterialNotFoundException("Lesson not found"));
 
-        // Cập nhật tài liệu cho bài học
+        // Save file and get full path
+        String materLink = fileService.store(file, "lessons/" + folder);
+
+        // Create material record
         Learning_Material learningMaterial = new Learning_Material();
-        learningMaterial.setMaterLink(fileName);
+        learningMaterial.setMaterLink(materLink);
         learningMaterial.setMaterType(materType != null ? materType : "application/octet-stream");
-        learningMaterial.setUploadedAt(Instant.now()); // Set thời gian tải lên
-        learningMaterial.setLessonId(lessonId); // Gán ID bài học
+        learningMaterial.setUploadedAt(Instant.now());
+        learningMaterial.setLesson(lesson);
 
         learning_MaterialRepository.save(learningMaterial);
 
-        ResUploadMaterialDTO res = new ResUploadMaterialDTO(fileName, Instant.now(), learningMaterial.getMaterType(),
+        ResUploadMaterialDTO res = new ResUploadMaterialDTO(materLink, Instant.now(), learningMaterial.getMaterType(),
                 null, lessonId);
         RestResponse<ResUploadMaterialDTO> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -124,14 +132,10 @@ public class LearningMaterialController {
     public ResponseEntity<RestResponse<Void>> assignMaterialToQuestion(
             @RequestBody ReqAssignMaterialDTO reqAssignMaterialDTO)
             throws StorageException {
-        ResQuestionDTO questionDTO = questionService.getQuestionById(reqAssignMaterialDTO.getQuestionId());
-        if (questionDTO == null) {
-            throw new LearningMaterialNotFoundException("Question not found");
-        }
+        Question question = questionRepository.findById(reqAssignMaterialDTO.getQuestionId())
+                .orElseThrow(() -> new LearningMaterialNotFoundException("Question not found"));
 
         Learning_Material learningMaterial = new Learning_Material();
-        Question question = convertToQuestion(questionDTO);
-
         learningMaterial.setQuestion(question);
         learningMaterial.setMaterLink(reqAssignMaterialDTO.getMaterLink());
         learningMaterial
@@ -151,13 +155,16 @@ public class LearningMaterialController {
     public ResponseEntity<RestResponse<Void>> assignMaterialToLesson(
             @RequestBody ReqAssignMaterialDTO reqAssignMaterialDTO)
             throws StorageException {
-        // Cập nhật tài liệu cho bài học
+        // Get lesson and verify it exists
+        Lesson lesson = lessonRepository.findById(reqAssignMaterialDTO.getLessonId())
+                .orElseThrow(() -> new LearningMaterialNotFoundException("Lesson not found"));
+
         Learning_Material learningMaterial = new Learning_Material();
         learningMaterial.setMaterLink(reqAssignMaterialDTO.getMaterLink());
         learningMaterial.setMaterType(reqAssignMaterialDTO.getMaterType() != null ? reqAssignMaterialDTO.getMaterType()
                 : "application/octet-stream");
-        learningMaterial.setLessonId(reqAssignMaterialDTO.getLessonId());
-        learningMaterial.setUploadedAt(Instant.now()); // Cập nhật thời gian tải lên
+        learningMaterial.setLesson(lesson);
+        learningMaterial.setUploadedAt(Instant.now());
         learning_MaterialRepository.save(learningMaterial);
 
         RestResponse<Void> response = new RestResponse<>();
@@ -225,16 +232,4 @@ public class LearningMaterialController {
         return ResponseEntity.ok(response);
     }
 
-    // Method to convert ResQuestionDTO to Question
-    private Question convertToQuestion(ResQuestionDTO questionDTO) {
-        Question question = new Question();
-        question.setId(questionDTO.getId());
-        question.setQuesContent(questionDTO.getQuesContent());
-        question.setKeyword(questionDTO.getKeyword());
-        question.setQuesType(questionDTO.getQuesType());
-        question.setSkillType(questionDTO.getSkillType());
-        question.setPoint(questionDTO.getPoint());
-        // Set other properties if needed
-        return question;
-    }
 }

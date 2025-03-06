@@ -1,18 +1,15 @@
 package utc.englishlearning.Encybara.service;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.nio.file.attribute.PosixFilePermission;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
@@ -28,37 +25,48 @@ import utc.englishlearning.Encybara.domain.Question;
 import utc.englishlearning.Encybara.repository.QuestionRepository;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class LearningMaterialService {
 
     @Value("${englishlearning.upload-file.base-uri}")
-    private String baseURI;
+    private String baseUri;
 
-    @Autowired
-    private LearningMaterialRepository learningMaterialRepository;
+    private final LearningMaterialRepository learningMaterialRepository;
+    private final LessonRepository lessonRepository;
+    private final QuestionRepository questionRepository;
 
-    @Autowired
-    private LessonRepository lessonRepository;
+    public LearningMaterialService(
+            @Value("${englishlearning.upload-file.base-uri}") String baseURI,
+            LearningMaterialRepository learningMaterialRepository,
+            LessonRepository lessonRepository,
+            QuestionRepository questionRepository) {
+        this.baseUri = baseURI;
+        this.learningMaterialRepository = learningMaterialRepository;
+        this.lessonRepository = lessonRepository;
+        this.questionRepository = questionRepository;
+    }
 
-    @Autowired
-    private QuestionRepository questionRepository;
+    private void validateFolderPath(String folder) throws StorageException {
+        if (folder == null || folder.contains("..")) {
+            throw new StorageException("Invalid folder path: " + folder);
+        }
+    }
 
-    public void createDirectory(String folder) throws URISyntaxException {
-        URI uri = new URI(folder);
-        Path path = Paths.get(uri);
-        File tmpDir = new File(path.toString());
-        if (!tmpDir.isDirectory()) {
-            try {
-                Files.createDirectory(tmpDir.toPath());
-                System.out.println(">>> CREATE NEW DIRECTORY SUCCESSFUL, PATH = " + tmpDir.toPath());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println(">>> SKIP MAKING DIRECTORY, ALREADY EXISTS");
+    private void createDirectory(String folder) throws IOException, StorageException {
+        validateFolderPath(folder);
+        Path basePath = getUploadPath();
+        Path folderPath = basePath.resolve(folder).normalize();
+
+        // Security check - ensure the folder is within base path
+        if (!folderPath.startsWith(basePath)) {
+            throw new StorageException("Cannot create directory outside of upload path");
         }
 
+        if (!Files.exists(folderPath)) {
+            Files.createDirectories(folderPath);
+        }
     }
 
     public String getStoredFileName(String fullPath) {
@@ -66,54 +74,155 @@ public class LearningMaterialService {
         return path.getFileName().toString();
     }
 
+    private Path getUploadPath() {
+        return Paths.get(baseUri).toAbsolutePath().normalize();
+    }
+
+    public String buildResourcePath(String relativePath) {
+        // Clean and normalize the path
+        String normalizedPath = relativePath.replace("\\", "/");
+
+        // Remove any leading slashes since baseURI includes them
+        while (normalizedPath.startsWith("/")) {
+            normalizedPath = normalizedPath.substring(1);
+        }
+
+        return normalizedPath;
+    }
+
+    @Value("${server.address:localhost}")
+    private String serverAddress;
+
+    @Value("${server.port:8080}")
+    private String serverPort;
+
+    public String getServerUrl() {
+        return String.format("http://%s:%s", serverAddress, serverPort);
+    }
+
+    private String buildMaterialLink(String folder, String filename) {
+        // Ensure the folder path is normalized and uses correct separators
+        String normalizedFolder = folder.replace("\\", "/");
+        if (!normalizedFolder.startsWith("/")) {
+            normalizedFolder = "/" + normalizedFolder;
+        }
+        if (!normalizedFolder.endsWith("/")) {
+            normalizedFolder = normalizedFolder + "/";
+        }
+
+        // Build URL with server IP and port
+        return getServerUrl() + "/uploadfile" + normalizedFolder + filename;
+    }
+
     public String store(MultipartFile file, String folder) throws IOException {
-        // Tạo tên file mới
+        // Normalize base path
+        Path basePath = getUploadPath();
+
+        // Create folder structure
+        Path folderPath = basePath.resolve(folder);
+        Files.createDirectories(folderPath);
+
+        // Create unique filename
         String originalFilename = file.getOriginalFilename();
         String sanitizedFilename = sanitizeFileName(originalFilename);
         String finalName = System.currentTimeMillis() + "-" + sanitizedFilename;
 
-        // Sử dụng Paths.get để tạo đường dẫn mà không có file://
-        Path path = Paths.get(baseURI, folder, finalName);
-        System.out.println("Saving file to: " + path.toString()); // In ra đường dẫn để kiểm tra
+        // Get full file path for storage
+        Path filePath = folderPath.resolve(finalName);
 
-        // Kiểm tra và tạo thư mục nếu cần
-        Files.createDirectories(path.getParent());
-
+        // Store the file
         try (InputStream inputStream = file.getInputStream()) {
-            Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
         }
-        return finalName;
+
+        // Return the full material link for database storage
+        return buildMaterialLink(folder, finalName);
     }
 
     private String sanitizeFileName(String filename) {
-        // Loại bỏ khoảng trắng và ký tự đặc biệt
-        return filename.replaceAll("[^a-zA-Z0-9.\\-]", "_"); // Thay thế ký tự không hợp lệ bằng dấu gạch dưới
+        // Remove whitespace and special characters
+        return filename.replaceAll("[^a-zA-Z0-9.\\-]", "_"); // Replace invalid characters with underscore
     }
 
-    public long getFileLength(String fileName, String folder) throws URISyntaxException {
-        URI uri = new URI(baseURI + folder + "/" + fileName);
-        Path path = Paths.get(uri);
+    private Path validateAndGetFilePath(String materLink) throws FileNotFoundException {
+        if (materLink == null) {
+            throw new FileNotFoundException("Material link is null");
+        }
+        try {
+            // Extract the relative path from the URL
+            String serverUrl = getServerUrl() + "/uploadfile";
+            String relativePath = materLink;
 
-        File tmpDir = new File(path.toString());
+            if (materLink.startsWith(serverUrl)) {
+                relativePath = materLink.substring(serverUrl.length());
+            }
 
-        // file không tồn tại, hoặc file là 1 director => return 0
-        if (!tmpDir.exists() || tmpDir.isDirectory())
-            return 0;
-        return tmpDir.length();
+            // Ensure the relativePath starts with a slash
+            if (!relativePath.startsWith("/")) {
+                relativePath = "/" + relativePath;
+            }
+
+            // Log the paths for debugging
+            System.out.println("Material Link: " + materLink);
+            System.out.println("Server URL: " + serverUrl);
+            System.out.println("Relative Path: " + relativePath);
+            System.out.println("Base URI: " + baseUri);
+
+            // Ensure baseUri ends with slash
+            String normalizedBaseUri = baseUri.replace("\\", "/");
+            if (!normalizedBaseUri.endsWith("/")) {
+                normalizedBaseUri = normalizedBaseUri + "/";
+            }
+
+            // Construct the actual file path with proper slash handling
+            String fullPath = normalizedBaseUri + relativePath.substring(1).replace("\\", "/");
+            System.out.println("Full Path: " + fullPath);
+            Path filePath = Paths.get(fullPath);
+
+            // Check file existence and readability
+            if (Files.exists(filePath)) {
+                System.out.println("File exists at: " + filePath);
+                if (!Files.isReadable(filePath)) {
+                    System.out.println("File is not readable: " + filePath);
+                    throw new FileNotFoundException("File is not readable: " + relativePath);
+                }
+            } else {
+                System.out.println("File does not exist at: " + filePath);
+                throw new FileNotFoundException("File not found: " + relativePath);
+            }
+
+            if (!Files.isRegularFile(filePath)) {
+                System.out.println("Path is not a regular file: " + filePath);
+                throw new FileNotFoundException("Not a regular file: " + relativePath);
+            }
+
+            return filePath;
+        } catch (Exception e) {
+            System.out.println("Error accessing file: " + e.getMessage());
+            e.printStackTrace();
+            throw new FileNotFoundException("Error accessing file: " + e.getMessage());
+        }
     }
 
-    public InputStreamResource getResource(String fileName, String folder)
-            throws URISyntaxException, FileNotFoundException {
-        URI uri = new URI(baseURI + folder + "/" + fileName);
-        Path path = Paths.get(uri);
+    public long getFileLength(String materLink) throws IOException {
+        Path filePath = validateAndGetFilePath(materLink);
+        return Files.size(filePath);
+    }
 
-        File file = new File(path.toString());
-        return new InputStreamResource(new FileInputStream(file));
+    public InputStreamResource getResource(String materLink) throws IOException {
+        try {
+            Path filePath = validateAndGetFilePath(materLink);
+            return new InputStreamResource(Files.newInputStream(filePath));
+        } catch (Exception e) {
+            System.out.println("Error getting resource: " + materLink + ", Error: " + e.getMessage());
+            e.printStackTrace();
+            throw new IOException("Could not read file: " + materLink, e);
+        }
     }
 
     public String getFileNameById(long id) throws StorageException {
         Learning_Material learningMaterial = learningMaterialRepository.findById(id)
-                .orElseThrow(() -> new StorageException("Tệp không tồn tại với ID = " + id));
+                .orElseThrow(() -> new StorageException("File not found with ID: " + id));
         return learningMaterial.getMaterLink();
     }
 
@@ -127,6 +236,15 @@ public class LearningMaterialService {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Question not found with ID: " + questionId));
         return learningMaterialRepository.findByQuestion(question);
+    }
+
+    public Path getFilePath(String relativePath) {
+        return Paths.get(baseUri, relativePath);
+    }
+
+    public boolean fileExists(String relativePath) {
+        Path filePath = getFilePath(relativePath);
+        return filePath.toFile().exists();
     }
 
 }
