@@ -7,8 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.attribute.PosixFilePermissions;
-import java.nio.file.attribute.PosixFilePermission;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -25,7 +23,6 @@ import utc.englishlearning.Encybara.domain.Question;
 import utc.englishlearning.Encybara.repository.QuestionRepository;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class LearningMaterialService {
