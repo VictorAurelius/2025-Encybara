@@ -105,4 +105,12 @@ public class GlobalExceptionHandler {
         response.setMessage(ex.getMessage());
         return ResponseEntity.badRequest().body(response);
     }
+
+    @ExceptionHandler(PerplexityException.class)
+    public ResponseEntity<RestResponse<String>> handlePerplexityException(PerplexityException ex) {
+        RestResponse<String> response = new RestResponse<>();
+        response.setStatusCode(ex.getStatusCode());
+        response.setMessage(ex.getMessage());
+        return ResponseEntity.status(ex.getStatusCode()).body(response);
+    }
 }
