@@ -3,273 +3,119 @@ package utc.englishlearning.Encybara.service;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import utc.englishlearning.Encybara.domain.response.perplexity.PerplexityEvaluateResponse;
 import utc.englishlearning.Encybara.exception.PerplexityException;
 
 import java.time.Duration;
-import java.time.Instant;
+import java.util.List;
 
 @Service
 @Slf4j
 public class PerplexityService {
 
-    @Value("${perplexity.email}")
-    private String perplexityEmail;
-
-    @Value("${perplexity.session.timeout.hours:168}") // Default to 1 week if not specified
-    private long sessionTimeoutHours;
-
     private WebDriver driver;
     private WebDriverWait wait;
-    private boolean isAwaitingAuthCode = false;
-    private Instant lastLoginTime;
 
     private void initializeWebDriver() {
         if (driver == null) {
-            WebDriverManager.chromedriver().setup();
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("--headless");
-            options.addArguments("--disable-gpu");
-            options.addArguments("--no-sandbox");
-            options.addArguments("--disable-dev-shm-usage");
-            options.addArguments("--window-size=1920,1080"); // Set larger window size
-            options.addArguments("--start-maximized");
+            try {
+                WebDriverManager.chromedriver().setup();
+                ChromeOptions options = new ChromeOptions();
 
-            driver = new ChromeDriver(options);
-            wait = new WebDriverWait(driver, Duration.ofSeconds(30)); // Increase timeout
-        }
-    }
+                // Basic options for headless operation
+                options.addArguments("--headless=new");
+                options.addArguments("--disable-gpu");
+                options.addArguments("--no-sandbox");
+                options.addArguments("--disable-dev-shm-usage");
 
-    public boolean initiateLogin() {
-        try {
-            initializeWebDriver();
-            driver.get("https://www.perplexity.ai/");
-            log.info("Navigated to Perplexity.ai");
+                // Window size and display settings
+                options.addArguments("--window-size=1920,1080");
+                options.addArguments("--start-maximized");
 
-            // Wait for page load
-            Thread.sleep(2000);
+                // Performance and stability options
+                options.addArguments("--disable-extensions");
+                options.addArguments("--disable-popup-blocking");
+                options.addArguments("--disable-notifications");
 
-            // Try multiple selectors for login button
-            WebElement loginButton = null;
-            String[] loginSelectors = {
-                    "//button[contains(text(), 'Log In')]",
-                    "//button[contains(text(), 'Login')]",
-                    "//button[contains(@class, 'login')]",
-                    "//div[contains(@class, 'login')]",
-                    "//a[contains(text(), 'Sign in')]"
-            };
+                // Add user agent to avoid detection
+                options.addArguments(
+                        "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
 
-            for (String selector : loginSelectors) {
-                try {
-                    loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(selector)));
-                    log.info("Found login button using selector: {}", selector);
-                    break;
-                } catch (Exception e) {
-                    log.debug("Selector not found: {}", selector);
-                }
-            }
+                driver = new ChromeDriver(options);
 
-            if (loginButton == null) {
-                throw new PerplexityException("Could not find login button with any known selector",
+                // Configure page load timeouts
+                driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+                driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+                // Initialize explicit wait with longer timeout
+                wait = new WebDriverWait(driver, Duration.ofSeconds(45));
+
+                log.info("WebDriver initialized successfully");
+            } catch (Exception e) {
+                log.error("Failed to initialize WebDriver: ", e);
+                throw new PerplexityException("Failed to initialize browser: " + e.getMessage(),
                         HttpStatus.INTERNAL_SERVER_ERROR.value());
             }
-
-            loginButton.click();
-            log.info("Clicked login button");
-
-            // Find and fill email field
-            WebElement emailInput = wait.until(ExpectedConditions.presenceOfElementLocated(
-                    By.xpath("//input[@type='email' or contains(@placeholder, 'email')]")));
-            emailInput.clear();
-            emailInput.sendKeys(perplexityEmail);
-            log.info("Entered email address");
-
-            // Click continue/submit - try multiple selectors
-            String[] submitSelectors = {
-                    "//button[@type='submit']",
-                    "//button[contains(text(), 'Continue')]",
-                    "//button[contains(text(), 'Next')]",
-                    "//button[contains(@class, 'submit')]"
-            };
-
-            WebElement submitButton = null;
-            for (String selector : submitSelectors) {
-                try {
-                    submitButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(selector)));
-                    log.info("Found submit button using selector: {}", selector);
-                    break;
-                } catch (Exception e) {
-                    log.debug("Submit button selector not found: {}", selector);
-                }
-            }
-
-            if (submitButton == null) {
-                throw new PerplexityException("Could not find submit button with any known selector",
-                        HttpStatus.INTERNAL_SERVER_ERROR.value());
-            }
-
-            submitButton.click();
-            log.info("Clicked submit button");
-
-            // Wait for auth code input field - try multiple selectors
-            String[] codeInputSelectors = {
-                    "//input[@type='text' and contains(@placeholder, 'code')]",
-                    "//input[contains(@placeholder, 'verification')]",
-                    "//input[contains(@placeholder, 'OTP')]"
-            };
-
-            WebElement codeInput = null;
-            for (String selector : codeInputSelectors) {
-                try {
-                    codeInput = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(selector)));
-                    log.info("Found code input field using selector: {}", selector);
-                    break;
-                } catch (Exception e) {
-                    log.debug("Code input selector not found: {}", selector);
-                }
-            }
-
-            if (codeInput == null) {
-                throw new PerplexityException("Could not find verification code input field",
-                        HttpStatus.INTERNAL_SERVER_ERROR.value());
-            }
-
-            isAwaitingAuthCode = true;
-            log.info("Successfully initiated login process");
-            return true;
-        } catch (Exception e) {
-            log.error("Failed to initiate Perplexity login: ", e);
-            throw new PerplexityException("Failed to initiate login: " + e.getMessage(),
-                    HttpStatus.INTERNAL_SERVER_ERROR.value());
-        }
-    }
-
-    public boolean submitAuthCode(String authCode) {
-        if (!isAwaitingAuthCode) {
-            throw new PerplexityException("No login process in progress. Please initiate login first.",
-                    HttpStatus.BAD_REQUEST.value());
-        }
-
-        try {
-            log.info("Submitting authentication code");
-            Thread.sleep(1000); // Wait for animation
-
-            // Try multiple selectors for code input
-            String[] codeInputSelectors = {
-                    "//input[@type='text' and contains(@placeholder, 'code')]",
-                    "//input[contains(@placeholder, 'verification')]",
-                    "//input[contains(@placeholder, 'OTP')]",
-                    "//input[contains(@placeholder, 'enter code')]",
-                    "//input[contains(@placeholder, 'magic')]"
-            };
-
-            WebElement codeInput = null;
-            for (String selector : codeInputSelectors) {
-                try {
-                    codeInput = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(selector)));
-                    log.info("Found code input field using selector: {}", selector);
-                    break;
-                } catch (Exception e) {
-                    log.debug("Code input selector not found: {}", selector);
-                }
-            }
-
-            if (codeInput == null) {
-                throw new PerplexityException("Could not find code input field",
-                        HttpStatus.INTERNAL_SERVER_ERROR.value());
-            }
-
-            codeInput.clear();
-            codeInput.sendKeys(authCode);
-            log.info("Entered authentication code");
-
-            // Try multiple selectors for submit button
-            String[] submitSelectors = {
-                    "//button[@type='submit']",
-                    "//button[contains(text(), 'Verify')]",
-                    "//button[contains(text(), 'Submit')]",
-                    "//button[contains(text(), 'Continue')]",
-                    "//button[contains(@class, 'submit')]"
-            };
-
-            WebElement submitButton = null;
-            for (String selector : submitSelectors) {
-                try {
-                    submitButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(selector)));
-                    log.info("Found submit button using selector: {}", selector);
-                    break;
-                } catch (Exception e) {
-                    log.debug("Submit button selector not found: {}", selector);
-                }
-            }
-
-            if (submitButton == null) {
-                throw new PerplexityException("Could not find submit button", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            }
-
-            submitButton.click();
-            log.info("Clicked submit button");
-
-            // Try multiple selectors for successful login confirmation
-            String[] successSelectors = {
-                    "//div[contains(@class, 'user-menu')]",
-                    "//div[contains(@class, 'profile')]",
-                    "//div[contains(@class, 'avatar')]",
-                    "//button[contains(@aria-label, 'User menu')]",
-                    "//div[contains(@class, 'account')]"
-            };
-
-            WebElement userMenu = null;
-            for (String selector : successSelectors) {
-                try {
-                    userMenu = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(selector)));
-                    log.info("Found user menu using selector: {}", selector);
-                    break;
-                } catch (Exception e) {
-                    log.debug("User menu selector not found: {}", selector);
-                }
-            }
-
-            if (userMenu == null) {
-                throw new PerplexityException("Could not confirm successful login",
-                        HttpStatus.INTERNAL_SERVER_ERROR.value());
-            }
-
-            isAwaitingAuthCode = false;
-            lastLoginTime = Instant.now();
-            log.info("Successfully authenticated with code");
-            return true;
-        } catch (Exception e) {
-            log.error("Failed to submit auth code: ", e);
-            throw new PerplexityException("Failed to submit auth code: " + e.getMessage(),
-                    HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
     }
 
     public PerplexityEvaluateResponse evaluateAnswer(String userAnswer, String question, String prompt) {
         try {
-            if (driver == null || !isLoggedIn()) {
-                throw new PerplexityException("Not logged in or session expired. Please authenticate again.",
-                        HttpStatus.UNAUTHORIZED.value());
+            initializeWebDriver();
+            driver.get("https://www.perplexity.ai/");
+            log.info("Navigated to Perplexity.ai");
+
+            // Wait for initial page load and any modals/popups to appear
+            Thread.sleep(5000);
+
+            // Check and close any modals or popups that might interfere
+            try {
+                List<WebElement> closeButtons = driver.findElements(
+                        By.xpath("//button[contains(@aria-label, 'close') or contains(@class, 'close')]"));
+                for (WebElement closeButton : closeButtons) {
+                    if (closeButton.isDisplayed()) {
+                        closeButton.click();
+                        Thread.sleep(1000);
+                    }
+                }
+            } catch (Exception e) {
+                log.debug("No modals/popups found to close");
             }
 
-            driver.get("https://www.perplexity.ai/");
+            // Look for input field with expanded selectors
+            WebElement inputField = null;
+            String[] inputSelectors = {
+                    "//textarea[contains(@placeholder, 'Ask anything')]",
+                    "//textarea[contains(@placeholder, 'Message Perplexity')]",
+                    "//textarea[contains(@class, 'text-input')]",
+                    "//textarea[@role='textbox']",
+                    "//div[contains(@class, 'input')]//textarea"
+            };
 
-            try {
-                WebElement newThreadButton = wait.until(ExpectedConditions.elementToBeClickable(
-                        By.xpath("//button[contains(text(), 'New Thread') or contains(@aria-label, 'New Thread')]")));
-                newThreadButton.click();
-            } catch (Exception e) {
-                log.debug("New thread button not found, continuing with current thread");
+            for (String selector : inputSelectors) {
+                try {
+                    inputField = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(selector)));
+                    if (inputField.isDisplayed()) {
+                        log.info("Found input field using selector: {}", selector);
+                        break;
+                    }
+                } catch (Exception e) {
+                    log.debug("Input field selector not found: {}", selector);
+                }
+            }
+
+            if (inputField == null) {
+                throw new PerplexityException("Could not find input field",
+                        HttpStatus.INTERNAL_SERVER_ERROR.value());
             }
 
             String evaluationPrompt = String.format(
@@ -282,19 +128,119 @@ public class PerplexityService {
                             "Additional Context/Prompt: %s",
                     question, userAnswer, prompt);
 
-            WebElement inputField = wait.until(ExpectedConditions.presenceOfElementLocated(
-                    By.xpath(
-                            "//textarea[contains(@placeholder, 'Ask anything...') or contains(@placeholder, 'Message Perplexity')]")));
             inputField.sendKeys(evaluationPrompt);
+            log.info("Entered evaluation prompt");
 
-            WebElement submitButton = wait.until(ExpectedConditions.elementToBeClickable(
-                    By.xpath("//button[@type='submit' or contains(@aria-label, 'Send')]")));
-            submitButton.click();
+            // Wait a moment for any dynamic UI updates
+            Thread.sleep(2000);
 
-            WebElement response = wait.until(ExpectedConditions.presenceOfElementLocated(
-                    By.xpath("//div[contains(@class, 'response') or contains(@class, 'answer')]//p")));
+            // Find and click the submit button using various selectors
+            WebElement submitButton = null;
+            String[] submitSelectors = {
+                    "//button[@type='submit']",
+                    "//button[contains(@aria-label, 'Send')]",
+                    "//button[contains(@aria-label, 'Submit')]",
+                    "//button[contains(@class, 'send')]",
+                    "//button[.//svg[contains(@class, 'send')]]",
+                    "//button[contains(@class, 'submit')]",
+                    "//div[contains(@class, 'send')]//button",
+                    "//button[.//*[local-name()='svg']]", // Look for any button containing an SVG
+                    "//textarea/..//button", // Button near textarea
+                    "//textarea/following::button[1]" // First button after textarea
+            };
+
+            for (String selector : submitSelectors) {
+                try {
+                    log.debug("Trying submit button selector: {}", selector);
+                    List<WebElement> buttons = driver.findElements(By.xpath(selector));
+                    for (WebElement button : buttons) {
+                        if (button.isDisplayed() && button.isEnabled()) {
+                            submitButton = button;
+                            log.info("Found submit button using selector: {}", selector);
+                            break;
+                        }
+                    }
+                    if (submitButton != null)
+                        break;
+                } catch (Exception e) {
+                    log.debug("Submit button selector not found: {}", selector);
+                }
+            }
+
+            if (submitButton == null) {
+                // Try JavaScript click on the last visible button as a fallback
+                try {
+                    List<WebElement> allButtons = driver.findElements(By.tagName("button"));
+                    for (int i = allButtons.size() - 1; i >= 0; i--) {
+                        WebElement button = allButtons.get(i);
+                        if (button.isDisplayed() && button.isEnabled()) {
+                            submitButton = button;
+                            log.info("Found potential submit button using fallback method");
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    log.debug("Fallback submit button search failed: {}", e.getMessage());
+                }
+            }
+
+            if (submitButton == null) {
+                throw new PerplexityException("Could not find submit button",
+                        HttpStatus.INTERNAL_SERVER_ERROR.value());
+            }
+
+            // Try multiple click methods
+            boolean clicked = false;
+            try {
+                submitButton.click();
+                clicked = true;
+            } catch (Exception e) {
+                log.debug("Regular click failed: {}", e.getMessage());
+                try {
+                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", submitButton);
+                    clicked = true;
+                } catch (Exception je) {
+                    log.debug("JavaScript click failed: {}", je.getMessage());
+                }
+            }
+
+            if (!clicked) {
+                throw new PerplexityException("Failed to click submit button",
+                        HttpStatus.INTERNAL_SERVER_ERROR.value());
+            }
+
+            log.info("Clicked submit button");
+
+            // Wait for and get the response with improved selectors
+            WebElement response = null;
+            String[] responseSelectors = {
+                    "//div[contains(@class, 'response')]//p",
+                    "//div[contains(@class, 'answer')]//p",
+                    "//div[contains(@class, 'message')]//p",
+                    "//div[contains(@class, 'response')]",
+                    "//div[contains(@class, 'answer')]",
+                    "//div[contains(@role, 'presentation')]//p"
+            };
+
+            for (String selector : responseSelectors) {
+                try {
+                    response = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(selector)));
+                    if (response.isDisplayed() && !response.getText().trim().isEmpty()) {
+                        log.info("Found response using selector: {}", selector);
+                        break;
+                    }
+                } catch (Exception e) {
+                    log.debug("Response selector not found: {}", selector);
+                }
+            }
+
+            if (response == null) {
+                throw new PerplexityException("Could not find response text",
+                        HttpStatus.INTERNAL_SERVER_ERROR.value());
+            }
 
             String responseText = response.getText();
+            log.info("Received response text");
 
             double score = parseScore(responseText);
             String evaluation = parseSection(responseText, "Evaluation:");
@@ -310,28 +256,6 @@ public class PerplexityService {
             log.error("Failed to evaluate answer: ", e);
             throw new PerplexityException("Failed to evaluate answer: " + e.getMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR.value());
-        }
-    }
-
-    private boolean isLoggedIn() {
-        try {
-            if (lastLoginTime == null) {
-                return false;
-            }
-
-            // Check if session has expired
-            Duration sessionAge = Duration.between(lastLoginTime, Instant.now());
-            if (sessionAge.toHours() >= sessionTimeoutHours) {
-                log.info("Session expired after {} hours (timeout: {} hours)", sessionAge.toHours(),
-                        sessionTimeoutHours);
-                return false;
-            }
-
-            // Check if user is still logged in via UI element
-            driver.findElement(By.xpath("//div[contains(@class, 'user-menu') or contains(@class, 'profile')]"));
-            return true;
-        } catch (Exception e) {
-            return false;
         }
     }
 
@@ -364,8 +288,6 @@ public class PerplexityService {
         if (driver != null) {
             driver.quit();
             driver = null;
-            isAwaitingAuthCode = false;
-            lastLoginTime = null;
         }
     }
 }

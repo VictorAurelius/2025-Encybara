@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utc.englishlearning.Encybara.domain.request.perplexity.PerplexityAuthCodeRequest;
 import utc.englishlearning.Encybara.domain.request.perplexity.PerplexityEvaluateRequest;
 import utc.englishlearning.Encybara.domain.response.perplexity.PerplexityEvaluateResponse;
 import utc.englishlearning.Encybara.domain.response.RestResponse;
@@ -19,34 +18,6 @@ import jakarta.annotation.PreDestroy;
 public class PerplexityController {
 
     private final PerplexityService perplexityService;
-
-    @PostMapping("/init")
-    public ResponseEntity<RestResponse<String>> initializeSession() {
-        boolean success = perplexityService.initiateLogin();
-        if (!success) {
-            throw new PerplexityException("Failed to initialize Perplexity session",
-                    HttpStatus.INTERNAL_SERVER_ERROR.value());
-        }
-
-        RestResponse<String> response = new RestResponse<>();
-        response.setStatusCode(HttpStatus.OK.value());
-        response.setMessage("Please check your email for the authentication code");
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/verify")
-    public ResponseEntity<RestResponse<String>> verifyAuthCode(@RequestBody PerplexityAuthCodeRequest request) {
-        boolean success = perplexityService.submitAuthCode(request.getAuthCode());
-        if (!success) {
-            throw new PerplexityException("Failed to verify authentication code",
-                    HttpStatus.INTERNAL_SERVER_ERROR.value());
-        }
-
-        RestResponse<String> response = new RestResponse<>();
-        response.setStatusCode(HttpStatus.OK.value());
-        response.setMessage("Authentication successful");
-        return ResponseEntity.ok(response);
-    }
 
     @PostMapping("/evaluate")
     public ResponseEntity<RestResponse<PerplexityEvaluateResponse>> evaluateAnswer(
