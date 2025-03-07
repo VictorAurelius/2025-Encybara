@@ -160,19 +160,19 @@ public class UserService {
         }
     }
 
-    public User updateUserAvatar(Long userId, String avatarPath) throws IdInvalidException {
+    public User updateUserAvatar(Long userId, String avatarUrl) throws IdInvalidException {
         User user = fetchUserById(userId);
         if (user == null) {
             throw new IdInvalidException("User với id = " + userId + " không tồn tại");
         }
 
         // Delete old avatar if exists
-        String oldAvatar = user.getAvatar();
-        if (oldAvatar != null && !oldAvatar.isEmpty()) {
-            fileStorageService.deleteFile(oldAvatar);
+        String oldAvatarUrl = user.getAvatar();
+        if (oldAvatarUrl != null && !oldAvatarUrl.isEmpty()) {
+            fileStorageService.deleteFile(oldAvatarUrl);
         }
 
-        user.setAvatar(avatarPath);
+        user.setAvatar(avatarUrl);
         return userRepository.save(user);
     }
 

@@ -122,16 +122,16 @@ public class UserController {
             throw new FileStorageException("Chỉ chấp nhận file hình ảnh");
         }
 
-        // Check file size (e.g., limit to 2MB)
+        // Check file size (e.g., limit to 4MB)
         if (file.getSize() > 4 * 1024 * 1024) {
             throw new FileStorageException("Kích thước file không được vượt quá 4MB");
         }
 
-        // Store the file and get material link style path
-        String avatarPath = this.fileStorageService.storeAvatar(file);
+        // Store the file and get direct material link (URL)
+        String avatarUrl = this.fileStorageService.storeAvatar(file);
 
-        // Update user's avatar path in DB and handle old avatar deletion
-        User updatedUser = this.userService.updateUserAvatar(userId, avatarPath);
+        // Update user's avatar URL in DB and handle old avatar deletion
+        User updatedUser = this.userService.updateUserAvatar(userId, avatarUrl);
 
         // Return updated user info
         return ResponseEntity.ok(this.userService.convertToResUserDTO(updatedUser));
