@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import utc.englishlearning.Encybara.exception.StorageException;
 import utc.englishlearning.Encybara.exception.LearningMaterialNotFoundException;
+import utc.englishlearning.Encybara.service.FileStorageService;
 import utc.englishlearning.Encybara.service.LearningMaterialService;
 import utc.englishlearning.Encybara.util.annotation.ApiMessage;
 import utc.englishlearning.Encybara.domain.Question;
@@ -37,16 +38,19 @@ public class LearningMaterialController {
     private final QuestionRepository questionRepository;
     private final LessonRepository lessonRepository;
     private final LearningMaterialRepository learning_MaterialRepository;
+    private final FileStorageService fileStorageService;
 
     public LearningMaterialController(
             LearningMaterialService fileService,
             QuestionRepository questionRepository,
             LessonRepository lessonRepository,
-            LearningMaterialRepository learning_MaterialRepository) {
+            LearningMaterialRepository learning_MaterialRepository,
+            FileStorageService fileStorageService) {
         this.fileService = fileService;
         this.questionRepository = questionRepository;
         this.lessonRepository = lessonRepository;
         this.learning_MaterialRepository = learning_MaterialRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     @PostMapping("/upload/question")
@@ -192,11 +196,21 @@ public class LearningMaterialController {
         Learning_Material material = learning_MaterialRepository.findById(id)
                 .orElseThrow(() -> new LearningMaterialNotFoundException("Material not found"));
 
+        // Get the file path from material link and delete physical file
+        try {
+            // Use FileStorageService to delete the physical file
+            fileStorageService.deleteFile(material.getMaterLink());
+        } catch (Exception e) {
+            // Log error but continue with database deletion
+            System.err.println("Error deleting file: " + e.getMessage());
+        }
+
+        // Delete record from database
         learning_MaterialRepository.delete(material);
 
         RestResponse<Void> response = new RestResponse<>();
         response.setStatusCode(200);
-        response.setMessage("Material deleted successfully");
+        response.setMessage("Material and associated file deleted successfully");
         return ResponseEntity.ok(response);
     }
 
