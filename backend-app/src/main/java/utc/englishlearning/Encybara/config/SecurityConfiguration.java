@@ -103,6 +103,7 @@ public class SecurityConfiguration {
                 "/api/v1/admin/**",
                 "/api/v1/flashcard-groups/**",
                 "/api/v1/flashcards/**",
+                "/api/chatgpt/**", // Add ChatGPT endpoints to whitelist
         };
 
         http
