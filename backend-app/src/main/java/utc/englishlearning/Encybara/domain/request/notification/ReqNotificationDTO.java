@@ -8,4 +8,6 @@ import lombok.Setter;
 public class ReqNotificationDTO {
     private String message;
     private Long userId;
+    private Long entityId; // Thêm entityId
+    private String entityType; // Thêm entityType
 }

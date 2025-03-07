@@ -1,5 +1,8 @@
 package utc.englishlearning.Encybara.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +31,8 @@ public class NotificationController {
         responseDTO.setRead(notification.isRead());
         responseDTO.setUserId(notification.getUserId());
         responseDTO.setCreatedAt(notification.getCreatedAt());
+        responseDTO.setEntityId(notification.getEntityId());
+        responseDTO.setEntityType(notification.getEntityType());
 
         RestResponse<ResNotificationDTO> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -39,8 +44,8 @@ public class NotificationController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<RestResponse<Page<ResNotificationDTO>>> getAllNotificationsByUserId(
             @PathVariable("userId") Long userId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(value = "page", required = false) int page,
+            @RequestParam(value = "size", required = false) int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Notification> notifications = notificationService.getAllNotificationsByUserId(userId, pageable);
 
@@ -54,8 +59,32 @@ public class NotificationController {
             dto.setRead(notification.isRead());
             dto.setUserId(notification.getUserId());
             dto.setCreatedAt(notification.getCreatedAt());
+            dto.setEntityId(notification.getEntityId());
+            dto.setEntityType(notification.getEntityType());
             return dto;
         }));
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<RestResponse<List<ResNotificationDTO>>> getAllNotifications() {
+        List<Notification> notifications = notificationService.getAllNotifications();
+        List<ResNotificationDTO> notificationDTOs = notifications.stream().map(notification -> {
+            ResNotificationDTO dto = new ResNotificationDTO();
+            dto.setId(notification.getId());
+            dto.setMessage(notification.getMessage());
+            dto.setRead(notification.isRead());
+            dto.setUserId(notification.getUserId());
+            dto.setCreatedAt(notification.getCreatedAt());
+            dto.setEntityId(notification.getEntityId());
+            dto.setEntityType(notification.getEntityType());
+            return dto;
+        }).collect(Collectors.toList());
+
+        RestResponse<List<ResNotificationDTO>> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("All notifications retrieved successfully");
+        response.setData(notificationDTOs);
         return ResponseEntity.ok(response);
     }
 
@@ -69,6 +98,8 @@ public class NotificationController {
         responseDTO.setRead(notification.isRead());
         responseDTO.setUserId(notification.getUserId());
         responseDTO.setCreatedAt(notification.getCreatedAt());
+        responseDTO.setEntityId(notification.getEntityId());
+        responseDTO.setEntityType(notification.getEntityType());
 
         RestResponse<ResNotificationDTO> response = new RestResponse<>();
         response.setStatusCode(200);
