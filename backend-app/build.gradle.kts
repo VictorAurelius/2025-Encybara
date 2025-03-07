@@ -45,9 +45,13 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	// Web scraping dependencies
 	implementation("org.jsoup:jsoup:1.14.3")
-	implementation("org.seleniumhq.selenium:selenium-java:4.16.1")
-	implementation("io.github.bonigarcia:webdrivermanager:5.6.2")
+	implementation("com.microsoft.playwright:playwright:1.41.0")
+	implementation("com.microsoft.playwright:driver-bundle:1.41.0")
+	implementation("com.microsoft.playwright:driver:1.41.0")
+	// JSON processing
+	implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
 	}
 tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-parameters")
