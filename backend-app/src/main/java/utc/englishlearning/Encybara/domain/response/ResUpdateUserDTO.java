@@ -9,10 +9,7 @@ import utc.englishlearning.Encybara.util.constant.SpecialFieldEnum;
 public class ResUpdateUserDTO {
     private long id;
     private String name;
-    private String address;
-
     private String phone;
     private SpecialFieldEnum speciField;
-    private String avatar;
     private String englishlevel;
 }
