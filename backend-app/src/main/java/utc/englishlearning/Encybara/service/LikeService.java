@@ -99,4 +99,12 @@ public class LikeService {
         discussion.setNumLike(discussion.getNumLike() - 1);
         discussionRepository.save(discussion);
     }
+
+    public boolean isReviewLiked(Long userId, Long reviewId) {
+        return likeRepository.existsByUserIdAndReviewId(userId, reviewId);
+    }
+
+    public boolean isDiscussionLiked(Long userId, Long discussionId) {
+        return likeRepository.existsByUserIdAndDiscussionId(userId, discussionId);
+    }
 }
