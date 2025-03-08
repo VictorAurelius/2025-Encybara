@@ -14,8 +14,18 @@ FROM openjdk:17-slim
 WORKDIR /backend-app
 EXPOSE 8080
 
+# Tạo sẵn cấu trúc thư mục uploads
+RUN mkdir -p /app/uploads/questions /app/uploads/lessons
+
+# Đặt quyền truy cập phù hợp cho thư mục
+RUN chmod -R 777 /app/uploads
+
 # Thêm non-root user
 RUN addgroup --system spring && adduser --system spring --ingroup spring
+
+# Thay đổi quyền sở hữu cho thư mục uploads
+RUN chown -R spring:spring /app/uploads
+
 USER spring:spring
 
 COPY --from=build /backend-app/source/build/libs/*.jar backend-app.jar
@@ -25,5 +35,3 @@ HEALTHCHECK --interval=30s --timeout=3s \
     CMD curl -f http://localhost:8080/actuator/health || exit 1
 
 ENTRYPOINT ["java", "-jar", "backend-app.jar"]
-
-
