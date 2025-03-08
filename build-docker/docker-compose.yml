@@ -31,7 +31,6 @@ services:
       - SPRING_DATASOURCE_PASSWORD=123456
       - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
       - englishlearning.upload-file.base-uri=/app/uploads/
-      - SERVER_ADDRESS=14.225.198.3
     volumes:
       - upload_data:/app/uploads
     healthcheck:
