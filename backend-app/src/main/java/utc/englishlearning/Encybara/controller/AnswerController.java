@@ -20,7 +20,8 @@ public class AnswerController {
 
     @PostMapping("/user/{userId}")
     public ResponseEntity<RestResponse<ResAnswerDTO>> createAnswerWithUserId(
-            @RequestBody ReqCreateAnswerDTO reqCreateAnswerDTO, @PathVariable("userId") Long userId) {
+            @RequestBody ReqCreateAnswerDTO reqCreateAnswerDTO,
+            @PathVariable("userId") Long userId) {
         ResAnswerDTO createdAnswer = answerService.createAnswerWithUserId(reqCreateAnswerDTO, userId);
         RestResponse<ResAnswerDTO> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -30,7 +31,8 @@ public class AnswerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RestResponse<ResAnswerDTO>> getAnswerById(@PathVariable("id") Long id) {
+    public ResponseEntity<RestResponse<ResAnswerDTO>> getAnswerById(
+            @PathVariable("id") Long id) {
         ResAnswerDTO answer = answerService.getAnswerById(id);
         RestResponse<ResAnswerDTO> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -41,7 +43,8 @@ public class AnswerController {
 
     @GetMapping("/question/{questionId}")
     public ResponseEntity<RestResponse<Page<Answer>>> getAnswersByQuestionId(
-            @PathVariable("questionId") Long questionId, Pageable pageable) {
+            @PathVariable("questionId") Long questionId,
+            Pageable pageable) {
         Page<Answer> answers = answerService.getAnswersByQuestionId(questionId, pageable);
         RestResponse<Page<Answer>> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -52,7 +55,8 @@ public class AnswerController {
 
     @GetMapping("/question/{questionId}/user/{userId}")
     public ResponseEntity<RestResponse<Page<Answer>>> getAllAnswersByQuestionIdAndUserId(
-            @PathVariable("questionId") Long questionId, @PathVariable("userId") Long userId, Pageable pageable) {
+            @PathVariable("questionId") Long questionId,
+            @PathVariable("userId") Long userId, Pageable pageable) {
         Page<Answer> answers = answerService.getAllAnswersByQuestionIdAndUserId(questionId, userId, pageable);
         RestResponse<Page<Answer>> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -62,7 +66,8 @@ public class AnswerController {
     }
 
     @PutMapping("/grade/{answerId}")
-    public ResponseEntity<RestResponse<Void>> gradeAnswer(@PathVariable("answerId") Long answerId) {
+    public ResponseEntity<RestResponse<Void>> gradeAnswer(
+            @PathVariable("answerId") Long answerId) {
         answerService.gradeAnswer(answerId);
         RestResponse<Void> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -71,7 +76,9 @@ public class AnswerController {
     }
 
     @GetMapping("/latest")
-    public ResponseEntity<ResAnswerDTO> getLatestAnswer(@RequestParam Long questionId, @RequestParam Long userId) {
+    public ResponseEntity<ResAnswerDTO> getLatestAnswer(
+            @RequestParam("questionId") Long questionId,
+            @RequestParam("userId") Long userId) {
         ResAnswerDTO latestAnswer = answerService.getLatestAnswerByUserAndQuestion(questionId, userId);
         RestResponse<Void> response = new RestResponse<>();
         response.setStatusCode(200);

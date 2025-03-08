@@ -44,9 +44,4 @@ public class Answer {
     @OneToOne(mappedBy = "answer", fetch = FetchType.LAZY)
     @JsonIgnore
     private Answer_Text answerText;
-
-    @OneToOne(mappedBy = "answer", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private Answer_Voice answerVoice;
-
 }
