@@ -53,8 +53,8 @@ public class PerplexityAIService {
 
                             Respond with these exact sections:
                             Score: (number from 0-100 based on accuracy and completeness)
-                            Evaluation: (brief evaluation of the answer's strengths and weaknesses)
-                            Improvements: (provide 2-3 specific suggestions for improving the answer)
+                            Evaluation: (brief evaluation of the answer's strengths and weaknesses in Vietnamese)
+                            Improvements: (provide a single English sentence that answers the question with a good score)
 
                             IMPORTANT: Your response MUST include all three sections with detailed improvements.""",
                     question, userAnswer, prompt);
@@ -149,29 +149,27 @@ public class PerplexityAIService {
                     }
                     isReadingEvaluation = false;
                     isReadingImprovements = false;
-                } 
+                }
                 // Handle both regular "Evaluation:" and markdown "## Evaluation:" formats
                 else if (line.matches("(?:##\\s*)?Evaluation:.*")) {
                     evaluation = line.replaceAll("(?:##\\s*)?Evaluation:\\s*", "").trim();
                     isReadingEvaluation = true;
                     isReadingImprovements = false;
-                } 
+                }
                 // Handle both regular "Improvements:" and markdown "## Improvements:" formats
                 else if (line.matches("(?:##\\s*)?Improvements:.*")) {
                     improvements.setLength(0);
                     improvements.append(line.replaceAll("(?:##\\s*)?Improvements:\\s*", "").trim());
                     isReadingEvaluation = false;
                     isReadingImprovements = true;
-                } 
-                else if (isReadingEvaluation) {
+                } else if (isReadingEvaluation) {
                     // If the next line starts with ##, it's a new section
                     if (line.startsWith("##")) {
                         isReadingEvaluation = false;
                     } else {
                         evaluation += " " + line.trim();
                     }
-                } 
-                else if (isReadingImprovements) {
+                } else if (isReadingImprovements) {
                     // If the next line starts with ##, it's a new section
                     if (line.startsWith("##")) {
                         isReadingImprovements = false;
