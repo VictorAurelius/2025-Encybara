@@ -1,10 +1,12 @@
 # Stage 1: Build the application
 FROM gradle:8.7-jdk17 AS build
-COPY --chown=gradle:gradle . /backend-app/source
 WORKDIR /backend-app/source
 
 # Copy các file cấu hình Gradle
 COPY build.gradle.kts settings.gradle.kts ./
+
+# Copy toàn bộ source code
+COPY . .
 
 # Build app
 RUN gradle clean build -x test --no-daemon
