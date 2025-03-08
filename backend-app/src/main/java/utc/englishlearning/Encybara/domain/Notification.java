@@ -19,8 +19,11 @@ public class Notification {
     private long id;
     private String message;
     private boolean isRead;
-    private Long userId; // ID của người nhận thông báo
-    private Instant createdAt; // Thời gian tạo thông báo
+    private String type;
+    private Long userId;
+    private Long entityId;
+    private String entityType;
+    private Instant createdAt;
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;

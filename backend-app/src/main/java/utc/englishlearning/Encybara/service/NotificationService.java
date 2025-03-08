@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import utc.englishlearning.Encybara.domain.Notification;
+import utc.englishlearning.Encybara.domain.Review;
+import utc.englishlearning.Encybara.domain.Discussion;
 import utc.englishlearning.Encybara.domain.request.notification.ReqNotificationDTO;
 import utc.englishlearning.Encybara.exception.NotificationNotFoundException;
 import utc.englishlearning.Encybara.repository.NotificationRepository;
@@ -23,7 +25,27 @@ public class NotificationService {
         notification.setUserId(requestDTO.getUserId());
         notification.setRead(false); // Mặc định là chưa đọc
         notification.setCreatedAt(Instant.now()); // Thay đổi để sử dụng Instant
+        notification.setEntityId(requestDTO.getEntityId()); // Thêm entityId
+        notification.setEntityType(requestDTO.getEntityType()); // Thêm entityType
         return notificationRepository.save(notification);
+    }
+
+    public void createNotificationForReview(Review review) {
+        ReqNotificationDTO notificationDTO = new ReqNotificationDTO();
+        notificationDTO.setMessage(review.getReSubject());
+        notificationDTO.setUserId(review.getUser().getId());
+        notificationDTO.setEntityId(review.getId());
+        notificationDTO.setEntityType("REVIEW");
+        createNotification(notificationDTO);
+    }
+
+    public void createNotificationForDiscussion(Discussion discussion) {
+        ReqNotificationDTO notificationDTO = new ReqNotificationDTO();
+        notificationDTO.setMessage(discussion.getContent());
+        notificationDTO.setUserId(discussion.getUser().getId());
+        notificationDTO.setEntityId(discussion.getId());
+        notificationDTO.setEntityType("DISCUSSION");
+        createNotification(notificationDTO);
     }
 
     public List<Notification> getAllNotificationsByUserId(Long userId) {
@@ -47,5 +69,9 @@ public class NotificationService {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new NotificationNotFoundException("Notification not found"));
         notificationRepository.delete(notification);
+    }
+
+    public List<Notification> getAllNotifications() {
+        return notificationRepository.findAll();
     }
 }

@@ -28,6 +28,9 @@ public class ReviewService {
     @Autowired
     private CourseRepository courseRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @Transactional
     public ResReviewDTO createReview(ReqCreateReviewDTO reqCreateReviewDTO) {
         if (reviewRepository.existsByUserIdAndCourseId(reqCreateReviewDTO.getUserId(),
@@ -47,6 +50,10 @@ public class ReviewService {
         review.setStatus(reqCreateReviewDTO.getStatus());
 
         review = reviewRepository.save(review);
+
+        // Gửi thông báo
+        notificationService.createNotificationForReview(review);
+
         return convertToDTO(review);
     }
 
@@ -64,6 +71,10 @@ public class ReviewService {
         review.setNumStar(reqUpdateReviewDTO.getNumStar());
         review.setStatus(reqUpdateReviewDTO.getStatus()); // Cập nhật status
         reviewRepository.save(review);
+
+        // Gửi thông báo
+        notificationService.createNotificationForReview(review);
+
         return convertToDTO(review);
     }
 
