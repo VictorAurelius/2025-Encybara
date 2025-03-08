@@ -131,6 +131,7 @@ public class PerplexityAIService {
             double score = 0;
             String evaluation = "";
             StringBuilder improvements = new StringBuilder();
+            boolean isReadingEvaluation = false;
             boolean isReadingImprovements = false;
 
             for (String line : lines) {
@@ -138,18 +139,45 @@ public class PerplexityAIService {
                 if (line.isEmpty())
                     continue;
 
-                if (line.startsWith("Score:")) {
-                    score = Double.parseDouble(line.substring(6).trim().replaceAll("[^0-9.]", ""));
+                // Handle both regular "Score:" and markdown "## Score:" formats
+                if (line.matches("(?:##\\s*)?Score:.*")) {
+                    String scoreText = line.replaceAll("(?:##\\s*)?Score:\\s*", "").trim();
+                    try {
+                        score = Double.parseDouble(scoreText.replaceAll("[^0-9.]", ""));
+                    } catch (NumberFormatException e) {
+                        log.warn("Failed to parse score from: {}", scoreText);
+                    }
+                    isReadingEvaluation = false;
                     isReadingImprovements = false;
-                } else if (line.startsWith("Evaluation:")) {
-                    evaluation = line.substring(11).trim();
+                } 
+                // Handle both regular "Evaluation:" and markdown "## Evaluation:" formats
+                else if (line.matches("(?:##\\s*)?Evaluation:.*")) {
+                    evaluation = line.replaceAll("(?:##\\s*)?Evaluation:\\s*", "").trim();
+                    isReadingEvaluation = true;
                     isReadingImprovements = false;
-                } else if (line.startsWith("Improvements:")) {
+                } 
+                // Handle both regular "Improvements:" and markdown "## Improvements:" formats
+                else if (line.matches("(?:##\\s*)?Improvements:.*")) {
                     improvements.setLength(0);
-                    improvements.append(line.substring(13).trim());
+                    improvements.append(line.replaceAll("(?:##\\s*)?Improvements:\\s*", "").trim());
+                    isReadingEvaluation = false;
                     isReadingImprovements = true;
-                } else if (isReadingImprovements) {
-                    improvements.append(" ").append(line.trim());
+                } 
+                else if (isReadingEvaluation) {
+                    // If the next line starts with ##, it's a new section
+                    if (line.startsWith("##")) {
+                        isReadingEvaluation = false;
+                    } else {
+                        evaluation += " " + line.trim();
+                    }
+                } 
+                else if (isReadingImprovements) {
+                    // If the next line starts with ##, it's a new section
+                    if (line.startsWith("##")) {
+                        isReadingImprovements = false;
+                    } else {
+                        improvements.append(" ").append(line.trim());
+                    }
                 }
             }
 
