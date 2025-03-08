@@ -9,6 +9,7 @@ public class ResAnswerDTO {
     private Long id;
     private Long questionId;
     private String answerContent;
-    private int pointAchieved;
-    private long sessionId;
+    private Integer pointAchieved;
+    private Long sessionId;
+    private String improvement; // Added improvement field
 }

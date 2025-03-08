@@ -16,7 +16,6 @@ import utc.englishlearning.Encybara.repository.QuestionRepository;
 import utc.englishlearning.Encybara.repository.AnswerTextRepository;
 import utc.englishlearning.Encybara.domain.Question_Choice;
 import utc.englishlearning.Encybara.repository.QuestionChoiceRepository;
-import utc.englishlearning.Encybara.util.SecurityUtil;
 import utc.englishlearning.Encybara.util.constant.QuestionTypeEnum;
 import utc.englishlearning.Encybara.domain.User;
 import utc.englishlearning.Encybara.repository.UserRepository;
@@ -42,34 +41,6 @@ public class AnswerService {
         @Autowired
         private UserRepository userRepository;
 
-        public ResAnswerDTO createAnswer(ReqCreateAnswerDTO reqCreateAnswerDTO) {
-                Question question = questionRepository.findById(reqCreateAnswerDTO.getQuestionId())
-                                .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
-
-                User user = userRepository.findByEmail(SecurityUtil.getCurrentUserLogin()
-                                .orElseThrow(() -> new RuntimeException("User not authenticated")));
-
-                // Tìm các câu trả lời trước đó của người dùng cho câu hỏi này
-                List<Answer> previousAnswers = answerRepository.findByUserAndQuestion(user, question);
-
-                // Tính sessionId mới
-                long newSessionId = previousAnswers.size() + 1;
-
-                Answer answer = new Answer();
-                answer.setQuestion(question);
-                answer.setUser(user);
-                answer.setPoint_achieved(0);
-                answer.setSessionId(newSessionId); // Thiết lập sessionId tự động
-
-                Answer_Text answerText = new Answer_Text();
-                answerText.setAnsContent(reqCreateAnswerDTO.getAnswerContent());
-                answerText.setAnswer(answer);
-                answerTextRepository.save(answerText);
-
-                answer = answerRepository.save(answer);
-                return convertToDTO(answer, answerText);
-        }
-
         public ResAnswerDTO createAnswerWithUserId(ReqCreateAnswerDTO reqCreateAnswerDTO, Long userId) {
                 Question question = questionRepository.findById(reqCreateAnswerDTO.getQuestionId())
                                 .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
@@ -86,7 +57,14 @@ public class AnswerService {
                 Answer answer = new Answer();
                 answer.setQuestion(question);
                 answer.setUser(user);
-                answer.setPoint_achieved(0);
+
+                // Set point_achieved from request or default to 0 if not provided
+                Integer pointAchieved = reqCreateAnswerDTO.getPointAchieved();
+                answer.setPoint_achieved(pointAchieved != null ? pointAchieved : 0);
+
+                // Set improvement from request if provided
+                answer.setImprovement(reqCreateAnswerDTO.getImprovement());
+
                 answer.setSessionId(newSessionId); // Thiết lập sessionId tự động
                 answer = answerRepository.save(answer);
 
@@ -204,6 +182,7 @@ public class AnswerService {
                 dto.setAnswerContent(answerText.getAnsContent());
                 dto.setPointAchieved(answer.getPoint_achieved());
                 dto.setSessionId(answer.getSessionId());
+                dto.setImprovement(answer.getImprovement()); // Add improvement to the DTO
                 return dto;
         }
 }

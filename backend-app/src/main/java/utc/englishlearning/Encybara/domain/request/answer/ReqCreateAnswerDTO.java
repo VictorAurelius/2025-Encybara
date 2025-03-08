@@ -7,6 +7,8 @@ import lombok.Setter;
 @Setter
 public class ReqCreateAnswerDTO {
     private Long questionId;
-    private String[] answerContent; // Thay đổi từ String thành String[]
+    private String[] answerContent; // Array of answer content
     private long sessionId;
+    private Integer pointAchieved; // Field for point achieved
+    private String improvement; // New field for improvement suggestions
 }
