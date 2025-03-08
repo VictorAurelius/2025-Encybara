@@ -1,5 +1,5 @@
 package utc.englishlearning.Encybara.util.constant;
 
 public enum QuestionTypeEnum {
-    CHOICE, MULTIPLE, TEXT, LISTENING
+    CHOICE, MULTIPLE, TEXT, LISTENING, WRITING, SPEAKING
 }
