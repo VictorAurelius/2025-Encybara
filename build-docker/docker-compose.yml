@@ -1,4 +1,13 @@
 services:
+  nginx:
+    image: nginx:1.23
+    volumes:
+      - ../horizon-tailwind-react-ts-main/build:/usr/share/nginx/html
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend-spring
   db-mysql:
     image: mysql:5.7.40
     restart: always

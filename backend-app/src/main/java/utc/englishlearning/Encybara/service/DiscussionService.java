@@ -32,6 +32,9 @@ public class DiscussionService {
     @Autowired
     private LikeRepository likeRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @Transactional
     public ResDiscussionDTO createDiscussion(ReqCreateDiscussionDTO reqCreateDiscussionDTO) {
         Discussion discussion = new Discussion();
@@ -62,6 +65,10 @@ public class DiscussionService {
         }
 
         discussion = discussionRepository.save(discussion);
+
+        // Gửi thông báo
+        notificationService.createNotificationForDiscussion(discussion);
+
         return convertToDTO(discussion);
     }
 
