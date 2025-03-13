@@ -133,11 +133,11 @@ public class AuthController {
                                 .path("/")
                                 .maxAge(0)
                                 .build();
-
+                SecurityContextHolder.clearContext();
                 return ResponseEntity.ok()
                                 .header(HttpHeaders.SET_COOKIE, deleteRefreshTokenCookie.toString())
                                 .header(HttpHeaders.SET_COOKIE, deleteAccessTokenCookie.toString())
-                                .body("Đăng xuất thành công");
+                                .body("Logout success");
         }
 
         @PostMapping("/register")
