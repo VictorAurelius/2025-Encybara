@@ -52,4 +52,15 @@ public class LikeController {
         response.setMessage("Discussion unliked successfully");
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/review-is-liked")
+    public ResponseEntity<Boolean> isReviewLiked(@RequestParam("userId") Long userId, @RequestParam("reviewId") Long reviewId) {
+        boolean isLiked = likeService.isReviewLiked(userId, reviewId);
+        return ResponseEntity.ok(isLiked);
+    }
+    @GetMapping("/discussion-is-liked")
+    public ResponseEntity<Boolean> isDiscussionLiked(@RequestParam("userId") Long userId, @RequestParam("discussionId") Long discussionId) {
+        boolean isLiked = likeService.isDiscussionLiked(userId, discussionId);
+        return ResponseEntity.ok(isLiked);
+    }
 }
