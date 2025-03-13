@@ -109,37 +109,66 @@ public class AnswerService {
                 Answer answer = answerRepository.findById(answerId)
                                 .orElseThrow(() -> new ResourceNotFoundException("Answer not found"));
 
-                // Get the associated question
                 Question question = answer.getQuestion();
+                String userAnswer = answer.getAnswerText().getAnsContent().trim();
+                List<Question_Choice> choices = questionChoiceRepository.findByQuestionId(question.getId());
 
-                // Kiểm tra loại câu hỏi
                 if (question.getQuesType() == QuestionTypeEnum.MULTIPLE) {
-                        // Lấy các lựa chọn đúng cho câu hỏi
-                        List<Question_Choice> choices = questionChoiceRepository.findByQuestionId(question.getId());
-                        // Nối chuỗi các lựa chọn đúng
-                        String correctAnswers = choices.stream()
+                        // Xử lý câu hỏi nhiều đáp án
+                        List<String> correctChoices = choices.stream()
                                         .filter(Question_Choice::isChoiceKey)
-                                        .map(Question_Choice::getChoiceContent)
-                                        .collect(Collectors.joining(", "));
+                                        .map(choice -> choice.getChoiceContent().trim())
+                                        .collect(Collectors.toList());
 
-                        // So sánh với nội dung câu trả lời
-                        boolean isCorrect = correctAnswers.equals(answer.getAnswerText().getAnsContent());
-                        answer.setPoint_achieved(isCorrect ? question.getPoint() : 0);
+                        List<String> userChoices = List.of(userAnswer.split("\\s*,\\s*")); // Tách các đáp án người
+                                                                                           // dùng, bỏ qua khoảng trắng
+
+                        // Kiểm tra số lượng đáp án và nội dung đáp án (không phân biệt thứ tự)
+                        boolean isFullyCorrect = correctChoices.size() == userChoices.size()
+                                        && correctChoices.stream()
+                                                        .allMatch(correct -> userChoices.stream()
+                                                                        .anyMatch(user -> normalizeAnswer(user).equals(
+                                                                                        normalizeAnswer(correct))));
+
+                        // Tính điểm dựa trên số đáp án đúng
+                        if (isFullyCorrect) {
+                                answer.setPoint_achieved(question.getPoint());
+                        } else {
+                                // Tính điểm từng phần nếu trả lời đúng một phần
+                                long correctCount = userChoices.stream()
+                                                .filter(userChoice -> correctChoices.stream()
+                                                                .anyMatch(correct -> normalizeAnswer(userChoice)
+                                                                                .equals(normalizeAnswer(correct))))
+                                                .count();
+
+                                double partialPoint = (double) correctCount / correctChoices.size()
+                                                * question.getPoint();
+                                answer.setPoint_achieved((int) Math.round(partialPoint));
+                        }
                 } else {
-                        // Get the correct choices for the question
-                        List<Question_Choice> choices = questionChoiceRepository.findByQuestionId(question.getId());
-
-                        // Check if the answer content matches any correct choice
+                        // Xử lý câu hỏi một đáp án
                         boolean isCorrect = choices.stream()
-                                        .anyMatch(choice -> choice.getChoiceContent()
-                                                        .equals(answer.getAnswerText().getAnsContent())
-                                                        && choice.isChoiceKey());
+                                        .filter(Question_Choice::isChoiceKey)
+                                        .anyMatch(choice -> normalizeAnswer(choice.getChoiceContent())
+                                                        .equals(normalizeAnswer(userAnswer)));
 
-                        // Update point_achieved based on the result
                         answer.setPoint_achieved(isCorrect ? question.getPoint() : 0);
                 }
 
-                answerRepository.save(answer); // Save the updated answer
+                answerRepository.save(answer);
+        }
+
+        /**
+         * Chuẩn hóa câu trả lời để so sánh
+         * - Chuyển về chữ thường
+         * - Bỏ khoảng trắng dư
+         * - Bỏ dấu câu cuối cùng
+         */
+        private String normalizeAnswer(String answer) {
+                return answer.trim()
+                                .toLowerCase()
+                                .replaceAll("\\s+", " ")
+                                .replaceAll("[.!?]+$", "");
         }
 
         public Page<Answer> getAnswersByQuestionId(Long questionId, Pageable pageable) {
