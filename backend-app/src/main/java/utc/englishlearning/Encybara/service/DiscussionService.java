@@ -46,16 +46,8 @@ public class DiscussionService {
             Discussion parentDiscussion = discussionRepository.findById(reqCreateDiscussionDTO.getParentId())
                     .orElseThrow(() -> new ResourceNotFoundException("Parent discussion not found"));
 
-            List<Discussion> replies = discussionRepository.findByParentDiscussionId(parentDiscussion.getId());
-            if (!replies.isEmpty()) {
-                throw new InvalidOperationException("Parent discussion already has replies.");
-            }
-
-            for (Discussion reply : replies) {
-                List<Discussion> subReplies = discussionRepository.findByParentDiscussionId(reply.getId());
-                if (!subReplies.isEmpty()) {
-                    throw new InvalidOperationException("Replies cannot have their own replies.");
-                }
+            if(parentDiscussion.getParentDiscussion() != null) {
+                throw new InvalidOperationException("Replies cannot have their own replies.");
             }
 
             discussion.setParentDiscussion(parentDiscussion);
