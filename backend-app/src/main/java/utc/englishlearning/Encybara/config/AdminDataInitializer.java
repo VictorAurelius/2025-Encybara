@@ -5,30 +5,30 @@ import java.util.List;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import utc.englishlearning.Encybara.domain.Permission;
-import utc.englishlearning.Encybara.domain.Role;
-import utc.englishlearning.Encybara.domain.Admin;
-import utc.englishlearning.Encybara.repository.PermissionRepository;
-import utc.englishlearning.Encybara.repository.RoleRepository;
-import utc.englishlearning.Encybara.repository.AdminRepository;
+import utc.englishlearning.Encybara.domain.*;
+import utc.englishlearning.Encybara.repository.*;
+import utc.englishlearning.Encybara.data.seeding.CourseDataSeeder;
 
 @Service
-public class DatabaseInitializer implements CommandLineRunner {
+public class AdminDataInitializer implements CommandLineRunner {
 
     private final PermissionRepository permissionRepository;
     private final RoleRepository roleRepository;
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CourseDataSeeder courseDataSeeder;
 
-    public DatabaseInitializer(
+    public AdminDataInitializer(
             PermissionRepository permissionRepository,
             RoleRepository roleRepository,
             AdminRepository adminRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            CourseDataSeeder courseDataSeeder) {
         this.permissionRepository = permissionRepository;
         this.roleRepository = roleRepository;
         this.adminRepository = adminRepository;
         this.passwordEncoder = passwordEncoder;
+        this.courseDataSeeder = courseDataSeeder;
     }
 
     @Override
@@ -116,8 +116,11 @@ public class DatabaseInitializer implements CommandLineRunner {
 
         if (countPermissions > 0 && countRoles > 0 && countAdmins > 0) {
             System.out.println(">>> SKIP INIT DATABASE ~ ALREADY HAVE DATA...");
-        } else
+        } else {
             System.out.println(">>> END INIT DATABASE");
-    }
+        }
 
+        // Seed course data
+        courseDataSeeder.seedPresentSimpleCourse();
+    }
 }
