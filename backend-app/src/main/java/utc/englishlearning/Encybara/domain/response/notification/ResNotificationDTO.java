@@ -4,8 +4,7 @@ import java.time.Instant;
 
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.Instant;
+import utc.englishlearning.Encybara.util.constant.ImageNotiEnum;
 
 @Getter
 @Setter
@@ -17,4 +16,5 @@ public class ResNotificationDTO {
     private Instant createdAt;
     private Long entityId;
     private String entityType;
+    private ImageNotiEnum img;
 }

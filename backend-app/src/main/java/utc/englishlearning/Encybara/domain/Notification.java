@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import utc.englishlearning.Encybara.util.constant.ImageNotiEnum;
+
 import java.time.Instant;
 
 @Entity
@@ -24,6 +26,7 @@ public class Notification {
     private Long entityId;
     private String entityType;
     private Instant createdAt;
+    private ImageNotiEnum img;
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;

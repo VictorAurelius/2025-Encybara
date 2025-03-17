@@ -27,6 +27,7 @@ public class NotificationService {
         notification.setCreatedAt(Instant.now()); // Thay đổi để sử dụng Instant
         notification.setEntityId(requestDTO.getEntityId()); // Thêm entityId
         notification.setEntityType(requestDTO.getEntityType()); // Thêm entityType
+        notification.setImg(requestDTO.getImg()); // Thêm img
         return notificationRepository.save(notification);
     }
 
