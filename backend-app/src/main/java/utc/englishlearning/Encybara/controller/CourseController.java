@@ -82,12 +82,30 @@ public class CourseController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<RestResponse<Void>> deleteCourse(@PathVariable("id") Long id) {
-        courseService.deleteCourse(id);
+    @PutMapping("/{id}/publish")
+    public ResponseEntity<RestResponse<Void>> publishCourse(@PathVariable("id") Long id) {
+        courseService.publishCourse(id);
         RestResponse<Void> response = new RestResponse<>();
         response.setStatusCode(HttpStatus.OK.value());
-        response.setMessage("Course deleted successfully");
+        response.setMessage("Course has been published successfully");
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}/make-private")
+    public ResponseEntity<RestResponse<Void>> makePrivate(@PathVariable("id") Long id) {
+        courseService.makePrivate(id);
+        RestResponse<Void> response = new RestResponse<>();
+        response.setStatusCode(HttpStatus.OK.value());
+        response.setMessage("Course has been made private successfully");
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}/make-public")
+    public ResponseEntity<RestResponse<Void>> makePublic(@PathVariable("id") Long id) {
+        courseService.makePublic(id);
+        RestResponse<Void> response = new RestResponse<>();
+        response.setStatusCode(HttpStatus.OK.value());
+        response.setMessage("Course has been made public successfully");
         return ResponseEntity.ok(response);
     }
 }

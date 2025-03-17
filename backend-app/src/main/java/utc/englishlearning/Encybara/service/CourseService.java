@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import utc.englishlearning.Encybara.domain.Course;
 import utc.englishlearning.Encybara.domain.Lesson;
 import utc.englishlearning.Encybara.domain.Course_Lesson;
+import utc.englishlearning.Encybara.util.constant.CourseStatusEnum;
 import utc.englishlearning.Encybara.domain.request.course.ReqAddLessonsToCourseDTO;
 import utc.englishlearning.Encybara.domain.request.course.ReqCreateCourseDTO;
 import utc.englishlearning.Encybara.domain.request.course.ReqUpdateCourseDTO;
@@ -42,6 +43,7 @@ public class CourseService {
         course.setRecomLevel(reqCreateCourseDTO.getRecomLevel());
         course.setCourseType(reqCreateCourseDTO.getCourseType());
         course.setSpeciField(reqCreateCourseDTO.getSpeciField());
+        course.setCourseStatus(CourseStatusEnum.PENDING); // Set initial status as PENDING
         course = courseRepository.save(course);
         return convertToDTO(course);
     }
@@ -122,10 +124,36 @@ public class CourseService {
     }
 
     @Transactional
-    public void deleteCourse(Long id) {
+    public void publishCourse(Long id) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
-        courseRepository.delete(course);
+        if (course.getCourseStatus() != CourseStatusEnum.PENDING) {
+            throw new IllegalStateException("Course must be in PENDING status to be published");
+        }
+        course.setCourseStatus(CourseStatusEnum.PUBLIC);
+        courseRepository.save(course);
+    }
+
+    @Transactional
+    public void makePrivate(Long id) {
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
+        if (course.getCourseStatus() != CourseStatusEnum.PUBLIC) {
+            throw new IllegalStateException("Course must be in PUBLIC status to be made private");
+        }
+        course.setCourseStatus(CourseStatusEnum.PRIVATE);
+        courseRepository.save(course);
+    }
+
+    @Transactional
+    public void makePublic(Long id) {
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
+        if (course.getCourseStatus() != CourseStatusEnum.PRIVATE) {
+            throw new IllegalStateException("Course must be in PRIVATE status to be made public");
+        }
+        course.setCourseStatus(CourseStatusEnum.PUBLIC);
+        courseRepository.save(course);
     }
 
     private ResCourseDTO convertToDTO(Course course) {
@@ -142,6 +170,7 @@ public class CourseService {
         dto.setUpdateBy(course.getUpdateBy());
         dto.setUpdateAt(course.getUpdateAt());
         dto.setSumLesson(course.getSumLesson());
+        dto.setCourseStatus(course.getCourseStatus());
 
         List<Long> lessonIds = (course.getCourselessons() != null) ? course.getCourselessons().stream()
                 .map(cl -> cl.getLesson().getId())

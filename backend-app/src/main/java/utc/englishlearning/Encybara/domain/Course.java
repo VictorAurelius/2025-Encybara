@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import utc.englishlearning.Encybara.util.SecurityUtil;
+import utc.englishlearning.Encybara.util.constant.CourseStatusEnum;
 import utc.englishlearning.Encybara.util.constant.CourseTypeEnum;
 import utc.englishlearning.Encybara.util.constant.SpecialFieldEnum;
 
@@ -40,7 +41,7 @@ public class Course {
     private Instant createAt;
     private String updateBy;
     private Instant updateAt;
-
+    private CourseStatusEnum courseStatus;
     private Integer sumLesson;
 
     @PrePersist
