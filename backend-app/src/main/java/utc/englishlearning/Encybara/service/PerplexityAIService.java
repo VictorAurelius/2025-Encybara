@@ -235,22 +235,14 @@ public class PerplexityAIService {
                             Context: %s
 
                             Key Points:
-                            1. First key point in English
-                            2. Second key point in English
-                            3. Third key point in English
+                            key point in English
                             ---
-                            1. Điểm chính thứ nhất
-                            2. Điểm chính thứ hai
-                            3. Điểm chính thứ ba
+                            Điểm chính
 
                             Sample Structure:
-                            1. Introduction part in English
-                            2. Main body part in English
-                            3. Conclusion part in English
+                            Sample answer in English
                             ---
-                            1. Phần mở đầu
-                            2. Phần thân bài
-                            3. Phần kết luận
+                            Dịch sang tiếng việt câu trả lời trên
 
                             Tips:
                             1. First tip in English
@@ -265,7 +257,7 @@ public class PerplexityAIService {
                             1. Keep each section's format exactly as shown above
                             2. Use simple numbered lists (1., 2., 3.)
                             3. Separate English and Vietnamese with "---"
-                            4. No special formatting or symbols
+                            4. No special formatting or symbols (bold, italics, etc.)
                             5. Each language section must be clear and concise""",
                     question, prompt);
 
