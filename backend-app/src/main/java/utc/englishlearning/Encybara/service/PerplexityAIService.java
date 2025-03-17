@@ -10,6 +10,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import utc.englishlearning.Encybara.domain.response.perplexity.PerplexityResponse;
+import utc.englishlearning.Encybara.domain.response.perplexity.PerplexitySuggestionResponse;
 import utc.englishlearning.Encybara.exception.PerplexityException;
 
 import java.util.HashMap;
@@ -208,6 +209,195 @@ public class PerplexityAIService {
 
         } catch (Exception e) {
             log.error("Failed to parse response: {}", e.getMessage());
+            log.error("Response content was: {}", content);
+            throw new PerplexityException("Failed to parse API response: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
+    }
+
+    public PerplexitySuggestionResponse getSuggestions(String question, String prompt) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("Authorization", "Bearer " + apiKey);
+
+            Map<String, Object> body = new HashMap<>();
+            body.put("model", "sonar");
+            body.put("temperature", 0.7);
+            body.put("max_tokens", 300);
+
+            String promptContent = String.format(
+                    """
+                            As an English teacher, help a student understand how to answer this question.
+                            Follow this exact format without any deviations:
+
+                            Question: %s
+                            Context: %s
+
+                            Key Points:
+                            1. First key point in English
+                            2. Second key point in English
+                            3. Third key point in English
+                            ---
+                            1. Điểm chính thứ nhất
+                            2. Điểm chính thứ hai
+                            3. Điểm chính thứ ba
+
+                            Sample Structure:
+                            1. Introduction part in English
+                            2. Main body part in English
+                            3. Conclusion part in English
+                            ---
+                            1. Phần mở đầu
+                            2. Phần thân bài
+                            3. Phần kết luận
+
+                            Tips:
+                            1. First tip in English
+                            2. Second tip in English
+                            3. Third tip in English
+                            ---
+                            1. Lời khuyên thứ nhất
+                            2. Lời khuyên thứ hai
+                            3. Lời khuyên thứ ba
+
+                            Rules:
+                            1. Keep each section's format exactly as shown above
+                            2. Use simple numbered lists (1., 2., 3.)
+                            3. Separate English and Vietnamese with "---"
+                            4. No special formatting or symbols
+                            5. Each language section must be clear and concise""",
+                    question, prompt);
+
+            body.put("messages", List.of(
+                    Map.of("role", "user", "content", promptContent)));
+
+            var response = restTemplate.postForEntity(
+                    API_URL,
+                    new org.springframework.http.HttpEntity<>(body, headers),
+                    Map.class);
+
+            if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+                String errorMessage = String.format("API request failed. Status: %s, Body: %s",
+                        response.getStatusCode(), response.getBody());
+                log.error(errorMessage);
+                throw new PerplexityException(errorMessage, HttpStatus.SERVICE_UNAVAILABLE.value());
+            }
+
+            @SuppressWarnings("unchecked")
+            Map<String, Object> responseBody = response.getBody();
+
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> choices = (List<Map<String, Object>>) responseBody.get("choices");
+
+            if (choices == null || choices.isEmpty()) {
+                throw new PerplexityException("No response content from API",
+                        HttpStatus.SERVICE_UNAVAILABLE.value());
+            }
+
+            @SuppressWarnings("unchecked")
+            Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
+
+            if (message == null) {
+                throw new PerplexityException("Invalid response format from API",
+                        HttpStatus.SERVICE_UNAVAILABLE.value());
+            }
+
+            String content = (String) message.get("content");
+            if (content == null || content.isEmpty()) {
+                throw new PerplexityException("Empty response content from API",
+                        HttpStatus.SERVICE_UNAVAILABLE.value());
+            }
+
+            return parseSuggestionResponse(content);
+
+        } catch (HttpClientErrorException e) {
+            log.error("API Error Response: {}", e.getResponseBodyAsString());
+            throw new PerplexityException(
+                    String.format("API request failed: %s", e.getResponseBodyAsString()),
+                    e.getStatusCode().value());
+        } catch (RestClientException e) {
+            log.error("REST client error: {}", e.getMessage());
+            throw new PerplexityException(
+                    "Failed to communicate with Perplexity API: " + e.getMessage(),
+                    HttpStatus.SERVICE_UNAVAILABLE.value());
+        } catch (Exception e) {
+            log.error("Failed to get suggestions: {}", e.getMessage());
+            throw new PerplexityException(
+                    "Failed to get suggestions: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
+    }
+
+    private PerplexitySuggestionResponse parseSuggestionResponse(String content) {
+        try {
+            log.debug("Parsing suggestion response content: {}", content);
+            // Split content into sections using section headers
+            String[] sections = content.split("(?=Key Points:|Sample Structure:|Tips:)");
+
+            // Initialize section content
+            String keyPointsStr = "";
+            String sampleStructureStr = "";
+            String tipsStr = "";
+
+            // Process each section
+            for (String section : sections) {
+                section = section.trim();
+                if (section.isEmpty() || section.startsWith("Question:") || section.startsWith("Context:") ||
+                        section.startsWith("IMPORTANT:")) {
+                    continue;
+                }
+
+                // Extract and clean section content
+                String cleanContent = section.replaceAll("\\s+", " ").trim();
+
+                if (section.startsWith("Key Points:")) {
+                    keyPointsStr = cleanContent.substring("Key Points:".length()).trim();
+                } else if (section.startsWith("Sample Structure:")) {
+                    sampleStructureStr = cleanContent.substring("Sample Structure:".length()).trim();
+                } else if (section.startsWith("Tips:")) {
+                    tipsStr = cleanContent.substring("Tips:".length()).trim();
+                }
+            }
+
+            // Log raw content for debugging
+            log.debug("Raw sections - KeyPoints: {}", keyPointsStr);
+            log.debug("Raw sections - SampleStructure: {}", sampleStructureStr);
+            log.debug("Raw sections - Tips: {}", tipsStr);
+
+            // Ensure we have at least some content
+            if (keyPointsStr.isEmpty() && sampleStructureStr.isEmpty() && tipsStr.isEmpty()) {
+                log.error("No valid content found in response: {}", content);
+                throw new PerplexityException("Failed to parse response: no valid content found",
+                        HttpStatus.INTERNAL_SERVER_ERROR.value());
+            }
+
+            // Use empty placeholder if section is missing
+            if (keyPointsStr.isEmpty()) {
+                keyPointsStr = "No key points provided";
+                log.warn("Key points section missing in response");
+            }
+            if (sampleStructureStr.isEmpty()) {
+                sampleStructureStr = "No sample structure provided";
+                log.warn("Sample structure section missing in response");
+            }
+            if (tipsStr.isEmpty()) {
+                tipsStr = "No tips provided";
+                log.warn("Tips section missing in response");
+            }
+
+            // Log the parsed sections for debugging
+            log.debug("Parsed sections - KeyPoints: {} chars, SampleStructure: {} chars, Tips: {} chars",
+                    keyPointsStr.length(), sampleStructureStr.length(), tipsStr.length());
+
+            return PerplexitySuggestionResponse.builder()
+                    .keyPoints(keyPointsStr)
+                    .sampleAnswer(sampleStructureStr)
+                    .tips(tipsStr)
+                    .build();
+
+        } catch (Exception e) {
+            log.error("Failed to parse suggestion response: {}", e.getMessage());
             log.error("Response content was: {}", content);
             throw new PerplexityException("Failed to parse API response: " + e.getMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR.value());
