@@ -236,29 +236,19 @@ public class PerplexityAIService {
 
                             Key Points:
                             key point in English
-                            ---
-                            Điểm chính
 
                             Sample Structure:
                             Sample answer in English
-                            ---
-                            Dịch sang tiếng việt câu trả lời trên
 
                             Tips:
                             1. First tip in English
                             2. Second tip in English
                             3. Third tip in English
-                            ---
-                            1. Lời khuyên thứ nhất
-                            2. Lời khuyên thứ hai
-                            3. Lời khuyên thứ ba
 
                             Rules:
                             1. Keep each section's format exactly as shown above
                             2. Use simple numbered lists (1., 2., 3.)
-                            3. Separate English and Vietnamese with "---"
-                            4. No special formatting or symbols (bold, italics, etc.)
-                            5. Each language section must be clear and concise""",
+                            3. No special formatting or symbols (bold, italics, etc.)""",
                     question, prompt);
 
             body.put("messages", List.of(
