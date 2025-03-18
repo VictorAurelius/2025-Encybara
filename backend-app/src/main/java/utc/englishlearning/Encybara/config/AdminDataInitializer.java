@@ -7,7 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.repository.*;
-import utc.englishlearning.Encybara.data.seeding.KET1CourseDataSeeder;
+import utc.englishlearning.Encybara.service.DataManagementService;
 
 @Service
 public class AdminDataInitializer implements CommandLineRunner {
@@ -16,19 +16,19 @@ public class AdminDataInitializer implements CommandLineRunner {
     private final RoleRepository roleRepository;
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
-    private final KET1CourseDataSeeder ket1CourseDataSeeder;
+    private final DataManagementService dataManagementService;
 
     public AdminDataInitializer(
             PermissionRepository permissionRepository,
             RoleRepository roleRepository,
             AdminRepository adminRepository,
             PasswordEncoder passwordEncoder,
-            KET1CourseDataSeeder courseDataSeeder) {
+            DataManagementService dataManagementService) {
         this.permissionRepository = permissionRepository;
         this.roleRepository = roleRepository;
         this.adminRepository = adminRepository;
         this.passwordEncoder = passwordEncoder;
-        this.ket1CourseDataSeeder = courseDataSeeder;
+        this.dataManagementService = dataManagementService;
     }
 
     @Override
@@ -121,6 +121,8 @@ public class AdminDataInitializer implements CommandLineRunner {
         }
 
         // Seed course data
-        ket1CourseDataSeeder.seedCourse();
+        System.out.println(">>> START SEEDING COURSE DATA");
+        dataManagementService.seedKet1Data();
+        System.out.println(">>> END SEEDING COURSE DATA");
     }
 }

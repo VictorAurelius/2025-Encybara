@@ -3,7 +3,7 @@ package utc.englishlearning.Encybara.data.seeding;
 import org.springframework.stereotype.Service;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.multipart.MultipartFile;
-import utc.englishlearning.Encybara.data.loader.JsonDataLoader;
+import utc.englishlearning.Encybara.data.loader.TestingMaterialLoader;
 import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.repository.*;
 import utc.englishlearning.Encybara.service.FileStorageService;
@@ -21,27 +21,27 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class KET1CourseDataSeeder {
+public class CourseDataSeeder {
     private final CourseRepository courseRepository;
     private final LessonRepository lessonRepository;
     private final QuestionRepository questionRepository;
     private final CourseLessonRepository courseLessonRepository;
     private final QuestionChoiceRepository questionChoiceRepository;
     private final LessonQuestionRepository lessonQuestionRepository;
-    private final JsonDataLoader jsonDataLoader;
+    private final TestingMaterialLoader materialLoader;
     private final ObjectMapper objectMapper;
     private final FileStorageService fileStorageService;
     private final LearningMaterialService learningMaterialService;
     private final LearningMaterialRepository learningMaterialRepository;
 
-    public KET1CourseDataSeeder(
+    public CourseDataSeeder(
             CourseRepository courseRepository,
             LessonRepository lessonRepository,
             QuestionRepository questionRepository,
             CourseLessonRepository courseLessonRepository,
             QuestionChoiceRepository questionChoiceRepository,
             LessonQuestionRepository lessonQuestionRepository,
-            JsonDataLoader jsonDataLoader,
+            TestingMaterialLoader materialLoader,
             ObjectMapper objectMapper,
             FileStorageService fileStorageService,
             LearningMaterialService learningMaterialService,
@@ -52,7 +52,7 @@ public class KET1CourseDataSeeder {
         this.courseLessonRepository = courseLessonRepository;
         this.questionChoiceRepository = questionChoiceRepository;
         this.lessonQuestionRepository = lessonQuestionRepository;
-        this.jsonDataLoader = jsonDataLoader;
+        this.materialLoader = materialLoader;
         this.objectMapper = objectMapper;
         this.fileStorageService = fileStorageService;
         this.learningMaterialService = learningMaterialService;
@@ -60,13 +60,16 @@ public class KET1CourseDataSeeder {
     }
 
     @SuppressWarnings("unchecked")
-    public void seedCourse() {
+    public void seedCourseData(String courseGroup, String testNumber, String paperNumber) {
         try {
+            // Set the data path for this specific course/test/paper
+            materialLoader.setDataPath(courseGroup, testNumber, paperNumber);
+
             // Load all data first
-            List<Course> courses = jsonDataLoader.loadCourses();
-            Map<String, Lesson> lessonsByName = jsonDataLoader.loadLessons();
-            Map<String, Question> questionsByContent = jsonDataLoader.loadQuestions();
-            Map<String, Map<String, Object>> materialsByLesson = jsonDataLoader.loadMaterials();
+            List<Course> courses = materialLoader.loadCourses();
+            Map<String, Lesson> lessonsByName = materialLoader.loadLessons();
+            Map<String, Question> questionsByContent = materialLoader.loadQuestions();
+            Map<String, Map<String, Object>> materialsByLesson = materialLoader.loadMaterials();
 
             for (Course course : courses) {
                 // Check if course already exists
@@ -109,37 +112,13 @@ public class KET1CourseDataSeeder {
                         // Process questions from lesson's questionContents
                         List<String> questionContents = lesson.getQuestionContents();
                         if (questionContents != null && !questionContents.isEmpty()) {
-                            // Process each question for this lesson
-                            for (String quesContent : questionContents) {
-                                Question question = questionsByContent.get(quesContent);
-                                if (question == null) {
-                                    System.out.println(">>> WARNING: Question not found: " + quesContent);
-                                    continue;
-                                }
-
-                                // Save question and its choices
-                                for (Question_Choice choice : question.getQuestionChoices()) {
-                                    choice.setQuestion(question);
-                                }
-                                question = questionRepository.save(question);
-
-                                // Create lesson-question relationship
-                                Lesson_Question lessonQuestion = new Lesson_Question();
-                                lessonQuestion.setLesson(lesson);
-                                lessonQuestion.setQuestion(question);
-                                lessonQuestionRepository.save(lessonQuestion);
-
-                                // Save question choices
-                                for (Question_Choice choice : question.getQuestionChoices()) {
-                                    questionChoiceRepository.save(choice);
-                                }
-                            }
+                            processQuestions(questionContents, questionsByContent, lesson);
                         }
 
                         // Process materials for this lesson
                         Map<String, Object> materialData = materialsByLesson.get(lessonName);
                         if (materialData != null) {
-                            seedLearningMaterial(materialData, lesson);
+                            seedLearningMaterial(materialData, lesson, courseGroup, testNumber, paperNumber);
                         }
                     }
                 }
@@ -147,12 +126,41 @@ public class KET1CourseDataSeeder {
                 System.out.println(">>> END SEEDING: " + course.getName());
             }
         } catch (IOException e) {
-            System.err.println("Error seeding KET1 course data: " + e.getMessage());
+            System.err.println("Error seeding course data: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private void seedLearningMaterial(Map<String, Object> materialData, Lesson lesson) {
+    private void processQuestions(List<String> questionContents, Map<String, Question> questionsByContent,
+            Lesson lesson) {
+        for (String quesContent : questionContents) {
+            Question question = questionsByContent.get(quesContent);
+            if (question == null) {
+                System.out.println(">>> WARNING: Question not found: " + quesContent);
+                continue;
+            }
+
+            // Save question and its choices
+            for (Question_Choice choice : question.getQuestionChoices()) {
+                choice.setQuestion(question);
+            }
+            question = questionRepository.save(question);
+
+            // Create lesson-question relationship
+            Lesson_Question lessonQuestion = new Lesson_Question();
+            lessonQuestion.setLesson(lesson);
+            lessonQuestion.setQuestion(question);
+            lessonQuestionRepository.save(lessonQuestion);
+
+            // Save question choices
+            for (Question_Choice choice : question.getQuestionChoices()) {
+                questionChoiceRepository.save(choice);
+            }
+        }
+    }
+
+    private void seedLearningMaterial(Map<String, Object> materialData, Lesson lesson,
+            String courseGroup, String testNumber, String paperNumber) {
         try {
             String sourceFilePath = (String) materialData.get("materPath");
             String materType = (String) materialData.get("materType");
@@ -172,8 +180,10 @@ public class KET1CourseDataSeeder {
                         materType,
                         Files.readAllBytes(tempFile));
 
-                // Store file using FileStorageService
-                String materLink = learningMaterialService.store(multipartFile, "lessons/test1");
+                // Store file in the appropriate course directory
+                String uploadPath = String.format("courses/%s/test%s/paper%s",
+                        courseGroup.toLowerCase(), testNumber, paperNumber);
+                String materLink = learningMaterialService.store(multipartFile, uploadPath);
 
                 // Create Learning_Material record
                 Learning_Material material = new Learning_Material();
