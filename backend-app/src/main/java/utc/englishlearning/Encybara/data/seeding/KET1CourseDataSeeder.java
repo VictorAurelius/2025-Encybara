@@ -1,11 +1,20 @@
 package utc.englishlearning.Encybara.data.seeding;
 
 import org.springframework.stereotype.Service;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.web.multipart.MultipartFile;
 import utc.englishlearning.Encybara.data.loader.JsonDataLoader;
 import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.repository.*;
+import utc.englishlearning.Encybara.service.FileStorageService;
+import utc.englishlearning.Encybara.service.LearningMaterialService;
+import utc.englishlearning.Encybara.util.ResourceMultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +30,9 @@ public class KET1CourseDataSeeder {
     private final LessonQuestionRepository lessonQuestionRepository;
     private final JsonDataLoader jsonDataLoader;
     private final ObjectMapper objectMapper;
+    private final FileStorageService fileStorageService;
+    private final LearningMaterialService learningMaterialService;
+    private final LearningMaterialRepository learningMaterialRepository;
 
     public KET1CourseDataSeeder(
             CourseRepository courseRepository,
@@ -30,7 +42,10 @@ public class KET1CourseDataSeeder {
             QuestionChoiceRepository questionChoiceRepository,
             LessonQuestionRepository lessonQuestionRepository,
             JsonDataLoader jsonDataLoader,
-            ObjectMapper objectMapper) {
+            ObjectMapper objectMapper,
+            FileStorageService fileStorageService,
+            LearningMaterialService learningMaterialService,
+            LearningMaterialRepository learningMaterialRepository) {
         this.courseRepository = courseRepository;
         this.lessonRepository = lessonRepository;
         this.questionRepository = questionRepository;
@@ -39,6 +54,9 @@ public class KET1CourseDataSeeder {
         this.lessonQuestionRepository = lessonQuestionRepository;
         this.jsonDataLoader = jsonDataLoader;
         this.objectMapper = objectMapper;
+        this.fileStorageService = fileStorageService;
+        this.learningMaterialService = learningMaterialService;
+        this.learningMaterialRepository = learningMaterialRepository;
     }
 
     @SuppressWarnings("unchecked")
@@ -123,6 +141,61 @@ public class KET1CourseDataSeeder {
             }
         } catch (IOException e) {
             System.err.println("Error seeding KET1 course data: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void seedLearningMaterial(String sourceFilePath, Lesson lesson) {
+        try {
+            // Load the image from resources
+            try (InputStream is = new ClassPathResource(sourceFilePath).getInputStream()) {
+                // Create temp file with original name
+                String fileName = Path.of(sourceFilePath).getFileName().toString();
+                Path tempFile = Files.createTempFile("temp_", fileName);
+                Files.copy(is, tempFile, StandardCopyOption.REPLACE_EXISTING);
+
+                // Create MultipartFile from the temp file
+                MultipartFile multipartFile = new ResourceMultipartFile(
+                        fileName,
+                        fileName,
+                        "image/png",
+                        Files.readAllBytes(tempFile));
+
+                // Store file using FileStorageService
+                String materLink = learningMaterialService.store(multipartFile, "lessons/test1");
+
+                // Create Learning_Material record
+                Learning_Material material = new Learning_Material();
+                material.setMaterLink(materLink);
+                material.setMaterType("image/png");
+                material.setLesson(lesson);
+                material.setUploadedAt(Instant.now());
+                learningMaterialRepository.save(material);
+
+                // Cleanup temp file
+                Files.deleteIfExists(tempFile);
+
+                System.out.println(">>> SEEDED MATERIAL: " + materLink + " for lesson: " + lesson.getName());
+            }
+        } catch (IOException e) {
+            System.err.println("Error seeding learning material: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void seedMaterials() {
+        try {
+            // Find lesson by name
+            Lesson lesson = lessonRepository.findAll().stream()
+                    .filter(l -> l.getName().equals("Paper 1: Reading and Writing - Part 1"))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Lesson not found"));
+
+            // Seed material for the lesson
+            seedLearningMaterial("data/ket1/img/test1/part1-paper1.png", lesson);
+
+        } catch (Exception e) {
+            System.err.println("Error in seedMaterials: " + e.getMessage());
             e.printStackTrace();
         }
     }

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 @Component
 public class JsonDataLoader {
@@ -84,6 +85,23 @@ public class JsonDataLoader {
             }
 
             return questionMap;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, Map<String, Object>> loadMaterials() throws IOException {
+        try (InputStream is = new ClassPathResource(DATA_PATH + "materials.json").getInputStream()) {
+            List<Map<String, Object>> materialDataList = objectMapper.readValue(is,
+                    new TypeReference<List<Map<String, Object>>>() {
+                    });
+            Map<String, Map<String, Object>> materialMap = new LinkedHashMap<>();
+
+            for (Map<String, Object> data : materialDataList) {
+                String lessonName = (String) data.get("lessonName");
+                materialMap.put(lessonName, data);
+            }
+
+            return materialMap;
         }
     }
 }
