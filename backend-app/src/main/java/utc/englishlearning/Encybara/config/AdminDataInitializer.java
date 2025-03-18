@@ -33,7 +33,7 @@ public class AdminDataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println(">>> START INIT DATABASE");
+        System.out.println(">>> START INIT ADMIN CONFIG");
         long countPermissions = this.permissionRepository.count();
         long countRoles = this.roleRepository.count();
         long countAdmins = this.adminRepository.count();

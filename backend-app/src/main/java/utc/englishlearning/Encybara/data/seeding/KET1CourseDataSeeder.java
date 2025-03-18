@@ -3,9 +3,11 @@ package utc.englishlearning.Encybara.data.seeding;
 import org.springframework.stereotype.Service;
 import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.repository.*;
+import utc.englishlearning.Encybara.util.constant.CourseStatusEnum;
 import utc.englishlearning.Encybara.util.constant.CourseTypeEnum;
 import utc.englishlearning.Encybara.util.constant.QuestionTypeEnum;
 import utc.englishlearning.Encybara.util.constant.SkillTypeEnum;
+import utc.englishlearning.Encybara.util.constant.SpecialFieldEnum;
 
 @Service
 public class KET1CourseDataSeeder {
@@ -48,158 +50,86 @@ public class KET1CourseDataSeeder {
         test1Course.setRecomLevel(1.5);
         test1Course.setCourseType(CourseTypeEnum.ALLSKILLS);
         test1Course.setNumLike(0);
+        test1Course.setCourseStatus(CourseStatusEnum.PUBLIC);
+        test1Course.setSumLesson(1);
+        test1Course.setGroup("KET1");
+        test1Course.setSpeciField(SpecialFieldEnum.EVERYONE);
+        test1Course.setCreateBy("admin");
         test1Course = courseRepository.save(test1Course);
 
-        Lesson lesson = new Lesson();
-        lesson.setName("Paper 1: Reading and Writing - Part 1");
-        lesson.setSkillType(SkillTypeEnum.READING);
-        lesson = lessonRepository.save(lesson);
+        Lesson part1Paper1 = new Lesson();
+        part1Paper1.setName("Paper 1: Reading and Writing - Part 1");
+        part1Paper1.setSkillType(SkillTypeEnum.READING);
+        part1Paper1.setSumQues(5);
+        part1Paper1.setCreateBy("admin");
+        part1Paper1 = lessonRepository.save(part1Paper1);
 
-        // Create Course_Lesson relationship
-        Course_Lesson courseLesson = new Course_Lesson();
-        courseLesson.setCourse(test1Course);
-        courseLesson.setLesson(lesson);
-        courseLessonRepository.save(courseLesson);
+        Course_Lesson test1P1 = new Course_Lesson();
+        test1P1.setCourse(test1Course);
+        test1P1.setLesson(part1Paper1);
+        courseLessonRepository.save(test1P1);
 
         // Create 10 questions for each lesson
-        createQuestionsForLesson(lesson);
+        createQuestionsForPart1Paper1(part1Paper1);
 
-        System.out.println(">>> END SEEDING: Present Simple Course");
+        Lesson part2Paper1 = new Lesson();
+        part2Paper1.setName("Paper 1: Reading and Writing - Part 2");
+        part2Paper1.setSkillType(SkillTypeEnum.READING);
+        part2Paper1.setSumQues(5);
+        part2Paper1.setCreateBy("admin");
+        part2Paper1 = lessonRepository.save(part2Paper1);
+
+        Course_Lesson test2P1 = new Course_Lesson();
+        test2P1.setCourse(test1Course);
+        test2P1.setLesson(part2Paper1);
+        courseLessonRepository.save(test2P1);
+
+        // Create 10 questions for each lesson
+        createQuestionsForPart2Paper1(part2Paper1);
+
+        System.out.println(">>> END SEEDING: Cambridge Key English Test (KET1) - Test 1");
     }
 
-    private void createQuestionsForLesson(Lesson lesson) {
-        QuestionTypeEnum[] questionTypes = { QuestionTypeEnum.CHOICE, QuestionTypeEnum.MULTIPLE,
-                QuestionTypeEnum.TEXT };
-        String[] questions;
+    private void createQuestionsForPart1Paper1(Lesson lesson) {
 
-        switch (lesson.getName()) {
-            case "Affirmative Sentences":
-                questions = new String[] {
-                        "Complete the sentence: He ___ to school every day.",
-                        "Choose the correct form: I ___ English.",
-                        "Fill in: The sun ___ in the east.",
-                        "Select the right form: She ___ coffee in the morning.",
-                        "Complete: Water ___ at 100 degrees Celsius.",
-                        "Choose correct form: Birds ___ in the sky.",
-                        "Fill blank: Time ___ fast.",
-                        "Select: My father ___ as a doctor.",
-                        "Complete: The Earth ___ around the sun.",
-                        "Choose: This shop ___ at 9 AM."
-                };
-                break;
-            case "Negative Sentences":
-                questions = new String[] {
-                        "Complete: He ___ not like spicy food.",
-                        "Fill in: I ___ not speak Japanese.",
-                        "Choose: She ___ not drink tea.",
-                        "Select: They ___ not work on Sundays.",
-                        "Complete: It ___ not snow in summer here.",
-                        "Fill blank: We ___ not eat meat.",
-                        "Choose form: The baby ___ not sleep well.",
-                        "Select: The store ___ not open on holidays.",
-                        "Complete: He ___ not drive to work.",
-                        "Fill: The museum ___ not allow photos."
-                };
-                break;
-            case "Interrogative Sentences":
-                questions = new String[] {
-                        "___ you speak English?",
-                        "___ she like chocolate?",
-                        "___ they live in London?",
-                        "___ he work at night?",
-                        "___ it rain often here?",
-                        "___ we need to bring books?",
-                        "___ the library open today?",
-                        "___ this bus go to the city center?",
-                        "___ your parents travel often?",
-                        "___ the movie start at 8PM?"
-                };
-                break;
-            case "Special Forms":
-                questions = new String[] {
-                        "Third person singular: He/She/It ___ (study)",
-                        "Verbs ending in -o: He ___ (go)",
-                        "Verbs ending in -ch: She ___ (teach)",
-                        "Verbs ending in -sh: It ___ (wash)",
-                        "Verbs ending in -ss: He ___ (pass)",
-                        "Verbs with y->ies: She ___ (try)",
-                        "Irregular verbs: He ___ (have)",
-                        "Special verb 'be': I ___ (be)",
-                        "Special verb 'do': He ___ (do)",
-                        "Have/Has usage: She ___ (have)"
-                };
-                break;
-            default: // Comprehensive Practice
-                questions = new String[] {
-                        "Transform to negative: He plays tennis.",
-                        "Make a question: They work hard.",
-                        "Correct form: The sun (rise) every day.",
-                        "Negative form: She drinks coffee.",
-                        "Question form: It costs $5.",
-                        "Third person: He (study) English.",
-                        "Complete: We (not/go) to school on Sundays.",
-                        "Question: You (like) pizza?",
-                        "Correct: She (do) homework every day.",
-                        "Transform: They (not/speak) Chinese."
-                };
-        }
+        Question ques1 = new Question();
+        ques1.setQuesContent("You can't drive this way.");
+        ques1.setSkillType(SkillTypeEnum.READING);
+        ques1.setQuesType(QuestionTypeEnum.TEXT);
+        ques1.setPoint(10);
+        ques1.setCreateBy("admin");
+        ques1 = questionRepository.save(ques1);
 
-        for (int i = 0; i < 10; i++) {
-            Question question = new Question();
-            question.setQuesContent(questions[i]);
-            question.setSkillType(SkillTypeEnum.READING);
-            question.setQuesType(questionTypes[i % 3]); // Rotate through question types
-            question.setPoint(10);
-            question = questionRepository.save(question);
+        Question_Choice ques1Choice1 = new Question_Choice();
+        ques1Choice1.setChoiceContent("F");
+        ques1Choice1.setChoiceKey(true);
+        questionChoiceRepository.save(ques1Choice1);
 
-            // Add choices for CHOICE and MULTIPLE type questions
-            if (question.getQuesType() == QuestionTypeEnum.CHOICE ||
-                    question.getQuesType() == QuestionTypeEnum.MULTIPLE) {
-                createChoicesForQuestion(question);
-            }
+        Lesson_Question ques1les = new Lesson_Question();
+        ques1les.setLesson(lesson);
+        ques1les.setQuestion(ques1);
+        lessonQuestionRepository.save(ques1les);
 
-            // Create Lesson_Question relationship
-            Lesson_Question lessonQuestion = new Lesson_Question();
-            lessonQuestion.setLesson(lesson);
-            lessonQuestion.setQuestion(question);
-            lessonQuestionRepository.save(lessonQuestion);
-        }
+        Question ques2 = new Question();
+        ques2.setQuesContent("Children do not have to pay.");
+        ques2.setSkillType(SkillTypeEnum.READING);
+        ques2.setQuesType(QuestionTypeEnum.TEXT);
+        ques2.setPoint(10);
+        ques2.setCreateBy("admin");
+        ques2 = questionRepository.save(ques2);
+
+        Question_Choice ques2Choice1 = new Question_Choice();
+        ques2Choice1.setChoiceContent("A");
+        ques2Choice1.setChoiceKey(true);
+        questionChoiceRepository.save(ques2Choice1);
+
+        Lesson_Question ques2les = new Lesson_Question();
+        ques2les.setLesson(lesson);
+        ques2les.setQuestion(ques1);
+        lessonQuestionRepository.save(ques2les);
+
     }
 
-    private void createChoicesForQuestion(Question question) {
-        String[] choices = new String[4];
-        boolean[] isCorrect = new boolean[4];
-
-        // Set choices based on question content
-        if (question.getQuesContent().contains("___")) {
-            // For fill in the blank questions
-            switch (question.getQuesContent().split("___")[0].trim()) {
-                case "He":
-                case "She":
-                case "It":
-                    choices = new String[] { "goes", "go", "going", "went" };
-                    isCorrect = new boolean[] { true, false, false, false };
-                    break;
-                case "I":
-                case "You":
-                case "We":
-                case "They":
-                    choices = new String[] { "go", "goes", "going", "went" };
-                    isCorrect = new boolean[] { true, false, false, false };
-                    break;
-                default:
-                    choices = new String[] { "do", "does", "did", "doing" };
-                    isCorrect = new boolean[] { true, false, false, false };
-            }
-        }
-
-        // Save choices
-        for (int i = 0; i < 4; i++) {
-            Question_Choice choice = new Question_Choice();
-            choice.setQuestion(question);
-            choice.setChoiceContent(choices[i]);
-            choice.setChoiceKey(isCorrect[i]);
-            questionChoiceRepository.save(choice);
-        }
+    private void createQuestionsForPart2Paper1(Lesson lesson) {
     }
 }
