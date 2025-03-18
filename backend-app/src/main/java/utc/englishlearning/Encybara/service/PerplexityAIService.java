@@ -228,27 +228,14 @@ public class PerplexityAIService {
 
             String promptContent = String.format(
                     """
-                            As an English teacher, help a student understand how to answer this question.
+                            As an English teacher, provide a concise sample answer for this question.
                             Follow this exact format without any deviations:
 
                             Question: %s
                             Context: %s
 
-                            Key Points:
-                            key point in English
-
-                            Sample Structure:
-                            Sample answer in English
-
-                            Tips:
-                            1. First tip in English
-                            2. Second tip in English
-                            3. Third tip in English
-
-                            Rules:
-                            1. Keep each section's format exactly as shown above
-                            2. Use simple numbered lists (1., 2., 3.)
-                            3. No special formatting or symbols (bold, italics, etc.)""",
+                            Sample answer:
+                            (Write a brief, well-structured answer in English)""",
                     question, prompt);
 
             body.put("messages", List.of(
@@ -314,68 +301,9 @@ public class PerplexityAIService {
     private PerplexitySuggestionResponse parseSuggestionResponse(String content) {
         try {
             log.debug("Parsing suggestion response content: {}", content);
-            // Split content into sections using section headers
-            String[] sections = content.split("(?=Key Points:|Sample Structure:|Tips:)");
-
-            // Initialize section content
-            String keyPointsStr = "";
-            String sampleStructureStr = "";
-            String tipsStr = "";
-
-            // Process each section
-            for (String section : sections) {
-                section = section.trim();
-                if (section.isEmpty() || section.startsWith("Question:") || section.startsWith("Context:") ||
-                        section.startsWith("IMPORTANT:")) {
-                    continue;
-                }
-
-                // Extract and clean section content
-                String cleanContent = section.replaceAll("\\s+", " ").trim();
-
-                if (section.startsWith("Key Points:")) {
-                    keyPointsStr = cleanContent.substring("Key Points:".length()).trim();
-                } else if (section.startsWith("Sample Structure:")) {
-                    sampleStructureStr = cleanContent.substring("Sample Structure:".length()).trim();
-                } else if (section.startsWith("Tips:")) {
-                    tipsStr = cleanContent.substring("Tips:".length()).trim();
-                }
-            }
-
-            // Log raw content for debugging
-            log.debug("Raw sections - KeyPoints: {}", keyPointsStr);
-            log.debug("Raw sections - SampleStructure: {}", sampleStructureStr);
-            log.debug("Raw sections - Tips: {}", tipsStr);
-
-            // Ensure we have at least some content
-            if (keyPointsStr.isEmpty() && sampleStructureStr.isEmpty() && tipsStr.isEmpty()) {
-                log.error("No valid content found in response: {}", content);
-                throw new PerplexityException("Failed to parse response: no valid content found",
-                        HttpStatus.INTERNAL_SERVER_ERROR.value());
-            }
-
-            // Use empty placeholder if section is missing
-            if (keyPointsStr.isEmpty()) {
-                keyPointsStr = "No key points provided";
-                log.warn("Key points section missing in response");
-            }
-            if (sampleStructureStr.isEmpty()) {
-                sampleStructureStr = "No sample structure provided";
-                log.warn("Sample structure section missing in response");
-            }
-            if (tipsStr.isEmpty()) {
-                tipsStr = "No tips provided";
-                log.warn("Tips section missing in response");
-            }
-
-            // Log the parsed sections for debugging
-            log.debug("Parsed sections - KeyPoints: {} chars, SampleStructure: {} chars, Tips: {} chars",
-                    keyPointsStr.length(), sampleStructureStr.length(), tipsStr.length());
 
             return PerplexitySuggestionResponse.builder()
-                    .keyPoints(keyPointsStr)
-                    .sampleAnswer(sampleStructureStr)
-                    .tips(tipsStr)
+                    .sampleAnswer(content.trim())
                     .build();
 
         } catch (Exception e) {
