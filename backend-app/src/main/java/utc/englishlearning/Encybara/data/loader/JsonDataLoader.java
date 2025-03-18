@@ -1,5 +1,6 @@
 package utc.englishlearning.Encybara.data.loader;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
@@ -9,159 +10,90 @@ import utc.englishlearning.Encybara.util.constant.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @Component
 public class JsonDataLoader {
     private final ObjectMapper objectMapper;
+    private final String DATA_PATH = "data/ket1/";
 
     public JsonDataLoader() {
         this.objectMapper = new ObjectMapper();
     }
 
-    public CourseData loadCourseData(String jsonPath) throws IOException {
-        try (InputStream is = new ClassPathResource(jsonPath).getInputStream()) {
-            return objectMapper.readValue(is, CourseData.class);
+    public List<Course> loadCourses() throws IOException {
+        try (InputStream is = new ClassPathResource(DATA_PATH + "courses.json").getInputStream()) {
+            return objectMapper.readValue(is, new TypeReference<List<Course>>() {
+            });
         }
     }
 
-    // Data classes to map JSON structure
-    public static class CourseData {
-        private String name;
-        private String intro;
-        private Double diffLevel;
-        private Double recomLevel;
-        private String courseType;
-        private Integer numLike;
-        private String courseStatus;
-        private Integer sumLesson;
-        private String group;
-        private String specialField;
-        private String createBy;
-        private List<LessonData> lessons;
+    public Map<String, Lesson> loadLessons() throws IOException {
+        try (InputStream is = new ClassPathResource(DATA_PATH + "lessons.json").getInputStream()) {
+            List<LessonData> lessonDataList = objectMapper.readValue(is, new TypeReference<List<LessonData>>() {
+            });
+            Map<String, Lesson> lessonMap = new HashMap<>();
 
-        // Getters and setters
-        public String getName() {
-            return name;
-        }
+            for (LessonData data : lessonDataList) {
+                Lesson lesson = new Lesson();
+                lesson.setName(data.getName());
+                lesson.setSkillType(SkillTypeEnum.valueOf(data.getSkillType()));
+                lesson.setSumQues(data.getSumQues());
+                lesson.setCreateBy(data.getCreateBy());
+                lessonMap.put(data.getId(), lesson);
+            }
 
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getIntro() {
-            return intro;
-        }
-
-        public void setIntro(String intro) {
-            this.intro = intro;
-        }
-
-        public Double getDiffLevel() {
-            return diffLevel;
-        }
-
-        public void setDiffLevel(Double diffLevel) {
-            this.diffLevel = diffLevel;
-        }
-
-        public Double getRecomLevel() {
-            return recomLevel;
-        }
-
-        public void setRecomLevel(Double recomLevel) {
-            this.recomLevel = recomLevel;
-        }
-
-        public String getCourseType() {
-            return courseType;
-        }
-
-        public void setCourseType(String courseType) {
-            this.courseType = courseType;
-        }
-
-        public Integer getNumLike() {
-            return numLike;
-        }
-
-        public void setNumLike(Integer numLike) {
-            this.numLike = numLike;
-        }
-
-        public String getCourseStatus() {
-            return courseStatus;
-        }
-
-        public void setCourseStatus(String courseStatus) {
-            this.courseStatus = courseStatus;
-        }
-
-        public Integer getSumLesson() {
-            return sumLesson;
-        }
-
-        public void setSumLesson(Integer sumLesson) {
-            this.sumLesson = sumLesson;
-        }
-
-        public String getGroup() {
-            return group;
-        }
-
-        public void setGroup(String group) {
-            this.group = group;
-        }
-
-        public String getSpecialField() {
-            return specialField;
-        }
-
-        public void setSpecialField(String specialField) {
-            this.specialField = specialField;
-        }
-
-        public String getCreateBy() {
-            return createBy;
-        }
-
-        public void setCreateBy(String createBy) {
-            this.createBy = createBy;
-        }
-
-        public List<LessonData> getLessons() {
-            return lessons;
-        }
-
-        public void setLessons(List<LessonData> lessons) {
-            this.lessons = lessons;
-        }
-
-        // Convert to domain object
-        public Course toCourse() {
-            Course course = new Course();
-            course.setName(name);
-            course.setIntro(intro);
-            course.setDiffLevel(diffLevel);
-            course.setRecomLevel(recomLevel);
-            course.setCourseType(CourseTypeEnum.valueOf(courseType));
-            course.setNumLike(numLike);
-            course.setCourseStatus(CourseStatusEnum.valueOf(courseStatus));
-            course.setSumLesson(sumLesson);
-            course.setGroup(group);
-            course.setSpeciField(SpecialFieldEnum.valueOf(specialField));
-            course.setCreateBy(createBy);
-            return course;
+            return lessonMap;
         }
     }
 
-    public static class LessonData {
+    public Map<String, Question> loadQuestions() throws IOException {
+        try (InputStream is = new ClassPathResource(DATA_PATH + "questions.json").getInputStream()) {
+            List<QuestionData> questionDataList = objectMapper.readValue(is, new TypeReference<List<QuestionData>>() {
+            });
+            Map<String, Question> questionMap = new HashMap<>();
+
+            for (QuestionData data : questionDataList) {
+                Question question = new Question();
+                question.setQuesContent(data.getQuesContent());
+                question.setSkillType(SkillTypeEnum.valueOf(data.getSkillType()));
+                question.setQuesType(QuestionTypeEnum.valueOf(data.getQuesType()));
+                question.setPoint(data.getPoint());
+                question.setCreateBy(data.getCreateBy());
+                questionMap.put(data.getId(), question);
+
+                // Create choices for the question
+                for (ChoiceData choiceData : data.getChoices()) {
+                    Question_Choice choice = new Question_Choice();
+                    choice.setChoiceContent(choiceData.getContent());
+                    choice.setChoiceKey(choiceData.getIsCorrect());
+                    choice.setQuestion(question);
+                }
+            }
+
+            return questionMap;
+        }
+    }
+
+    // Simple data classes for JSON mapping
+    private static class LessonData {
+        private String id;
         private String name;
         private String skillType;
         private Integer sumQues;
         private String createBy;
-        private List<QuestionData> questions;
+        private List<String> questionIds;
 
         // Getters and setters
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
         public String getName() {
             return name;
         }
@@ -194,26 +126,17 @@ public class JsonDataLoader {
             this.createBy = createBy;
         }
 
-        public List<QuestionData> getQuestions() {
-            return questions;
+        public List<String> getQuestionIds() {
+            return questionIds;
         }
 
-        public void setQuestions(List<QuestionData> questions) {
-            this.questions = questions;
-        }
-
-        // Convert to domain object
-        public Lesson toLesson() {
-            Lesson lesson = new Lesson();
-            lesson.setName(name);
-            lesson.setSkillType(SkillTypeEnum.valueOf(skillType));
-            lesson.setSumQues(sumQues);
-            lesson.setCreateBy(createBy);
-            return lesson;
+        public void setQuestionIds(List<String> questionIds) {
+            this.questionIds = questionIds;
         }
     }
 
-    public static class QuestionData {
+    private static class QuestionData {
+        private String id;
         private String quesContent;
         private String skillType;
         private String quesType;
@@ -222,6 +145,14 @@ public class JsonDataLoader {
         private List<ChoiceData> choices;
 
         // Getters and setters
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
         public String getQuesContent() {
             return quesContent;
         }
@@ -269,20 +200,9 @@ public class JsonDataLoader {
         public void setChoices(List<ChoiceData> choices) {
             this.choices = choices;
         }
-
-        // Convert to domain object
-        public Question toQuestion() {
-            Question question = new Question();
-            question.setQuesContent(quesContent);
-            question.setSkillType(SkillTypeEnum.valueOf(skillType));
-            question.setQuesType(QuestionTypeEnum.valueOf(quesType));
-            question.setPoint(point);
-            question.setCreateBy(createBy);
-            return question;
-        }
     }
 
-    public static class ChoiceData {
+    private static class ChoiceData {
         private String content;
         private Boolean isCorrect;
 
@@ -301,14 +221,6 @@ public class JsonDataLoader {
 
         public void setIsCorrect(Boolean isCorrect) {
             this.isCorrect = isCorrect;
-        }
-
-        // Convert to domain object
-        public Question_Choice toChoice() {
-            Question_Choice choice = new Question_Choice();
-            choice.setChoiceContent(content);
-            choice.setChoiceKey(isCorrect);
-            return choice;
         }
     }
 }

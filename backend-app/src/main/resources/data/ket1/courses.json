@@ -1,0 +1,20 @@
+[
+    {
+        "id": "ket1-test1",
+        "name": "Cambridge Key English Test (KET1) - Test 1",
+        "intro": "(Level A1) Prepare for the Cambridge Key English Test (KET1) with comprehensive practice in reading, writing, listening, and speaking skills. This course covers all essential areas to help you succeed in the KET1 exam.",
+        "diffLevel": 1.0,
+        "recomLevel": 1.5,
+        "courseType": "ALLSKILLS",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 1,
+        "group": "KET1",
+        "specialField": "EVERYONE",
+        "createBy": "admin",
+        "lessonIds": [
+            "ket1-p1",
+            "ket1-p2"
+        ]
+    }
+]

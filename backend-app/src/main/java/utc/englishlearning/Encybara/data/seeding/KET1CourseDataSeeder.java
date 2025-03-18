@@ -5,7 +5,10 @@ import utc.englishlearning.Encybara.data.loader.JsonDataLoader;
 import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.repository.*;
 
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class KET1CourseDataSeeder {
@@ -34,58 +37,66 @@ public class KET1CourseDataSeeder {
         this.jsonDataLoader = jsonDataLoader;
     }
 
-    public void seedCourse() {
+    @PostConstruct
+    public void seedData() {
         try {
-            JsonDataLoader.CourseData courseData = jsonDataLoader.loadCourseData("data/ket1-course.json");
+            // Load all data first
+            List<Course> courses = jsonDataLoader.loadCourses();
+            Map<String, Lesson> lessonMap = jsonDataLoader.loadLessons();
+            Map<String, Question> questionMap = jsonDataLoader.loadQuestions();
 
-            Course existingCourse = courseRepository.findByName(courseData.getName());
-            if (existingCourse != null) {
-                System.out.println(">>> SKIP: " + courseData.getName() + " already exists");
-                return;
-            }
-
-            System.out.println(">>> START SEEDING: " + courseData.getName());
-
-            // Create and save course
-            Course course = courseData.toCourse();
-            course = courseRepository.save(course);
-
-            // Create and save lessons with questions
-            for (JsonDataLoader.LessonData lessonData : courseData.getLessons()) {
-                // Create and save lesson
-                Lesson lesson = lessonData.toLesson();
-                lesson = lessonRepository.save(lesson);
-
-                // Create course-lesson relationship
-                Course_Lesson courseLesson = new Course_Lesson();
-                courseLesson.setCourse(course);
-                courseLesson.setLesson(lesson);
-                courseLessonRepository.save(courseLesson);
-
-                // Create and save questions with choices
-                for (JsonDataLoader.QuestionData questionData : lessonData.getQuestions()) {
-                    // Create and save question
-                    Question question = questionData.toQuestion();
-                    question = questionRepository.save(question);
-
-                    // Create and save choices
-                    for (JsonDataLoader.ChoiceData choiceData : questionData.getChoices()) {
-                        Question_Choice choice = choiceData.toChoice();
-                        choice.setQuestion(question);
-                        questionChoiceRepository.save(choice);
-                    }
-
-                    // Create lesson-question relationship
-                    Lesson_Question lessonQuestion = new Lesson_Question();
-                    lessonQuestion.setLesson(lesson);
-                    lessonQuestion.setQuestion(question);
-                    lessonQuestionRepository.save(lessonQuestion);
+            for (Course course : courses) {
+                // Check if course already exists
+                Course existingCourse = courseRepository.findByName(course.getName());
+                if (existingCourse != null) {
+                    System.out.println(">>> SKIP: " + course.getName() + " already exists");
+                    continue;
                 }
-            }
 
-            System.out.println(">>> END SEEDING: " + courseData.getName());
+                System.out.println(">>> START SEEDING: " + course.getName());
+
+                // Save course
+                course = courseRepository.save(course);
+
+                // Save lessons and create relationships
+                for (Map.Entry<String, Lesson> entry : lessonMap.entrySet()) {
+                    Lesson lesson = entry.getValue();
+
+                    // Save lesson
+                    lesson = lessonRepository.save(lesson);
+
+                    // Create course-lesson relationship
+                    Course_Lesson courseLesson = new Course_Lesson();
+                    courseLesson.setCourse(course);
+                    courseLesson.setLesson(lesson);
+                    courseLessonRepository.save(courseLesson);
+
+                    // Find corresponding questions for this lesson from JSON data
+                    String lessonId = entry.getKey();
+                    for (Map.Entry<String, Question> qEntry : questionMap.entrySet()) {
+                        Question question = qEntry.getValue();
+
+                        // Save question
+                        question = questionRepository.save(question);
+
+                        // Create lesson-question relationship
+                        Lesson_Question lessonQuestion = new Lesson_Question();
+                        lessonQuestion.setLesson(lesson);
+                        lessonQuestion.setQuestion(question);
+                        lessonQuestionRepository.save(lessonQuestion);
+
+                        // Save question choices
+                        for (Question_Choice choice : question.getQuestionChoices()) {
+                            choice.setQuestion(question);
+                            questionChoiceRepository.save(choice);
+                        }
+                    }
+                }
+
+                System.out.println(">>> END SEEDING: " + course.getName());
+            }
         } catch (IOException e) {
-            System.err.println("Error loading course data: " + e.getMessage());
+            System.err.println("Error seeding KET1 course data: " + e.getMessage());
             e.printStackTrace();
         }
     }
