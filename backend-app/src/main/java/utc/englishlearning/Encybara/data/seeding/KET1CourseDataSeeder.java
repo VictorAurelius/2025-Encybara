@@ -6,6 +6,7 @@ import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.repository.*;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +29,8 @@ public class KET1CourseDataSeeder {
             CourseLessonRepository courseLessonRepository,
             QuestionChoiceRepository questionChoiceRepository,
             LessonQuestionRepository lessonQuestionRepository,
-            JsonDataLoader jsonDataLoader) {
+            JsonDataLoader jsonDataLoader,
+            ObjectMapper objectMapper) {
         this.courseRepository = courseRepository;
         this.lessonRepository = lessonRepository;
         this.questionRepository = questionRepository;
@@ -36,7 +38,7 @@ public class KET1CourseDataSeeder {
         this.questionChoiceRepository = questionChoiceRepository;
         this.lessonQuestionRepository = lessonQuestionRepository;
         this.jsonDataLoader = jsonDataLoader;
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = objectMapper;
     }
 
     @SuppressWarnings("unchecked")
@@ -58,6 +60,7 @@ public class KET1CourseDataSeeder {
                 System.out.println(">>> START SEEDING: " + course.getName());
 
                 // Save course
+                course.setCreateAt(Instant.now());
                 course = courseRepository.save(course);
 
                 // Get lesson names from course JSON
@@ -71,6 +74,7 @@ public class KET1CourseDataSeeder {
                         continue;
 
                     // Save lesson
+                    lesson.setCreateAt(Instant.now());
                     lesson = lessonRepository.save(lesson);
 
                     // Create course-lesson relationship

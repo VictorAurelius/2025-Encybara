@@ -20,8 +20,8 @@ public class JsonDataLoader {
     private final ObjectMapper objectMapper;
     private final String DATA_PATH = "data/ket1/";
 
-    public JsonDataLoader() {
-        this.objectMapper = new ObjectMapper();
+    public JsonDataLoader(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
         // Bỏ qua các trường không khớp với entity
         this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
