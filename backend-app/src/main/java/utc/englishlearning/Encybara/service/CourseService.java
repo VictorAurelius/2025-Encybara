@@ -9,6 +9,8 @@ import utc.englishlearning.Encybara.domain.Course;
 import utc.englishlearning.Encybara.domain.Lesson;
 import utc.englishlearning.Encybara.domain.Course_Lesson;
 import utc.englishlearning.Encybara.util.constant.CourseStatusEnum;
+import utc.englishlearning.Encybara.util.constant.CourseTypeEnum;
+import utc.englishlearning.Encybara.util.constant.SpecialFieldEnum;
 import utc.englishlearning.Encybara.domain.request.course.ReqAddLessonsToCourseDTO;
 import utc.englishlearning.Encybara.domain.request.course.ReqCreateCourseDTO;
 import utc.englishlearning.Encybara.domain.request.course.ReqUpdateCourseDTO;
@@ -161,6 +163,42 @@ public class CourseService {
     public Page<ResCourseDTO> getCoursesByGroup(String group, Pageable pageable) {
         return courseRepository.findByGroup(group, pageable)
                 .map(this::convertToDTO);
+    }
+
+    public Page<ResCourseDTO> getAllCourses(String name, Double diffLevel, Double recomLevel,
+            String courseType, String speciField, String group,
+            String courseStatus, Pageable pageable) {
+        // Convert string enum values to enum types if provided
+        CourseTypeEnum courseTypeEnum = null;
+        if (courseType != null && !courseType.isEmpty()) {
+            try {
+                courseTypeEnum = CourseTypeEnum.valueOf(courseType.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Invalid enum value, will be ignored in filtering
+            }
+        }
+
+        SpecialFieldEnum speciFieldEnum = null;
+        if (speciField != null && !speciField.isEmpty()) {
+            try {
+                speciFieldEnum = SpecialFieldEnum.valueOf(speciField.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Invalid enum value, will be ignored in filtering
+            }
+        }
+
+        CourseStatusEnum courseStatusEnum = null;
+        if (courseStatus != null && !courseStatus.isEmpty()) {
+            try {
+                courseStatusEnum = CourseStatusEnum.valueOf(courseStatus.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Invalid enum value, will be ignored in filtering
+            }
+        }
+
+        return courseRepository.findCoursesWithFilters(
+                name, diffLevel, recomLevel, courseTypeEnum, speciFieldEnum,
+                group, courseStatusEnum, pageable).map(this::convertToDTO);
     }
 
     private ResCourseDTO convertToDTO(Course course) {

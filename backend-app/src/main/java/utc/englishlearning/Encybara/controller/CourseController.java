@@ -54,8 +54,17 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<RestResponse<Page<ResCourseDTO>>> getAllCourses(Pageable pageable) {
-        Page<ResCourseDTO> courses = courseService.getAllCourses(pageable);
+    public ResponseEntity<RestResponse<Page<ResCourseDTO>>> getAllCourses(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "diffLevel", required = false) Double diffLevel,
+            @RequestParam(value = "recomLevel", required = false) Double recomLevel,
+            @RequestParam(value = "courseType", required = false) String courseType,
+            @RequestParam(value = "speciField", required = false) String speciField,
+            @RequestParam(value = "group", required = false) String group,
+            @RequestParam(value = "courseStatus", required = false) String courseStatus,
+            Pageable pageable) {
+        Page<ResCourseDTO> courses = courseService.getAllCourses(name, diffLevel, recomLevel,
+                courseType, speciField, group, courseStatus, pageable);
         RestResponse<Page<ResCourseDTO>> response = new RestResponse<>();
         response.setStatusCode(200);
         response.setMessage("Courses retrieved successfully");
