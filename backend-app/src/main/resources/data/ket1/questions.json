@@ -1,6 +1,5 @@
 [
     {
-        "id": "q1",
         "quesContent": "You can't drive this way.",
         "skillType": "READING",
         "quesType": "TEXT",
@@ -14,7 +13,6 @@
         ]
     },
     {
-        "id": "q2",
         "quesContent": "Children do not have to pay.",
         "skillType": "READING",
         "quesType": "TEXT",

@@ -1,21 +1,19 @@
 [
     {
-        "id": "ket1-p1",
         "name": "Paper 1: Reading and Writing - Part 1",
         "skillType": "READING",
         "sumQues": 5,
         "createBy": "admin",
-        "questionIds": [
-            "q1",
-            "q2"
+        "questionContents": [
+            "You can't drive this way.",
+            "Children do not have to pay."
         ]
     },
     {
-        "id": "ket1-p2",
         "name": "Paper 1: Reading and Writing - Part 2",
         "skillType": "READING",
         "sumQues": 5,
         "createBy": "admin",
-        "questionIds": []
+        "questionContents": []
     }
 ]

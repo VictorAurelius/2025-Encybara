@@ -5,7 +5,6 @@ import utc.englishlearning.Encybara.data.loader.JsonDataLoader;
 import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.repository.*;
 
-import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -37,13 +36,12 @@ public class KET1CourseDataSeeder {
         this.jsonDataLoader = jsonDataLoader;
     }
 
-    @PostConstruct
-    public void seedData() {
+    public void seedCourse() {
         try {
             // Load all data first
             List<Course> courses = jsonDataLoader.loadCourses();
-            Map<String, Lesson> lessonMap = jsonDataLoader.loadLessons();
-            Map<String, Question> questionMap = jsonDataLoader.loadQuestions();
+            Map<String, Lesson> lessonsByName = jsonDataLoader.loadLessons();
+            Map<String, Question> questionsByContent = jsonDataLoader.loadQuestions();
 
             for (Course course : courses) {
                 // Check if course already exists
@@ -59,7 +57,7 @@ public class KET1CourseDataSeeder {
                 course = courseRepository.save(course);
 
                 // Save lessons and create relationships
-                for (Map.Entry<String, Lesson> entry : lessonMap.entrySet()) {
+                for (Map.Entry<String, Lesson> entry : lessonsByName.entrySet()) {
                     Lesson lesson = entry.getValue();
 
                     // Save lesson
@@ -71,9 +69,8 @@ public class KET1CourseDataSeeder {
                     courseLesson.setLesson(lesson);
                     courseLessonRepository.save(courseLesson);
 
-                    // Find corresponding questions for this lesson from JSON data
-                    String lessonId = entry.getKey();
-                    for (Map.Entry<String, Question> qEntry : questionMap.entrySet()) {
+                    // Create and link questions
+                    for (Map.Entry<String, Question> qEntry : questionsByContent.entrySet()) {
                         Question question = qEntry.getValue();
 
                         // Save question

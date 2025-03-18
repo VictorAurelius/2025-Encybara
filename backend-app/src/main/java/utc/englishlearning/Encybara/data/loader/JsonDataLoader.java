@@ -1,6 +1,7 @@
 package utc.englishlearning.Encybara.data.loader;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,8 @@ public class JsonDataLoader {
 
     public JsonDataLoader() {
         this.objectMapper = new ObjectMapper();
+        // Bỏ qua các trường không khớp với entity
+        this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public List<Course> loadCourses() throws IOException {
@@ -31,17 +34,19 @@ public class JsonDataLoader {
 
     public Map<String, Lesson> loadLessons() throws IOException {
         try (InputStream is = new ClassPathResource(DATA_PATH + "lessons.json").getInputStream()) {
-            List<LessonData> lessonDataList = objectMapper.readValue(is, new TypeReference<List<LessonData>>() {
-            });
+            List<Map<String, Object>> lessonDataList = objectMapper.readValue(is,
+                    new TypeReference<List<Map<String, Object>>>() {
+                    });
             Map<String, Lesson> lessonMap = new HashMap<>();
 
-            for (LessonData data : lessonDataList) {
+            for (Map<String, Object> data : lessonDataList) {
+                String name = (String) data.get("name");
                 Lesson lesson = new Lesson();
-                lesson.setName(data.getName());
-                lesson.setSkillType(SkillTypeEnum.valueOf(data.getSkillType()));
-                lesson.setSumQues(data.getSumQues());
-                lesson.setCreateBy(data.getCreateBy());
-                lessonMap.put(data.getId(), lesson);
+                lesson.setName(name);
+                lesson.setSkillType(SkillTypeEnum.valueOf((String) data.get("skillType")));
+                lesson.setSumQues((Integer) data.get("sumQues"));
+                lesson.setCreateBy((String) data.get("createBy"));
+                lessonMap.put(name, lesson);
             }
 
             return lessonMap;
@@ -50,177 +55,34 @@ public class JsonDataLoader {
 
     public Map<String, Question> loadQuestions() throws IOException {
         try (InputStream is = new ClassPathResource(DATA_PATH + "questions.json").getInputStream()) {
-            List<QuestionData> questionDataList = objectMapper.readValue(is, new TypeReference<List<QuestionData>>() {
-            });
+            List<Map<String, Object>> questionDataList = objectMapper.readValue(is,
+                    new TypeReference<List<Map<String, Object>>>() {
+                    });
             Map<String, Question> questionMap = new HashMap<>();
 
-            for (QuestionData data : questionDataList) {
+            for (Map<String, Object> data : questionDataList) {
+                String content = (String) data.get("quesContent");
                 Question question = new Question();
-                question.setQuesContent(data.getQuesContent());
-                question.setSkillType(SkillTypeEnum.valueOf(data.getSkillType()));
-                question.setQuesType(QuestionTypeEnum.valueOf(data.getQuesType()));
-                question.setPoint(data.getPoint());
-                question.setCreateBy(data.getCreateBy());
-                questionMap.put(data.getId(), question);
+                question.setQuesContent(content);
+                question.setSkillType(SkillTypeEnum.valueOf((String) data.get("skillType")));
+                question.setQuesType(QuestionTypeEnum.valueOf((String) data.get("quesType")));
+                question.setPoint((Integer) data.get("point"));
+                question.setCreateBy((String) data.get("createBy"));
 
-                // Create choices for the question
-                for (ChoiceData choiceData : data.getChoices()) {
+                // Create choices
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> choices = (List<Map<String, Object>>) data.get("choices");
+                for (Map<String, Object> choiceData : choices) {
                     Question_Choice choice = new Question_Choice();
-                    choice.setChoiceContent(choiceData.getContent());
-                    choice.setChoiceKey(choiceData.getIsCorrect());
+                    choice.setChoiceContent((String) choiceData.get("content"));
+                    choice.setChoiceKey((Boolean) choiceData.get("isCorrect"));
                     choice.setQuestion(question);
                 }
+
+                questionMap.put(content, question);
             }
 
             return questionMap;
-        }
-    }
-
-    // Simple data classes for JSON mapping
-    private static class LessonData {
-        private String id;
-        private String name;
-        private String skillType;
-        private Integer sumQues;
-        private String createBy;
-        private List<String> questionIds;
-
-        // Getters and setters
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getSkillType() {
-            return skillType;
-        }
-
-        public void setSkillType(String skillType) {
-            this.skillType = skillType;
-        }
-
-        public Integer getSumQues() {
-            return sumQues;
-        }
-
-        public void setSumQues(Integer sumQues) {
-            this.sumQues = sumQues;
-        }
-
-        public String getCreateBy() {
-            return createBy;
-        }
-
-        public void setCreateBy(String createBy) {
-            this.createBy = createBy;
-        }
-
-        public List<String> getQuestionIds() {
-            return questionIds;
-        }
-
-        public void setQuestionIds(List<String> questionIds) {
-            this.questionIds = questionIds;
-        }
-    }
-
-    private static class QuestionData {
-        private String id;
-        private String quesContent;
-        private String skillType;
-        private String quesType;
-        private Integer point;
-        private String createBy;
-        private List<ChoiceData> choices;
-
-        // Getters and setters
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getQuesContent() {
-            return quesContent;
-        }
-
-        public void setQuesContent(String quesContent) {
-            this.quesContent = quesContent;
-        }
-
-        public String getSkillType() {
-            return skillType;
-        }
-
-        public void setSkillType(String skillType) {
-            this.skillType = skillType;
-        }
-
-        public String getQuesType() {
-            return quesType;
-        }
-
-        public void setQuesType(String quesType) {
-            this.quesType = quesType;
-        }
-
-        public Integer getPoint() {
-            return point;
-        }
-
-        public void setPoint(Integer point) {
-            this.point = point;
-        }
-
-        public String getCreateBy() {
-            return createBy;
-        }
-
-        public void setCreateBy(String createBy) {
-            this.createBy = createBy;
-        }
-
-        public List<ChoiceData> getChoices() {
-            return choices;
-        }
-
-        public void setChoices(List<ChoiceData> choices) {
-            this.choices = choices;
-        }
-    }
-
-    private static class ChoiceData {
-        private String content;
-        private Boolean isCorrect;
-
-        // Getters and setters
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-
-        public Boolean getIsCorrect() {
-            return isCorrect;
-        }
-
-        public void setIsCorrect(Boolean isCorrect) {
-            this.isCorrect = isCorrect;
         }
     }
 }
