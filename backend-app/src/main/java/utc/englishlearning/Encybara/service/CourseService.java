@@ -43,6 +43,7 @@ public class CourseService {
         course.setRecomLevel(reqCreateCourseDTO.getRecomLevel());
         course.setCourseType(reqCreateCourseDTO.getCourseType());
         course.setSpeciField(reqCreateCourseDTO.getSpeciField());
+        course.setGroup(reqCreateCourseDTO.getGroup());
         course.setCourseStatus(CourseStatusEnum.PENDING); // Set initial status as PENDING
         course = courseRepository.save(course);
         return convertToDTO(course);
@@ -57,6 +58,7 @@ public class CourseService {
         course.setRecomLevel(reqUpdateCourseDTO.getRecomLevel());
         course.setCourseType(reqUpdateCourseDTO.getCourseType());
         course.setSpeciField(reqUpdateCourseDTO.getSpeciField());
+        course.setGroup(reqUpdateCourseDTO.getGroup());
         course = courseRepository.save(course);
         return convertToDTO(course);
     }
@@ -156,6 +158,13 @@ public class CourseService {
         courseRepository.save(course);
     }
 
+    public List<ResCourseDTO> getCoursesByGroup(String group) {
+        List<Course> courses = courseRepository.findByGroup(group);
+        return courses.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     private ResCourseDTO convertToDTO(Course course) {
         ResCourseDTO dto = new ResCourseDTO();
         dto.setId(course.getId());
@@ -171,6 +180,7 @@ public class CourseService {
         dto.setUpdateAt(course.getUpdateAt());
         dto.setSumLesson(course.getSumLesson());
         dto.setCourseStatus(course.getCourseStatus());
+        dto.setGroup(course.getGroup()); // Make sure this line is present
 
         List<Long> lessonIds = (course.getCourselessons() != null) ? course.getCourselessons().stream()
                 .map(cl -> cl.getLesson().getId())

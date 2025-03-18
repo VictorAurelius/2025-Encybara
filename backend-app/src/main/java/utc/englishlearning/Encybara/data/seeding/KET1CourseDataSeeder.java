@@ -50,28 +50,19 @@ public class KET1CourseDataSeeder {
         test1Course.setNumLike(0);
         test1Course = courseRepository.save(test1Course);
 
-        String[] lessonNames = {
-                "Paper 1 - READING",
-                "Paper 1 - WRITING",
-                "Paper 2 - LISTENING",
-                "Paper 3 - SPEAKING",
-        };
+        Lesson lesson = new Lesson();
+        lesson.setName("Paper 1: Reading and Writing - Part 1");
+        lesson.setSkillType(SkillTypeEnum.READING);
+        lesson = lessonRepository.save(lesson);
 
-        for (int i = 0; i < lessonNames.length; i++) {
-            Lesson lesson = new Lesson();
-            lesson.setName(lessonNames[i]);
-            lesson.setSkillType(SkillTypeEnum.READING);
-            lesson = lessonRepository.save(lesson);
+        // Create Course_Lesson relationship
+        Course_Lesson courseLesson = new Course_Lesson();
+        courseLesson.setCourse(test1Course);
+        courseLesson.setLesson(lesson);
+        courseLessonRepository.save(courseLesson);
 
-            // Create Course_Lesson relationship
-            Course_Lesson courseLesson = new Course_Lesson();
-            courseLesson.setCourse(test1Course);
-            courseLesson.setLesson(lesson);
-            courseLessonRepository.save(courseLesson);
-
-            // Create 10 questions for each lesson
-            createQuestionsForLesson(lesson);
-        }
+        // Create 10 questions for each lesson
+        createQuestionsForLesson(lesson);
 
         System.out.println(">>> END SEEDING: Present Simple Course");
     }

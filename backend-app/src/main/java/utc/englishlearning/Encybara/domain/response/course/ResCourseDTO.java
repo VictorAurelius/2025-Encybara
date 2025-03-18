@@ -26,4 +26,5 @@ public class ResCourseDTO {
     private Integer sumLesson;
     private List<Long> lessonIds;
     private CourseStatusEnum courseStatus;
+    private String group;
 }

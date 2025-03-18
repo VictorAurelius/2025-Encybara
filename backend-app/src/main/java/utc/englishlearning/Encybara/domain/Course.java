@@ -1,5 +1,6 @@
 package utc.englishlearning.Encybara.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -43,6 +44,8 @@ public class Course {
     private Instant updateAt;
     private CourseStatusEnum courseStatus;
     private Integer sumLesson;
+    @Column(name = "course_group") // Changed from 'group' to avoid SQL reserved keyword
+    private String group;
 
     @PrePersist
     public void handleBeforeCreate() {

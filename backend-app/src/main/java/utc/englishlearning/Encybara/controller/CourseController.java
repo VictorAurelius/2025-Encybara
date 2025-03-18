@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import utc.englishlearning.Encybara.domain.request.course.ReqCreateCourseDTO;
 import utc.englishlearning.Encybara.domain.request.course.ReqUpdateCourseDTO;
 import utc.englishlearning.Encybara.domain.response.course.ResCourseDTO;
@@ -58,6 +60,16 @@ public class CourseController {
         RestResponse<Page<ResCourseDTO>> response = new RestResponse<>();
         response.setStatusCode(200);
         response.setMessage("Courses retrieved successfully");
+        response.setData(courses);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/group/{group}")
+    public ResponseEntity<RestResponse<List<ResCourseDTO>>> getCoursesByGroup(@PathVariable("group") String group) {
+        List<ResCourseDTO> courses = courseService.getCoursesByGroup(group);
+        RestResponse<List<ResCourseDTO>> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Courses retrieved successfully by group");
         response.setData(courses);
         return ResponseEntity.ok(response);
     }

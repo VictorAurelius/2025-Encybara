@@ -14,4 +14,5 @@ public class ReqUpdateCourseDTO {
     private double recomLevel;
     private CourseTypeEnum courseType;
     private SpecialFieldEnum speciField;
+    private String group;
 }
