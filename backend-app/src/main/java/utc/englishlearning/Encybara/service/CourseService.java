@@ -158,11 +158,9 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    public List<ResCourseDTO> getCoursesByGroup(String group) {
-        List<Course> courses = courseRepository.findByGroup(group);
-        return courses.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public Page<ResCourseDTO> getCoursesByGroup(String group, Pageable pageable) {
+        return courseRepository.findByGroup(group, pageable)
+                .map(this::convertToDTO);
     }
 
     private ResCourseDTO convertToDTO(Course course) {
