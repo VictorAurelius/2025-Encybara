@@ -8,7 +8,7 @@ import utc.englishlearning.Encybara.util.constant.QuestionTypeEnum;
 import utc.englishlearning.Encybara.util.constant.SkillTypeEnum;
 
 @Service
-public class CourseDataSeeder {
+public class KET1CourseDataSeeder {
     private final CourseRepository courseRepository;
     private final LessonRepository lessonRepository;
     private final QuestionRepository questionRepository;
@@ -16,7 +16,7 @@ public class CourseDataSeeder {
     private final QuestionChoiceRepository questionChoiceRepository;
     private final LessonQuestionRepository lessonQuestionRepository;
 
-    public CourseDataSeeder(
+    public KET1CourseDataSeeder(
             CourseRepository courseRepository,
             LessonRepository lessonRepository,
             QuestionRepository questionRepository,

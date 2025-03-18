@@ -7,7 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.repository.*;
-import utc.englishlearning.Encybara.data.seeding.CourseDataSeeder;
+import utc.englishlearning.Encybara.data.seeding.KET1CourseDataSeeder;
 
 @Service
 public class AdminDataInitializer implements CommandLineRunner {
@@ -16,19 +16,19 @@ public class AdminDataInitializer implements CommandLineRunner {
     private final RoleRepository roleRepository;
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
-    private final CourseDataSeeder courseDataSeeder;
+    private final KET1CourseDataSeeder ket1CourseDataSeeder;
 
     public AdminDataInitializer(
             PermissionRepository permissionRepository,
             RoleRepository roleRepository,
             AdminRepository adminRepository,
             PasswordEncoder passwordEncoder,
-            CourseDataSeeder courseDataSeeder) {
+            KET1CourseDataSeeder courseDataSeeder) {
         this.permissionRepository = permissionRepository;
         this.roleRepository = roleRepository;
         this.adminRepository = adminRepository;
         this.passwordEncoder = passwordEncoder;
-        this.courseDataSeeder = courseDataSeeder;
+        this.ket1CourseDataSeeder = courseDataSeeder;
     }
 
     @Override
@@ -115,12 +115,12 @@ public class AdminDataInitializer implements CommandLineRunner {
         }
 
         if (countPermissions > 0 && countRoles > 0 && countAdmins > 0) {
-            System.out.println(">>> SKIP INIT DATABASE ~ ALREADY HAVE DATA...");
+            System.out.println(">>> SKIP INIT ADMIN CONFIG ~ ALREADY HAVE DATA...");
         } else {
-            System.out.println(">>> END INIT DATABASE");
+            System.out.println(">>> END INIT ADMIN CONFIG");
         }
 
         // Seed course data
-        courseDataSeeder.seedPresentSimpleCourse();
+        ket1CourseDataSeeder.seedPresentSimpleCourse();
     }
 }
