@@ -10,12 +10,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import utc.englishlearning.Encybara.util.SecurityUtil;
 import utc.englishlearning.Encybara.util.constant.SkillTypeEnum;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -56,13 +58,16 @@ public class Lesson {
 
     @OneToMany(mappedBy = "lesson", fetch = FetchType.LAZY)
     @JsonIgnore
-    List<Lesson_Result> lessonResults;
+    private List<Lesson_Result> lessonResults = new ArrayList<>();
 
     @OneToMany(mappedBy = "lesson", fetch = FetchType.LAZY)
     @JsonIgnore
-    List<Lesson_Question> lessonquestions;
+    private List<Lesson_Question> lessonquestions = new ArrayList<>();
 
     @OneToMany(mappedBy = "lesson", fetch = FetchType.LAZY)
     @JsonIgnore
-    List<Course_Lesson> courselesson;
+    private List<Course_Lesson> courselesson = new ArrayList<>();
+
+    @Transient
+    private List<String> questionContents = new ArrayList<>();
 }

@@ -1,7 +1,6 @@
 package utc.englishlearning.Encybara.data.loader;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
@@ -22,8 +21,6 @@ public class JsonDataLoader {
 
     public JsonDataLoader(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-        // Bỏ qua các trường không khớp với entity
-        this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public List<Course> loadCourses() throws IOException {
@@ -35,21 +32,12 @@ public class JsonDataLoader {
 
     public Map<String, Lesson> loadLessons() throws IOException {
         try (InputStream is = new ClassPathResource(DATA_PATH + "lessons.json").getInputStream()) {
-            List<Map<String, Object>> lessonDataList = objectMapper.readValue(is,
-                    new TypeReference<List<Map<String, Object>>>() {
-                    });
+            List<Lesson> lessons = objectMapper.readValue(is, new TypeReference<List<Lesson>>() {
+            });
             Map<String, Lesson> lessonMap = new HashMap<>();
-
-            for (Map<String, Object> data : lessonDataList) {
-                String name = (String) data.get("name");
-                Lesson lesson = new Lesson();
-                lesson.setName(name);
-                lesson.setSkillType(SkillTypeEnum.valueOf((String) data.get("skillType")));
-                lesson.setSumQues((Integer) data.get("sumQues"));
-                lesson.setCreateBy((String) data.get("createBy"));
-                lessonMap.put(name, lesson);
+            for (Lesson lesson : lessons) {
+                lessonMap.put(lesson.getName(), lesson);
             }
-
             return lessonMap;
         }
     }

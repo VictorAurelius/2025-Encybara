@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "courses")
@@ -47,6 +48,9 @@ public class Course {
     @Column(name = "course_group") // Changed from 'group' to avoid SQL reserved keyword
     private String group;
 
+    @Transient // This field won't be persisted to database
+    private List<String> lessonNames = new ArrayList<>();
+
     @PrePersist
     public void handleBeforeCreate() {
         this.createBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
@@ -67,16 +71,20 @@ public class Course {
 
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     @JsonIgnore
-    List<Course_Lesson> courselessons;
+    private List<Course_Lesson> courselessons = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     @JsonIgnore
-    List<Enrollment> enrollments;
+    private List<Enrollment> enrollments = new ArrayList<>();
 
     public List<Lesson> getLessons() {
         List<Lesson> lessons = new ArrayList<>();
-        for (Course_Lesson courseLesson : courselessons) {
-            lessons.add(courseLesson.getLesson());
+        if (courselessons != null) {
+            for (Course_Lesson courseLesson : courselessons) {
+                if (courseLesson != null && courseLesson.getLesson() != null) {
+                    lessons.add(courseLesson.getLesson());
+                }
+            }
         }
         return lessons;
     }

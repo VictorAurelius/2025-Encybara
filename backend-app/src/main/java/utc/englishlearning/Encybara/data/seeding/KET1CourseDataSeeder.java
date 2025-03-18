@@ -63,52 +63,57 @@ public class KET1CourseDataSeeder {
                 course.setCreateAt(Instant.now());
                 course = courseRepository.save(course);
 
-                // Get lesson names from course JSON
-                List<String> lessonNames = (List<String>) objectMapper.convertValue(course, Map.class)
-                        .get("lessonNames");
+                // Process each lesson using the lessonNames from Course entity
+                Map<String, Object> courseData = objectMapper.convertValue(course, Map.class);
+                List<String> lessonNames = (List<String>) courseData.get("lessonNames");
 
-                // Process each lesson
-                for (String lessonName : lessonNames) {
-                    Lesson lesson = lessonsByName.get(lessonName);
-                    if (lesson == null)
-                        continue;
+                if (lessonNames != null) {
+                    course.setLessonNames(lessonNames); // Set the lessonNames to the Course entity
 
-                    // Save lesson
-                    lesson.setCreateAt(Instant.now());
-                    lesson = lessonRepository.save(lesson);
+                    for (String lessonName : lessonNames) {
+                        Lesson lesson = lessonsByName.get(lessonName);
+                        if (lesson == null) {
+                            System.out.println(">>> WARNING: Lesson not found: " + lessonName);
+                            continue;
+                        }
 
-                    // Create course-lesson relationship
-                    Course_Lesson courseLesson = new Course_Lesson();
-                    courseLesson.setCourse(course);
-                    courseLesson.setLesson(lesson);
-                    courseLessonRepository.save(courseLesson);
+                        // Save lesson
+                        lesson.setCreateAt(Instant.now());
+                        lesson = lessonRepository.save(lesson);
 
-                    // Get question contents for this lesson
-                    Map<String, Object> lessonData = objectMapper.convertValue(lesson, Map.class);
-                    List<String> questionContents = (List<String>) lessonData.get("questionContents");
+                        // Create course-lesson relationship
+                        Course_Lesson courseLesson = new Course_Lesson();
+                        courseLesson.setCourse(course);
+                        courseLesson.setLesson(lesson);
+                        courseLessonRepository.save(courseLesson);
 
-                    if (questionContents != null) {
-                        // Process each question for this lesson
-                        for (String quesContent : questionContents) {
-                            Question question = questionsByContent.get(quesContent);
-                            if (question == null)
-                                continue;
+                        // Process questions from lesson's questionContents
+                        List<String> questionContents = lesson.getQuestionContents();
+                        if (questionContents != null && !questionContents.isEmpty()) {
+                            // Process each question for this lesson
+                            for (String quesContent : questionContents) {
+                                Question question = questionsByContent.get(quesContent);
+                                if (question == null) {
+                                    System.out.println(">>> WARNING: Question not found: " + quesContent);
+                                    continue;
+                                }
 
-                            // Save question and its choices
-                            for (Question_Choice choice : question.getQuestionChoices()) {
-                                choice.setQuestion(question);
-                            }
-                            question = questionRepository.save(question);
+                                // Save question and its choices
+                                for (Question_Choice choice : question.getQuestionChoices()) {
+                                    choice.setQuestion(question);
+                                }
+                                question = questionRepository.save(question);
 
-                            // Create lesson-question relationship
-                            Lesson_Question lessonQuestion = new Lesson_Question();
-                            lessonQuestion.setLesson(lesson);
-                            lessonQuestion.setQuestion(question);
-                            lessonQuestionRepository.save(lessonQuestion);
+                                // Create lesson-question relationship
+                                Lesson_Question lessonQuestion = new Lesson_Question();
+                                lessonQuestion.setLesson(lesson);
+                                lessonQuestion.setQuestion(question);
+                                lessonQuestionRepository.save(lessonQuestion);
 
-                            // Save question choices
-                            for (Question_Choice choice : question.getQuestionChoices()) {
-                                questionChoiceRepository.save(choice);
+                                // Save question choices
+                                for (Question_Choice choice : question.getQuestionChoices()) {
+                                    questionChoiceRepository.save(choice);
+                                }
                             }
                         }
                     }
