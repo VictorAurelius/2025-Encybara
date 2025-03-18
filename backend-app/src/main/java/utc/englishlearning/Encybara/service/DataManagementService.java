@@ -14,7 +14,7 @@ public class DataManagementService {
     public void seedKet1Data() {
         // KET1 Test 1
         courseDataSeeder.seedCourseData("ket1", "1", "1");
-        courseDataSeeder.seedCourseData("ket1", "1", "2");
+        // courseDataSeeder.seedCourseData("ket1", "1", "2");
 
         // Add more KET1 tests as needed
         // courseDataSeeder.seedCourseData("ket1", "2", "1");
@@ -23,29 +23,11 @@ public class DataManagementService {
 
     public void seedKet2Data() {
         // KET2 Test 1
-        courseDataSeeder.seedCourseData("ket2", "1", "1");
-        courseDataSeeder.seedCourseData("ket2", "1", "2");
+        // courseDataSeeder.seedCourseData("ket2", "1", "1");
+        // courseDataSeeder.seedCourseData("ket2", "1", "2");
 
         // Add more KET2 tests as needed
         // courseDataSeeder.seedCourseData("ket2", "2", "1");
         // courseDataSeeder.seedCourseData("ket2", "2", "2");
     }
-
-    // Example directory structure for a course group:
-    /*
-     * data/
-     * └── ket1/
-     * └── json/
-     * ├── test1/
-     * │ ├── paper1/
-     * │ │ ├── courses.json
-     * │ │ ├── lessons.json
-     * │ │ ├── materials.json
-     * │ │ ├── questions-1.json
-     * │ │ └── questions-2.json
-     * │ └── paper2/
-     * │ └── ...
-     * └── test2/
-     * └── ...
-     */
 }

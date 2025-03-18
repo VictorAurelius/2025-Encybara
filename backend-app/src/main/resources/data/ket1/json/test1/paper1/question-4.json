@@ -1,170 +1,168 @@
 [
     {
-        "quesContent": "You can't drive this way.",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "F",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Children do not have to pay.",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "A",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "You can shop here six days a week.",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "G",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Be careful when you stand up.",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "C",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "We work quickly.",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "B",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Nina was very ... because she got lots of presents.",
+        "quesContent": "Choose the best word for space 28",
         "skillType": "READING",
         "quesType": "CHOICE",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "interesting",
-                "isCorrect": false
-            },
-            {
-                "content": "lovely",
-                "isCorrect": false
-            },
-            {
-                "content": "happy",
+                "content": "came",
                 "isCorrect": true
+            },
+            {
+                "content": "come",
+                "isCorrect": false
+            },
+            {
+                "content": "comes",
+                "isCorrect": false
             }
         ]
     },
     {
-        "quesContent": "She ... some friends to her house for a party.",
+        "quesContent": "Choose the best word for space 29",
         "skillType": "READING",
         "quesType": "CHOICE",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "decided",
+                "content": "being",
                 "isCorrect": false
             },
             {
-                "content": "agreed",
+                "content": "be",
                 "isCorrect": false
             },
             {
-                "content": "invited",
+                "content": "been",
                 "isCorrect": true
             }
         ]
     },
     {
-        "quesContent": "Her mother made a big chocolate ... with 'Happy Birthday' on the top.",
+        "quesContent": "Choose the best word for space 30",
         "skillType": "READING",
         "quesType": "CHOICE",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "meal",
+                "content": "has",
                 "isCorrect": false
             },
             {
-                "content": "cake",
+                "content": "have",
                 "isCorrect": true
             },
             {
-                "content": "dish",
+                "content": "had",
                 "isCorrect": false
             }
         ]
     },
     {
-        "quesContent": "Nina and her friends has a great time, singing and dancing and ... to their favorite music.",
+        "quesContent": "Choose the best word for space 31",
         "skillType": "READING",
         "quesType": "CHOICE",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "listening",
+                "content": "were",
+                "isCorrect": false
+            },
+            {
+                "content": "is",
+                "isCorrect": false
+            },
+            {
+                "content": "are",
                 "isCorrect": true
-            },
-            {
-                "content": "hearing",
-                "isCorrect": false
-            },
-            {
-                "content": "looking",
-                "isCorrect": false
             }
         ]
     },
     {
-        "quesContent": "When they had to go, everybody ... Nina and her mother for the party.",
+        "quesContent": "Choose the best word for space 32",
         "skillType": "READING",
         "quesType": "CHOICE",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "said",
+                "content": "or",
                 "isCorrect": false
             },
             {
-                "content": "thanked",
+                "content": "if",
+                "isCorrect": false
+            },
+            {
+                "content": "but",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose the best word for space 33",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "them",
                 "isCorrect": true
             },
             {
-                "content": "told",
+                "content": "him",
+                "isCorrect": false
+            },
+            {
+                "content": "us",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose the best word for space 34",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "from",
+                "isCorrect": false
+            },
+            {
+                "content": "by",
+                "isCorrect": true
+            },
+            {
+                "content": "to",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose the best word for space 35",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "the",
+                "isCorrect": false
+            },
+            {
+                "content": "a",
+                "isCorrect": true
+            },
+            {
+                "content": "any",
                 "isCorrect": false
             }
         ]

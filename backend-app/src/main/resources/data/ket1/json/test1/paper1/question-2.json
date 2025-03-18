@@ -1,438 +1,112 @@
 [
     {
-        "quesContent": "Choose the best word for space 28",
+        "quesContent": "It's time for lunch.",
         "skillType": "READING",
         "quesType": "CHOICE",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "came",
-                "isCorrect": true
-            },
-            {
-                "content": "come",
+                "content": "Oh good!",
                 "isCorrect": false
             },
             {
-                "content": "comes",
+                "content": "One hour.",
+                "isCorrect": true
+            },
+            {
+                "content": "Half past twelve.",
                 "isCorrect": false
             }
         ]
     },
     {
-        "quesContent": "Choose the best word for space 29",
+        "quesContent": "Would you like a drink?",
         "skillType": "READING",
         "quesType": "CHOICE",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "being",
+                "content": "I don't like coffee.",
                 "isCorrect": false
             },
             {
-                "content": "be",
+                "content": "I prefer tea.",
                 "isCorrect": false
             },
             {
-                "content": "been",
+                "content": "Coffee, please.",
                 "isCorrect": true
             }
         ]
     },
     {
-        "quesContent": "Choose the best word for space 30",
+        "quesContent": "How much was your new shirt?",
         "skillType": "READING",
         "quesType": "CHOICE",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "has",
+                "content": "It's a red shirt.",
                 "isCorrect": false
             },
             {
-                "content": "have",
+                "content": "It was very cheap.",
                 "isCorrect": true
             },
             {
-                "content": "had",
+                "content": "It was in a shop.",
                 "isCorrect": false
             }
         ]
     },
     {
-        "quesContent": "Choose the best word for space 31",
+        "quesContent": "I'm very sorry.",
         "skillType": "READING",
         "quesType": "CHOICE",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "were",
+                "content": "I'm afraid so.",
                 "isCorrect": false
             },
             {
-                "content": "is",
+                "content": "I think so.",
                 "isCorrect": false
             },
             {
-                "content": "are",
+                "content": "That's all right.",
                 "isCorrect": true
             }
         ]
     },
     {
-        "quesContent": "Choose the best word for space 32",
-        "skillType": "READING",
-        "quesType": "CHOICE",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "or",
-                "isCorrect": false
-            },
-            {
-                "content": "if",
-                "isCorrect": false
-            },
-            {
-                "content": "but",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Choose the best word for space 33",
-        "skillType": "READING",
-        "quesType": "CHOICE",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "them",
-                "isCorrect": true
-            },
-            {
-                "content": "him",
-                "isCorrect": false
-            },
-            {
-                "content": "us",
-                "isCorrect": false
-            }
-        ]
-    },
-    {
-        "quesContent": "Choose the best word for space 34",
-        "skillType": "READING",
-        "quesType": "CHOICE",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "from",
-                "isCorrect": false
-            },
-            {
-                "content": "by",
-                "isCorrect": true
-            },
-            {
-                "content": "to",
-                "isCorrect": false
-            }
-        ]
-    },
-    {
-        "quesContent": "Choose the best word for space 35",
-        "skillType": "READING",
-        "quesType": "CHOICE",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "the",
-                "isCorrect": false
-            },
-            {
-                "content": "a",
-                "isCorrect": true
-            },
-            {
-                "content": "any",
-                "isCorrect": false
-            }
-        ]
-    },
-    {
-        "quesContent": "You need this to travel to some foreign countries.",
+        "quesContent": "Choose correct letter A-H for space 16",
         "skillType": "READING",
         "quesType": "TEXT",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "passport",
+                "content": "G",
                 "isCorrect": true
             }
         ]
     },
     {
-        "quesContent": "You need to buy this before you get on a plane.",
+        "quesContent": "Choose correct letter A-H for space 17",
         "skillType": "READING",
         "quesType": "TEXT",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "ticket",
+                "content": "F",
                 "isCorrect": true
             }
         ]
-    },
-    {
-        "quesContent": "This is where you go to get a plane.",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "airport",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "You put your clothes in this when you travel.",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "suitcase",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "This person likes visiting different places.",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "tourist",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Write ONE word for space 41",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "in",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Write ONE word for space 42",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "from",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Write ONE word for space 43",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "have",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Write ONE word for space 44",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "are",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Write ONE word for space 45",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "my",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Write ONE word for space 46",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "His",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Write ONE word for space 47",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "if",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Write ONE word for space 48",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "to",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Write ONE word for space 49",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "am",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Write ONE word for space 50",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "me",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Complete Andy's Notes - Date",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "9 April",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Complete Andy's Notes - Name of film",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "The Last King",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Complete Andy's Notes - Starting time",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "8 p.m.",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Complete Andy's Notes - Ticket price",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "£3.50",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Complete Andy's Notes - Meet Sheila in",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "Coffee Bar",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Read the note from your friend Richard.\nWrite a postcard to tell him what he wants to know.\n'It's great that you're coming to see me in England. Tell me when you are coming, how long you want to stay and what you want to do.\nWrite soon!\nRichard'\nWrite 25-35 words.\nWrite your postcard on the answer sheet.",
-        "skillType": "WRITING",
-        "quesType": "WRITING",
-        "point": 10,
-        "createBy": "admin",
-        "choices": []
     }
 ]

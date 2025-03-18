@@ -30,7 +30,6 @@ public class CourseDataSeeder {
     private final LessonQuestionRepository lessonQuestionRepository;
     private final TestingMaterialLoader materialLoader;
     private final ObjectMapper objectMapper;
-    private final FileStorageService fileStorageService;
     private final LearningMaterialService learningMaterialService;
     private final LearningMaterialRepository learningMaterialRepository;
 
@@ -54,7 +53,6 @@ public class CourseDataSeeder {
         this.lessonQuestionRepository = lessonQuestionRepository;
         this.materialLoader = materialLoader;
         this.objectMapper = objectMapper;
-        this.fileStorageService = fileStorageService;
         this.learningMaterialService = learningMaterialService;
         this.learningMaterialRepository = learningMaterialRepository;
     }

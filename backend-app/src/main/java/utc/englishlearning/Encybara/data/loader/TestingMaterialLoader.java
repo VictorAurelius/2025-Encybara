@@ -51,7 +51,6 @@ public class TestingMaterialLoader {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public Map<String, Question> loadQuestions() throws IOException {
         Map<String, Question> questionMap = new HashMap<>();
         int fileCount = 1;
@@ -131,7 +130,6 @@ public class TestingMaterialLoader {
         return question;
     }
 
-    @SuppressWarnings("unchecked")
     public Map<String, Map<String, Object>> loadMaterials() throws IOException {
         System.out.println("Loading materials from: " + basePath + "materials.json");
         try (InputStream is = new ClassPathResource(basePath + "materials.json").getInputStream()) {

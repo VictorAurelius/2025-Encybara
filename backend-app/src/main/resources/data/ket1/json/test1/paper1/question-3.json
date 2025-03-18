@@ -1,19 +1,19 @@
 [
     {
-        "quesContent": "You can't drive this way.",
+        "quesContent": "Choose correct letter A-H for space 18",
         "skillType": "READING",
         "quesType": "TEXT",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "F",
+                "content": "H",
                 "isCorrect": true
             }
         ]
     },
     {
-        "quesContent": "Children do not have to pay.",
+        "quesContent": "Choose correct letter A-H for space 19",
         "skillType": "READING",
         "quesType": "TEXT",
         "point": 10,
@@ -26,20 +26,7 @@
         ]
     },
     {
-        "quesContent": "You can shop here six days a week.",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "G",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Be careful when you stand up.",
+        "quesContent": "Choose correct letter A-H for space 20",
         "skillType": "READING",
         "quesType": "TEXT",
         "point": 10,
@@ -52,120 +39,149 @@
         ]
     },
     {
-        "quesContent": "We work quickly.",
-        "skillType": "READING",
-        "quesType": "TEXT",
-        "point": 10,
-        "createBy": "admin",
-        "choices": [
-            {
-                "content": "B",
-                "isCorrect": true
-            }
-        ]
-    },
-    {
-        "quesContent": "Nina was very ... because she got lots of presents.",
+        "quesContent": "Which book is by somebody who has written a lot of books?",
         "skillType": "READING",
         "quesType": "CHOICE",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "interesting",
+                "content": "The Long Night",
                 "isCorrect": false
             },
             {
-                "content": "lovely",
-                "isCorrect": false
-            },
-            {
-                "content": "happy",
+                "content": "Hard Work",
                 "isCorrect": true
+            },
+            {
+                "content": "Hospital or Cinema?",
+                "isCorrect": false
             }
         ]
     },
     {
-        "quesContent": "She ... some friends to her house for a party.",
+        "quesContent": "Which book is about somebody who is very poor?",
         "skillType": "READING",
         "quesType": "CHOICE",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "decided",
+                "content": "The Long Night",
                 "isCorrect": false
             },
             {
-                "content": "agreed",
-                "isCorrect": false
-            },
-            {
-                "content": "invited",
+                "content": "Hard Work",
                 "isCorrect": true
+            },
+            {
+                "content": "Hospital or Cinema?",
+                "isCorrect": false
             }
         ]
     },
     {
-        "quesContent": "Her mother made a big chocolate ... with 'Happy Birthday' on the top.",
+        "quesContent": "Which book is about somebody who would like to work in a hospital?",
         "skillType": "READING",
         "quesType": "CHOICE",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "meal",
+                "content": "The Long Night",
                 "isCorrect": false
             },
             {
-                "content": "cake",
+                "content": "Hard Work",
+                "isCorrect": false
+            },
+            {
+                "content": "Hospital or Cinema?",
                 "isCorrect": true
-            },
-            {
-                "content": "dish",
-                "isCorrect": false
             }
         ]
     },
     {
-        "quesContent": "Nina and her friends has a great time, singing and dancing and ... to their favorite music.",
+        "quesContent": "Which book is by somebody who worked in a school?",
         "skillType": "READING",
         "quesType": "CHOICE",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "listening",
+                "content": "The Long Night",
                 "isCorrect": true
             },
             {
-                "content": "hearing",
+                "content": "Hard Work",
                 "isCorrect": false
             },
             {
-                "content": "looking",
+                "content": "Hospital or Cinema?",
                 "isCorrect": false
             }
         ]
     },
     {
-        "quesContent": "When they had to go, everybody ... Nina and her mother for the party.",
+        "quesContent": "Which book is about a difficult journey?",
         "skillType": "READING",
         "quesType": "CHOICE",
         "point": 10,
         "createBy": "admin",
         "choices": [
             {
-                "content": "said",
-                "isCorrect": false
-            },
-            {
-                "content": "thanked",
+                "content": "The Long Night",
                 "isCorrect": true
             },
             {
-                "content": "told",
+                "content": "Hard Work",
                 "isCorrect": false
+            },
+            {
+                "content": "Hospital or Cinema?",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Which book is about a man and his son?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "The Long Night",
+                "isCorrect": false
+            },
+            {
+                "content": "Hard Work",
+                "isCorrect": true
+            },
+            {
+                "content": "Hospital or Cinema?",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Which book is by a student?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "The Long Night",
+                "isCorrect": false
+            },
+            {
+                "content": "Hard Work",
+                "isCorrect": false
+            },
+            {
+                "content": "Hospital or Cinema?",
+                "isCorrect": true
             }
         ]
     }
