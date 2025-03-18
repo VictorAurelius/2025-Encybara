@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ import jakarta.persistence.FetchType;
 import java.time.Instant;
 import java.util.List;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 
 @Entity
 @Table(name = "questions")
@@ -28,6 +30,8 @@ public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String quesContent;
     private String keyword;
     private QuestionTypeEnum quesType;

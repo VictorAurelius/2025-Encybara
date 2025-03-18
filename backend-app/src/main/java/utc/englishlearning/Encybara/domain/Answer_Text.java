@@ -1,10 +1,12 @@
 package utc.englishlearning.Encybara.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -18,6 +20,8 @@ public class Answer_Text {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String ansContent;
     @OneToOne
     @JoinColumn(name = "answer_id", nullable = false)
