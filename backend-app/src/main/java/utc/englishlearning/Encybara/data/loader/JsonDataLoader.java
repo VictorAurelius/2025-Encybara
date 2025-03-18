@@ -18,7 +18,7 @@ import java.util.LinkedHashMap;
 @Component
 public class JsonDataLoader {
     private final ObjectMapper objectMapper;
-    private final String DATA_PATH = "data/ket1/";
+    private final String DATA_PATH = "data/ket1/json/test1/paper1/";
 
     public JsonDataLoader(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;

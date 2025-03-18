@@ -1,0 +1,72 @@
+[
+    {
+        "name": "Paper 1 Reading Part 1 Image",
+        "materType": "image/png",
+        "materPath": "data/ket1/img/test1/paper1/part1-paper1.png",
+        "lessonName": "Paper 1: Reading and Writing - Part 1",
+        "createBy": "admin"
+    },
+    {
+        "name": "Paper 1 Reading Part 2 Image",
+        "materType": "image/png",
+        "materPath": "data/ket1/img/test1/paper1/part2-paper1.png",
+        "lessonName": "Paper 1: Reading and Writing - Part 2",
+        "createBy": "admin"
+    },
+    {
+        "name": "Paper 1 Reading Part 3 Image",
+        "materType": "image/png",
+        "materPath": "data/ket1/img/test1/paper1/part3-paper1.png",
+        "lessonName": "Paper 1: Reading and Writing - Part 3",
+        "createBy": "admin"
+    },
+    {
+        "name": "Paper 1 Reading Conversation at a garage Image",
+        "materType": "image/png",
+        "materPath": "data/ket1/img/test1/paper1/part3-paper1-2.png",
+        "lessonName": "Paper 1: Reading and Writing - Conversation at a garage",
+        "createBy": "admin"
+    },
+    {
+        "name": "Paper 1 Reading Part 4 Image",
+        "materType": "image/png",
+        "materPath": "data/ket1/img/test1/paper1/part4-paper1.png",
+        "lessonName": "Paper 1: Reading and Writing - Part 4",
+        "createBy": "admin"
+    },
+    {
+        "name": "Paper 1 Reading Part 5 Image",
+        "materType": "image/png",
+        "materPath": "data/ket1/img/test1/paper1/part5-paper1.png",
+        "lessonName": "Paper 1: Reading and Writing - Part 5",
+        "createBy": "admin"
+    },
+    {
+        "name": "Paper 1 Reading Part 6 Image",
+        "materType": "image/png",
+        "materPath": "data/ket1/img/test1/paper1/part6-paper1.png",
+        "lessonName": "Paper 1: Reading and Writing - Part 6",
+        "createBy": "admin"
+    },
+    {
+        "name": "Paper 1 Reading Part 7 Image",
+        "materType": "image/png",
+        "materPath": "data/ket1/img/test1/paper1/part7-paper1.png",
+        "lessonName": "Paper 1: Reading and Writing - Part 7",
+        "createBy": "admin"
+    },
+    {
+        "name": "Paper 1 Reading Part 8 Image",
+        "materType": "image/png",
+        "materPath": "data/ket1/img/test1/paper1/part8-paper1.png",
+        "lessonName": "Paper 1: Reading and Writing - Part 8",
+        "createBy": "admin"
+    },
+    {
+        "name": "Paper 1 Reading Part 9 Image",
+        "materType": "image/png",
+        "materPath": "data/ket1/img/test1/paper1/part9-paper1.png",
+        "lessonName": "Paper 1: Reading and Writing - Part 9",
+        "createBy": "admin"
+    }
+]
