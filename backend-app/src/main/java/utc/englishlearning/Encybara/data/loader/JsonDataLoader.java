@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @Component
@@ -53,6 +54,7 @@ public class JsonDataLoader {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public Map<String, Question> loadQuestions() throws IOException {
         try (InputStream is = new ClassPathResource(DATA_PATH + "questions.json").getInputStream()) {
             List<Map<String, Object>> questionDataList = objectMapper.readValue(is,
@@ -62,6 +64,8 @@ public class JsonDataLoader {
 
             for (Map<String, Object> data : questionDataList) {
                 String content = (String) data.get("quesContent");
+
+                // Create question
                 Question question = new Question();
                 question.setQuesContent(content);
                 question.setSkillType(SkillTypeEnum.valueOf((String) data.get("skillType")));
@@ -69,14 +73,23 @@ public class JsonDataLoader {
                 question.setPoint((Integer) data.get("point"));
                 question.setCreateBy((String) data.get("createBy"));
 
-                // Create choices
-                @SuppressWarnings("unchecked")
-                List<Map<String, Object>> choices = (List<Map<String, Object>>) data.get("choices");
-                for (Map<String, Object> choiceData : choices) {
-                    Question_Choice choice = new Question_Choice();
-                    choice.setChoiceContent((String) choiceData.get("content"));
-                    choice.setChoiceKey((Boolean) choiceData.get("isCorrect"));
-                    choice.setQuestion(question);
+                // Initialize collections
+                question.setAnswers(new ArrayList<>());
+                question.setLessonQuestions(new ArrayList<>());
+                question.setQuestionChoices(new ArrayList<>());
+
+                // Create choices for question
+                List<Map<String, Object>> choicesData = (List<Map<String, Object>>) data.get("choices");
+                if (choicesData != null) {
+                    List<Question_Choice> choices = new ArrayList<>();
+                    for (Map<String, Object> choiceData : choicesData) {
+                        Question_Choice choice = new Question_Choice();
+                        choice.setChoiceContent((String) choiceData.get("content"));
+                        choice.setChoiceKey((Boolean) choiceData.get("isCorrect"));
+                        choice.setQuestion(question);
+                        choices.add(choice);
+                    }
+                    question.setQuestionChoices(choices);
                 }
 
                 questionMap.put(content, question);

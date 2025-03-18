@@ -8,6 +8,7 @@ import utc.englishlearning.Encybara.repository.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class KET1CourseDataSeeder {
@@ -18,6 +19,7 @@ public class KET1CourseDataSeeder {
     private final QuestionChoiceRepository questionChoiceRepository;
     private final LessonQuestionRepository lessonQuestionRepository;
     private final JsonDataLoader jsonDataLoader;
+    private final ObjectMapper objectMapper;
 
     public KET1CourseDataSeeder(
             CourseRepository courseRepository,
@@ -34,8 +36,10 @@ public class KET1CourseDataSeeder {
         this.questionChoiceRepository = questionChoiceRepository;
         this.lessonQuestionRepository = lessonQuestionRepository;
         this.jsonDataLoader = jsonDataLoader;
+        this.objectMapper = new ObjectMapper();
     }
 
+    @SuppressWarnings("unchecked")
     public void seedCourse() {
         try {
             // Load all data first
@@ -56,9 +60,15 @@ public class KET1CourseDataSeeder {
                 // Save course
                 course = courseRepository.save(course);
 
-                // Save lessons and create relationships
-                for (Map.Entry<String, Lesson> entry : lessonsByName.entrySet()) {
-                    Lesson lesson = entry.getValue();
+                // Get lesson names from course JSON
+                List<String> lessonNames = (List<String>) objectMapper.convertValue(course, Map.class)
+                        .get("lessonNames");
+
+                // Process each lesson
+                for (String lessonName : lessonNames) {
+                    Lesson lesson = lessonsByName.get(lessonName);
+                    if (lesson == null)
+                        continue;
 
                     // Save lesson
                     lesson = lessonRepository.save(lesson);
@@ -69,23 +79,33 @@ public class KET1CourseDataSeeder {
                     courseLesson.setLesson(lesson);
                     courseLessonRepository.save(courseLesson);
 
-                    // Create and link questions
-                    for (Map.Entry<String, Question> qEntry : questionsByContent.entrySet()) {
-                        Question question = qEntry.getValue();
+                    // Get question contents for this lesson
+                    Map<String, Object> lessonData = objectMapper.convertValue(lesson, Map.class);
+                    List<String> questionContents = (List<String>) lessonData.get("questionContents");
 
-                        // Save question
-                        question = questionRepository.save(question);
+                    if (questionContents != null) {
+                        // Process each question for this lesson
+                        for (String quesContent : questionContents) {
+                            Question question = questionsByContent.get(quesContent);
+                            if (question == null)
+                                continue;
 
-                        // Create lesson-question relationship
-                        Lesson_Question lessonQuestion = new Lesson_Question();
-                        lessonQuestion.setLesson(lesson);
-                        lessonQuestion.setQuestion(question);
-                        lessonQuestionRepository.save(lessonQuestion);
+                            // Save question and its choices
+                            for (Question_Choice choice : question.getQuestionChoices()) {
+                                choice.setQuestion(question);
+                            }
+                            question = questionRepository.save(question);
 
-                        // Save question choices
-                        for (Question_Choice choice : question.getQuestionChoices()) {
-                            choice.setQuestion(question);
-                            questionChoiceRepository.save(choice);
+                            // Create lesson-question relationship
+                            Lesson_Question lessonQuestion = new Lesson_Question();
+                            lessonQuestion.setLesson(lesson);
+                            lessonQuestion.setQuestion(question);
+                            lessonQuestionRepository.save(lessonQuestion);
+
+                            // Save question choices
+                            for (Question_Choice choice : question.getQuestionChoices()) {
+                                questionChoiceRepository.save(choice);
+                            }
                         }
                     }
                 }
