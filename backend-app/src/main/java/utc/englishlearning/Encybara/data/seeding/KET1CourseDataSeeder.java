@@ -31,32 +31,30 @@ public class KET1CourseDataSeeder {
         this.lessonQuestionRepository = lessonQuestionRepository;
     }
 
-    public void seedPresentSimpleCourse() {
-        Course existingCourse = courseRepository.findByName("Present Simple Tense");
+    public void seedCourse() {
+        Course existingCourse = courseRepository.findByName("Cambridge Key English Test (KET1) - Test 1");
         if (existingCourse != null) {
-            System.out.println(">>> SKIP: Present Simple Course already exists");
+            System.out.println(">>> SKIP: Cambridge Key English Test (KET1) - Test 1 already exists");
             return;
         }
 
-        System.out.println(">>> START SEEDING: Present Simple Course");
+        System.out.println(">>> START SEEDING: Cambridge Key English Test (KET1) - Test 1");
 
-        // Create Present Simple course
-        Course presentSimpleCourse = new Course();
-        presentSimpleCourse.setName("Present Simple Tense");
-        presentSimpleCourse.setIntro("Master the basics of Present Simple tense in English");
-        presentSimpleCourse.setDiffLevel(1);
-        presentSimpleCourse.setRecomLevel(1);
-        presentSimpleCourse.setCourseType(CourseTypeEnum.READING);
-        presentSimpleCourse.setNumLike(0);
-        presentSimpleCourse = courseRepository.save(presentSimpleCourse);
+        Course test1Course = new Course();
+        test1Course.setName("Cambridge Key English Test (KET1) - Test 1");
+        test1Course.setIntro(
+                "(Level A1) Prepare for the Cambridge Key English Test (KET1) with comprehensive practice in reading, writing, listening, and speaking skills. This course covers all essential areas to help you succeed in the KET1 exam.");
+        test1Course.setDiffLevel(1.0);
+        test1Course.setRecomLevel(1.5);
+        test1Course.setCourseType(CourseTypeEnum.ALLSKILLS);
+        test1Course.setNumLike(0);
+        test1Course = courseRepository.save(test1Course);
 
-        // Create 5 lessons
         String[] lessonNames = {
-                "Affirmative Sentences",
-                "Negative Sentences",
-                "Interrogative Sentences",
-                "Special Forms",
-                "Comprehensive Practice"
+                "Paper 1 - READING",
+                "Paper 1 - WRITING",
+                "Paper 2 - LISTENING",
+                "Paper 3 - SPEAKING",
         };
 
         for (int i = 0; i < lessonNames.length; i++) {
@@ -67,7 +65,7 @@ public class KET1CourseDataSeeder {
 
             // Create Course_Lesson relationship
             Course_Lesson courseLesson = new Course_Lesson();
-            courseLesson.setCourse(presentSimpleCourse);
+            courseLesson.setCourse(test1Course);
             courseLesson.setLesson(lesson);
             courseLessonRepository.save(courseLesson);
 

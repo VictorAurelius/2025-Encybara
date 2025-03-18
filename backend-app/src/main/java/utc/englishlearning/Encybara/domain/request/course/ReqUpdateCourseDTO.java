@@ -10,8 +10,8 @@ import utc.englishlearning.Encybara.util.constant.SpecialFieldEnum;
 public class ReqUpdateCourseDTO {
     private String name;
     private String intro;
-    private int diffLevel;
-    private int recomLevel;
+    private double diffLevel;
+    private double recomLevel;
     private CourseTypeEnum courseType;
     private SpecialFieldEnum speciField;
 }

@@ -121,6 +121,6 @@ public class AdminDataInitializer implements CommandLineRunner {
         }
 
         // Seed course data
-        ket1CourseDataSeeder.seedPresentSimpleCourse();
+        ket1CourseDataSeeder.seedCourse();
     }
 }

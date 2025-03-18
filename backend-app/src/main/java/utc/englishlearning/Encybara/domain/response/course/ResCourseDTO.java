@@ -15,8 +15,8 @@ public class ResCourseDTO {
     private long id;
     private String name;
     private String intro;
-    private int diffLevel;
-    private int recomLevel;
+    private double diffLevel;
+    private double recomLevel;
     private CourseTypeEnum courseType;
     private SpecialFieldEnum speciField;
     private String createBy;
