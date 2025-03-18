@@ -3,15 +3,13 @@ package utc.englishlearning.Encybara.data.loader;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.util.constant.*;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,51 +26,77 @@ public class TestingMaterialLoader {
     public void setDataPath(String courseGroup, String testNumber, String paperNumber) {
         this.basePath = String.format("%s/%s/json/test%s/paper%s/",
                 JSON_BASE, courseGroup.toLowerCase(), testNumber, paperNumber);
+        System.out.println("Setting data path to: " + this.basePath);
     }
 
     public List<Course> loadCourses() throws IOException {
+        System.out.println("Loading courses from: " + basePath + "courses.json");
         try (InputStream is = new ClassPathResource(basePath + "courses.json").getInputStream()) {
-            return objectMapper.readValue(is, new TypeReference<List<Course>>() {
+            List<Course> courses = objectMapper.readValue(is, new TypeReference<List<Course>>() {
             });
+            System.out.println("Loaded " + courses.size() + " courses");
+            return courses;
         }
     }
 
     public Map<String, Lesson> loadLessons() throws IOException {
+        System.out.println("Loading lessons from: " + basePath + "lessons.json");
         try (InputStream is = new ClassPathResource(basePath + "lessons.json").getInputStream()) {
             List<Lesson> lessons = objectMapper.readValue(is, new TypeReference<List<Lesson>>() {
             });
-            return lessons.stream().collect(Collectors.toMap(Lesson::getName, lesson -> lesson));
+            Map<String, Lesson> lessonMap = lessons.stream()
+                    .collect(Collectors.toMap(Lesson::getName, lesson -> lesson));
+            System.out.println("Loaded " + lessonMap.size() + " lessons");
+            return lessonMap;
         }
     }
 
     @SuppressWarnings("unchecked")
     public Map<String, Question> loadQuestions() throws IOException {
         Map<String, Question> questionMap = new HashMap<>();
+        int fileCount = 1;
+        int totalQuestions = 0;
 
-        // Scan for all question files in the directory
-        ClassPathResource baseResource = new ClassPathResource(basePath);
-        Path baseDirPath = Paths.get(baseResource.getURI());
+        while (true) {
+            String filename = String.format("question-%d.json", fileCount);
+            String fullPath = basePath + filename;
+            Resource resource = new ClassPathResource(fullPath);
 
-        // List all question-*.json files
-        List<Path> questionFiles = Files.list(baseDirPath)
-                .filter(path -> path.getFileName().toString().matches("questions-\\d+\\.json"))
-                .collect(Collectors.toList());
+            if (!resource.exists()) {
+                if (fileCount == 1) {
+                    System.out.println("WARNING: No question files found in path: " + basePath);
+                }
+                break;
+            }
 
-        // Load questions from each file
-        for (Path questionFile : questionFiles) {
-            try (InputStream is = Files.newInputStream(questionFile)) {
+            try (InputStream is = resource.getInputStream()) {
+                System.out.println("Loading questions from: " + filename);
+
                 List<Map<String, Object>> questionDataList = objectMapper.readValue(is,
                         new TypeReference<List<Map<String, Object>>>() {
                         });
 
                 for (Map<String, Object> data : questionDataList) {
-                    String content = (String) data.get("quesContent");
-                    Question question = createQuestionFromData(data);
-                    questionMap.put(content, question);
+                    try {
+                        String content = (String) data.get("quesContent");
+                        Question question = createQuestionFromData(data);
+                        questionMap.put(content, question);
+                        totalQuestions++;
+                    } catch (Exception e) {
+                        System.err.println("Error processing question in " + filename + ": " + e.getMessage());
+                    }
                 }
+
+                System.out.println("Loaded " + questionDataList.size() + " questions from " + filename);
+                fileCount++;
+            } catch (Exception e) {
+                System.err.println("Error reading question file " + filename + ": " + e.getMessage());
+                break;
             }
         }
 
+        System.out.println("Total question files processed: " + (fileCount - 1));
+        System.out.println("Total questions loaded: " + totalQuestions);
         return questionMap;
     }
 
@@ -109,17 +133,21 @@ public class TestingMaterialLoader {
 
     @SuppressWarnings("unchecked")
     public Map<String, Map<String, Object>> loadMaterials() throws IOException {
+        System.out.println("Loading materials from: " + basePath + "materials.json");
         try (InputStream is = new ClassPathResource(basePath + "materials.json").getInputStream()) {
             List<Map<String, Object>> materialDataList = objectMapper.readValue(is,
                     new TypeReference<List<Map<String, Object>>>() {
                     });
 
-            return materialDataList.stream()
+            Map<String, Map<String, Object>> materialMap = materialDataList.stream()
                     .collect(Collectors.toMap(
                             data -> (String) data.get("lessonName"),
                             data -> data,
                             (existing, replacement) -> existing,
                             LinkedHashMap::new));
+
+            System.out.println("Loaded " + materialMap.size() + " materials");
+            return materialMap;
         }
     }
 }
