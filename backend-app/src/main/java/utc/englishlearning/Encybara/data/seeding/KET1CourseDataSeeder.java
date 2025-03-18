@@ -66,6 +66,7 @@ public class KET1CourseDataSeeder {
             List<Course> courses = jsonDataLoader.loadCourses();
             Map<String, Lesson> lessonsByName = jsonDataLoader.loadLessons();
             Map<String, Question> questionsByContent = jsonDataLoader.loadQuestions();
+            Map<String, Map<String, Object>> materialsByLesson = jsonDataLoader.loadMaterials();
 
             for (Course course : courses) {
                 // Check if course already exists
@@ -86,7 +87,7 @@ public class KET1CourseDataSeeder {
                 List<String> lessonNames = (List<String>) courseData.get("lessonNames");
 
                 if (lessonNames != null) {
-                    course.setLessonNames(lessonNames); // Set the lessonNames to the Course entity
+                    course.setLessonNames(lessonNames);
 
                     for (String lessonName : lessonNames) {
                         Lesson lesson = lessonsByName.get(lessonName);
@@ -134,6 +135,12 @@ public class KET1CourseDataSeeder {
                                 }
                             }
                         }
+
+                        // Process materials for this lesson
+                        Map<String, Object> materialData = materialsByLesson.get(lessonName);
+                        if (materialData != null) {
+                            seedLearningMaterial(materialData, lesson);
+                        }
                     }
                 }
 
@@ -145,8 +152,12 @@ public class KET1CourseDataSeeder {
         }
     }
 
-    private void seedLearningMaterial(String sourceFilePath, Lesson lesson) {
+    private void seedLearningMaterial(Map<String, Object> materialData, Lesson lesson) {
         try {
+            String sourceFilePath = (String) materialData.get("materPath");
+            String materType = (String) materialData.get("materType");
+            String name = (String) materialData.get("name");
+
             // Load the image from resources
             try (InputStream is = new ClassPathResource(sourceFilePath).getInputStream()) {
                 // Create temp file with original name
@@ -156,9 +167,9 @@ public class KET1CourseDataSeeder {
 
                 // Create MultipartFile from the temp file
                 MultipartFile multipartFile = new ResourceMultipartFile(
+                        name,
                         fileName,
-                        fileName,
-                        "image/png",
+                        materType,
                         Files.readAllBytes(tempFile));
 
                 // Store file using FileStorageService
@@ -167,7 +178,7 @@ public class KET1CourseDataSeeder {
                 // Create Learning_Material record
                 Learning_Material material = new Learning_Material();
                 material.setMaterLink(materLink);
-                material.setMaterType("image/png");
+                material.setMaterType(materType);
                 material.setLesson(lesson);
                 material.setUploadedAt(Instant.now());
                 learningMaterialRepository.save(material);
@@ -179,23 +190,6 @@ public class KET1CourseDataSeeder {
             }
         } catch (IOException e) {
             System.err.println("Error seeding learning material: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public void seedMaterials() {
-        try {
-            // Find lesson by name
-            Lesson lesson = lessonRepository.findAll().stream()
-                    .filter(l -> l.getName().equals("Paper 1: Reading and Writing - Part 1"))
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("Lesson not found"));
-
-            // Seed material for the lesson
-            seedLearningMaterial("data/ket1/img/test1/part1-paper1.png", lesson);
-
-        } catch (Exception e) {
-            System.err.println("Error in seedMaterials: " + e.getMessage());
             e.printStackTrace();
         }
     }
