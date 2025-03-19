@@ -14,7 +14,8 @@ public class DataManagementService {
     public void seedKet1Data() {
         // KET1 Test 1
         courseDataSeeder.seedCourseData("ket1", "1", "1");
-        // courseDataSeeder.seedCourseData("ket1", "1", "2");
+        courseDataSeeder.seedCourseData("ket1", "1", "2");
+        courseDataSeeder.seedCourseData("ket1", "1", "3");
 
         // Add more KET1 tests as needed
         // courseDataSeeder.seedCourseData("ket1", "2", "1");

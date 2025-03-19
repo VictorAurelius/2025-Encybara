@@ -2,63 +2,63 @@
     {
         "name": "Paper 2 Listening Part 1 Image",
         "materType": "image/png",
-        "materPath": "data/ket1/img/test1/paper2/part1-paper2.png",
+        "materPath": "data/ket1/file/test1/paper2/part1-paper2.png",
         "lessonName": "Paper 2: Listening - Part 1",
         "createBy": "admin"
     },
     {
         "name": "Paper 2 Listening Part 2 Image",
         "materType": "image/png",
-        "materPath": "data/ket1/img/test1/paper2/part2-paper2.png",
+        "materPath": "data/ket1/file/test1/paper2/part2-paper2.png",
         "lessonName": "Paper 2: Listening - Part 2",
         "createBy": "admin"
     },
     {
         "name": "Paper 2 Listening Part 3 Image",
         "materType": "image/png",
-        "materPath": "data/ket1/img/test1/paper2/part3-paper2.png",
+        "materPath": "data/ket1/file/test1/paper2/part3-paper2.png",
         "lessonName": "Paper 2: Listening - Part 3",
         "createBy": "admin"
     },
     {
         "name": "Paper 2 Listening Part 4 Image",
         "materType": "image/png",
-        "materPath": "data/ket1/img/test1/paper2/part4-paper2.png",
+        "materPath": "data/ket1/file/test1/paper2/part4-paper2.png",
         "lessonName": "Paper 2: Listening - Part 4",
         "createBy": "admin"
     },
     {
         "name": "Paper 2 Listening Part 5 Image",
         "materType": "image/png",
-        "materPath": "data/ket1/img/test1/paper2/part5-paper2.png",
+        "materPath": "data/ket1/file/test1/paper2/part5-paper2.png",
         "lessonName": "Paper 2: Listening - Part 5",
         "createBy": "admin"
     },
     {
         "name": "Paper 2 Listening Part 2 Audio",
         "materType": "audio/mp3",
-        "materPath": "data/ket1/img/test1/paper2/q-part2.mp3",
+        "materPath": "data/ket1/file/test1/paper2/q-part2.mp3",
         "lessonName": "Paper 2: Listening - Part 2",
         "createBy": "admin"
     },
     {
         "name": "Paper 2 Listening Part 3 Audio",
         "materType": "audio/mp3",
-        "materPath": "data/ket1/img/test1/paper2/q-part3.mp3",
+        "materPath": "data/ket1/file/test1/paper2/q-part3.mp3",
         "lessonName": "Paper 2: Listening - Part 3",
         "createBy": "admin"
     },
     {
         "name": "Paper 2 Listening Part 4 Audio",
         "materType": "audio/mp3",
-        "materPath": "data/ket1/img/test1/paper2/q-part4.mp3",
+        "materPath": "data/ket1/file/test1/paper2/q-part4.mp3",
         "lessonName": "Paper 2: Listening - Part 4",
         "createBy": "admin"
     },
     {
         "name": "Paper 2 Listening Part 5 Audio",
         "materType": "audio/mp3",
-        "materPath": "data/ket1/img/test1/paper2/q-part5.mp3",
+        "materPath": "data/ket1/file/test1/paper2/q-part5.mp3",
         "lessonName": "Paper 2: Listening - Part 5",
         "createBy": "admin"
     }
