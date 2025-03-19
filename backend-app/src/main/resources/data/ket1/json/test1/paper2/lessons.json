@@ -63,12 +63,5 @@
             "Complete the information - Book a holiday for",
             "Complete the information - And get a free"
         ]
-    },
-    {
-        "name": "Paper 3: SPEAKING - Part 1",
-        "skillType": "SPEAKING",
-        "sumQues": 1,
-        "createBy": "admin",
-        "questionContents": []
     }
 ]
