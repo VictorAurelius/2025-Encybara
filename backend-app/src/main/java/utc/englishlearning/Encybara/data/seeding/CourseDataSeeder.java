@@ -30,6 +30,7 @@ public class CourseDataSeeder {
     private final LessonQuestionRepository lessonQuestionRepository;
     private final TestingMaterialLoader materialLoader;
     private final ObjectMapper objectMapper;
+    private final FileStorageService fileStorageService;
     private final LearningMaterialService learningMaterialService;
     private final LearningMaterialRepository learningMaterialRepository;
 
@@ -53,6 +54,7 @@ public class CourseDataSeeder {
         this.lessonQuestionRepository = lessonQuestionRepository;
         this.materialLoader = materialLoader;
         this.objectMapper = objectMapper;
+        this.fileStorageService = fileStorageService;
         this.learningMaterialService = learningMaterialService;
         this.learningMaterialRepository = learningMaterialRepository;
     }
@@ -67,7 +69,7 @@ public class CourseDataSeeder {
             List<Course> courses = materialLoader.loadCourses();
             Map<String, Lesson> lessonsByName = materialLoader.loadLessons();
             Map<String, Question> questionsByContent = materialLoader.loadQuestions();
-            Map<String, Map<String, Object>> materialsByLesson = materialLoader.loadMaterials();
+            Map<String, List<Map<String, Object>>> materialsByTarget = materialLoader.loadMaterials();
 
             for (Course course : courses) {
                 // Check if course already exists
@@ -114,9 +116,30 @@ public class CourseDataSeeder {
                         }
 
                         // Process materials for this lesson
-                        Map<String, Object> materialData = materialsByLesson.get(lessonName);
-                        if (materialData != null) {
-                            seedLearningMaterial(materialData, lesson, courseGroup, testNumber, paperNumber);
+                        List<Map<String, Object>> lessonMaterials = materialsByTarget.get("lessons");
+                        if (lessonMaterials != null) {
+                            for (Map<String, Object> materialData : lessonMaterials) {
+                                if (lessonName.equals(materialData.get("lessonName"))) {
+                                    seedLearningMaterial(materialData, lesson, null, courseGroup, testNumber,
+                                            paperNumber);
+                                }
+                            }
+                        }
+
+                        // Process materials for questions in this lesson
+                        List<Map<String, Object>> questionMaterials = materialsByTarget.get("questions");
+                        if (questionMaterials != null && questionContents != null) {
+                            for (String quesContent : questionContents) {
+                                Question question = questionsByContent.get(quesContent);
+                                if (question != null) {
+                                    for (Map<String, Object> materialData : questionMaterials) {
+                                        if (quesContent.equals(materialData.get("questionContent"))) {
+                                            seedLearningMaterial(materialData, null, question, courseGroup, testNumber,
+                                                    paperNumber);
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -157,7 +180,7 @@ public class CourseDataSeeder {
         }
     }
 
-    private void seedLearningMaterial(Map<String, Object> materialData, Lesson lesson,
+    private void seedLearningMaterial(Map<String, Object> materialData, Lesson lesson, Question question,
             String courseGroup, String testNumber, String paperNumber) {
         try {
             String sourceFilePath = (String) materialData.get("materPath");
@@ -188,13 +211,16 @@ public class CourseDataSeeder {
                 material.setMaterLink(materLink);
                 material.setMaterType(materType);
                 material.setLesson(lesson);
+                material.setQuestion(question);
                 material.setUploadedAt(Instant.now());
                 learningMaterialRepository.save(material);
 
                 // Cleanup temp file
                 Files.deleteIfExists(tempFile);
 
-                System.out.println(">>> SEEDED MATERIAL: " + materLink + " for lesson: " + lesson.getName());
+                String target = lesson != null ? "lesson: " + lesson.getName()
+                        : "question: " + question.getQuesContent();
+                System.out.println(">>> SEEDED MATERIAL: " + materLink + " for " + target);
             }
         } catch (IOException e) {
             System.err.println("Error seeding learning material: " + e.getMessage());

@@ -51,6 +51,7 @@ public class TestingMaterialLoader {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public Map<String, Question> loadQuestions() throws IOException {
         Map<String, Question> questionMap = new HashMap<>();
         int fileCount = 1;
@@ -130,22 +131,43 @@ public class TestingMaterialLoader {
         return question;
     }
 
-    public Map<String, Map<String, Object>> loadMaterials() throws IOException {
-        System.out.println("Loading materials from: " + basePath + "materials.json");
-        try (InputStream is = new ClassPathResource(basePath + "materials.json").getInputStream()) {
+    @SuppressWarnings("unchecked")
+    public Map<String, List<Map<String, Object>>> loadMaterials() throws IOException {
+        Map<String, List<Map<String, Object>>> materialMap = new HashMap<>();
+        materialMap.put("lessons", new ArrayList<>());
+        materialMap.put("questions", new ArrayList<>());
+
+        String fullPath = basePath + "materials.json";
+        Resource resource = new ClassPathResource(fullPath);
+
+        if (!resource.exists()) {
+            System.out.println("NOTE: No materials.json found in path: " + basePath);
+            return materialMap;
+        }
+
+        try (InputStream is = resource.getInputStream()) {
             List<Map<String, Object>> materialDataList = objectMapper.readValue(is,
                     new TypeReference<List<Map<String, Object>>>() {
                     });
 
-            Map<String, Map<String, Object>> materialMap = materialDataList.stream()
-                    .collect(Collectors.toMap(
-                            data -> (String) data.get("lessonName"),
-                            data -> data,
-                            (existing, replacement) -> existing,
-                            LinkedHashMap::new));
+            // Separate materials by target type (lesson or question)
+            for (Map<String, Object> material : materialDataList) {
+                String lessonName = (String) material.get("lessonName");
+                String questionContent = (String) material.get("questionContent");
 
-            System.out.println("Loaded " + materialMap.size() + " materials");
-            return materialMap;
+                if (lessonName != null) {
+                    materialMap.get("lessons").add(material);
+                } else if (questionContent != null) {
+                    materialMap.get("questions").add(material);
+                }
+            }
+
+            System.out.println("Loaded " + materialMap.get("lessons").size() + " lesson materials");
+            System.out.println("Loaded " + materialMap.get("questions").size() + " question materials");
+        } catch (Exception e) {
+            System.err.println("Warning: Error reading materials file: " + e.getMessage());
         }
+
+        return materialMap;
     }
 }

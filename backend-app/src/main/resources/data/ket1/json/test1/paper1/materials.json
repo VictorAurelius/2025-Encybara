@@ -4,6 +4,7 @@
         "materType": "image/png",
         "materPath": "data/ket1/file/test1/paper1/part1-paper1.png",
         "lessonName": "Paper 1: Reading and Writing - Part 1",
+        "questionContent": null,
         "createBy": "admin"
     },
     {
@@ -11,6 +12,7 @@
         "materType": "image/png",
         "materPath": "data/ket1/file/test1/paper1/part2-paper1.png",
         "lessonName": "Paper 1: Reading and Writing - Part 2",
+        "questionContent": null,
         "createBy": "admin"
     },
     {
@@ -18,6 +20,7 @@
         "materType": "image/png",
         "materPath": "data/ket1/file/test1/paper1/part3-paper1.png",
         "lessonName": "Paper 1: Reading and Writing - Part 3",
+        "questionContent": null,
         "createBy": "admin"
     },
     {
@@ -25,6 +28,7 @@
         "materType": "image/png",
         "materPath": "data/ket1/file/test1/paper1/part3-paper1-2.png",
         "lessonName": "Paper 1: Reading and Writing - Conversation at a garage",
+        "questionContent": null,
         "createBy": "admin"
     },
     {
@@ -32,6 +36,7 @@
         "materType": "image/png",
         "materPath": "data/ket1/file/test1/paper1/part4-paper1.png",
         "lessonName": "Paper 1: Reading and Writing - Part 4",
+        "questionContent": null,
         "createBy": "admin"
     },
     {
@@ -39,6 +44,7 @@
         "materType": "image/png",
         "materPath": "data/ket1/file/test1/paper1/part5-paper1.png",
         "lessonName": "Paper 1: Reading and Writing - Part 5",
+        "questionContent": null,
         "createBy": "admin"
     },
     {
@@ -46,6 +52,7 @@
         "materType": "image/png",
         "materPath": "data/ket1/file/test1/paper1/part6-paper1.png",
         "lessonName": "Paper 1: Reading and Writing - Part 6",
+        "questionContent": null,
         "createBy": "admin"
     },
     {
@@ -53,6 +60,7 @@
         "materType": "image/png",
         "materPath": "data/ket1/file/test1/paper1/part7-paper1.png",
         "lessonName": "Paper 1: Reading and Writing - Part 7",
+        "questionContent": null,
         "createBy": "admin"
     },
     {
@@ -60,6 +68,7 @@
         "materType": "image/png",
         "materPath": "data/ket1/file/test1/paper1/part8-paper1.png",
         "lessonName": "Paper 1: Reading and Writing - Part 8",
+        "questionContent": null,
         "createBy": "admin"
     },
     {
@@ -67,6 +76,7 @@
         "materType": "image/png",
         "materPath": "data/ket1/file/test1/paper1/part9-paper1.png",
         "lessonName": "Paper 1: Reading and Writing - Part 9",
+        "questionContent": null,
         "createBy": "admin"
     }
 ]
