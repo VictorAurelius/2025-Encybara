@@ -103,5 +103,70 @@
                 "isCorrect": true
             }
         ]
+    },
+    {
+        "quesContent": "What does Bill do?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "F",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does David do?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "G",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does Paul's mother do?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "E",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does Paul's father do?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "B",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does Paul do?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "A",
+                "isCorrect": true
+            }
+        ]
     }
 ]

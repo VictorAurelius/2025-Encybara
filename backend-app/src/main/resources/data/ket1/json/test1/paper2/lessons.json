@@ -11,5 +11,64 @@
             "Which man wants to see him?",
             "How did the woman get to work?"
         ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 2",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "What does Bill do?",
+            "What does David do?",
+            "What does Paul's mother do?",
+            "What does Paul's father do?",
+            "What does Paul do?"
+        ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 3",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "When is the football match?",
+            "Where are they going to eat on Saturday evening?",
+            "What are they going to do on Sunday morning?",
+            "Where are they going to have lunch on Sunday?",
+            "They can't go to the cinema on Sunday afternoon because"
+        ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 4",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Complete the phone message - From",
+            "Complete the phone message - Party at",
+            "Complete the phone message - Time",
+            "Complete the phone message - Please bring",
+            "Complete the phone message - Her phone number"
+        ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 5",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Complete the information - New address (Road)",
+            "Complete the information - Opposite",
+            "Complete the information - Opens on",
+            "Complete the information - Book a holiday for",
+            "Complete the information - And get a free"
+        ]
+    },
+    {
+        "name": "Paper 3: SPEAKING - Part 1",
+        "skillType": "SPEAKING",
+        "sumQues": 1,
+        "createBy": "admin",
+        "questionContents": []
     }
 ]

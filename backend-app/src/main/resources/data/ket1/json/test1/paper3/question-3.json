@@ -1,0 +1,42 @@
+[
+    {
+        "quesContent": "(Family/Friends) How many people are there in your immediate family?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "(Family/Friends) Who do you get on best with in your family?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "(Family/Friends) What do you usually do with your friends?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "(Family/Friends) What kind of people do you like to have as friends?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "(Family/Friends) How much time do you manage to spend with members of your family?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    }
+]

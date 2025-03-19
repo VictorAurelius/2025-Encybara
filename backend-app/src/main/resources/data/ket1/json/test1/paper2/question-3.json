@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "Complete the phone message - From",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Elaine",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the phone message - Party at",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Grand Hotel",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the phone message - Time",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "8.30 PM",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the phone message - Please bring",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "friend",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the phone message - Her phone number",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "7245936",
+                "isCorrect": true
+            }
+        ]
+    }
+]

@@ -1,0 +1,67 @@
+[
+    {
+        "name": "Speaking - Part 1: Work/Study",
+        "skillType": "SPEAKING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "(Work/Study) What do you do, do you work or are you a student?",
+            "(Work/Study) Why did you choose that job/subject?",
+            "(Work/Study) What responsibilities do you have at work/school?",
+            "(Work/Study) Do you get on well with your colleagues/classmates?",
+            "(Work/Study) If you had the chance, would you change your job/subject?"
+        ]
+    },
+    {
+        "name": "Speaking - Part 1: Home/Hometown",
+        "skillType": "SPEAKING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "(Home/Hometown) Where is your hometown?",
+            "(Home/Hometown) What is your favorite room in your home?",
+            "(Home/Hometown) Do you like your hometown?",
+            "(Home/Hometown) How are the walls decorated in your home?",
+            "(Home/Hometown) What would you change about your hometown/home?"
+        ]
+    },
+    {
+        "name": "Speaking - Part 1: Family/Friends",
+        "skillType": "SPEAKING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "(Family/Friends) How many people are there in your immediate family?",
+            "(Family/Friends) Who do you get on best with in your family?",
+            "(Family/Friends) What do you usually do with your friends?",
+            "(Family/Friends) What kind of people do you like to have as friends?",
+            "(Family/Friends) How much time do you manage to spend with members of your family?"
+        ]
+    },
+    {
+        "name": "Speaking - Part 1: Hobbies/Interests",
+        "skillType": "SPEAKING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "(Hobbies/Interests) What do you enjoy doing in your free time?",
+            "(Hobbies/Interests) How did you become interested in this hobby?",
+            "(Hobbies/Interests) Do you prefer indoor or outdoor activities?",
+            "(Hobbies/Interests) How much time do you spend on your hobbies each week?",
+            "(Hobbies/Interests) Are your hobbies popular in your country?"
+        ]
+    },
+    {
+        "name": "Speaking - Part 1: Daily Routine",
+        "skillType": "SPEAKING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "(Daily Routine) When do you usually get up in the morning?",
+            "(Daily Routine) What is your typical daily routine?",
+            "(Daily Routine) Do you usually have the same routine every day?",
+            "(Daily Routine) What's your favorite time of the day?",
+            "(Daily Routine) Is your routine the same today as it was when you were a child?"
+        ]
+    }
+]

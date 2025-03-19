@@ -1,0 +1,42 @@
+[
+    {
+        "quesContent": "(Hobbies/Interests) What do you enjoy doing in your free time?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "(Hobbies/Interests) How did you become interested in this hobby?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "(Hobbies/Interests) Do you prefer indoor or outdoor activities?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "(Hobbies/Interests) How much time do you spend on your hobbies each week?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "(Hobbies/Interests) Are your hobbies popular in your country?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    }
+]

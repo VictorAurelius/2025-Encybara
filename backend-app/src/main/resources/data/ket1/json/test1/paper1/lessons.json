@@ -69,7 +69,7 @@
     {
         "name": "Paper 1: Reading and Writing - Part 5",
         "skillType": "READING",
-        "sumQues": 28,
+        "sumQues": 8,
         "createBy": "admin",
         "questionContents": [
             "Choose the best word for space 28",
@@ -129,7 +129,7 @@
     {
         "name": "Paper 1: Reading and Writing - Part 9",
         "skillType": "WRITING",
-        "sumQues": 5,
+        "sumQues": 1,
         "createBy": "admin",
         "questionContents": [
             "Read the note from your friend Richard.\nWrite a postcard to tell him what he wants to know.\n'It's great that you're coming to see me in England. Tell me when you are coming, how long you want to stay and what you want to do.\nWrite soon!\nRichard'\nWrite 25-35 words.\nWrite your postcard on the answer sheet."

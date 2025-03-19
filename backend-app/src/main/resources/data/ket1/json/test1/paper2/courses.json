@@ -1,24 +1,10 @@
 [
     {
-        "name": "(Paper 2) Cambridge Key English Test (KET1) - Test 1 - Part 1",
+        "name": "(Paper 2) Cambridge Key English Test (KET1) - Test 1",
         "intro": "(Level A1) Prepare for the Cambridge Key English Test (KET1) with comprehensive practice in reading, writing, listening, and speaking skills. This course covers all essential areas to help you succeed in the KET1 exam.",
         "diffLevel": 1.0,
         "recomLevel": 1.5,
-        "courseType": "READING",
-        "numLike": 0,
-        "courseStatus": "PUBLIC",
-        "sumLesson": 1,
-        "group": "KET1",
-        "speciField": "EVERYONE",
-        "createBy": "admin",
-        "lessonNames": []
-    },
-    {
-        "name": "(Paper 2) Cambridge Key English Test (KET1) - Test 1 - Part 2",
-        "intro": "(Level A1) Prepare for the Cambridge Key English Test (KET1) with comprehensive practice in reading, writing, listening, and speaking skills. This course covers all essential areas to help you succeed in the KET1 exam.",
-        "diffLevel": 1.0,
-        "recomLevel": 1.5,
-        "courseType": "READING",
+        "courseType": "LISTENING",
         "numLike": 0,
         "courseStatus": "PUBLIC",
         "sumLesson": 1,
