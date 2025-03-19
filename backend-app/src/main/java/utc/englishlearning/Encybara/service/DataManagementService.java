@@ -13,22 +13,19 @@ public class DataManagementService {
 
     public void seedKet1Data() {
         // KET1 Test 1
-        courseDataSeeder.seedCourseData("ket1", "1", "1");
-        courseDataSeeder.seedCourseData("ket1", "1", "2");
-        courseDataSeeder.seedCourseData("ket1", "1", "3");
+        courseDataSeeder.seedCourseData("ket1", "test1", "paper1");
+        courseDataSeeder.seedCourseData("ket1", "test1", "paper2");
+        courseDataSeeder.seedCourseData("ket1", "test1", "paper3");
 
         // Add more KET1 tests as needed
         // courseDataSeeder.seedCourseData("ket1", "2", "1");
         // courseDataSeeder.seedCourseData("ket1", "2", "2");
     }
 
-    public void seedKet2Data() {
-        // KET2 Test 1
-        // courseDataSeeder.seedCourseData("ket2", "1", "1");
-        // courseDataSeeder.seedCourseData("ket2", "1", "2");
-
-        // Add more KET2 tests as needed
-        // courseDataSeeder.seedCourseData("ket2", "2", "1");
-        // courseDataSeeder.seedCourseData("ket2", "2", "2");
+    public void seedEFITData() {
+        // EFIT Test 1
+        courseDataSeeder.seedCourseData("efit", "unit1", "paper1");
+        // courseDataSeeder.seedCourseData("efit", "test1", "paper2");
+        // courseDataSeeder.seedCourseData("efit", "test1", "paper3");
     }
 }

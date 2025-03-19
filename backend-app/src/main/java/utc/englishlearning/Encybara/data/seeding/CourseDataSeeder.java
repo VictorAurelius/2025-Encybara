@@ -60,10 +60,10 @@ public class CourseDataSeeder {
     }
 
     @SuppressWarnings("unchecked")
-    public void seedCourseData(String courseGroup, String testNumber, String paperNumber) {
+    public void seedCourseData(String courseGroup, String unitNumber, String paperNumber) {
         try {
             // Set the data path for this specific course/test/paper
-            materialLoader.setDataPath(courseGroup, testNumber, paperNumber);
+            materialLoader.setDataPath(courseGroup, unitNumber, paperNumber);
 
             // Load all data first
             List<Course> courses = materialLoader.loadCourses();
@@ -120,7 +120,7 @@ public class CourseDataSeeder {
                         if (lessonMaterials != null) {
                             for (Map<String, Object> materialData : lessonMaterials) {
                                 if (lessonName.equals(materialData.get("lessonName"))) {
-                                    seedLearningMaterial(materialData, lesson, null, courseGroup, testNumber,
+                                    seedLearningMaterial(materialData, lesson, null, courseGroup, unitNumber,
                                             paperNumber);
                                 }
                             }
@@ -134,7 +134,7 @@ public class CourseDataSeeder {
                                 if (question != null) {
                                     for (Map<String, Object> materialData : questionMaterials) {
                                         if (quesContent.equals(materialData.get("questionContent"))) {
-                                            seedLearningMaterial(materialData, null, question, courseGroup, testNumber,
+                                            seedLearningMaterial(materialData, null, question, courseGroup, unitNumber,
                                                     paperNumber);
                                         }
                                     }

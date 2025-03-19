@@ -23,9 +23,9 @@ public class TestingMaterialLoader {
         this.objectMapper = objectMapper;
     }
 
-    public void setDataPath(String courseGroup, String testNumber, String paperNumber) {
-        this.basePath = String.format("%s/%s/json/test%s/paper%s/",
-                JSON_BASE, courseGroup.toLowerCase(), testNumber, paperNumber);
+    public void setDataPath(String courseGroup, String unitNumber, String paperNumber) {
+        this.basePath = String.format("%s/%s/json/%s/%s/",
+                JSON_BASE, courseGroup.toLowerCase(), unitNumber, paperNumber);
         System.out.println("Setting data path to: " + this.basePath);
     }
 
