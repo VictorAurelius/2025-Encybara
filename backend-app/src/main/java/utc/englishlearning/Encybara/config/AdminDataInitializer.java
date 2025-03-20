@@ -123,6 +123,7 @@ public class AdminDataInitializer implements CommandLineRunner {
         // Seed course data
         System.out.println(">>> START SEEDING COURSE DATA");
         dataManagementService.seedKet1Data();
+        dataManagementService.seedEFITData();
         System.out.println(">>> END SEEDING COURSE DATA");
     }
 }
