@@ -3,7 +3,7 @@
         "name": "EFIT Unit 1: Paper 1 - Lesson 1 Image",
         "materType": "image/png",
         "materPath": "data/efit/file/unit1/paper1/les1-paper1.png",
-        "lessonName": "Speaking - Part 1: Information Technology",
+        "lessonName": "(JaD) 1. Speaking: Information Technology",
         "questionContent": null,
         "createBy": "admin"
     },
@@ -11,7 +11,7 @@
         "name": "EFIT Unit 1: Paper 1 - Lesson 2 Image",
         "materType": "image/png",
         "materPath": "data/efit/file/unit1/paper1/les2-paper1.png",
-        "lessonName": "Listening 2: People introducing their jobs",
+        "lessonName": "(JaD) 2. Listening: People introducing their jobs",
         "questionContent": null,
         "createBy": "admin"
     },
@@ -19,7 +19,7 @@
         "name": "EFIT Unit 1: Paper 1 - Lesson 2 Audio",
         "materType": "audio/mp3",
         "materPath": "data/efit/file/unit1/paper1/les2-3-paper1.mp3",
-        "lessonName": "Listening 2: People introducing their jobs",
+        "lessonName": "(JaD) 2. Listening: People introducing their jobs",
         "questionContent": null,
         "createBy": "admin"
     },
@@ -27,7 +27,7 @@
         "name": "EFIT Unit 1: Paper 1 - Lesson 3 Audio",
         "materType": "audio/mp3",
         "materPath": "data/efit/file/unit1/paper1/les2-3-paper1.mp3",
-        "lessonName": "Listening 3: IT Collocations",
+        "lessonName": "(JaD) 3. Listening: IT Collocations",
         "questionContent": null,
         "createBy": "admin"
     }

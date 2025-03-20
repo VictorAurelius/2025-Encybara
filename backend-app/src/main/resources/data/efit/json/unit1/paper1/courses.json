@@ -7,15 +7,16 @@
         "courseType": "ALLSKILLS",
         "numLike": 0,
         "courseStatus": "PUBLIC",
-        "sumLesson": 4,
+        "sumLesson": 5,
         "group": "English for Information Technology - UTC",
         "speciField": "IT",
         "createBy": "admin",
         "lessonNames": [
-            "(JaD) Speaking - Part 1: Information Technology",
-            "(JaD) Listening 1: People introducing their jobs",
-            "(JaD) Listening 2: IT Collocations",
-            "(JaD) Speaking - Part 2: IT Jobs Discussion"
+            "(JaD) 1. Speaking: Information Technology",
+            "(JaD) 2. Listening: People introducing their jobs",
+            "(JaD) 3. Listening: IT Collocations",
+            "(JaD) 4. Speaking: IT Jobs Discussion",
+            "(JaD) 5. Listening: IT Support Technician Job"
         ]
     }
 ]

@@ -1,6 +1,6 @@
 [
     {
-        "name": "(JaD) Speaking - Part 1: Information Technology",
+        "name": "(JaD) 1. Speaking: Information Technology",
         "skillType": "SPEAKING",
         "sumQues": 3,
         "createBy": "admin",
@@ -11,7 +11,7 @@
         ]
     },
     {
-        "name": "(JaD) Listening 1: People introducing their jobs",
+        "name": "(JaD) 2. Listening: People introducing their jobs",
         "skillType": "LISTENING",
         "sumQues": 6,
         "createBy": "admin",
@@ -25,7 +25,7 @@
         ]
     },
     {
-        "name": "(JaD) Listening 2: IT Collocations",
+        "name": "(JaD) 3. Listening: IT Collocations",
         "skillType": "LISTENING",
         "sumQues": 9,
         "createBy": "admin",
@@ -42,7 +42,7 @@
         ]
     },
     {
-        "name": "(JaD) Speaking - Part 2: IT Jobs Discussion",
+        "name": "(JaD) 4. Speaking: IT Jobs Discussion",
         "skillType": "SPEAKING",
         "sumQues": 3,
         "createBy": "admin",
@@ -53,7 +53,7 @@
         ]
     },
     {
-        "name": "(JaD) Listening 3: IT Support Technician Job",
+        "name": "(JaD) 5. Listening: IT Support Technician Job",
         "skillType": "LISTENING",
         "sumQues": 8,
         "createBy": "admin",
