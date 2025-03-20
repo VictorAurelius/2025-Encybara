@@ -63,5 +63,65 @@
             "(Daily Routine) What's your favorite time of the day?",
             "(Daily Routine) Is your routine the same today as it was when you were a child?"
         ]
+    },
+    {
+        "name": "Describe a family member you spend a lot of time with",
+        "skillType": "SPEAKING",
+        "sumQues": 4,
+        "createBy": "admin",
+        "questionContents": [
+            "(Family member) Who this person is?",
+            "(Family member) What relationship you have with this person?",
+            "(Family member) What activities you do together?",
+            "(Family member) Explain why you spend the most time with him/her."
+        ]
+    },
+    {
+        "name": "Describe a person who expresses his/her feelings openly",
+        "skillType": "SPEAKING",
+        "sumQues": 4,
+        "createBy": "admin",
+        "questionContents": [
+            "(Feelings openly) Who that person is?",
+            "(Feelings openly) How long you have known him/her?",
+            "(Feelings openly) How he/she expresses feelings?",
+            "(Feelings openly) Explain how you feel about this person."
+        ]
+    },
+    {
+        "name": "Describe someone you admire",
+        "skillType": "SPEAKING",
+        "sumQues": 4,
+        "createBy": "admin",
+        "questionContents": [
+            "(Admire) Who this person is?",
+            "(Admire) How you know this person?",
+            "(Admire) What qualities this person has?",
+            "(Admire) Explain why you admire this person."
+        ]
+    },
+    {
+        "name": "Describe a famous person in your country",
+        "skillType": "SPEAKING",
+        "sumQues": 4,
+        "createBy": "admin",
+        "questionContents": [
+            "(Famous Person) Who this person is?",
+            "(Famous Person) What they do?",
+            "(Famous Person) Why they are famous?",
+            "(Famous Person) Explain how people in your country feel about this person."
+        ]
+    },
+    {
+        "name": "Describe a friend who talks a lot",
+        "skillType": "SPEAKING",
+        "sumQues": 4,
+        "createBy": "admin",
+        "questionContents": [
+            "(Friend talks a lot) Who this person is?",
+            "(Friend talks a lot) How you met this person?",
+            "(Friend talks a lot) What you usually do together?",
+            "(Friend talks a lot) Explain how you feel about this person."
+        ]
     }
 ]
