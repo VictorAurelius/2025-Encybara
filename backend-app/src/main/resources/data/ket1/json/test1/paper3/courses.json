@@ -38,5 +38,25 @@
             "Describe a famous person in your country",
             "Describe a friend who talks a lot"
         ]
+    },
+    {
+        "name": "Speaking - Part 2: Describe an object/place/event/activity",
+        "intro": "(Level A1-A2) Enhance your speaking skills for the Cambridge KET exam by practicing detailed descriptions of objects, places, events, and activities. This course helps you develop fluency and confidence in expressing ideas clearly and sharing personal experiences. By focusing on real-life scenarios, you'll improve your ability to organize thoughts and communicate effectively in Part 2 of the KET Speaking test.",
+        "diffLevel": 3.5,
+        "recomLevel": 3.0,
+        "courseType": "SPEAKING",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 5,
+        "group": "Cambridge Key English Test 1 (KET1)",
+        "speciField": "EVERYONE",
+        "createBy": "admin",
+        "lessonNames": [
+            "Describe a present you have given someone",
+            "Describe something you own which is very important to you",
+            "Describe a change that could improve your local area",
+            "Describe a time when the weather prevented you from doing something",
+            "Describe an exciting experience you have had"
+        ]
     }
 ]

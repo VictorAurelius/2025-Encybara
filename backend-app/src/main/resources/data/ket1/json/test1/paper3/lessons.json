@@ -123,5 +123,65 @@
             "(Friend talks a lot) What you usually do together?",
             "(Friend talks a lot) Explain how you feel about this person."
         ]
+    },
+    {
+        "name": "Describe a present you have given someone",
+        "skillType": "SPEAKING",
+        "sumQues": 4,
+        "createBy": "admin",
+        "questionContents": [
+            "(Present) What the present was?",
+            "(Present) Who you gave it to?",
+            "(Present) When you gave it?",
+            "(Present) Explain why you decided to give this particular gift."
+        ]
+    },
+    {
+        "name": "Describe something you own which is very important to you",
+        "skillType": "SPEAKING",
+        "sumQues": 4,
+        "createBy": "admin",
+        "questionContents": [
+            "(Important object) Where you got it from?",
+            "(Important object) How long you have had it?",
+            "(Important object) What you use it for?",
+            "(Important object) Explain why it is important to you."
+        ]
+    },
+    {
+        "name": "Describe a change that could improve your local area",
+        "skillType": "SPEAKING",
+        "sumQues": 4,
+        "createBy": "admin",
+        "questionContents": [
+            "(Local change) What the change would be?",
+            "(Local change) How this change could be made?",
+            "(Local change) Who would benefit from the change?",
+            "(Local change) Explain how this change would improve your local area."
+        ]
+    },
+    {
+        "name": "Describe a time when the weather prevented you from doing something",
+        "skillType": "SPEAKING",
+        "sumQues": 4,
+        "createBy": "admin",
+        "questionContents": [
+            "(Weather) When it happened?",
+            "(Weather) What you planned to do?",
+            "(Weather) What the weather was like?",
+            "(Weather) Explain how you felt when you had to change your plans."
+        ]
+    },
+    {
+        "name": "Describe an exciting experience you have had",
+        "skillType": "SPEAKING",
+        "sumQues": 4,
+        "createBy": "admin",
+        "questionContents": [
+            "(Exciting experience) What you did?",
+            "(Exciting experience) Where and when it happened?",
+            "(Exciting experience) Who you were with?",
+            "(Exciting experience) Explain why it was exciting for you."
+        ]
     }
 ]
