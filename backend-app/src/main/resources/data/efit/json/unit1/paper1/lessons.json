@@ -1,6 +1,6 @@
 [
     {
-        "name": "Speaking - Part 1: Information Technology",
+        "name": "(JaD) Speaking - Part 1: Information Technology",
         "skillType": "SPEAKING",
         "sumQues": 3,
         "createBy": "admin",
@@ -11,7 +11,7 @@
         ]
     },
     {
-        "name": "Listening 2: People introducing their jobs",
+        "name": "(JaD) Listening 1: People introducing their jobs",
         "skillType": "LISTENING",
         "sumQues": 6,
         "createBy": "admin",
@@ -25,7 +25,7 @@
         ]
     },
     {
-        "name": "Listening 3: IT Collocations",
+        "name": "(JaD) Listening 2: IT Collocations",
         "skillType": "LISTENING",
         "sumQues": 9,
         "createBy": "admin",
@@ -39,6 +39,33 @@
             "Complete the collocation: design _______",
             "Complete the collocation: maintain _______",
             "Complete the collocation: write _______ for software"
+        ]
+    },
+    {
+        "name": "(JaD) Speaking - Part 2: IT Jobs Discussion",
+        "skillType": "SPEAKING",
+        "sumQues": 3,
+        "createBy": "admin",
+        "questionContents": [
+            "(IT Jobs) List any other IT jobs you can think of.",
+            "(IT Jobs) What do people in these jobs do?",
+            "(IT Jobs) Which jobs would/wouldn't you like to do? Why?"
+        ]
+    },
+    {
+        "name": "(JaD) Listening 3: IT Support Technician Job",
+        "skillType": "LISTENING",
+        "sumQues": 8,
+        "createBy": "admin",
+        "questionContents": [
+            "What do you think Robert's job is?",
+            "Does Robert check emails?",
+            "Does Robert have emails waiting for him?",
+            "Does Robert visit people at their desks?",
+            "Do sales people have problems?",
+            "Does Robert attend meetings?",
+            "Does Robert visit other companies?",
+            "Complete the sentence: Robert _______ checks emails."
         ]
     }
 ]
