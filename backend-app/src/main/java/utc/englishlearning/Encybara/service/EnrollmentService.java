@@ -12,6 +12,7 @@ import utc.englishlearning.Encybara.domain.response.enrollment.ResEnrollmentWith
 import utc.englishlearning.Encybara.domain.response.enrollment.ResEnrollmentWithRecommendationsDTO.SkillProgress;
 import utc.englishlearning.Encybara.exception.ResourceNotFoundException;
 import utc.englishlearning.Encybara.repository.*;
+import utc.englishlearning.Encybara.util.constant.EnglishLevelEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -116,8 +117,21 @@ public class EnrollmentService {
         // Automatically evaluate learning result when course is completed
         if (comLevel >= 80.0) {
             // Update learning result scores
+            // Update learning result scores
             learningResultService.evaluateAndUpdateScores(enrollment);
             Learning_Result learningResult = enrollment.getLearningResult();
+
+            // Calculate and update English level based on average score
+            double avgScore = (learningResult.getListeningScore() +
+                    learningResult.getSpeakingScore() +
+                    learningResult.getReadingScore() +
+                    learningResult.getWritingScore()) / 4.0;
+
+            // Update user's English level based on average score
+            User user = enrollment.getUser();
+            EnglishLevelEnum level = EnglishLevelEnum.fromScore(avgScore);
+            user.setEnglishlevel(level.getDisplayName());
+            userRepository.save(user);
 
             // Get course recommendations
             List<Course> recommendedCourses = courseRecommendationService.getRecommendedCourses(learningResult);
