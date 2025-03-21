@@ -32,4 +32,10 @@ public class Enrollment {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "learning_result_id", nullable = false)
+    private Learning_Result learningResult;
+
+    private double skillScore; // Score achieved for the specific skill in this course
 }
