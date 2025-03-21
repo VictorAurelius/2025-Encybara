@@ -1,17 +1,16 @@
 package utc.englishlearning.Encybara.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utc.englishlearning.Encybara.domain.request.enrollment.ReqCreateEnrollmentDTO;
-import utc.englishlearning.Encybara.domain.response.enrollment.ResEnrollmentDTO;
-import utc.englishlearning.Encybara.service.EnrollmentService;
-import utc.englishlearning.Encybara.domain.response.RestResponse;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.RequestParam;
 import utc.englishlearning.Encybara.domain.request.enrollment.ReqCalculateEnrollmentResultDTO;
-import utc.englishlearning.Encybara.domain.response.enrollment.ResCalculateEnrollmentResultDTO;
+import utc.englishlearning.Encybara.domain.response.enrollment.ResEnrollmentDTO;
+import utc.englishlearning.Encybara.domain.response.enrollment.ResEnrollmentWithRecommendationsDTO;
+import utc.englishlearning.Encybara.domain.response.RestResponse;
+import utc.englishlearning.Encybara.service.EnrollmentService;
 
 @RestController
 @RequestMapping("/api/v1/enrollments")
@@ -36,7 +35,7 @@ public class EnrollmentController {
         enrollmentService.joinCourse(id);
         RestResponse<Void> response = new RestResponse<>();
         response.setStatusCode(200);
-        response.setMessage("Joined course successfully");
+        response.setMessage("Course joined successfully");
         return ResponseEntity.ok(response);
     }
 
@@ -45,14 +44,14 @@ public class EnrollmentController {
         enrollmentService.refuseCourse(id);
         RestResponse<Void> response = new RestResponse<>();
         response.setStatusCode(200);
-        response.setMessage("Enrollment deleted successfully");
+        response.setMessage("Course refused successfully");
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<RestResponse<Page<ResEnrollmentDTO>>> getEnrollmentsByUserId(
             @PathVariable("userId") Long userId,
-            @RequestParam("proStatus") Boolean proStatus,
+            @RequestParam(value = "proStatus", required = false) Boolean proStatus,
             Pageable pageable) {
         Page<ResEnrollmentDTO> enrollments = enrollmentService.getEnrollmentsByUserId(userId, proStatus, pageable);
         RestResponse<Page<ResEnrollmentDTO>> response = new RestResponse<>();
@@ -63,10 +62,10 @@ public class EnrollmentController {
     }
 
     @PostMapping("/calculate-result")
-    public ResponseEntity<RestResponse<ResCalculateEnrollmentResultDTO>> calculateEnrollmentResult(
+    public ResponseEntity<RestResponse<ResEnrollmentWithRecommendationsDTO>> calculateEnrollmentResult(
             @RequestBody ReqCalculateEnrollmentResultDTO reqDto) {
-        ResCalculateEnrollmentResultDTO result = enrollmentService.calculateEnrollmentResult(reqDto);
-        RestResponse<ResCalculateEnrollmentResultDTO> response = new RestResponse<>();
+        ResEnrollmentWithRecommendationsDTO result = enrollmentService.calculateEnrollmentResult(reqDto);
+        RestResponse<ResEnrollmentWithRecommendationsDTO> response = new RestResponse<>();
         response.setStatusCode(200);
         response.setMessage("Enrollment result calculated successfully");
         response.setData(result);
@@ -74,7 +73,7 @@ public class EnrollmentController {
     }
 
     @GetMapping("/latest")
-    public ResponseEntity<RestResponse<ResEnrollmentDTO>> getLatestEnrollmentByCourseId(
+    public ResponseEntity<RestResponse<ResEnrollmentDTO>> getLatestEnrollment(
             @RequestParam("courseId") Long courseId,
             @RequestParam("userId") Long userId) {
         ResEnrollmentDTO enrollmentDTO = enrollmentService.getLatestEnrollmentByCourseIdAndUserId(courseId, userId);
