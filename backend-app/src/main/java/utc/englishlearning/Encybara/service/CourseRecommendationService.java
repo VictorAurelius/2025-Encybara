@@ -2,6 +2,7 @@ package utc.englishlearning.Encybara.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import utc.englishlearning.Encybara.domain.Course;
 import utc.englishlearning.Encybara.domain.Enrollment;
@@ -9,6 +10,7 @@ import utc.englishlearning.Encybara.domain.Learning_Result;
 import utc.englishlearning.Encybara.repository.CourseRepository;
 import utc.englishlearning.Encybara.repository.EnrollmentRepository;
 import utc.englishlearning.Encybara.util.constant.CourseTypeEnum;
+import utc.englishlearning.Encybara.util.constant.CourseStatusEnum;
 import utc.englishlearning.Encybara.util.constant.SkillTypeEnum;
 
 import java.util.*;
@@ -16,6 +18,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class CourseRecommendationService {
+
+    private static final double MAX_RECOMMENDED_LEVEL_INCREASE = 1.0;
+    private static final double MIN_COMPLETION_RATE_FOR_HIGHER_LEVEL = 80.0;
+    private static final double MAX_SKILL_GAP_FOR_ALLSKILLS = 1.0;
 
     @Autowired
     private CourseRepository courseRepository;
@@ -26,30 +32,47 @@ public class CourseRecommendationService {
     public List<Course> getRecommendedCourses(Learning_Result learningResult) {
         List<Course> recommendations = new ArrayList<>();
 
-        // Get recommended courses for each skill
         recommendations.addAll(getRecommendedCoursesForSkill(learningResult, SkillTypeEnum.LISTENING));
         recommendations.addAll(getRecommendedCoursesForSkill(learningResult, SkillTypeEnum.SPEAKING));
         recommendations.addAll(getRecommendedCoursesForSkill(learningResult, SkillTypeEnum.READING));
         recommendations.addAll(getRecommendedCoursesForSkill(learningResult, SkillTypeEnum.WRITING));
 
-        // Add ALLSKILLS courses if overall progress is good
-        if (isOverallProgressGood(learningResult)) {
+        if (isReadyForAllSkills(learningResult)) {
             recommendations.addAll(getRecommendedAllSkillsCourses(learningResult));
         }
 
-        // Prioritize recommendations based on skill gaps
-        return prioritizeRecommendations(recommendations, learningResult);
+        return filterAndPrioritizeRecommendations(recommendations, learningResult);
+    }
+
+    private boolean isReadyForAllSkills(Learning_Result learningResult) {
+        double maxSkill = Math.max(
+                Math.max(learningResult.getListeningScore(), learningResult.getSpeakingScore()),
+                Math.max(learningResult.getReadingScore(), learningResult.getWritingScore()));
+        double minSkill = Math.min(
+                Math.min(learningResult.getListeningScore(), learningResult.getSpeakingScore()),
+                Math.min(learningResult.getReadingScore(), learningResult.getWritingScore()));
+
+        return (maxSkill - minSkill <= MAX_SKILL_GAP_FOR_ALLSKILLS) && isOverallProgressGood(learningResult);
     }
 
     private List<Course> getRecommendedCoursesForSkill(Learning_Result learningResult, SkillTypeEnum skill) {
+        if (skill == SkillTypeEnum.ALLSKILLS) {
+            return getRecommendedAllSkillsCourses(learningResult);
+        }
+
         double currentLevel = getSkillLevel(learningResult, skill);
         double[] difficultyRange = calculateRecommendedDifficultyRange(learningResult, skill);
 
-        // Get courses within the difficulty range for the skill
-        return courseRepository.findByCourseTypeAndDiffLevelBetween(
+        return courseRepository.findPublicCoursesByTypeAndLevelRange(
                 mapSkillTypeToCourseType(skill),
                 difficultyRange[0],
-                difficultyRange[1]);
+                difficultyRange[1],
+                CourseStatusEnum.PUBLIC);
+    }
+
+    private boolean isAppropriateLevel(Course course, double currentLevel) {
+        return course.getRecomLevel() <= currentLevel &&
+                course.getDiffLevel() <= currentLevel + MAX_RECOMMENDED_LEVEL_INCREASE;
     }
 
     private double[] calculateRecommendedDifficultyRange(Learning_Result learningResult, SkillTypeEnum skill) {
@@ -57,32 +80,27 @@ public class CourseRecommendationService {
         double lowerBound = currentLevel - 0.5;
         double upperBound = currentLevel + 0.5;
 
-        // Adjust range based on recent performance
         List<Enrollment> recentEnrollments = getRecentEnrollments(learningResult.getUser().getId(), skill, 5);
 
         if (!recentEnrollments.isEmpty()) {
-            double avgCompletion = recentEnrollments.stream()
-                    .mapToDouble(Enrollment::getComLevel)
-                    .average()
-                    .orElse(0.0);
-
-            // Adjust difficulty based on completion rates
-            if (areAllCompletionRatesLow(recentEnrollments)) {
-                lowerBound -= 0.5;
-                upperBound -= 0.5;
-            } else if (areAllCompletionRatesHigh(recentEnrollments)) {
-                lowerBound += 0.5;
-                upperBound += 0.5;
+            if (areAllCompletionRatesHigh(recentEnrollments)) {
+                upperBound = Math.min(7.0, currentLevel + MAX_RECOMMENDED_LEVEL_INCREASE);
+            } else if (areAllCompletionRatesLow(recentEnrollments)) {
+                lowerBound = Math.max(1.0, currentLevel - 1.0);
+                upperBound = currentLevel;
             }
 
-            // Check for stagnation or progress
-            boolean isStagnating = isSkillStagnating(learningResult, skill);
-            if (isStagnating) {
-                lowerBound -= 0.5; // Suggest easier courses to build foundation
+            if (isSkillStagnating(learningResult, skill)) {
+                upperBound = currentLevel;
+                lowerBound = Math.max(1.0, currentLevel - 0.5);
             }
         }
 
-        // Ensure bounds stay within valid range (1.0 - 7.0)
+        if (skill == SkillTypeEnum.ALLSKILLS) {
+            lowerBound = Math.max(lowerBound, currentLevel - 0.5);
+            upperBound = Math.min(upperBound, currentLevel + 0.5);
+        }
+
         return new double[] {
                 Math.max(1.0, lowerBound),
                 Math.min(7.0, upperBound)
@@ -95,18 +113,31 @@ public class CourseRecommendationService {
             case SPEAKING -> learningResult.getSpeakingScore();
             case READING -> learningResult.getReadingScore();
             case WRITING -> learningResult.getWritingScore();
-            default -> throw new IllegalArgumentException("Invalid skill type");
+            case ALLSKILLS -> {
+                double avg = (learningResult.getListeningScore() +
+                        learningResult.getSpeakingScore() +
+                        learningResult.getReadingScore() +
+                        learningResult.getWritingScore()) / 4.0;
+                yield Math.round(avg * 2) / 2.0;
+            }
         };
     }
 
+    private List<Enrollment> getRecentEnrollments(Long userId, SkillTypeEnum skill, int limit) {
+        return enrollmentRepository.findByUserIdAndCourseTypeSortedByEnrollDate(
+                userId,
+                mapSkillTypeToCourseType(skill),
+                PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "errolDate"))).getContent();
+    }
+
     private boolean areAllCompletionRatesLow(List<Enrollment> enrollments) {
-        return enrollments.stream()
+        return !enrollments.isEmpty() && enrollments.stream()
                 .allMatch(e -> e.getComLevel() < 50.0);
     }
 
     private boolean areAllCompletionRatesHigh(List<Enrollment> enrollments) {
-        return enrollments.stream()
-                .allMatch(e -> e.getComLevel() > 80.0);
+        return !enrollments.isEmpty() && enrollments.stream()
+                .allMatch(e -> e.getComLevel() >= MIN_COMPLETION_RATE_FOR_HIGHER_LEVEL);
     }
 
     private boolean isSkillStagnating(Learning_Result learningResult, SkillTypeEnum skill) {
@@ -114,7 +145,14 @@ public class CourseRecommendationService {
         double previousScore = getPreviousSkillLevel(learningResult, skill);
         List<Enrollment> recentEnrollments = getRecentEnrollments(learningResult.getUser().getId(), skill, 3);
 
-        return currentScore <= previousScore && !recentEnrollments.isEmpty();
+        boolean noProgress = currentScore <= previousScore;
+        boolean hasLowCompletionRates = !recentEnrollments.isEmpty() &&
+                recentEnrollments.stream()
+                        .mapToDouble(Enrollment::getComLevel)
+                        .average()
+                        .orElse(0.0) < 60.0;
+
+        return noProgress || hasLowCompletionRates;
     }
 
     private double getPreviousSkillLevel(Learning_Result learningResult, SkillTypeEnum skill) {
@@ -123,42 +161,78 @@ public class CourseRecommendationService {
             case SPEAKING -> learningResult.getPreviousSpeakingScore();
             case READING -> learningResult.getPreviousReadingScore();
             case WRITING -> learningResult.getPreviousWritingScore();
-            default -> throw new IllegalArgumentException("Invalid skill type");
+            case ALLSKILLS -> {
+                double avg = (learningResult.getPreviousListeningScore() +
+                        learningResult.getPreviousSpeakingScore() +
+                        learningResult.getPreviousReadingScore() +
+                        learningResult.getPreviousWritingScore()) / 4.0;
+                yield Math.round(avg * 2) / 2.0;
+            }
         };
     }
 
     private List<Course> getRecommendedAllSkillsCourses(Learning_Result learningResult) {
-        double averageLevel = (learningResult.getListeningScore() +
-                learningResult.getSpeakingScore() +
-                learningResult.getReadingScore() +
-                learningResult.getWritingScore()) / 4.0;
+        double averageLevel = getSkillLevel(learningResult, SkillTypeEnum.ALLSKILLS);
+        double[] difficultyRange = calculateRecommendedDifficultyRange(learningResult, SkillTypeEnum.ALLSKILLS);
 
-        return courseRepository.findByCourseTypeAndDiffLevelBetween(
+        return courseRepository.findPublicCoursesByTypeAndLevelRange(
                 CourseTypeEnum.ALLSKILLS,
-                averageLevel - 0.5,
-                averageLevel + 0.5);
+                difficultyRange[0],
+                difficultyRange[1],
+                CourseStatusEnum.PUBLIC);
     }
 
     private boolean isOverallProgressGood(Learning_Result learningResult) {
-        // Check if all skills are improving
-        return learningResult.getListeningScore() > learningResult.getPreviousListeningScore() &&
+        boolean skillsImproving = learningResult.getListeningScore() > learningResult.getPreviousListeningScore() &&
                 learningResult.getSpeakingScore() > learningResult.getPreviousSpeakingScore() &&
                 learningResult.getReadingScore() > learningResult.getPreviousReadingScore() &&
                 learningResult.getWritingScore() > learningResult.getPreviousWritingScore();
+
+        List<Enrollment> recentListening = getRecentEnrollments(learningResult.getUser().getId(),
+                SkillTypeEnum.LISTENING, 3);
+        List<Enrollment> recentSpeaking = getRecentEnrollments(learningResult.getUser().getId(), SkillTypeEnum.SPEAKING,
+                3);
+        List<Enrollment> recentReading = getRecentEnrollments(learningResult.getUser().getId(), SkillTypeEnum.READING,
+                3);
+        List<Enrollment> recentWriting = getRecentEnrollments(learningResult.getUser().getId(), SkillTypeEnum.WRITING,
+                3);
+
+        boolean goodCompletionRates = areAllCompletionRatesHigh(recentListening) &&
+                areAllCompletionRatesHigh(recentSpeaking) &&
+                areAllCompletionRatesHigh(recentReading) &&
+                areAllCompletionRatesHigh(recentWriting);
+
+        return skillsImproving && goodCompletionRates;
     }
 
-    private List<Course> prioritizeRecommendations(List<Course> recommendations, Learning_Result learningResult) {
-        // Find the highest skill level
+    private List<Course> filterAndPrioritizeRecommendations(List<Course> recommendations,
+            Learning_Result learningResult) {
         double maxSkillLevel = Math.max(
                 Math.max(learningResult.getListeningScore(), learningResult.getSpeakingScore()),
                 Math.max(learningResult.getReadingScore(), learningResult.getWritingScore()));
 
-        // Sort recommendations prioritizing courses for skills that need improvement
         return recommendations.stream()
+                .filter(course -> isAppropriateLevel(course, getSkillLevel(learningResult,
+                        mapCourseTypeToSkillType(course.getCourseType()))))
                 .sorted((c1, c2) -> {
                     double skill1Gap = getSkillGap(c1.getCourseType(), learningResult, maxSkillLevel);
                     double skill2Gap = getSkillGap(c2.getCourseType(), learningResult, maxSkillLevel);
-                    return Double.compare(skill2Gap, skill1Gap); // Larger gaps first
+
+                    int gapCompare = Double.compare(skill2Gap, skill1Gap);
+                    if (gapCompare != 0) {
+                        return gapCompare;
+                    }
+
+                    if (c1.getCourseType() == CourseTypeEnum.ALLSKILLS
+                            && c2.getCourseType() != CourseTypeEnum.ALLSKILLS) {
+                        return isReadyForAllSkills(learningResult) ? -1 : 1;
+                    }
+                    if (c2.getCourseType() == CourseTypeEnum.ALLSKILLS
+                            && c1.getCourseType() != CourseTypeEnum.ALLSKILLS) {
+                        return isReadyForAllSkills(learningResult) ? 1 : -1;
+                    }
+
+                    return Double.compare(c1.getDiffLevel(), c2.getDiffLevel());
                 })
                 .collect(Collectors.toList());
     }
@@ -169,18 +243,9 @@ public class CourseRecommendationService {
             case SPEAKING -> learningResult.getSpeakingScore();
             case READING -> learningResult.getReadingScore();
             case WRITING -> learningResult.getWritingScore();
-            case ALLSKILLS -> (learningResult.getListeningScore() + learningResult.getSpeakingScore() +
-                    learningResult.getReadingScore() + learningResult.getWritingScore()) / 4.0;
-            default -> 0.0;
+            case ALLSKILLS -> getSkillLevel(learningResult, SkillTypeEnum.ALLSKILLS);
         };
         return maxSkillLevel - skillLevel;
-    }
-
-    private List<Enrollment> getRecentEnrollments(Long userId, SkillTypeEnum skill, int limit) {
-        return enrollmentRepository.findByUserIdAndCourseTypeSortedByEnrollDate(
-                userId,
-                mapSkillTypeToCourseType(skill),
-                PageRequest.of(0, limit));
     }
 
     private CourseTypeEnum mapSkillTypeToCourseType(SkillTypeEnum skillType) {
@@ -190,6 +255,16 @@ public class CourseRecommendationService {
             case READING -> CourseTypeEnum.READING;
             case WRITING -> CourseTypeEnum.WRITING;
             case ALLSKILLS -> CourseTypeEnum.ALLSKILLS;
+        };
+    }
+
+    private SkillTypeEnum mapCourseTypeToSkillType(CourseTypeEnum courseType) {
+        return switch (courseType) {
+            case LISTENING -> SkillTypeEnum.LISTENING;
+            case SPEAKING -> SkillTypeEnum.SPEAKING;
+            case READING -> SkillTypeEnum.READING;
+            case WRITING -> SkillTypeEnum.WRITING;
+            case ALLSKILLS -> SkillTypeEnum.ALLSKILLS;
         };
     }
 }

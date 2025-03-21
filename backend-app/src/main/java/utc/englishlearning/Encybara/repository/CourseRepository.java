@@ -37,21 +37,33 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
                         @Param("courseStatus") CourseStatusEnum courseStatus,
                         Pageable pageable);
 
-        @Query("SELECT c FROM Course c WHERE c.courseType = :courseType AND c.diffLevel BETWEEN :minLevel AND :maxLevel AND c.courseStatus = 'PUBLISHED' ORDER BY c.diffLevel")
-        List<Course> findByCourseTypeAndDiffLevelBetween(
+        @Query("SELECT c FROM Course c " +
+                        "WHERE c.courseType = :courseType " +
+                        "AND c.diffLevel BETWEEN :minLevel AND :maxLevel " +
+                        "AND c.courseStatus = :status")
+        List<Course> findPublicCoursesByTypeAndLevelRange(
                         @Param("courseType") CourseTypeEnum courseType,
                         @Param("minLevel") double minLevel,
-                        @Param("maxLevel") double maxLevel);
+                        @Param("maxLevel") double maxLevel,
+                        @Param("status") CourseStatusEnum status);
 
-        @Query("SELECT c FROM Course c WHERE c.courseType = :courseType AND c.diffLevel <= :maxLevel AND c.courseStatus = 'PUBLISHED' ORDER BY c.diffLevel DESC")
-        List<Course> findEasierCoursesByType(
+        @Query("SELECT c FROM Course c " +
+                        "WHERE c.courseType = :courseType " +
+                        "AND c.diffLevel <= :maxLevel " +
+                        "AND c.courseStatus = :status")
+        Page<Course> findPublicEasierCoursesByType(
                         @Param("courseType") CourseTypeEnum courseType,
                         @Param("maxLevel") double maxLevel,
+                        @Param("status") CourseStatusEnum status,
                         Pageable pageable);
 
-        @Query("SELECT c FROM Course c WHERE c.courseType = :courseType AND c.diffLevel >= :minLevel AND c.courseStatus = 'PUBLISHED' ORDER BY c.diffLevel")
-        List<Course> findHarderCoursesByType(
+        @Query("SELECT c FROM Course c " +
+                        "WHERE c.courseType = :courseType " +
+                        "AND c.diffLevel >= :minLevel " +
+                        "AND c.courseStatus = :status")
+        Page<Course> findPublicHarderCoursesByType(
                         @Param("courseType") CourseTypeEnum courseType,
                         @Param("minLevel") double minLevel,
+                        @Param("status") CourseStatusEnum status,
                         Pageable pageable);
 }
