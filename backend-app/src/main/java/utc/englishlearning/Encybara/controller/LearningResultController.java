@@ -20,7 +20,8 @@ public class LearningResultController {
     private LearningResultService learningResultService;
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<RestResponse<ResLearningResultDTO>> getLearningResult(@PathVariable Long userId) {
+    public ResponseEntity<RestResponse<ResLearningResultDTO>> getLearningResult(
+            @PathVariable("userId") Long userId) {
         ResLearningResultDTO result = learningResultService.getLearningResult(userId);
         RestResponse<ResLearningResultDTO> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -31,7 +32,7 @@ public class LearningResultController {
 
     @GetMapping("/user/{userId}/detailed")
     public ResponseEntity<RestResponse<ResDetailedLearningResultDTO>> getDetailedLearningResult(
-            @PathVariable Long userId) {
+            @PathVariable("userId") Long userId) {
         ResDetailedLearningResultDTO result = learningResultService.getDetailedLearningResult(userId);
         RestResponse<ResDetailedLearningResultDTO> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -41,7 +42,8 @@ public class LearningResultController {
     }
 
     @GetMapping("/user/{userId}/progress")
-    public ResponseEntity<RestResponse<ResDetailedLearningResultDTO>> analyzeProgress(@PathVariable Long userId) {
+    public ResponseEntity<RestResponse<ResDetailedLearningResultDTO>> analyzeProgress(
+            @PathVariable("userId") Long userId) {
         ResDetailedLearningResultDTO result = learningResultService.analyzeRecentProgress(userId);
         RestResponse<ResDetailedLearningResultDTO> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -51,7 +53,8 @@ public class LearningResultController {
     }
 
     @GetMapping("/user/{userId}/completion-rates")
-    public ResponseEntity<RestResponse<double[]>> getCompletionRates(@PathVariable Long userId) {
+    public ResponseEntity<RestResponse<double[]>> getCompletionRates(
+            @PathVariable("userId") Long userId) {
         double[] rates = learningResultService.getCompletionRatesByDifficulty(userId);
         RestResponse<double[]> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -62,8 +65,8 @@ public class LearningResultController {
 
     @GetMapping("/user/{userId}/recommended-level")
     public ResponseEntity<RestResponse<Double>> getRecommendedLevel(
-            @PathVariable Long userId,
-            @RequestParam SkillTypeEnum skillType) {
+            @PathVariable("userId") Long userId,
+            @RequestParam(value = "skillType", required = false) SkillTypeEnum skillType) {
         double level = learningResultService.getRecommendedLevel(userId, skillType);
         RestResponse<Double> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -74,8 +77,8 @@ public class LearningResultController {
 
     @GetMapping("/user/{userId}/ready-for-upgrade")
     public ResponseEntity<RestResponse<Boolean>> isReadyForHigherLevel(
-            @PathVariable Long userId,
-            @RequestParam SkillTypeEnum skillType) {
+            @PathVariable("userId") Long userId,
+            @RequestParam(value = "skillType", required = false) SkillTypeEnum skillType) {
         boolean ready = learningResultService.isReadyForHigherLevel(userId, skillType);
         RestResponse<Boolean> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -86,7 +89,7 @@ public class LearningResultController {
 
     @PutMapping("/user/{userId}")
     public ResponseEntity<RestResponse<ResLearningResultDTO>> updateLearningResult(
-            @PathVariable Long userId,
+            @PathVariable("userId") Long userId,
             @Valid @RequestBody ReqUpdateLearningResultDTO request) {
         ResLearningResultDTO result = learningResultService.updateLearningResult(userId, request);
         RestResponse<ResLearningResultDTO> response = new RestResponse<>();
