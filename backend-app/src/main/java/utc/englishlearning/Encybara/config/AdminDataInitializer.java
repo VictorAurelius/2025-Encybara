@@ -3,11 +3,14 @@ package utc.englishlearning.Encybara.config;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.boot.CommandLineRunner;
+import java.time.Instant;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.repository.*;
 import utc.englishlearning.Encybara.service.DataManagementService;
+import utc.englishlearning.Encybara.util.constant.SpecialFieldEnum;
 
 @Service
 public class AdminDataInitializer implements CommandLineRunner {
@@ -15,20 +18,26 @@ public class AdminDataInitializer implements CommandLineRunner {
     private final PermissionRepository permissionRepository;
     private final RoleRepository roleRepository;
     private final AdminRepository adminRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final DataManagementService dataManagementService;
+    private final LearningResultRepository learningResultRepository;
 
     public AdminDataInitializer(
             PermissionRepository permissionRepository,
             RoleRepository roleRepository,
             AdminRepository adminRepository,
+            UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            DataManagementService dataManagementService) {
+            DataManagementService dataManagementService,
+            LearningResultRepository learningResultRepository) {
         this.permissionRepository = permissionRepository;
         this.roleRepository = roleRepository;
         this.adminRepository = adminRepository;
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.dataManagementService = dataManagementService;
+        this.learningResultRepository = learningResultRepository;
     }
 
     @Override
@@ -112,6 +121,40 @@ public class AdminDataInitializer implements CommandLineRunner {
             }
 
             this.adminRepository.save(adminUser);
+        }
+
+        // Create default user if none exists
+        long countUsers = this.userRepository.count();
+        if (countUsers == 0) {
+            // Create default user
+            utc.englishlearning.Encybara.domain.User defaultUser = new utc.englishlearning.Encybara.domain.User();
+            defaultUser.setName("Encybara User");
+            defaultUser.setEmail("user@example.com");
+            defaultUser.setPassword(this.passwordEncoder.encode("Abc@123456"));
+            defaultUser.setPhone("0123456789");
+            defaultUser.setSpeciField(SpecialFieldEnum.IT);
+            defaultUser.setRefreshToken("");
+
+            // Create associated learning result
+            Learning_Result learningResult = new Learning_Result();
+            learningResult.setListeningScore(4.0);
+            learningResult.setSpeakingScore(4.0);
+            learningResult.setReadingScore(4.0);
+            learningResult.setWritingScore(4.0);
+            learningResult.setPreviousListeningScore(3.5);
+            learningResult.setPreviousSpeakingScore(3.5);
+            learningResult.setPreviousReadingScore(3.5);
+            learningResult.setPreviousWritingScore(3.5);
+            learningResult.setLastUpdated(Instant.now());
+            learningResult.setUser(defaultUser);
+
+            // Save user first
+            defaultUser = userRepository.save(defaultUser);
+
+            // Then save learning result
+            learningResultRepository.save(learningResult);
+
+            System.out.println(">>> DEFAULT USER CREATED");
         }
 
         if (countPermissions > 0 && countRoles > 0 && countAdmins > 0) {

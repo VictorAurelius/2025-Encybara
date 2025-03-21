@@ -201,6 +201,17 @@ public class CourseService {
                 group, courseStatusEnum, pageable).map(this::convertToDTO);
     }
 
+    public Page<String> getCourseGroups(CourseStatusEnum status, Pageable pageable) {
+        return courseRepository.findDistinctGroupsByStatus(status, pageable);
+    }
+
+    public List<String> getAllSpecialFields() {
+        return List.of(SpecialFieldEnum.values())
+                .stream()
+                .map(Enum::name)
+                .collect(Collectors.toList());
+    }
+
     private ResCourseDTO convertToDTO(Course course) {
         ResCourseDTO dto = new ResCourseDTO();
         dto.setId(course.getId());

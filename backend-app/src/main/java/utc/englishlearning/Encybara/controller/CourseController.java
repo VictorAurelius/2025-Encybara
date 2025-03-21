@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import utc.englishlearning.Encybara.util.constant.CourseStatusEnum;
 import utc.englishlearning.Encybara.domain.request.course.ReqCreateCourseDTO;
 import utc.englishlearning.Encybara.domain.request.course.ReqUpdateCourseDTO;
 import utc.englishlearning.Encybara.domain.response.course.ResCourseDTO;
@@ -128,6 +130,37 @@ public class CourseController {
         RestResponse<Void> response = new RestResponse<>();
         response.setStatusCode(HttpStatus.OK.value());
         response.setMessage("Course has been made public successfully");
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/groups")
+    public ResponseEntity<RestResponse<Page<String>>> getCourseGroups(
+            @RequestParam(value = "status", required = false) String status,
+            Pageable pageable) {
+        CourseStatusEnum statusEnum = null;
+        if (status != null && !status.isEmpty()) {
+            try {
+                statusEnum = CourseStatusEnum.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Invalid enum value will result in null (no filter)
+            }
+        }
+
+        Page<String> groups = courseService.getCourseGroups(statusEnum, pageable);
+        RestResponse<Page<String>> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Course groups retrieved successfully");
+        response.setData(groups);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/special-fields")
+    public ResponseEntity<RestResponse<List<String>>> getSpecialFields() {
+        List<String> fields = courseService.getAllSpecialFields();
+        RestResponse<List<String>> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Special fields retrieved successfully");
+        response.setData(fields);
         return ResponseEntity.ok(response);
     }
 }

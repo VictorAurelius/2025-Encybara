@@ -19,6 +19,9 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
         Page<Course> findByGroup(String group, Pageable pageable);
 
+        @Query("SELECT DISTINCT c.group FROM Course c WHERE (:status IS NULL OR c.courseStatus = :status) AND c.group IS NOT NULL")
+        Page<String> findDistinctGroupsByStatus(@Param("status") CourseStatusEnum status, Pageable pageable);
+
         @Query("SELECT c FROM Course c WHERE " +
                         "(:name IS NULL OR c.name LIKE %:name%) AND " +
                         "(:diffLevel IS NULL OR c.diffLevel = :diffLevel) AND " +
