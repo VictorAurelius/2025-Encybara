@@ -1,11 +1,8 @@
 package utc.englishlearning.Encybara.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import utc.englishlearning.Encybara.domain.Course;
-import utc.englishlearning.Encybara.domain.Enrollment;
 import utc.englishlearning.Encybara.domain.Learning_Result;
 import utc.englishlearning.Encybara.repository.CourseRepository;
 import utc.englishlearning.Encybara.repository.EnrollmentRepository;
@@ -80,12 +77,14 @@ public class CourseRecommendationService {
         double lowerBound = currentLevel - 0.5;
         double upperBound = currentLevel + 0.5;
 
-        List<Enrollment> recentEnrollments = getRecentEnrollments(learningResult.getUser().getId(), skill, 5);
+        Double avgCompletionRate = enrollmentRepository.getAverageCompletionRateLastMonth(
+                learningResult.getUser().getId(),
+                mapSkillTypeToCourseType(skill).name());
 
-        if (!recentEnrollments.isEmpty()) {
-            if (areAllCompletionRatesHigh(recentEnrollments)) {
+        if (avgCompletionRate != null) {
+            if (avgCompletionRate >= MIN_COMPLETION_RATE_FOR_HIGHER_LEVEL) {
                 upperBound = Math.min(7.0, currentLevel + MAX_RECOMMENDED_LEVEL_INCREASE);
-            } else if (areAllCompletionRatesLow(recentEnrollments)) {
+            } else if (avgCompletionRate < 50.0) {
                 lowerBound = Math.max(1.0, currentLevel - 1.0);
                 upperBound = currentLevel;
             }
@@ -123,36 +122,15 @@ public class CourseRecommendationService {
         };
     }
 
-    private List<Enrollment> getRecentEnrollments(Long userId, SkillTypeEnum skill, int limit) {
-        return enrollmentRepository.findByUserIdAndCourseTypeSortedByEnrollDate(
-                userId,
-                mapSkillTypeToCourseType(skill),
-                PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "errolDate"))).getContent();
-    }
-
-    private boolean areAllCompletionRatesLow(List<Enrollment> enrollments) {
-        return !enrollments.isEmpty() && enrollments.stream()
-                .allMatch(e -> e.getComLevel() < 50.0);
-    }
-
-    private boolean areAllCompletionRatesHigh(List<Enrollment> enrollments) {
-        return !enrollments.isEmpty() && enrollments.stream()
-                .allMatch(e -> e.getComLevel() >= MIN_COMPLETION_RATE_FOR_HIGHER_LEVEL);
-    }
-
     private boolean isSkillStagnating(Learning_Result learningResult, SkillTypeEnum skill) {
         double currentScore = getSkillLevel(learningResult, skill);
         double previousScore = getPreviousSkillLevel(learningResult, skill);
-        List<Enrollment> recentEnrollments = getRecentEnrollments(learningResult.getUser().getId(), skill, 3);
 
-        boolean noProgress = currentScore <= previousScore;
-        boolean hasLowCompletionRates = !recentEnrollments.isEmpty() &&
-                recentEnrollments.stream()
-                        .mapToDouble(Enrollment::getComLevel)
-                        .average()
-                        .orElse(0.0) < 60.0;
+        Double avgCompletionRate = enrollmentRepository.getAverageCompletionRateLastMonth(
+                learningResult.getUser().getId(),
+                mapSkillTypeToCourseType(skill).name());
 
-        return noProgress || hasLowCompletionRates;
+        return currentScore <= previousScore || (avgCompletionRate != null && avgCompletionRate < 60.0);
     }
 
     private double getPreviousSkillLevel(Learning_Result learningResult, SkillTypeEnum skill) {
@@ -188,19 +166,20 @@ public class CourseRecommendationService {
                 learningResult.getReadingScore() > learningResult.getPreviousReadingScore() &&
                 learningResult.getWritingScore() > learningResult.getPreviousWritingScore();
 
-        List<Enrollment> recentListening = getRecentEnrollments(learningResult.getUser().getId(),
-                SkillTypeEnum.LISTENING, 3);
-        List<Enrollment> recentSpeaking = getRecentEnrollments(learningResult.getUser().getId(), SkillTypeEnum.SPEAKING,
-                3);
-        List<Enrollment> recentReading = getRecentEnrollments(learningResult.getUser().getId(), SkillTypeEnum.READING,
-                3);
-        List<Enrollment> recentWriting = getRecentEnrollments(learningResult.getUser().getId(), SkillTypeEnum.WRITING,
-                3);
+        Double listeningCompletion = enrollmentRepository.getAverageCompletionRateLastMonth(
+                learningResult.getUser().getId(), CourseTypeEnum.LISTENING.name());
+        Double speakingCompletion = enrollmentRepository.getAverageCompletionRateLastMonth(
+                learningResult.getUser().getId(), CourseTypeEnum.SPEAKING.name());
+        Double readingCompletion = enrollmentRepository.getAverageCompletionRateLastMonth(
+                learningResult.getUser().getId(), CourseTypeEnum.READING.name());
+        Double writingCompletion = enrollmentRepository.getAverageCompletionRateLastMonth(
+                learningResult.getUser().getId(), CourseTypeEnum.WRITING.name());
 
-        boolean goodCompletionRates = areAllCompletionRatesHigh(recentListening) &&
-                areAllCompletionRatesHigh(recentSpeaking) &&
-                areAllCompletionRatesHigh(recentReading) &&
-                areAllCompletionRatesHigh(recentWriting);
+        boolean goodCompletionRates = (listeningCompletion == null
+                || listeningCompletion >= MIN_COMPLETION_RATE_FOR_HIGHER_LEVEL) &&
+                (speakingCompletion == null || speakingCompletion >= MIN_COMPLETION_RATE_FOR_HIGHER_LEVEL) &&
+                (readingCompletion == null || readingCompletion >= MIN_COMPLETION_RATE_FOR_HIGHER_LEVEL) &&
+                (writingCompletion == null || writingCompletion >= MIN_COMPLETION_RATE_FOR_HIGHER_LEVEL);
 
         return skillsImproving && goodCompletionRates;
     }

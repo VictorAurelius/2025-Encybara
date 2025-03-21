@@ -19,7 +19,7 @@ public class Enrollment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private Instant errolDate;
+    private Instant enrollDate;
     private boolean proStatus;
 
     private int totalPoints; // Điểm tổng của khóa học

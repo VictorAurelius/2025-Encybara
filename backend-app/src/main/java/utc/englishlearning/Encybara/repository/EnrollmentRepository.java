@@ -17,7 +17,7 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
 
         Page<Enrollment> findByUserIdAndProStatus(Long userId, Boolean proStatus, Pageable pageable);
 
-        List<Enrollment> findTopByCourseIdAndUserIdOrderByErrolDateDesc(Long courseId, Long userId, Pageable pageable);
+        List<Enrollment> findTopByCourseIdAndUserIdOrderByEnrollDateDesc(Long courseId, Long userId, Pageable pageable);
 
         @Query("SELECT e FROM Enrollment e " +
                         "JOIN e.course c " +
@@ -39,12 +39,13 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
                         @Param("minCompletion") double minCompletion,
                         Pageable pageable);
 
-        @Query("SELECT AVG(e.comLevel) FROM Enrollment e " +
-                        "JOIN e.course c " +
-                        "WHERE e.user.id = :userId " +
-                        "AND c.courseType = :courseType " +
-                        "AND e.errolDate >= CURRENT_DATE - 30")
+        @Query(value = "SELECT COALESCE(AVG(e.com_level), 0.0) " +
+                        "FROM enrollments e " +
+                        "JOIN courses c ON e.course_id = c.id " +
+                        "WHERE e.user_id = :userId " +
+                        "AND c.course_type = :courseType " +
+                        "AND e.enroll_date >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)", nativeQuery = true)
         Double getAverageCompletionRateLastMonth(
                         @Param("userId") Long userId,
-                        @Param("courseType") CourseTypeEnum courseType);
+                        @Param("courseType") String courseType);
 }

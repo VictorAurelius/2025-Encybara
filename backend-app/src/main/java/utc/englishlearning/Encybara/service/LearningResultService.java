@@ -248,7 +248,7 @@ public class LearningResultService {
         item.setDiffLevel(enrollment.getCourse().getDiffLevel());
         item.setComLevel(enrollment.getComLevel());
         item.setSkillScore(enrollment.getSkillScore());
-        item.setEnrollDate(enrollment.getErrolDate());
+        item.setEnrollDate(enrollment.getEnrollDate());
         return item;
     }
 }

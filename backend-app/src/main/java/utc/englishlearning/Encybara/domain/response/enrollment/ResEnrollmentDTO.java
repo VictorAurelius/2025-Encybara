@@ -10,7 +10,7 @@ public class ResEnrollmentDTO {
     private Long id;
     private Long userId;
     private Long courseId;
-    private Instant errolDate;
+    private Instant enrollDate;
     private boolean proStatus;
     private int totalPoints; // Total points for the course
     private double comLevel; // Course completion level

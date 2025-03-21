@@ -56,7 +56,7 @@ public class EnrollmentService {
         Enrollment enrollment = new Enrollment();
         enrollment.setUser(user);
         enrollment.setCourse(course);
-        enrollment.setErrolDate(Instant.now());
+        enrollment.setEnrollDate(Instant.now());
         enrollment.setProStatus(false);
 
         enrollment = enrollmentRepository.save(enrollment);
@@ -68,7 +68,7 @@ public class EnrollmentService {
         Enrollment enrollment = enrollmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found"));
         enrollment.setProStatus(true);
-        enrollment.setErrolDate(Instant.now());
+        enrollment.setEnrollDate(Instant.now());
         enrollmentRepository.save(enrollment);
     }
 
@@ -221,7 +221,7 @@ public class EnrollmentService {
 
     public ResEnrollmentDTO getLatestEnrollmentByCourseIdAndUserId(Long courseId, Long userId) {
         List<Enrollment> enrollments = enrollmentRepository
-                .findTopByCourseIdAndUserIdOrderByErrolDateDesc(courseId, userId, PageRequest.of(0, 1));
+                .findTopByCourseIdAndUserIdOrderByEnrollDateDesc(courseId, userId, PageRequest.of(0, 1));
 
         Enrollment enrollment = enrollments.isEmpty() ? null : enrollments.get(0);
         if (enrollment == null) {
@@ -235,7 +235,7 @@ public class EnrollmentService {
         dto.setId(enrollment.getId());
         dto.setUserId(enrollment.getUser().getId());
         dto.setCourseId(enrollment.getCourse().getId());
-        dto.setErrolDate(enrollment.getErrolDate());
+        dto.setEnrollDate(enrollment.getEnrollDate());
         dto.setProStatus(enrollment.isProStatus());
         dto.setTotalPoints(enrollment.getTotalPoints());
         dto.setComLevel(enrollment.getComLevel());

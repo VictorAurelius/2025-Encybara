@@ -12,25 +12,25 @@ import java.util.List;
 
 @Repository
 public interface LearningResultRepository extends JpaRepository<Learning_Result, Long> {
-    Optional<Learning_Result> findByUser(User user);
+        Optional<Learning_Result> findByUser(User user);
 
-    @Query("SELECT lr FROM Learning_Result lr " +
-            "LEFT JOIN FETCH lr.enrollmentHistory eh " +
-            "WHERE lr.user.id = :userId " +
-            "ORDER BY eh.errolDate DESC")
-    Optional<Learning_Result> findByUserIdWithHistory(@Param("userId") Long userId);
+        @Query("SELECT lr FROM Learning_Result lr " +
+                        "LEFT JOIN FETCH lr.enrollmentHistory eh " +
+                        "WHERE lr.user.id = :userId " +
+                        "ORDER BY eh.enrollDate DESC")
+        Optional<Learning_Result> findByUserIdWithHistory(@Param("userId") Long userId);
 
-    @Query("SELECT lr FROM Learning_Result lr " +
-            "LEFT JOIN FETCH lr.enrollmentHistory eh " +
-            "WHERE lr.user.id = :userId " +
-            "AND eh.errolDate >= CURRENT_DATE - 30 " +
-            "ORDER BY eh.errolDate DESC")
-    Optional<Learning_Result> findByUserIdWithRecentHistory(@Param("userId") Long userId);
+        @Query("SELECT lr FROM Learning_Result lr " +
+                        "LEFT JOIN FETCH lr.enrollmentHistory eh " +
+                        "WHERE lr.user.id = :userId " +
+                        "AND eh.enrollDate >= DATEADD(day, -30, CURRENT_TIMESTAMP) " +
+                        "ORDER BY eh.enrollDate DESC")
+        Optional<Learning_Result> findByUserIdWithRecentHistory(@Param("userId") Long userId);
 
-    @Query("SELECT e.course.diffLevel, AVG(e.comLevel) as avgCompletion " +
-            "FROM Enrollment e " +
-            "WHERE e.learningResult.id = :learningResultId " +
-            "GROUP BY e.course.diffLevel " +
-            "ORDER BY e.course.diffLevel DESC")
-    List<Object[]> findCompletionRatesByDifficulty(@Param("learningResultId") Long learningResultId);
+        @Query("SELECT e.course.diffLevel, AVG(e.comLevel) as avgCompletion " +
+                        "FROM Enrollment e " +
+                        "WHERE e.learningResult.id = :learningResultId " +
+                        "GROUP BY e.course.diffLevel " +
+                        "ORDER BY e.course.diffLevel DESC")
+        List<Object[]> findCompletionRatesByDifficulty(@Param("learningResultId") Long learningResultId);
 }
