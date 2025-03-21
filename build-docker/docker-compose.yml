@@ -1,13 +1,4 @@
 services:
-  nginx:
-    image: nginx:1.23
-    volumes:
-      - ../horizon-tailwind-react-ts-main/build:/usr/share/nginx/html
-      - ./default.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - "3000:80"
-    depends_on:
-      - backend-spring
   db-mysql:
     image: mysql:5.7.40
     restart: always
@@ -38,7 +29,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql:3306/encybara?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8mb4
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=123456
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
       - englishlearning.upload-file.base-uri=/app/uploads/
     volumes:
       - upload_data:/app/uploads

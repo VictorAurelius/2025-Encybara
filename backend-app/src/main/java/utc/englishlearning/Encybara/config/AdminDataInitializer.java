@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.repository.*;
 import utc.englishlearning.Encybara.service.DataManagementService;
+import utc.englishlearning.Encybara.service.CourseRecommendationRefreshService;
 import utc.englishlearning.Encybara.util.constant.SpecialFieldEnum;
 
 @Service
@@ -21,6 +22,7 @@ public class AdminDataInitializer implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
     private final DataManagementService dataManagementService;
     private final LearningResultRepository learningResultRepository;
+    private final CourseRecommendationRefreshService courseRecommendationRefreshService;
 
     public AdminDataInitializer(
             PermissionRepository permissionRepository,
@@ -29,7 +31,8 @@ public class AdminDataInitializer implements CommandLineRunner {
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             DataManagementService dataManagementService,
-            LearningResultRepository learningResultRepository) {
+            LearningResultRepository learningResultRepository,
+            CourseRecommendationRefreshService courseRecommendationRefreshService) {
         this.permissionRepository = permissionRepository;
         this.roleRepository = roleRepository;
         this.adminRepository = adminRepository;
@@ -37,6 +40,7 @@ public class AdminDataInitializer implements CommandLineRunner {
         this.passwordEncoder = passwordEncoder;
         this.dataManagementService = dataManagementService;
         this.learningResultRepository = learningResultRepository;
+        this.courseRecommendationRefreshService = courseRecommendationRefreshService;
     }
 
     @Override
@@ -136,14 +140,14 @@ public class AdminDataInitializer implements CommandLineRunner {
 
             // Create associated learning result
             Learning_Result learningResult = new Learning_Result();
-            learningResult.setListeningScore(4.0);
-            learningResult.setSpeakingScore(4.0);
-            learningResult.setReadingScore(4.0);
-            learningResult.setWritingScore(4.0);
-            learningResult.setPreviousListeningScore(3.5);
-            learningResult.setPreviousSpeakingScore(3.5);
-            learningResult.setPreviousReadingScore(3.5);
-            learningResult.setPreviousWritingScore(3.5);
+            learningResult.setListeningScore(5.0);
+            learningResult.setSpeakingScore(5.0);
+            learningResult.setReadingScore(5.0);
+            learningResult.setWritingScore(5.0);
+            learningResult.setPreviousListeningScore(4.5);
+            learningResult.setPreviousSpeakingScore(4.5);
+            learningResult.setPreviousReadingScore(4.5);
+            learningResult.setPreviousWritingScore(4.5);
             learningResult.setLastUpdated(Instant.now());
             learningResult.setUser(defaultUser);
 
@@ -167,5 +171,9 @@ public class AdminDataInitializer implements CommandLineRunner {
         dataManagementService.seedKet1Data();
         dataManagementService.seedEFITData();
         System.out.println(">>> END SEEDING COURSE DATA");
+
+        // Refresh course recommendations for all users
+        System.out.println(">>> REFRESHING COURSE RECOMMENDATIONS");
+        courseRecommendationRefreshService.refreshAllRecommendations();
     }
 }

@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import utc.englishlearning.Encybara.domain.Course;
 import utc.englishlearning.Encybara.domain.Enrollment;
+import utc.englishlearning.Encybara.domain.User;
 import utc.englishlearning.Encybara.util.constant.CourseTypeEnum;
 
 import java.util.List;
@@ -48,4 +50,8 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
         Double getAverageCompletionRateLastMonth(
                         @Param("userId") Long userId,
                         @Param("courseType") String courseType);
+
+        void deleteByUserAndProStatusFalse(User user);
+
+        boolean existsByUserAndCourseAndProStatusTrue(User user, Course course);
 }
