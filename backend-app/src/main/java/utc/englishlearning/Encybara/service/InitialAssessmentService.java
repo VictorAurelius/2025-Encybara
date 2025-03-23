@@ -73,6 +73,21 @@ public class InitialAssessmentService {
         Course assessmentCourse = courseRepository.findById(1L) // Assessment course has ID 1
                 .orElseThrow(() -> new ResourceNotFoundException("Assessment course not found with ID: 1"));
 
+        // Create learning result with base scores
+        Learning_Result learningResult = new Learning_Result();
+        learningResult.setUser(user);
+        learningResult.setListeningScore(1.0);
+        learningResult.setSpeakingScore(1.0);
+        learningResult.setReadingScore(1.0);
+        learningResult.setWritingScore(1.0);
+        learningResult.setPreviousListeningScore(1.0);
+        learningResult.setPreviousSpeakingScore(1.0);
+        learningResult.setPreviousReadingScore(1.0);
+        learningResult.setPreviousWritingScore(1.0);
+        learningResult.setLastUpdated(Instant.now());
+
+        learningResult = learningResultRepository.save(learningResult);
+
         // Create enrollment for assessment course
         Enrollment enrollment = new Enrollment();
         enrollment.setUser(user);
@@ -81,8 +96,7 @@ public class InitialAssessmentService {
         enrollment.setProStatus(true); // User is actively taking this course
         enrollment.setComLevel(0.0);
         enrollment.setTotalPoints(0);
-
-        // Note: Learning result will be created after assessment completion
+        enrollment.setLearningResult(learningResult);
 
         enrollmentRepository.save(enrollment);
     }

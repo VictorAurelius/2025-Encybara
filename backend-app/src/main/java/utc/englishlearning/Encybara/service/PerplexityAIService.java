@@ -53,7 +53,7 @@ public class PerplexityAIService {
                             Context: %s
 
                             Respond with these exact sections:
-                            Score: (number from 0-100 based on accuracy and completeness)
+                            Score: (number from 0-10 based on accuracy and completeness)
                             Evaluation: (brief evaluation of the answer's strengths and weaknesses in Vietnamese)
                             Improvements: (provide a single English sentence that answers the question with a good score)
 

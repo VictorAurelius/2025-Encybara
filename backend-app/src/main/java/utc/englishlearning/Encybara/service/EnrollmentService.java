@@ -47,6 +47,9 @@ public class EnrollmentService {
     @Autowired
     private CourseRecommendationService courseRecommendationService;
 
+    @Autowired
+    private LearningResultRepository learningResultRepository;
+
     @Transactional
     public ResEnrollmentDTO createEnrollment(ReqCreateEnrollmentDTO reqCreateEnrollmentDTO) {
         User user = userRepository.findById(reqCreateEnrollmentDTO.getUserId())
@@ -54,11 +57,17 @@ public class EnrollmentService {
         Course course = courseRepository.findById(reqCreateEnrollmentDTO.getCourseId())
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
 
+        // Get or create learning result
+        Learning_Result learningResult = getOrCreateLearningResult(user);
+
         Enrollment enrollment = new Enrollment();
         enrollment.setUser(user);
         enrollment.setCourse(course);
         enrollment.setEnrollDate(Instant.now());
-        enrollment.setProStatus(false);
+        enrollment.setProStatus(true); // Auto-join the course
+        enrollment.setComLevel(0.0);
+        enrollment.setTotalPoints(0);
+        enrollment.setLearningResult(learningResult);
 
         enrollment = enrollmentRepository.save(enrollment);
         return convertToDTO(enrollment);
@@ -242,6 +251,34 @@ public class EnrollmentService {
             throw new ResourceNotFoundException("No enrollment found for this course and user");
         }
         return convertToDTO(enrollment);
+    }
+
+    /**
+     * Gets the existing learning result for a user or creates a new one with base
+     * scores
+     */
+    private Learning_Result getOrCreateLearningResult(User user) {
+        // Try to get existing learning result
+        Learning_Result learningResult = user.getLearningResult();
+
+        if (learningResult == null) {
+            // Create new learning result with base scores
+            learningResult = new Learning_Result();
+            learningResult.setUser(user);
+            learningResult.setListeningScore(1.0);
+            learningResult.setSpeakingScore(1.0);
+            learningResult.setReadingScore(1.0);
+            learningResult.setWritingScore(1.0);
+            learningResult.setPreviousListeningScore(1.0);
+            learningResult.setPreviousSpeakingScore(1.0);
+            learningResult.setPreviousReadingScore(1.0);
+            learningResult.setPreviousWritingScore(1.0);
+            learningResult.setLastUpdated(Instant.now());
+
+            learningResult = learningResultRepository.save(learningResult);
+        }
+
+        return learningResult;
     }
 
     private ResEnrollmentDTO convertToDTO(Enrollment enrollment) {
