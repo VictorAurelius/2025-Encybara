@@ -29,75 +29,87 @@ public class InitialAssessmentService {
 
     @Transactional
     public void skipInitialAssessment(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
+        try {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
 
-        // Create learning result with base scores
-        Learning_Result learningResult = new Learning_Result();
-        learningResult.setUser(user);
-        learningResult.setListeningScore(1.0);
-        learningResult.setSpeakingScore(1.0);
-        learningResult.setReadingScore(1.0);
-        learningResult.setWritingScore(1.0);
-        learningResult.setPreviousListeningScore(1.0);
-        learningResult.setPreviousSpeakingScore(1.0);
-        learningResult.setPreviousReadingScore(1.0);
-        learningResult.setPreviousWritingScore(1.0);
-        learningResult.setLastUpdated(Instant.now());
+            // Get existing learning result or create new one
+            Learning_Result learningResult = user.getLearningResult();
+            if (learningResult == null) {
+                learningResult = new Learning_Result();
+                learningResult.setUser(user);
+                learningResult.setListeningScore(1.0);
+                learningResult.setSpeakingScore(1.0);
+                learningResult.setReadingScore(1.0);
+                learningResult.setWritingScore(1.0);
+                learningResult.setPreviousListeningScore(1.0);
+                learningResult.setPreviousSpeakingScore(1.0);
+                learningResult.setPreviousReadingScore(1.0);
+                learningResult.setPreviousWritingScore(1.0);
+                learningResult.setLastUpdated(Instant.now());
+                learningResult = learningResultRepository.save(learningResult);
+            }
 
-        learningResult = learningResultRepository.save(learningResult);
+            // Get course recommendations based on base scores
+            var recommendedCourses = courseRecommendationService.getRecommendedCourses(learningResult);
 
-        // Get course recommendations based on base scores
-        var recommendedCourses = courseRecommendationService.getRecommendedCourses(learningResult);
+            // Create enrollment entries for recommendations
+            for (Course course : recommendedCourses) {
+                Enrollment enrollment = new Enrollment();
+                enrollment.setUser(user);
+                enrollment.setCourse(course);
+                enrollment.setLearningResult(learningResult);
+                enrollment.setEnrollDate(Instant.now());
+                enrollment.setProStatus(false);
+                enrollment.setComLevel(0.0);
+                enrollment.setTotalPoints(0);
 
-        // Create enrollment entries for recommendations
-        for (Course course : recommendedCourses) {
-            Enrollment enrollment = new Enrollment();
-            enrollment.setUser(user);
-            enrollment.setCourse(course);
-            enrollment.setLearningResult(learningResult);
-            enrollment.setEnrollDate(Instant.now());
-            enrollment.setProStatus(false);
-            enrollment.setComLevel(0.0);
-            enrollment.setTotalPoints(0);
-
-            enrollmentRepository.save(enrollment);
+                enrollmentRepository.save(enrollment);
+            }
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Failed to skip initial assessment: " + e.getMessage(), e);
         }
     }
 
     @Transactional
     public void startInitialAssessment(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
+        try {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
 
-        Course assessmentCourse = courseRepository.findById(1L) // Assessment course has ID 1
-                .orElseThrow(() -> new ResourceNotFoundException("Assessment course not found with ID: 1"));
+            Course assessmentCourse = courseRepository.findById(1L) // Assessment course has ID 1
+                    .orElseThrow(() -> new ResourceNotFoundException("Assessment course not found with ID: 1"));
 
-        // Create learning result with base scores
-        Learning_Result learningResult = new Learning_Result();
-        learningResult.setUser(user);
-        learningResult.setListeningScore(1.0);
-        learningResult.setSpeakingScore(1.0);
-        learningResult.setReadingScore(1.0);
-        learningResult.setWritingScore(1.0);
-        learningResult.setPreviousListeningScore(1.0);
-        learningResult.setPreviousSpeakingScore(1.0);
-        learningResult.setPreviousReadingScore(1.0);
-        learningResult.setPreviousWritingScore(1.0);
-        learningResult.setLastUpdated(Instant.now());
+            // Get existing learning result or create new one
+            Learning_Result learningResult = user.getLearningResult();
+            if (learningResult == null) {
+                learningResult = new Learning_Result();
+                learningResult.setUser(user);
+                learningResult.setListeningScore(1.0);
+                learningResult.setSpeakingScore(1.0);
+                learningResult.setReadingScore(1.0);
+                learningResult.setWritingScore(1.0);
+                learningResult.setPreviousListeningScore(1.0);
+                learningResult.setPreviousSpeakingScore(1.0);
+                learningResult.setPreviousReadingScore(1.0);
+                learningResult.setPreviousWritingScore(1.0);
+                learningResult.setLastUpdated(Instant.now());
+                learningResult = learningResultRepository.save(learningResult);
+            }
 
-        learningResult = learningResultRepository.save(learningResult);
+            // Create enrollment for assessment course
+            Enrollment enrollment = new Enrollment();
+            enrollment.setUser(user);
+            enrollment.setCourse(assessmentCourse);
+            enrollment.setEnrollDate(Instant.now());
+            enrollment.setProStatus(true); // User is actively taking this course
+            enrollment.setComLevel(0.0);
+            enrollment.setTotalPoints(0);
+            enrollment.setLearningResult(learningResult);
 
-        // Create enrollment for assessment course
-        Enrollment enrollment = new Enrollment();
-        enrollment.setUser(user);
-        enrollment.setCourse(assessmentCourse);
-        enrollment.setEnrollDate(Instant.now());
-        enrollment.setProStatus(true); // User is actively taking this course
-        enrollment.setComLevel(0.0);
-        enrollment.setTotalPoints(0);
-        enrollment.setLearningResult(learningResult);
-
-        enrollmentRepository.save(enrollment);
+            enrollmentRepository.save(enrollment);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Failed to start initial assessment: " + e.getMessage(), e);
+        }
     }
 }
