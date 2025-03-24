@@ -9,9 +9,6 @@ import utc.englishlearning.Encybara.repository.*;
 public class PlacementAssessmentService {
 
     @Autowired
-    private EnrollmentRepository enrollmentRepository;
-
-    @Autowired
     private LessonResultRepository lessonResultRepository;
 
     /**
@@ -98,6 +95,12 @@ public class PlacementAssessmentService {
                 case SPEAKING -> scores.speakingPercentage += percentage;
                 case READING -> scores.readingPercentage += percentage;
                 case WRITING -> scores.writingPercentage += percentage;
+                case ALLSKILLS -> {
+                    scores.listeningPercentage += percentage / 4;
+                    scores.speakingPercentage += percentage / 4;
+                    scores.readingPercentage += percentage / 4;
+                    scores.writingPercentage += percentage / 4;
+                }
             }
         }
 
