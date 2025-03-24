@@ -1,0 +1,227 @@
+[
+    {
+        "quesContent": "Mark the letter A, B, C, or D to indicate the word OPPOSITE in meaning to the underlined word 'critical':\n\nOne of the reasons why families break up is that parents are always critical of each other.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "intolerant",
+                "isCorrect": false
+            },
+            {
+                "content": "supportive",
+                "isCorrect": true
+            },
+            {
+                "content": "tired",
+                "isCorrect": false
+            },
+            {
+                "content": "unaware",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Mark the letter A, B, C, or D to indicate the word OPPOSITE in meaning to the underlined word 'post':\n\nUsing Facebook, you can post update sayings about your life everyday.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "locate",
+                "isCorrect": false
+            },
+            {
+                "content": "displace",
+                "isCorrect": true
+            },
+            {
+                "content": "establish",
+                "isCorrect": false
+            },
+            {
+                "content": "put up",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Mark the letter A, B, C, or D to indicate the word CLOSEST in meaning to the underlined word 'efficient':\n\nAdverts on Facebook seem to be more efficient than billboards or TV ads because of its enormous number of users.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "disorganised",
+                "isCorrect": false
+            },
+            {
+                "content": "successful",
+                "isCorrect": true
+            },
+            {
+                "content": "connected",
+                "isCorrect": false
+            },
+            {
+                "content": "updated",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Mark the letter A, B, C, or D to indicate the word CLOSEST in meaning to the underlined word 'endeavoring':\n\nAfter many year of unsuccessfully endeavoring to form his own orchestra, Glenn Miller finally achieved world fame in 1939 as a big band leader.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "requesting",
+                "isCorrect": false
+            },
+            {
+                "content": "trying",
+                "isCorrect": true
+            },
+            {
+                "content": "offering",
+                "isCorrect": false
+            },
+            {
+                "content": "deciding",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose the best answer to complete the sentence:\n\nI can't stand ____________ people who are not tolerant of new ideas.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "narrow-mind",
+                "isCorrect": false
+            },
+            {
+                "content": "narrow-minded",
+                "isCorrect": true
+            },
+            {
+                "content": "minded-narrow",
+                "isCorrect": false
+            },
+            {
+                "content": "narrow-minding",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose the best answer to complete the dialogue:\n\nPatient: \"Can I make an appointment to see the doctor, please?\"\nReceptionist: \"________\"",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Not at the moment. He can't be disturbed.",
+                "isCorrect": false
+            },
+            {
+                "content": "OK, you will need to check my diary.",
+                "isCorrect": false
+            },
+            {
+                "content": "OK, let me just check the diary.",
+                "isCorrect": true
+            },
+            {
+                "content": "Have a seat and I'll be with you in an hour.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose the best answer to complete the sentence:\n\nI ____________ there once a long time ago and ____________ back since.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "went / wasn't",
+                "isCorrect": false
+            },
+            {
+                "content": "was going / had not been",
+                "isCorrect": false
+            },
+            {
+                "content": "have gone / wasn't",
+                "isCorrect": false
+            },
+            {
+                "content": "went / have not been",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose the best answer to complete the sentence:\n\nYou can ____________ new words in the dictionary.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "look up",
+                "isCorrect": true
+            },
+            {
+                "content": "get up",
+                "isCorrect": false
+            },
+            {
+                "content": "turn up",
+                "isCorrect": false
+            },
+            {
+                "content": "take up",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose the best answer to complete the sentence:\n\n____________ you study for these exams ____________ you will do.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "The harder/ the better",
+                "isCorrect": true
+            },
+            {
+                "content": "The more / the much",
+                "isCorrect": false
+            },
+            {
+                "content": "The hardest / the best",
+                "isCorrect": false
+            },
+            {
+                "content": "The more hard / the more good",
+                "isCorrect": false
+            }
+        ]
+    }
+]
