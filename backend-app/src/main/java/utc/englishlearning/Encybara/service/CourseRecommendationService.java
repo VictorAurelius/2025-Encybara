@@ -57,7 +57,6 @@ public class CourseRecommendationService {
             return getRecommendedAllSkillsCourses(learningResult);
         }
 
-        double currentLevel = getSkillLevel(learningResult, skill);
         double[] difficultyRange = calculateRecommendedDifficultyRange(learningResult, skill);
 
         return courseRepository.findPublicCoursesByTypeAndLevelRange(
@@ -150,7 +149,6 @@ public class CourseRecommendationService {
     }
 
     private List<Course> getRecommendedAllSkillsCourses(Learning_Result learningResult) {
-        double averageLevel = getSkillLevel(learningResult, SkillTypeEnum.ALLSKILLS);
         double[] difficultyRange = calculateRecommendedDifficultyRange(learningResult, SkillTypeEnum.ALLSKILLS);
 
         return courseRepository.findPublicCoursesByTypeAndLevelRange(

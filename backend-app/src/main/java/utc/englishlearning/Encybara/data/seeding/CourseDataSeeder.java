@@ -30,7 +30,6 @@ public class CourseDataSeeder {
     private final LessonQuestionRepository lessonQuestionRepository;
     private final TestingMaterialLoader materialLoader;
     private final ObjectMapper objectMapper;
-    private final FileStorageService fileStorageService;
     private final LearningMaterialService learningMaterialService;
     private final LearningMaterialRepository learningMaterialRepository;
 
@@ -54,7 +53,6 @@ public class CourseDataSeeder {
         this.lessonQuestionRepository = lessonQuestionRepository;
         this.materialLoader = materialLoader;
         this.objectMapper = objectMapper;
-        this.fileStorageService = fileStorageService;
         this.learningMaterialService = learningMaterialService;
         this.learningMaterialRepository = learningMaterialRepository;
     }
@@ -202,7 +200,7 @@ public class CourseDataSeeder {
                         Files.readAllBytes(tempFile));
 
                 // Store file in the appropriate course directory
-                String uploadPath = String.format("courses/%s/test%s/paper%s",
+                String uploadPath = String.format("courses/%s/%s/%s",
                         courseGroup.toLowerCase(), testNumber, paperNumber);
                 String materLink = learningMaterialService.store(multipartFile, uploadPath);
 

@@ -51,7 +51,6 @@ public class TestingMaterialLoader {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public Map<String, Question> loadQuestions() throws IOException {
         Map<String, Question> questionMap = new HashMap<>();
         int fileCount = 1;
@@ -131,7 +130,6 @@ public class TestingMaterialLoader {
         return question;
     }
 
-    @SuppressWarnings("unchecked")
     public Map<String, List<Map<String, Object>>> loadMaterials() throws IOException {
         Map<String, List<Map<String, Object>>> materialMap = new HashMap<>();
         materialMap.put("lessons", new ArrayList<>());

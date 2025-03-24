@@ -22,6 +22,10 @@ public class DataManagementService {
         // EFIT Test 1
         courseDataSeeder.seedCourseData("efit", "unit1", "paper1");
         courseDataSeeder.seedCourseData("efit", "unit1", "paper2");
+    }
 
+    public void seedPlacementData() {
+        // EFIT Test 1
+        courseDataSeeder.seedCourseData("placement", "test1", "paper1");
     }
 }
