@@ -1,0 +1,26 @@
+[
+    {
+        "name": "PLACEMENT Test 1: Paper 1 - Lesson Listening Text",
+        "materType": "image/png",
+        "materPath": "data/placement/file/test1/paper1/listening-2.png",
+        "lessonName": "(PLACEMENT) Text - Listening",
+        "questionContent": null,
+        "createBy": "admin"
+    },
+    {
+        "name": "PLACEMENT Test 1: Paper 1 - Lesson Listening Text",
+        "materType": "audio/mp3",
+        "materPath": "data/placement/file/test1/paper1/listening-2.mp3",
+        "lessonName": "(PLACEMENT) Text - Listening",
+        "questionContent": null,
+        "createBy": "admin"
+    },
+    {
+        "name": "PLACEMENT Test 1: Paper 1 - Lesson Listening Choice",
+        "materType": "audio/mp3",
+        "materPath": "data/placement/file/test1/paper1/listening-1.mp3",
+        "lessonName": "(PLACEMENT) Choice - Listening",
+        "questionContent": null,
+        "createBy": "admin"
+    }
+]

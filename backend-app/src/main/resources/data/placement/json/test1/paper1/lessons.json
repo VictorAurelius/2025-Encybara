@@ -1,5 +1,18 @@
 [
     {
+        "name": "(PLACEMENT) Text - Reading",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Rewrite the sentence using 'Tired':\n\nAlthough he was very tired, he agreed to help me with my homework.",
+            "Rewrite the sentence using relative clauses:\n\nThe man works for my father's company. The man's daughter is fond of dancing.",
+            "Rewrite the sentence starting with 'Martin apologized':\n\n\"I'm sorry, Angela, I'm afraid I've damaged your car,\" said Martin.",
+            "Rewrite the sentence starting with 'Maradona':\n\nPeople think that Maradona is the best football player in the 20th century.",
+            "Rewrite the sentence starting with 'If':\n\nWithout your help, I couldn't overcome the problem."
+        ]
+    },
+    {
         "name": "(PLACEMENT) Choice - Reading",
         "skillType": "READING",
         "sumQues": 9,
@@ -14,6 +27,51 @@
             "Choose the best answer to complete the sentence:\n\nI ____________ there once a long time ago and ____________ back since.",
             "Choose the best answer to complete the sentence:\n\nYou can ____________ new words in the dictionary.",
             "Choose the best answer to complete the sentence:\n\n____________ you study for these exams ____________ you will do."
+        ]
+    },
+    {
+        "name": "(PLACEMENT) Choice - Listening",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Listen to the talk about Festival 1:\n\nWhat is the name of the festival?",
+            "Listen to the talk about Festival 1:\n\nWhat do people do in the festival?",
+            "Listen to the talk about Festival 1:\n\nWhich country is famous for this festival?",
+            "Listen to the talk about Festival 2:\n\nWhere is the festival?",
+            "Listen to the talk about Festival 2:\n\nWhat do people throw in the festival?"
+        ]
+    },
+    {
+        "name": "(PLACEMENT) Text - Listening",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Listen to the conversation between a travel agent and a tourist and fill in the blank: Name of tourist",
+            "Listen to the conversation between a travel agent and a tourist and fill in the blank: Mobile",
+            "Listen to the conversation between a travel agent and a tourist and fill in the blank: Address (number)",
+            "Listen to the conversation between a travel agent and a tourist and fill in the blank: Gather at",
+            "Listen to the conversation between a travel agent and a tourist and fill in the blank: Leave at"
+        ]
+    },
+    {
+        "name": "(PLACEMENT) Writing",
+        "skillType": "WRITING",
+        "sumQues": 1,
+        "createBy": "admin",
+        "questionContents": [
+            "Write a short paragraph introducing yourself, including your name, age, occupation, and interests."
+        ]
+    },
+    {
+        "name": "(PLACEMENT) Speaking",
+        "skillType": "SPEAKING",
+        "sumQues": 2,
+        "createBy": "admin",
+        "questionContents": [
+            "Introduce yourself: Tell us your name, where you are from, and what you do.",
+            "Describe your family: How many people are in your family? What do they do? What do you enjoy doing together?"
         ]
     }
 ]
