@@ -3,8 +3,11 @@ package utc.englishlearning.Encybara.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utc.englishlearning.Encybara.service.InitialAssessmentService;
+import utc.englishlearning.Encybara.domain.Enrollment;
 import utc.englishlearning.Encybara.domain.response.RestResponse;
+import utc.englishlearning.Encybara.service.InitialAssessmentService;
+import utc.englishlearning.Encybara.repository.EnrollmentRepository;
+import utc.englishlearning.Encybara.exception.ResourceNotFoundException;
 
 /**
  * Controller for handling initial assessment choices when users register.
@@ -16,6 +19,9 @@ public class InitialAssessmentController {
 
     @Autowired
     private InitialAssessmentService initialAssessmentService;
+
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
 
     /**
      * Handles users who choose to skip the initial assessment.
@@ -37,11 +43,8 @@ public class InitialAssessmentController {
     }
 
     /**
-     * Handles users who choose to take the initial assessment.
-     * Creates an enrollment for the assessment course (ID: 1) but no learning
-     * result yet.
-     * Learning result will be created after assessment completion.
-     *
+     * Creates enrollment for placement test course.
+     * 
      * @param userId The ID of the user starting the assessment
      * @return Response indicating successful enrollment in assessment course
      */
@@ -53,6 +56,27 @@ public class InitialAssessmentController {
         RestResponse<Void> response = new RestResponse<>();
         response.setStatusCode(200);
         response.setMessage("Initial assessment course enrollment created");
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Completes the placement assessment and creates course recommendations based
+     * on results.
+     * 
+     * @param enrollmentId The ID of the placement test enrollment
+     * @return Response indicating successful completion and recommendation creation
+     */
+    @PostMapping("/enrollments/{enrollmentId}/complete")
+    public ResponseEntity<RestResponse<Void>> completePlacementAssessment(
+            @PathVariable("enrollmentId") Long enrollmentId) {
+        Enrollment placementEnrollment = enrollmentRepository.findById(enrollmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found"));
+
+        initialAssessmentService.completePlacementAssessment(placementEnrollment);
+
+        RestResponse<Void> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Placement assessment completed and recommendations created");
         return ResponseEntity.ok(response);
     }
 }

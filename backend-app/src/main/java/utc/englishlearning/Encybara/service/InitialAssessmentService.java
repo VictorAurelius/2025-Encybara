@@ -27,6 +27,9 @@ public class InitialAssessmentService {
     @Autowired
     private CourseRecommendationService courseRecommendationService;
 
+    @Autowired
+    private PlacementAssessmentService placementAssessmentService;
+
     @Transactional
     public void skipInitialAssessment(Long userId) {
         try {
@@ -68,6 +71,52 @@ public class InitialAssessmentService {
             }
         } catch (RuntimeException e) {
             throw new RuntimeException("Failed to skip initial assessment: " + e.getMessage(), e);
+        }
+    }
+
+    @Transactional
+    public void completePlacementAssessment(Enrollment placementEnrollment) {
+        try {
+            // Calculate scores based on placement test results
+            PlacementAssessmentService.SkillScores scores = placementAssessmentService
+                    .calculateSkillScores(placementEnrollment);
+
+            // Update learning result with calculated scores
+            Learning_Result learningResult = placementEnrollment.getLearningResult();
+            learningResult.setListeningScore(scores.getListeningScore());
+            learningResult.setSpeakingScore(scores.getSpeakingScore());
+            learningResult.setReadingScore(scores.getReadingScore());
+            learningResult.setWritingScore(scores.getWritingScore());
+
+            // Set previous scores same as current for initial assessment
+            learningResult.setPreviousListeningScore(scores.getListeningScore());
+            learningResult.setPreviousSpeakingScore(scores.getSpeakingScore());
+            learningResult.setPreviousReadingScore(scores.getReadingScore());
+            learningResult.setPreviousWritingScore(scores.getWritingScore());
+
+            learningResult.setLastUpdated(Instant.now());
+            learningResultRepository.save(learningResult);
+
+            // Get course recommendations based on placement scores
+            var recommendedCourses = courseRecommendationService.getRecommendedCourses(learningResult);
+
+            // Create enrollment entries for recommendations
+            User user = placementEnrollment.getUser();
+            for (Course course : recommendedCourses) {
+                if (course.getId() != 1L) { // Skip placement test course
+                    Enrollment enrollment = new Enrollment();
+                    enrollment.setUser(user);
+                    enrollment.setCourse(course);
+                    enrollment.setLearningResult(learningResult);
+                    enrollment.setEnrollDate(Instant.now());
+                    enrollment.setProStatus(false);
+                    enrollment.setComLevel(0.0);
+                    enrollment.setTotalPoints(0);
+                    enrollmentRepository.save(enrollment);
+                }
+            }
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Failed to complete placement assessment: " + e.getMessage(), e);
         }
     }
 
