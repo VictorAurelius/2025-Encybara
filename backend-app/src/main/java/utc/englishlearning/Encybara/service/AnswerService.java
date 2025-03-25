@@ -5,23 +5,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
-import utc.englishlearning.Encybara.domain.Answer;
-import utc.englishlearning.Encybara.domain.Answer_Text;
-import utc.englishlearning.Encybara.domain.Question;
+import org.springframework.transaction.annotation.Transactional;
+import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.domain.response.answer.ResAnswerDTO;
 import utc.englishlearning.Encybara.domain.request.answer.ReqCreateAnswerDTO;
 import utc.englishlearning.Encybara.exception.ResourceNotFoundException;
-import utc.englishlearning.Encybara.repository.AnswerRepository;
-import utc.englishlearning.Encybara.repository.QuestionRepository;
-import utc.englishlearning.Encybara.repository.AnswerTextRepository;
-import utc.englishlearning.Encybara.domain.Question_Choice;
-import utc.englishlearning.Encybara.repository.QuestionChoiceRepository;
-import utc.englishlearning.Encybara.util.SecurityUtil;
+import utc.englishlearning.Encybara.repository.*;
 import utc.englishlearning.Encybara.util.constant.QuestionTypeEnum;
-import utc.englishlearning.Encybara.domain.User;
-import utc.englishlearning.Encybara.repository.UserRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,58 +35,55 @@ public class AnswerService {
         @Autowired
         private UserRepository userRepository;
 
-        public ResAnswerDTO createAnswer(ReqCreateAnswerDTO reqCreateAnswerDTO) {
-                Question question = questionRepository.findById(reqCreateAnswerDTO.getQuestionId())
-                                .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
+        @Autowired
+        private EnrollmentRepository enrollmentRepository;
 
-                User user = userRepository.findByEmail(SecurityUtil.getCurrentUserLogin()
-                                .orElseThrow(() -> new RuntimeException("User not authenticated")));
-
-                // Tìm các câu trả lời trước đó của người dùng cho câu hỏi này
-                List<Answer> previousAnswers = answerRepository.findByUserAndQuestion(user, question);
-
-                // Tính sessionId mới
-                long newSessionId = previousAnswers.size() + 1;
-
-                Answer answer = new Answer();
-                answer.setQuestion(question);
-                answer.setUser(user);
-                answer.setPoint_achieved(0);
-                answer.setSessionId(newSessionId); // Thiết lập sessionId tự động
-
-                Answer_Text answerText = new Answer_Text();
-                answerText.setAnsContent(reqCreateAnswerDTO.getAnswerContent());
-                answerText.setAnswer(answer);
-                answerTextRepository.save(answerText);
-
-                answer = answerRepository.save(answer);
-                return convertToDTO(answer, answerText);
-        }
-
-        public ResAnswerDTO createAnswerWithUserId(ReqCreateAnswerDTO reqCreateAnswerDTO, Long userId) {
-                Question question = questionRepository.findById(reqCreateAnswerDTO.getQuestionId())
+        @Transactional
+        public ResAnswerDTO createAnswerWithUserId(ReqCreateAnswerDTO reqDto, Long userId) {
+                // Get required entities
+                Question question = questionRepository.findById(reqDto.getQuestionId())
                                 .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
 
                 User user = userRepository.findById(userId)
                                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-                // Tìm các câu trả lời trước đó của người dùng cho câu hỏi này
-                List<Answer> previousAnswers = answerRepository.findByUserAndQuestion(user, question);
+                // Get enrollment if provided
+                Enrollment enrollment = null;
+                if (reqDto.getEnrollmentId() != null) {
+                        enrollment = enrollmentRepository.findById(reqDto.getEnrollmentId())
+                                        .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found"));
 
-                // Tính sessionId mới
+                        // Validate that the enrollment belongs to the user
+                        if (!Objects.equals(enrollment.getUser().getId(), userId)) {
+                                throw new IllegalArgumentException("Enrollment does not belong to the user");
+                        }
+                }
+
+                // Get previous answers to calculate session ID
+                List<Answer> previousAnswers = answerRepository.findByUserAndQuestion(user, question);
                 long newSessionId = previousAnswers.size() + 1;
 
+                // Create and save answer
                 Answer answer = new Answer();
                 answer.setQuestion(question);
                 answer.setUser(user);
-                answer.setPoint_achieved(0);
-                answer.setSessionId(newSessionId); // Thiết lập sessionId tự động
+                answer.setEnrollment(enrollment);
+                answer.setPoint_achieved(reqDto.getPointAchieved() != null ? reqDto.getPointAchieved() : 0);
+                answer.setImprovement(reqDto.getImprovement());
+                answer.setSessionId(newSessionId);
                 answer = answerRepository.save(answer);
 
+                // Create and save answer text
                 Answer_Text answerText = new Answer_Text();
-                answerText.setAnsContent(reqCreateAnswerDTO.getAnswerContent());
+                answerText.setAnsContent(reqDto.getAnswerContent());
                 answerText.setAnswer(answer);
                 answerTextRepository.save(answerText);
+
+                // Grade answer if it's a choice or multiple choice question
+                if (question.getQuesType() == QuestionTypeEnum.CHOICE ||
+                                question.getQuesType() == QuestionTypeEnum.MULTIPLE) {
+                        gradeAnswer(answer.getId());
+                }
 
                 return convertToDTO(answer, answerText);
         }
@@ -106,72 +96,75 @@ public class AnswerService {
                 return convertToDTO(answer, answerText);
         }
 
-        public List<Answer> getAnswersByQuestionId(Long questionId) {
-                return answerRepository.findAll().stream()
-                                .filter(answer -> Long.valueOf(answer.getQuestion().getId()).equals(questionId))
-                                .collect(Collectors.toList());
-        }
-
-        public Page<Answer> getAllAnswersByQuestionIdAndUserId(Long questionId, Long userId, Pageable pageable) {
-                List<Answer> allAnswers = answerRepository.findAll();
-
-                // Filter answers by questionId and userId
-                List<Answer> filteredAnswers = allAnswers.stream()
-                                .filter(answer -> answer.getQuestion().getId() == questionId
-                                                && answer.getUser().getId() == userId)
-                                .collect(Collectors.toList());
-
-                // Create a Page object
-                int start = (int) pageable.getOffset();
-                int end = Math.min((start + pageable.getPageSize()), filteredAnswers.size());
-                return new PageImpl<>(filteredAnswers.subList(start, end), pageable, filteredAnswers.size());
-        }
-
-        public void gradeAnswer(Long answerId) {
-                Answer answer = answerRepository.findById(answerId)
-                                .orElseThrow(() -> new ResourceNotFoundException("Answer not found"));
-
-                // Get the associated question
-                Question question = answer.getQuestion();
-
-                // Kiểm tra loại câu hỏi
-                if (question.getQuesType() == QuestionTypeEnum.MULTIPLE) {
-                        // Lấy các lựa chọn đúng cho câu hỏi
-                        List<Question_Choice> choices = questionChoiceRepository.findByQuestionId(question.getId());
-                        // Nối chuỗi các lựa chọn đúng
-                        String correctAnswers = choices.stream()
-                                        .filter(Question_Choice::isChoiceKey)
-                                        .map(Question_Choice::getChoiceContent)
-                                        .collect(Collectors.joining(", "));
-
-                        // So sánh với nội dung câu trả lời
-                        boolean isCorrect = correctAnswers.equals(answer.getAnswerText().getAnsContent());
-                        answer.setPoint_achieved(isCorrect ? question.getPoint() : 0);
-                } else {
-                        // Get the correct choices for the question
-                        List<Question_Choice> choices = questionChoiceRepository.findByQuestionId(question.getId());
-
-                        // Check if the answer content matches any correct choice
-                        boolean isCorrect = choices.stream()
-                                        .anyMatch(choice -> choice.getChoiceContent()
-                                                        .equals(answer.getAnswerText().getAnsContent())
-                                                        && choice.isChoiceKey());
-
-                        // Update point_achieved based on the result
-                        answer.setPoint_achieved(isCorrect ? question.getPoint() : 0);
-                }
-
-                answerRepository.save(answer); // Save the updated answer
-        }
-
         public Page<Answer> getAnswersByQuestionId(Long questionId, Pageable pageable) {
                 List<Answer> allAnswers = answerRepository.findAll().stream()
-                                .filter(answer -> Long.valueOf(answer.getQuestion().getId()).equals(questionId))
+                                .filter(answer -> Objects.equals(answer.getQuestion().getId(), questionId))
                                 .collect(Collectors.toList());
 
                 int start = (int) pageable.getOffset();
                 int end = Math.min((start + pageable.getPageSize()), allAnswers.size());
                 return new PageImpl<>(allAnswers.subList(start, end), pageable, allAnswers.size());
+        }
+
+        public Page<Answer> getAllAnswersByQuestionIdAndUserId(Long questionId, Long userId, Pageable pageable) {
+                List<Answer> allAnswers = answerRepository.findAll().stream()
+                                .filter(answer -> Objects.equals(answer.getQuestion().getId(), questionId)
+                                                && Objects.equals(answer.getUser().getId(), userId))
+                                .collect(Collectors.toList());
+
+                int start = (int) pageable.getOffset();
+                int end = Math.min((start + pageable.getPageSize()), allAnswers.size());
+                return new PageImpl<>(allAnswers.subList(start, end), pageable, allAnswers.size());
+        }
+
+        @Transactional
+        public void gradeAnswer(Long answerId) {
+                Answer answer = answerRepository.findById(answerId)
+                                .orElseThrow(() -> new ResourceNotFoundException("Answer not found"));
+
+                Question question = answer.getQuestion();
+                String userAnswer = answer.getAnswerText().getAnsContent().trim();
+                List<Question_Choice> choices = questionChoiceRepository.findByQuestionId(question.getId());
+
+                if (question.getQuesType() == QuestionTypeEnum.MULTIPLE) {
+                        // Handle multiple choice questions
+                        List<String> correctChoices = choices.stream()
+                                        .filter(Question_Choice::isChoiceKey)
+                                        .map(choice -> choice.getChoiceContent().trim())
+                                        .collect(Collectors.toList());
+
+                        List<String> userChoices = List.of(userAnswer.split("\\s*,\\s*"));
+
+                        boolean isFullyCorrect = correctChoices.size() == userChoices.size()
+                                        && correctChoices.stream()
+                                                        .allMatch(correct -> userChoices.stream()
+                                                                        .anyMatch(user -> normalizeAnswer(user).equals(
+                                                                                        normalizeAnswer(correct))));
+
+                        if (isFullyCorrect) {
+                                answer.setPoint_achieved(question.getPoint());
+                        } else {
+                                long correctCount = userChoices.stream()
+                                                .filter(userChoice -> correctChoices.stream()
+                                                                .anyMatch(correct -> normalizeAnswer(userChoice)
+                                                                                .equals(normalizeAnswer(correct))))
+                                                .count();
+
+                                double partialPoint = (double) correctCount / correctChoices.size()
+                                                * question.getPoint();
+                                answer.setPoint_achieved((int) Math.round(partialPoint));
+                        }
+                } else {
+                        // Handle single choice questions
+                        boolean isCorrect = choices.stream()
+                                        .filter(Question_Choice::isChoiceKey)
+                                        .anyMatch(choice -> normalizeAnswer(choice.getChoiceContent())
+                                                        .equals(normalizeAnswer(userAnswer)));
+
+                        answer.setPoint_achieved(isCorrect ? question.getPoint() : 0);
+                }
+
+                answerRepository.save(answer);
         }
 
         public ResAnswerDTO getLatestAnswerByUserAndQuestion(Long questionId, Long userId) {
@@ -181,10 +174,8 @@ public class AnswerService {
                 Question question = questionRepository.findById(questionId)
                                 .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
 
-                // Lấy tất cả các câu trả lời của người dùng cho câu hỏi này
                 List<Answer> userAnswers = answerRepository.findByUserAndQuestion(user, question);
 
-                // Lấy câu trả lời mới nhất
                 return userAnswers.stream()
                                 .max((a1, a2) -> Long.compare(a1.getSessionId(), a2.getSessionId()))
                                 .map(answer -> {
@@ -204,6 +195,19 @@ public class AnswerService {
                 dto.setAnswerContent(answerText.getAnsContent());
                 dto.setPointAchieved(answer.getPoint_achieved());
                 dto.setSessionId(answer.getSessionId());
+                dto.setImprovement(answer.getImprovement());
+
+                if (answer.getEnrollment() != null) {
+                        dto.setEnrollmentId(answer.getEnrollment().getId());
+                }
+
                 return dto;
+        }
+
+        private String normalizeAnswer(String answer) {
+                return answer.trim()
+                                .toLowerCase()
+                                .replaceAll("\\s+", " ")
+                                .replaceAll("[.!?]+$", "");
         }
 }

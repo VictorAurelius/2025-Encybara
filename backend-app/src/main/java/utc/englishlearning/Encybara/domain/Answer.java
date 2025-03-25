@@ -2,6 +2,7 @@ package utc.englishlearning.Encybara.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +27,10 @@ public class Answer {
     private int point_achieved;
     private long sessionId;
 
+    // Change from Text to String for the improvement field
+    @Column(columnDefinition = "TEXT")
+    private String improvement;
+
     @ManyToOne
     @JoinColumn(name = "question_id")
     @JsonIgnore
@@ -40,8 +45,8 @@ public class Answer {
     @JsonIgnore
     private Answer_Text answerText;
 
-    @OneToOne(mappedBy = "answer", fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(name = "enrollment_id")
     @JsonIgnore
-    private Answer_Voice answerVoice;
-
+    private Enrollment enrollment;
 }

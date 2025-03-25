@@ -42,8 +42,11 @@ public class QuestionSpecification {
         };
     }
 
-    public static Specification<Question> hasPoint(int point) {
+    public static Specification<Question> hasPoint(Integer point) {
         return (root, query, criteriaBuilder) -> {
+            if (point == null) {
+                return criteriaBuilder.conjunction();
+            }
             return criteriaBuilder.equal(root.get("point"), point);
         };
     }

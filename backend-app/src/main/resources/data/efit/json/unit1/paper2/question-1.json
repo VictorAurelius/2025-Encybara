@@ -1,0 +1,117 @@
+[
+    {
+        "quesContent": "(IT Organisations) What technology company would you choose to discuss?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "(IT Organisations) What activities does this company carry out?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "(IT Organisations) Why is this company important in the technology sector?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "A company or companies that sell things (Futachiba)",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "provider",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Companies that make things to sell (Futachiba)",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "manufacturers",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Factories (Futachiba)",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "production facilities",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Things a company sells (Futachiba)",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "products",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Using software that runs and stores information on the internet (IBGroup)",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "cloud",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Customers (IBGroup)",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "clients",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Start selling a new product (Digital World)",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "launch",
+                "isCorrect": true
+            }
+        ]
+    }
+]

@@ -33,6 +33,7 @@ public class NotificationController {
         responseDTO.setCreatedAt(notification.getCreatedAt());
         responseDTO.setEntityId(notification.getEntityId());
         responseDTO.setEntityType(notification.getEntityType());
+        responseDTO.setImg(notification.getImg());
 
         RestResponse<ResNotificationDTO> response = new RestResponse<>();
         response.setStatusCode(200);
@@ -61,6 +62,7 @@ public class NotificationController {
             dto.setCreatedAt(notification.getCreatedAt());
             dto.setEntityId(notification.getEntityId());
             dto.setEntityType(notification.getEntityType());
+            dto.setImg(notification.getImg());
             return dto;
         }));
         return ResponseEntity.ok(response);
@@ -78,6 +80,7 @@ public class NotificationController {
             dto.setCreatedAt(notification.getCreatedAt());
             dto.setEntityId(notification.getEntityId());
             dto.setEntityType(notification.getEntityType());
+            dto.setImg(notification.getImg());
             return dto;
         }).collect(Collectors.toList());
 
@@ -100,6 +103,7 @@ public class NotificationController {
         responseDTO.setCreatedAt(notification.getCreatedAt());
         responseDTO.setEntityId(notification.getEntityId());
         responseDTO.setEntityType(notification.getEntityType());
+        responseDTO.setImg(notification.getImg());
 
         RestResponse<ResNotificationDTO> response = new RestResponse<>();
         response.setStatusCode(200);

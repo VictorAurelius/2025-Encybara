@@ -1,0 +1,188 @@
+[
+    {
+        "quesContent": "Choose correct letter A-H for space 18",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "H",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose correct letter A-H for space 19",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "A",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose correct letter A-H for space 20",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "C",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Which book is by somebody who has written a lot of books?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "The Long Night",
+                "isCorrect": false
+            },
+            {
+                "content": "Hard Work",
+                "isCorrect": true
+            },
+            {
+                "content": "Hospital or Cinema?",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Which book is about somebody who is very poor?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "The Long Night",
+                "isCorrect": false
+            },
+            {
+                "content": "Hard Work",
+                "isCorrect": true
+            },
+            {
+                "content": "Hospital or Cinema?",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Which book is about somebody who would like to work in a hospital?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "The Long Night",
+                "isCorrect": false
+            },
+            {
+                "content": "Hard Work",
+                "isCorrect": false
+            },
+            {
+                "content": "Hospital or Cinema?",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Which book is by somebody who worked in a school?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "The Long Night",
+                "isCorrect": true
+            },
+            {
+                "content": "Hard Work",
+                "isCorrect": false
+            },
+            {
+                "content": "Hospital or Cinema?",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Which book is about a difficult journey?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "The Long Night",
+                "isCorrect": true
+            },
+            {
+                "content": "Hard Work",
+                "isCorrect": false
+            },
+            {
+                "content": "Hospital or Cinema?",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Which book is about a man and his son?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "The Long Night",
+                "isCorrect": false
+            },
+            {
+                "content": "Hard Work",
+                "isCorrect": true
+            },
+            {
+                "content": "Hospital or Cinema?",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Which book is by a student?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "The Long Night",
+                "isCorrect": false
+            },
+            {
+                "content": "Hard Work",
+                "isCorrect": false
+            },
+            {
+                "content": "Hospital or Cinema?",
+                "isCorrect": true
+            }
+        ]
+    }
+]

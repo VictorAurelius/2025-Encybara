@@ -10,7 +10,6 @@ import lombok.Setter;
 public class ReqFlashcardDTO {
     private String word;
     private List<Integer> definitionIndices;
-    private List<Integer> meaningIndices;
-    private List<Integer> phoneticIndices;
     private Long userId;
+    private int partOfSpeechIndex;
 }

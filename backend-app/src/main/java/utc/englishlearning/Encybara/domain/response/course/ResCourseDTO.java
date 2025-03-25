@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import utc.englishlearning.Encybara.util.constant.CourseTypeEnum;
 import utc.englishlearning.Encybara.util.constant.SpecialFieldEnum;
+import utc.englishlearning.Encybara.util.constant.CourseStatusEnum;
 
 import java.time.Instant;
 import java.util.List;
@@ -14,8 +15,8 @@ public class ResCourseDTO {
     private long id;
     private String name;
     private String intro;
-    private int diffLevel;
-    private int recomLevel;
+    private double diffLevel;
+    private double recomLevel;
     private CourseTypeEnum courseType;
     private SpecialFieldEnum speciField;
     private String createBy;
@@ -24,4 +25,6 @@ public class ResCourseDTO {
     private Instant updateAt;
     private Integer sumLesson;
     private List<Long> lessonIds;
+    private CourseStatusEnum courseStatus;
+    private String group;
 }

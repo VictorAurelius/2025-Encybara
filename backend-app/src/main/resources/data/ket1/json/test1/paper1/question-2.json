@@ -1,0 +1,112 @@
+[
+    {
+        "quesContent": "It's time for lunch.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Oh good!",
+                "isCorrect": false
+            },
+            {
+                "content": "One hour.",
+                "isCorrect": true
+            },
+            {
+                "content": "Half past twelve.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Would you like a drink?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "I don't like coffee.",
+                "isCorrect": false
+            },
+            {
+                "content": "I prefer tea.",
+                "isCorrect": false
+            },
+            {
+                "content": "Coffee, please.",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "How much was your new shirt?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "It's a red shirt.",
+                "isCorrect": false
+            },
+            {
+                "content": "It was very cheap.",
+                "isCorrect": true
+            },
+            {
+                "content": "It was in a shop.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "I'm very sorry.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "I'm afraid so.",
+                "isCorrect": false
+            },
+            {
+                "content": "I think so.",
+                "isCorrect": false
+            },
+            {
+                "content": "That's all right.",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose correct letter A-H for space 16",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "G",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose correct letter A-H for space 17",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "F",
+                "isCorrect": true
+            }
+        ]
+    }
+]

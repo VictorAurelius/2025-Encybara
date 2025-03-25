@@ -1,0 +1,172 @@
+[
+    {
+        "quesContent": "What have they forgotten?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "ticket",
+                "isCorrect": false
+            },
+            {
+                "content": "camera",
+                "isCorrect": true
+            },
+            {
+                "content": "passport",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "What time does the train go?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "6:15",
+                "isCorrect": true
+            },
+            {
+                "content": "6:50",
+                "isCorrect": false
+            },
+            {
+                "content": "6:10",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Where is Room 22?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "On the right of the door",
+                "isCorrect": false
+            },
+            {
+                "content": "Next to main hall, in the second door",
+                "isCorrect": true
+            },
+            {
+                "content": "Go through the main hall",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Which man wants to see him?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "wearing a hat",
+                "isCorrect": true
+            },
+            {
+                "content": "wearing a hat and glasses",
+                "isCorrect": false
+            },
+            {
+                "content": "doesn't wear a hat",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "How did the woman get to work?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "by bicycle",
+                "isCorrect": false
+            },
+            {
+                "content": "by bus",
+                "isCorrect": false
+            },
+            {
+                "content": "by car",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does Bill do?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "F",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does David do?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "G",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does Paul's mother do?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "E",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does Paul's father do?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "B",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does Paul do?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "A",
+                "isCorrect": true
+            }
+        ]
+    }
+]

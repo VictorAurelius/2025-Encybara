@@ -3,37 +3,49 @@ package utc.englishlearning.Encybara.config;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.boot.CommandLineRunner;
+import java.time.Instant;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import utc.englishlearning.Encybara.domain.Permission;
-import utc.englishlearning.Encybara.domain.Role;
-import utc.englishlearning.Encybara.domain.Admin;
-import utc.englishlearning.Encybara.repository.PermissionRepository;
-import utc.englishlearning.Encybara.repository.RoleRepository;
-import utc.englishlearning.Encybara.repository.AdminRepository;
+import utc.englishlearning.Encybara.domain.*;
+import utc.englishlearning.Encybara.repository.*;
+import utc.englishlearning.Encybara.service.DataManagementService;
+import utc.englishlearning.Encybara.service.CourseRecommendationRefreshService;
+import utc.englishlearning.Encybara.util.constant.SpecialFieldEnum;
 
 @Service
-public class DatabaseInitializer implements CommandLineRunner {
+public class AdminDataInitializer implements CommandLineRunner {
 
     private final PermissionRepository permissionRepository;
     private final RoleRepository roleRepository;
     private final AdminRepository adminRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final DataManagementService dataManagementService;
+    private final LearningResultRepository learningResultRepository;
+    private final CourseRecommendationRefreshService courseRecommendationRefreshService;
 
-    public DatabaseInitializer(
+    public AdminDataInitializer(
             PermissionRepository permissionRepository,
             RoleRepository roleRepository,
             AdminRepository adminRepository,
-            PasswordEncoder passwordEncoder) {
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            DataManagementService dataManagementService,
+            LearningResultRepository learningResultRepository,
+            CourseRecommendationRefreshService courseRecommendationRefreshService) {
         this.permissionRepository = permissionRepository;
         this.roleRepository = roleRepository;
         this.adminRepository = adminRepository;
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.dataManagementService = dataManagementService;
+        this.learningResultRepository = learningResultRepository;
+        this.courseRecommendationRefreshService = courseRecommendationRefreshService;
     }
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println(">>> START INIT DATABASE");
+        System.out.println(">>> START INIT ADMIN CONFIG");
         long countPermissions = this.permissionRepository.count();
         long countRoles = this.roleRepository.count();
         long countAdmins = this.adminRepository.count();
@@ -114,10 +126,55 @@ public class DatabaseInitializer implements CommandLineRunner {
             this.adminRepository.save(adminUser);
         }
 
-        if (countPermissions > 0 && countRoles > 0 && countAdmins > 0) {
-            System.out.println(">>> SKIP INIT DATABASE ~ ALREADY HAVE DATA...");
-        } else
-            System.out.println(">>> END INIT DATABASE");
-    }
+        // Create default user if none exists
+        long countUsers = this.userRepository.count();
+        if (countUsers == 0) {
+            // Create default user
+            utc.englishlearning.Encybara.domain.User defaultUser = new utc.englishlearning.Encybara.domain.User();
+            defaultUser.setName("Encybara User");
+            defaultUser.setEmail("user@example.com");
+            defaultUser.setPassword(this.passwordEncoder.encode("Abc@123456"));
+            defaultUser.setPhone("0123456789");
+            defaultUser.setSpeciField(SpecialFieldEnum.IT);
+            defaultUser.setRefreshToken("");
 
+            // Create associated learning result
+            Learning_Result learningResult = new Learning_Result();
+            learningResult.setListeningScore(5.0);
+            learningResult.setSpeakingScore(5.0);
+            learningResult.setReadingScore(5.0);
+            learningResult.setWritingScore(5.0);
+            learningResult.setPreviousListeningScore(4.5);
+            learningResult.setPreviousSpeakingScore(4.5);
+            learningResult.setPreviousReadingScore(4.5);
+            learningResult.setPreviousWritingScore(4.5);
+            learningResult.setLastUpdated(Instant.now());
+            learningResult.setUser(defaultUser);
+
+            // Save user first
+            defaultUser = userRepository.save(defaultUser);
+
+            // Then save learning result
+            learningResultRepository.save(learningResult);
+
+            System.out.println(">>> DEFAULT USER CREATED");
+        }
+
+        if (countPermissions > 0 && countRoles > 0 && countAdmins > 0) {
+            System.out.println(">>> SKIP INIT ADMIN CONFIG ~ ALREADY HAVE DATA...");
+        } else {
+            System.out.println(">>> END INIT ADMIN CONFIG");
+        }
+
+        // Seed course data
+        System.out.println(">>> START SEEDING COURSE DATA");
+        dataManagementService.seedPlacementData();
+        dataManagementService.seedKet1Data();
+        dataManagementService.seedEFITData();
+        System.out.println(">>> END SEEDING COURSE DATA");
+
+        // Refresh course recommendations for all users
+        System.out.println(">>> REFRESHING COURSE RECOMMENDATIONS");
+        courseRecommendationRefreshService.refreshAllRecommendations();
+    }
 }

@@ -1,0 +1,172 @@
+[
+    {
+        "quesContent": "You can't drive this way.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "F",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Children do not have to pay.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "A",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "You can shop here six days a week.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "G",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Be careful when you stand up.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "C",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "We work quickly.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "B",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Nina was very ... because she got lots of presents.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "interesting",
+                "isCorrect": false
+            },
+            {
+                "content": "lovely",
+                "isCorrect": false
+            },
+            {
+                "content": "happy",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "She ... some friends to her house for a party.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "decided",
+                "isCorrect": false
+            },
+            {
+                "content": "agreed",
+                "isCorrect": false
+            },
+            {
+                "content": "invited",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Her mother made a big chocolate ... with 'Happy Birthday' on the top.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "meal",
+                "isCorrect": false
+            },
+            {
+                "content": "cake",
+                "isCorrect": true
+            },
+            {
+                "content": "dish",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Nina and her friends has a great time, singing and dancing and ... to their favorite music.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "listening",
+                "isCorrect": true
+            },
+            {
+                "content": "hearing",
+                "isCorrect": false
+            },
+            {
+                "content": "looking",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "When they had to go, everybody ... Nina and her mother for the party.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "said",
+                "isCorrect": false
+            },
+            {
+                "content": "thanked",
+                "isCorrect": true
+            },
+            {
+                "content": "told",
+                "isCorrect": false
+            }
+        ]
+    }
+]

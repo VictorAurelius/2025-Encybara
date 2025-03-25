@@ -1,0 +1,192 @@
+[
+    {
+        "quesContent": "Rewrite the sentence using 'Tired':\n\nAlthough he was very tired, he agreed to help me with my homework.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Tired as he was, he agreed to help me with my homework",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Rewrite the sentence using relative clauses:\n\nThe man works for my father's company. The man's daughter is fond of dancing.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "The man whose daughter is fond of dancing works for my father's company",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Rewrite the sentence starting with 'Martin apologized':\n\n\"I'm sorry, Angela, I'm afraid I've damaged your car,\" said Martin.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Martin apologized to Angela for having damaged her car",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Rewrite the sentence starting with 'Maradona':\n\nPeople think that Maradona is the best football player in the 20th century.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Maradona is thought to be the best football player in the 20th century",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Rewrite the sentence starting with 'If':\n\nWithout your help, I couldn't overcome the problem.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "If it hadn't been for your help, I couldn't overcome the problem",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Listen to the talk about Festival 1:\n\nWhat is the name of the festival?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Mid-Autumn",
+                "isCorrect": false
+            },
+            {
+                "content": "Carnival",
+                "isCorrect": true
+            },
+            {
+                "content": "Halloween",
+                "isCorrect": false
+            },
+            {
+                "content": "Christmas",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Listen to the talk about Festival 1:\n\nWhat do people do in the festival?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Wear colourful costumes",
+                "isCorrect": true
+            },
+            {
+                "content": "Draw on their bodies",
+                "isCorrect": false
+            },
+            {
+                "content": "Wear T-shirts",
+                "isCorrect": false
+            },
+            {
+                "content": "Make colourful lanterns",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Listen to the talk about Festival 1:\n\nWhich country is famous for this festival?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Brazil",
+                "isCorrect": true
+            },
+            {
+                "content": "France",
+                "isCorrect": false
+            },
+            {
+                "content": "Spain",
+                "isCorrect": false
+            },
+            {
+                "content": "Japan",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Listen to the talk about Festival 2:\n\nWhere is the festival?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "In Brazil",
+                "isCorrect": false
+            },
+            {
+                "content": "In France",
+                "isCorrect": false
+            },
+            {
+                "content": "In Thailand",
+                "isCorrect": false
+            },
+            {
+                "content": "In Spain",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Listen to the talk about Festival 2:\n\nWhat do people throw in the festival?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Potatoes",
+                "isCorrect": false
+            },
+            {
+                "content": "Vegetables",
+                "isCorrect": false
+            },
+            {
+                "content": "Tomatoes",
+                "isCorrect": true
+            },
+            {
+                "content": "Fruit",
+                "isCorrect": false
+            }
+        ]
+    }
+]

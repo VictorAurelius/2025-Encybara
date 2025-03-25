@@ -3,24 +3,14 @@ package utc.englishlearning.Encybara.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import utc.englishlearning.Encybara.domain.Answer;
-import utc.englishlearning.Encybara.domain.Enrollment;
-import utc.englishlearning.Encybara.domain.Lesson;
-import utc.englishlearning.Encybara.domain.Lesson_Result;
-import utc.englishlearning.Encybara.domain.Question;
-import utc.englishlearning.Encybara.domain.User;
+import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.domain.request.lesson.ReqCreateLessonResultDTO;
 import utc.englishlearning.Encybara.domain.response.lesson.ResLessonResultDTO;
 import utc.englishlearning.Encybara.exception.ResourceNotFoundException;
-import utc.englishlearning.Encybara.repository.LessonResultRepository;
-import utc.englishlearning.Encybara.repository.AnswerRepository;
-import utc.englishlearning.Encybara.repository.QuestionRepository;
-import utc.englishlearning.Encybara.repository.UserRepository;
-import utc.englishlearning.Encybara.repository.LessonRepository;
-import utc.englishlearning.Encybara.repository.EnrollmentRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import utc.englishlearning.Encybara.repository.*;
 import utc.englishlearning.Encybara.util.SecurityUtil;
 import utc.englishlearning.Encybara.exception.ResourceAlreadyExistsException;
 
@@ -47,45 +37,53 @@ public class LessonResultService {
         @Autowired
         private EnrollmentRepository enrollmentRepository;
 
-        public ResLessonResultDTO createLessonResult(ReqCreateLessonResultDTO reqDto) {
-                User user = userRepository.findByEmail(SecurityUtil.getCurrentUserLogin()
-                                .orElseThrow(() -> new RuntimeException("User not authenticated")));
-                // User user = userRepository.findById(reqDto.getUserId()).get();
+        private ResLessonResultDTO convertToDTO(Lesson_Result result) {
+                ResLessonResultDTO dto = new ResLessonResultDTO();
+                dto.setId(result.getId());
+                dto.setUserId(result.getUser().getId());
+                dto.setUserName(result.getUser().getName());
+                dto.setLessonId(result.getLesson().getId());
+                dto.setLessonName(result.getLesson().getName());
+                dto.setStuTime(result.getStuTime());
+                dto.setTotalPoints(result.getTotalPoints());
+                dto.setComLevel(result.getComLevel());
 
-                Lesson lesson = lessonRepository.findById(reqDto.getLessonId())
-                                .orElseThrow(() -> new ResourceNotFoundException("Lesson not found"));
+                if (result.getEnrollment() != null) {
+                        dto.setEnrollmentId(result.getEnrollment().getId());
+                        if (result.getEnrollment().getCourse() != null) {
+                                dto.setCourseType(result.getEnrollment().getCourse().getCourseType().toString());
+                                dto.setDiffLevel(result.getEnrollment().getCourse().getDiffLevel());
+                        }
+                }
 
-                List<Question> questions = questionRepository.findByLesson(lesson);
+                if (result.getLesson() != null) {
+                        dto.setSkillType(result.getLesson().getSkillType().toString());
+                }
 
-                List<Answer> answers = answerRepository.findByUserAndQuestionInAndSessionId(user, questions,
-                                reqDto.getSessionId());
-                int totalPointsAchieved = answers.stream().mapToInt(Answer::getPoint_achieved).sum();
+                return dto;
+        }
 
-                int totalPointsPossible = questionRepository.findByLesson(lesson)
-                                .stream().mapToInt(Question::getPoint).sum();
+        public Page<ResLessonResultDTO> getResultsByLessonIdAsDTO(Long lessonId, Pageable pageable) {
+                return lessonResultRepository.findByLessonId(lessonId, pageable)
+                                .map(this::convertToDTO);
+        }
 
-                double comLevel = totalPointsPossible > 0 ? (double) totalPointsAchieved / totalPointsPossible * 100
-                                : 0;
+        public Page<ResLessonResultDTO> getResultsByUserIdAndLessonIdAsDTO(Long userId, Long lessonId,
+                        Pageable pageable) {
+                return lessonResultRepository.findByUserIdAndLessonId(userId, lessonId, pageable)
+                                .map(this::convertToDTO);
+        }
 
-                Lesson_Result lessonResult = new Lesson_Result();
-                lessonResult.setLesson(lesson);
-                lessonResult.setUser(user);
-                lessonResult.setSessionId(reqDto.getSessionId());
-                lessonResult.setStuTime(reqDto.getStuTime());
-                lessonResult.setTotalPoints(totalPointsAchieved);
-                lessonResult.setComLevel(comLevel);
-                lessonResultRepository.save(lessonResult);
+        public Page<ResLessonResultDTO> getLatestResultsByUserIdAsDTO(Long userId, Pageable pageable) {
+                return lessonResultRepository.findByUserIdOrderBySessionIdDesc(userId, pageable)
+                                .map(this::convertToDTO);
+        }
 
-                ResLessonResultDTO resDto = new ResLessonResultDTO();
-                resDto.setId(lessonResult.getId());
-                resDto.setLessonId(lesson.getId());
-                resDto.setUserId(user.getId());
-                resDto.setSessionId(reqDto.getSessionId());
-                resDto.setStuTime(reqDto.getStuTime());
-                resDto.setPoint(totalPointsAchieved);
-                resDto.setComLevel(comLevel);
-
-                return resDto;
+        public List<ResLessonResultDTO> getLatestResultsByUserIdAndLessonIdAsDTO(Long userId, Long lessonId) {
+                return lessonResultRepository.findByUserIdAndLessonIdOrderBySessionIdDesc(userId, lessonId)
+                                .stream()
+                                .map(this::convertToDTO)
+                                .toList();
         }
 
         @Transactional
@@ -96,7 +94,7 @@ public class LessonResultService {
                 Lesson lesson = lessonRepository.findById(reqDto.getLessonId())
                                 .orElseThrow(() -> new ResourceNotFoundException("Lesson not found"));
 
-                // Kiểm tra xem Lesson_Result đã tồn tại chưa
+                // Check if result already exists
                 if (lessonResultRepository.existsByUserIdAndLessonIdAndSessionIdAndEnrollmentId(
                                 userId, reqDto.getLessonId(), reqDto.getSessionId(), reqDto.getEnrollmentId())) {
                         throw new ResourceAlreadyExistsException(
@@ -112,48 +110,78 @@ public class LessonResultService {
                                 reqDto.getSessionId());
                 int totalPointsAchieved = answers.stream().mapToInt(Answer::getPoint_achieved).sum();
 
-                int totalPointsPossible = questionRepository.findByLesson(lesson)
-                                .stream().mapToInt(Question::getPoint).sum();
+                int totalPointsPossible = questions.stream()
+                                .mapToInt(Question::getPoint)
+                                .sum();
+
+                double comLevel = totalPointsPossible > 0 ? (double) totalPointsAchieved / totalPointsPossible * 100
+                                : 0;
+
+                User user = userRepository.findById(userId)
+                                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+                Lesson_Result lessonResult = new Lesson_Result();
+                lessonResult.setLesson(lesson);
+                lessonResult.setUser(user);
+                lessonResult.setSessionId(reqDto.getSessionId());
+                lessonResult.setStuTime(reqDto.getStuTime());
+                lessonResult.setTotalPoints(totalPointsAchieved);
+                lessonResult.setEnrollment(enrollment);
+                lessonResult.setComLevel(comLevel);
+                lessonResult = lessonResultRepository.save(lessonResult);
+
+                return convertToDTO(lessonResult);
+        }
+
+        public ResLessonResultDTO createLessonResult(ReqCreateLessonResultDTO reqDto) {
+                User user = userRepository.findByEmail(SecurityUtil.getCurrentUserLogin()
+                                .orElseThrow(() -> new RuntimeException("User not authenticated")));
+
+                Lesson lesson = lessonRepository.findById(reqDto.getLessonId())
+                                .orElseThrow(() -> new ResourceNotFoundException("Lesson not found"));
+
+                List<Question> questions = questionRepository.findByLesson(lesson);
+
+                List<Answer> answers = answerRepository.findByUserAndQuestionInAndSessionId(user, questions,
+                                reqDto.getSessionId());
+                int totalPointsAchieved = answers.stream().mapToInt(Answer::getPoint_achieved).sum();
+
+                int totalPointsPossible = questions.stream()
+                                .mapToInt(Question::getPoint)
+                                .sum();
 
                 double comLevel = totalPointsPossible > 0 ? (double) totalPointsAchieved / totalPointsPossible * 100
                                 : 0;
 
                 Lesson_Result lessonResult = new Lesson_Result();
                 lessonResult.setLesson(lesson);
-                lessonResult.setUser(userRepository.findById(userId)
-                                .orElseThrow(() -> new ResourceNotFoundException("User not found")));
+                lessonResult.setUser(user);
                 lessonResult.setSessionId(reqDto.getSessionId());
                 lessonResult.setStuTime(reqDto.getStuTime());
                 lessonResult.setTotalPoints(totalPointsAchieved);
-                lessonResult.setEnrollment(enrollment);
                 lessonResult.setComLevel(comLevel);
-                lessonResultRepository.save(lessonResult);
+                lessonResult = lessonResultRepository.save(lessonResult);
 
-                ResLessonResultDTO resDto = new ResLessonResultDTO();
-                resDto.setId(lessonResult.getId());
-                resDto.setLessonId(lesson.getId());
-                resDto.setUserId(userId);
-                resDto.setSessionId(reqDto.getSessionId());
-                resDto.setStuTime(reqDto.getStuTime());
-                resDto.setPoint(totalPointsAchieved);
-                resDto.setComLevel(comLevel);
-                resDto.setEnrollmentId(enrollment.getId());
-
-                return resDto;
+                return convertToDTO(lessonResult);
         }
 
+        // Keep these methods for backward compatibility but mark as deprecated
+        @Deprecated
         public Page<Lesson_Result> getResultsByLessonId(Long lessonId, Pageable pageable) {
                 return lessonResultRepository.findByLessonId(lessonId, pageable);
         }
 
+        @Deprecated
         public Page<Lesson_Result> getResultsByUserIdAndLessonId(Long userId, Long lessonId, Pageable pageable) {
                 return lessonResultRepository.findByUserIdAndLessonId(userId, lessonId, pageable);
         }
 
+        @Deprecated
         public Page<Lesson_Result> getLatestResultsByUserId(Long userId, Pageable pageable) {
                 return lessonResultRepository.findByUserIdOrderBySessionIdDesc(userId, pageable);
         }
 
+        @Deprecated
         public List<Lesson_Result> getLatestResultsByUserIdAndLessonId(Long userId, Long lessonId) {
                 return lessonResultRepository.findByUserIdAndLessonIdOrderBySessionIdDesc(userId, lessonId);
         }

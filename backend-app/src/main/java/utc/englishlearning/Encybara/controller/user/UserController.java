@@ -3,6 +3,7 @@ package utc.englishlearning.Encybara.controller.user;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.turkraft.springfilter.boot.Filter;
 
@@ -22,7 +25,9 @@ import utc.englishlearning.Encybara.domain.response.auth.ResCreateUserDTO;
 import utc.englishlearning.Encybara.domain.response.ResUpdateUserDTO;
 import utc.englishlearning.Encybara.domain.response.ResUserDTO;
 import utc.englishlearning.Encybara.domain.response.ResultPaginationDTO;
+import utc.englishlearning.Encybara.exception.FileStorageException;
 import utc.englishlearning.Encybara.exception.IdInvalidException;
+import utc.englishlearning.Encybara.service.FileStorageService;
 import utc.englishlearning.Encybara.service.UserService;
 import utc.englishlearning.Encybara.util.annotation.ApiMessage;
 
@@ -30,12 +35,14 @@ import utc.englishlearning.Encybara.util.annotation.ApiMessage;
 @RequestMapping("/api/v1")
 public class UserController {
     private final UserService userService;
-
     private final PasswordEncoder passwordEncoder;
+    private final FileStorageService fileStorageService;
 
-    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder,
+            FileStorageService fileStorageService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.fileStorageService = fileStorageService;
     }
 
     @PostMapping("/users")
@@ -79,7 +86,6 @@ public class UserController {
                 .body(this.userService.convertToResUserDTO(fetchUser));
     }
 
-    // fetch all users
     @GetMapping("/users")
     @ApiMessage("fetch all users")
     public ResponseEntity<ResultPaginationDTO> getAllUser(
@@ -100,4 +106,34 @@ public class UserController {
         return ResponseEntity.ok(this.userService.convertToResUpdateUserDTO(ericUser));
     }
 
+    @PostMapping(value = "/users/{userId}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ApiMessage("Upload user avatar")
+    public ResponseEntity<ResUserDTO> uploadAvatar(
+            @PathVariable("userId") Long userId,
+            @RequestParam("file") MultipartFile file) throws IdInvalidException {
+
+        if (file == null || file.isEmpty()) {
+            throw new FileStorageException("File không được để trống");
+        }
+
+        // Check file type
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new FileStorageException("Chỉ chấp nhận file hình ảnh");
+        }
+
+        // Check file size (e.g., limit to 4MB)
+        if (file.getSize() > 4 * 1024 * 1024) {
+            throw new FileStorageException("Kích thước file không được vượt quá 4MB");
+        }
+
+        // Store the file and get direct material link (URL)
+        String avatarUrl = this.fileStorageService.storeAvatar(file);
+
+        // Update user's avatar URL in DB and handle old avatar deletion
+        User updatedUser = this.userService.updateUserAvatar(userId, avatarUrl);
+
+        // Return updated user info
+        return ResponseEntity.ok(this.userService.convertToResUserDTO(updatedUser));
+    }
 }

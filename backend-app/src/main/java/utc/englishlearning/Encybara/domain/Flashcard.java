@@ -33,10 +33,19 @@ public class Flashcard {
     @Lob
     @Column(columnDefinition = "TEXT")
     private String definitions;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String vietNameseMeaning;
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String exampleMeaning;
     private Instant lastReviewed;
     private String partOfSpeech;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String phoneticText;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String phoneticAudio;
 
     @ManyToOne

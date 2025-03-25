@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import utc.englishlearning.Encybara.domain.User;
 import utc.englishlearning.Encybara.domain.response.auth.ResCreateUserDTO;
+import utc.englishlearning.Encybara.exception.IdInvalidException;
 import utc.englishlearning.Encybara.domain.response.ResUpdateUserDTO;
 import utc.englishlearning.Encybara.domain.response.ResUserDTO;
 import utc.englishlearning.Encybara.domain.response.ResultPaginationDTO;
@@ -20,9 +21,11 @@ import utc.englishlearning.Encybara.repository.UserRepository;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final FileStorageService fileStorageService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, FileStorageService fileStorageService) {
         this.userRepository = userRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     public User handleCreateUser(User user) {
@@ -71,7 +74,6 @@ public class UserService {
             currentUser.setName(reqUser.getName());
             currentUser.setPhone(reqUser.getPhone());
             currentUser.setSpeciField(reqUser.getSpeciField());
-            currentUser.setAvatar(reqUser.getAvatar());
             currentUser.setEnglishlevel(reqUser.getEnglishlevel());
             currentUser = this.userRepository.save(currentUser);
         }
@@ -108,7 +110,6 @@ public class UserService {
         res.setName(user.getName());
         res.setPhone(user.getPhone());
         res.setSpeciField(user.getSpeciField());
-        res.setAvatar(user.getAvatar());
         res.setEnglishlevel(user.getEnglishlevel());
 
         return res;
@@ -157,6 +158,22 @@ public class UserService {
             currentUser.setRefreshToken(null);
             this.userRepository.save(currentUser);
         }
+    }
+
+    public User updateUserAvatar(Long userId, String avatarUrl) throws IdInvalidException {
+        User user = fetchUserById(userId);
+        if (user == null) {
+            throw new IdInvalidException("User với id = " + userId + " không tồn tại");
+        }
+
+        // Delete old avatar if exists
+        String oldAvatarUrl = user.getAvatar();
+        if (oldAvatarUrl != null && !oldAvatarUrl.isEmpty()) {
+            fileStorageService.deleteFile(oldAvatarUrl);
+        }
+
+        user.setAvatar(avatarUrl);
+        return userRepository.save(user);
     }
 
 }

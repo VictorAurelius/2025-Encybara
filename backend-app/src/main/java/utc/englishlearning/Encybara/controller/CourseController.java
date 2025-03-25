@@ -5,6 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import utc.englishlearning.Encybara.util.constant.CourseStatusEnum;
 import utc.englishlearning.Encybara.domain.request.course.ReqCreateCourseDTO;
 import utc.englishlearning.Encybara.domain.request.course.ReqUpdateCourseDTO;
 import utc.englishlearning.Encybara.domain.response.course.ResCourseDTO;
@@ -53,11 +56,32 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<RestResponse<Page<ResCourseDTO>>> getAllCourses(Pageable pageable) {
-        Page<ResCourseDTO> courses = courseService.getAllCourses(pageable);
+    public ResponseEntity<RestResponse<Page<ResCourseDTO>>> getAllCourses(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "diffLevel", required = false) Double diffLevel,
+            @RequestParam(value = "recomLevel", required = false) Double recomLevel,
+            @RequestParam(value = "courseType", required = false) String courseType,
+            @RequestParam(value = "speciField", required = false) String speciField,
+            @RequestParam(value = "group", required = false) String group,
+            @RequestParam(value = "courseStatus", required = false) String courseStatus,
+            Pageable pageable) {
+        Page<ResCourseDTO> courses = courseService.getAllCourses(name, diffLevel, recomLevel,
+                courseType, speciField, group, courseStatus, pageable);
         RestResponse<Page<ResCourseDTO>> response = new RestResponse<>();
         response.setStatusCode(200);
         response.setMessage("Courses retrieved successfully");
+        response.setData(courses);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/group/{group}")
+    public ResponseEntity<RestResponse<Page<ResCourseDTO>>> getCoursesByGroup(
+            @PathVariable("group") String group,
+            Pageable pageable) {
+        Page<ResCourseDTO> courses = courseService.getCoursesByGroup(group, pageable);
+        RestResponse<Page<ResCourseDTO>> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Courses retrieved successfully by group");
         response.setData(courses);
         return ResponseEntity.ok(response);
     }
@@ -82,12 +106,61 @@ public class CourseController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<RestResponse<Void>> deleteCourse(@PathVariable("id") Long id) {
-        courseService.deleteCourse(id);
+    @PutMapping("/{id}/publish")
+    public ResponseEntity<RestResponse<Void>> publishCourse(@PathVariable("id") Long id) {
+        courseService.publishCourse(id);
         RestResponse<Void> response = new RestResponse<>();
         response.setStatusCode(HttpStatus.OK.value());
-        response.setMessage("Course deleted successfully");
+        response.setMessage("Course has been published successfully");
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}/make-private")
+    public ResponseEntity<RestResponse<Void>> makePrivate(@PathVariable("id") Long id) {
+        courseService.makePrivate(id);
+        RestResponse<Void> response = new RestResponse<>();
+        response.setStatusCode(HttpStatus.OK.value());
+        response.setMessage("Course has been made private successfully");
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}/make-public")
+    public ResponseEntity<RestResponse<Void>> makePublic(@PathVariable("id") Long id) {
+        courseService.makePublic(id);
+        RestResponse<Void> response = new RestResponse<>();
+        response.setStatusCode(HttpStatus.OK.value());
+        response.setMessage("Course has been made public successfully");
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/groups")
+    public ResponseEntity<RestResponse<Page<String>>> getCourseGroups(
+            @RequestParam(value = "status", required = false) String status,
+            Pageable pageable) {
+        CourseStatusEnum statusEnum = null;
+        if (status != null && !status.isEmpty()) {
+            try {
+                statusEnum = CourseStatusEnum.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Invalid enum value will result in null (no filter)
+            }
+        }
+
+        Page<String> groups = courseService.getCourseGroups(statusEnum, pageable);
+        RestResponse<Page<String>> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Course groups retrieved successfully");
+        response.setData(groups);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/special-fields")
+    public ResponseEntity<RestResponse<List<String>>> getSpecialFields() {
+        List<String> fields = courseService.getAllSpecialFields();
+        RestResponse<List<String>> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Special fields retrieved successfully");
+        response.setData(fields);
         return ResponseEntity.ok(response);
     }
 }

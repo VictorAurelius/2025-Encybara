@@ -20,6 +20,7 @@ public class ResFlashcardDTO {
     private Instant lastReviewed;
     private String examples;
     private Long userId;
+    private String exampleMeaning;
 
     public Instant getLastReviewed() {
         return lastReviewed;
@@ -67,5 +68,13 @@ public class ResFlashcardDTO {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getExampleMeaning() {
+        return exampleMeaning;
+    }
+
+    public void setExampleMeaning(String exampleMeaning) {
+        this.exampleMeaning = exampleMeaning;
     }
 }

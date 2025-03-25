@@ -15,10 +15,10 @@ public class GoogleTranslateController {
         this.googleTranslateService = googleTranslateService;
     }
 
-    @GetMapping("/translate")
+    @GetMapping("/translate/{language}/{text}")
     public ResponseEntity<RestResponse<String>> translateText(
-            @RequestParam String text,
-            @RequestParam(defaultValue = "vi") String language) {
+            @PathVariable("text") String text,
+            @PathVariable("language") String language) {
         Mono<String> translatedTextMono = googleTranslateService.translate(text, language);
 
         // Chuyển đổi Mono<String> thành String
