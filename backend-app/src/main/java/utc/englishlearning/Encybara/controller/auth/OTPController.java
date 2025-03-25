@@ -20,6 +20,8 @@ import utc.englishlearning.Encybara.service.OtpService;
 import utc.englishlearning.Encybara.service.UserService;
 import utc.englishlearning.Encybara.service.FlashcardGroupService;
 import utc.englishlearning.Encybara.util.SecurityUtil;
+import utc.englishlearning.Encybara.repository.FlashcardGroupRepository;
+import utc.englishlearning.Encybara.domain.FlashcardGroup;
 
 @RestController
 @RequestMapping("/api/v1/otp/")
@@ -30,15 +32,18 @@ public class OTPController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final FlashcardGroupService flashcardGroupService;
+    private final FlashcardGroupRepository flashcardGroupRepository;
 
     public OTPController(PasswordEncoder passwordEncoder, OtpService otpService, EmailService emailService,
-            SecurityUtil securityUtil, UserService userService, FlashcardGroupService flashcardGroupService) {
+            SecurityUtil securityUtil, UserService userService, FlashcardGroupService flashcardGroupService,
+            FlashcardGroupRepository flashcardGroupRepository) {
         this.passwordEncoder = passwordEncoder;
         this.otpService = otpService;
         this.emailService = emailService;
         this.securityUtil = securityUtil;
         this.userService = userService;
         this.flashcardGroupService = flashcardGroupService;
+        this.flashcardGroupRepository = flashcardGroupRepository;
     }
 
     // API gửi lại otp dựa vào id
@@ -130,8 +135,12 @@ public class OTPController {
             // Lưu người dùng vào cơ sở dữ liệu
             User savedUser = userService.handleCreateUser(user);
 
-            // Create default "New Flashcards" group for the user
-            flashcardGroupService.createFlashcardGroup("New Flashcards", savedUser.getId());
+            // Check if "New Flashcards" group exists
+            FlashcardGroup newFlashcardsGroup = flashcardGroupRepository.findByName("New Flashcards");
+            if (newFlashcardsGroup == null) {
+                // Create default "New Flashcards" group for the user
+                flashcardGroupService.createFlashcardGroup("New Flashcards", savedUser.getId());
+            }
 
             otpService.removeOtpData(otpRequest.getOtpID());
             return ResponseEntity.ok(new ErrorResponseDTO("Registration successful"));
