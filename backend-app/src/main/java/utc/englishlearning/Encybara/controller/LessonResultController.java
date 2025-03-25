@@ -3,8 +3,6 @@ package utc.englishlearning.Encybara.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import utc.englishlearning.Encybara.domain.Lesson_Result;
 import utc.englishlearning.Encybara.domain.RestResponse;
 import utc.englishlearning.Encybara.domain.request.lesson.ReqCreateLessonResultDTO;
 import utc.englishlearning.Encybara.domain.response.lesson.ResLessonResultDTO;

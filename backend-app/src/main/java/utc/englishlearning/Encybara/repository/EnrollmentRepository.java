@@ -12,6 +12,7 @@ import utc.englishlearning.Encybara.domain.User;
 import utc.englishlearning.Encybara.util.constant.CourseTypeEnum;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
@@ -54,4 +55,13 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
         void deleteByUserAndProStatusFalse(User user);
 
         boolean existsByUserAndCourseAndProStatusTrue(User user, Course course);
+
+        /**
+         * Find enrollment by user ID and course ID
+         * 
+         * @param userId   the ID of the user
+         * @param courseId the ID of the course
+         * @return Optional containing the enrollment if found
+         */
+        Optional<Enrollment> findByUserIdAndCourseId(Long userId, Long courseId);
 }

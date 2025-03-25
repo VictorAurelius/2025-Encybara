@@ -1,7 +1,5 @@
 package utc.englishlearning.Encybara.domain.response.lesson;
 
-import java.time.Instant;
-
 public class ResLessonResultDTO {
     private Long id;
     private Long userId;
