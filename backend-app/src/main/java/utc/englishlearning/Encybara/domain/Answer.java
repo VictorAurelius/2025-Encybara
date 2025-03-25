@@ -44,4 +44,9 @@ public class Answer {
     @OneToOne(mappedBy = "answer", fetch = FetchType.LAZY)
     @JsonIgnore
     private Answer_Text answerText;
+
+    @ManyToOne
+    @JoinColumn(name = "enrollment_id")
+    @JsonIgnore
+    private Enrollment enrollment;
 }

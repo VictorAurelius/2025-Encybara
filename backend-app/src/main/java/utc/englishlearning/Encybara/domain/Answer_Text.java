@@ -27,7 +27,11 @@ public class Answer_Text {
     @JoinColumn(name = "answer_id", nullable = false)
     private Answer answer;
 
-    public void setAnsContent(String[] ansContent) {
+    public void setAnsContent(String ansContent) {
+        this.ansContent = ansContent;
+    }
+
+    public void setAnsContentArray(String[] ansContent) {
         this.ansContent = String.join(", ", ansContent);
     }
 }
