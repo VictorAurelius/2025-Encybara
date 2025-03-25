@@ -27,6 +27,9 @@ public class InitialAssessmentService {
     private EnrollmentRepository enrollmentRepository;
 
     @Autowired
+    private LessonResultRepository lessonResultRepository;
+
+    @Autowired
     private CourseRecommendationService courseRecommendationService;
 
     @Autowired
@@ -84,21 +87,18 @@ public class InitialAssessmentService {
                     .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
 
             // Find placement assessment course
-            // Find placement assessment course
             Page<Course> placementCourses = courseRepository.findCoursesWithFilters(
-                    null, // name containing
-                    null, // diffLevel
-                    null, // recomLevel
-                    null, // courseType
-                    null, // speciField
-                    "PLACEMENT", // group
-                    null, // courseStatus
-                    PageRequest.of(0, 1));
+                    null, null, null, null, null, "PLACEMENT", null, PageRequest.of(0, 1));
 
             Course assessmentCourse = placementCourses.getContent()
                     .stream()
                     .findFirst()
                     .orElseThrow(() -> new ResourceNotFoundException("Placement assessment course not found"));
+
+            // Check if user already has an enrollment for this course
+            if (enrollmentRepository.findByUserIdAndCourseId(user.getId(), assessmentCourse.getId()).isPresent()) {
+                throw new RuntimeException("User already enrolled in placement assessment course");
+            }
 
             // Get existing learning result or create new one
             Learning_Result learningResult = user.getLearningResult();
@@ -140,6 +140,31 @@ public class InitialAssessmentService {
             PlacementAssessmentService.SkillScores scores = placementAssessmentService
                     .calculateSkillScores(placementEnrollment);
 
+            // Calculate total points and completion level for the enrollment
+            int totalPointsPossible = 0;
+            int totalPointsAchieved = 0;
+            var lessonResults = lessonResultRepository.findByEnrollment(placementEnrollment);
+            for (Lesson_Result result : lessonResults) {
+                Lesson lesson = result.getLesson();
+                totalPointsPossible += lesson.getSumQues(); // Each question typically worth 1 point
+                totalPointsAchieved += result.getTotalPoints();
+            }
+
+            // Update enrollment completion metrics
+            double comLevel = totalPointsPossible > 0 ? (double) totalPointsAchieved / totalPointsPossible * 100 : 0;
+            placementEnrollment.setTotalPoints(totalPointsAchieved);
+            placementEnrollment.setComLevel(comLevel);
+
+            // Set skill-specific score based on course type
+            switch (placementEnrollment.getCourse().getCourseType()) {
+                case LISTENING -> placementEnrollment.setSkillScore(scores.getListeningScore());
+                case SPEAKING -> placementEnrollment.setSkillScore(scores.getSpeakingScore());
+                case READING -> placementEnrollment.setSkillScore(scores.getReadingScore());
+                case WRITING -> placementEnrollment.setSkillScore(scores.getWritingScore());
+                default -> placementEnrollment.setSkillScore((scores.getListeningScore() + scores.getSpeakingScore()
+                        + scores.getReadingScore() + scores.getWritingScore()) / 4.0);
+            }
+
             // Update learning result with calculated scores
             Learning_Result learningResult = placementEnrollment.getLearningResult();
             learningResult.setListeningScore(scores.getListeningScore());
@@ -154,7 +179,10 @@ public class InitialAssessmentService {
             learningResult.setPreviousWritingScore(scores.getWritingScore());
 
             learningResult.setLastUpdated(Instant.now());
+
+            // Save both enrollment and learning result
             learningResultRepository.save(learningResult);
+            enrollmentRepository.save(placementEnrollment);
 
             // Get course recommendations based on placement scores
             var recommendedCourses = courseRecommendationService.getRecommendedCourses(learningResult);
