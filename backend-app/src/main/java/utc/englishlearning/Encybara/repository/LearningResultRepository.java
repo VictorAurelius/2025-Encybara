@@ -1,5 +1,7 @@
 package utc.englishlearning.Encybara.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -33,4 +35,17 @@ public interface LearningResultRepository extends JpaRepository<Learning_Result,
                         "GROUP BY e.course.diffLevel " +
                         "ORDER BY e.course.diffLevel DESC")
         List<Object[]> findCompletionRatesByDifficulty(@Param("learningResultId") Long learningResultId);
+
+        // Admin-specific queries
+        @Query("SELECT lr FROM Learning_Result lr JOIN lr.user u " +
+                        "WHERE u.englishlevel = :level")
+        Page<Learning_Result> findByUserEnglishlevel(@Param("level") String level, Pageable pageable);
+
+        @Query("SELECT lr FROM Learning_Result lr JOIN lr.user u " +
+                        "WHERE (:email is null OR LOWER(u.email) LIKE LOWER(CONCAT('%', :email, '%'))) " +
+                        "AND (:name is null OR LOWER(u.name) LIKE LOWER(CONCAT('%', :name, '%')))")
+        Page<Learning_Result> searchByFilters(
+                        @Param("email") String email,
+                        @Param("name") String name,
+                        Pageable pageable);
 }
