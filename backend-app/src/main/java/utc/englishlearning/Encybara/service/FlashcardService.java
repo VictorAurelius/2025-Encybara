@@ -43,6 +43,7 @@ public class FlashcardService {
     @Autowired
     private GlosbeDictionaryService glosbeDictionaryService;
 
+    @SuppressWarnings("null")
     public ResFlashcardDTO createFlashcardForEnglishDefinition(String word, int partOfSpeechIndex,
             List<Integer> definitionIndices, Long userId) {
         Flashcard flashcard = new Flashcard();
@@ -97,8 +98,8 @@ public class FlashcardService {
         }
 
         // Lưu phonetics đã chọn
-        StringBuilder selectedPhoneticsText = new StringBuilder();
-        StringBuilder selectedPhoneticsAudio = new StringBuilder();
+        String selectedPhoneticsText = null;
+        String selectedPhoneticsAudio = null;
 
         // Chỉ lấy một phonetic từ phần bài phát biểu đã chọn
         for (ResWord definition : definitions) {
@@ -107,8 +108,13 @@ public class FlashcardService {
                 List<Phonetic> phonetics = definition.getPhonetics();
                 if (phonetics != null && !phonetics.isEmpty()) {
                     Phonetic phonetic = phonetics.get(0); // Lấy phonetic đầu tiên
-                    selectedPhoneticsText.append(phonetic.getText()).append("; ");
-                    selectedPhoneticsAudio.append(phonetic.getAudio()).append("; ");
+                    if (phonetic.getText() != null) {
+                        selectedPhoneticsText = phonetic.getText();
+                    }
+                    if (phonetic.getAudio() != null) {
+                        selectedPhoneticsAudio = phonetic.getAudio();
+                    }
+                    break; // Chỉ lấy phonetic đầu tiên tìm thấy
                 }
             }
         }
@@ -186,11 +192,24 @@ public class FlashcardService {
         flashcard.setExampleMeaning(selectedMeaning.getExampleMeaning());
 
         // Lưu phonetics từ DictionaryService
-        List<Phonetic> phonetics = dictionaryService.getWordDefinition(word).block().get(0).getPhonetics();
-        if (phonetics != null && !phonetics.isEmpty()) {
-            Phonetic phonetic = phonetics.get(0);
-            flashcard.setPhoneticText(phonetic.getText());
-            flashcard.setPhoneticAudio(phonetic.getAudio());
+        try {
+            List<ResWord> wordDefinitions = dictionaryService.getWordDefinition(word).block();
+            if (wordDefinitions != null && !wordDefinitions.isEmpty()) {
+                ResWord definition = wordDefinitions.get(0);
+                List<Phonetic> phonetics = definition.getPhonetics();
+                if (phonetics != null && !phonetics.isEmpty()) {
+                    Phonetic phonetic = phonetics.get(0);
+                    if (phonetic.getText() != null) {
+                        flashcard.setPhoneticText(phonetic.getText());
+                    }
+                    if (phonetic.getAudio() != null) {
+                        flashcard.setPhoneticAudio(phonetic.getAudio());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Log error but continue with null phonetics
+            System.out.println("Error getting phonetics: " + e.getMessage());
         }
 
         // Lưu flashcard vào cơ sở dữ liệu

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import utc.englishlearning.Encybara.domain.RestResponse;
 import utc.englishlearning.Encybara.domain.User;
-import utc.englishlearning.Encybara.domain.FlashcardGroup;
 import utc.englishlearning.Encybara.domain.request.ErrorResponseDTO;
 import utc.englishlearning.Encybara.domain.request.TokenResponseDTO;
 import utc.englishlearning.Encybara.domain.request.auth.ReqOtpVerificationDTO;
