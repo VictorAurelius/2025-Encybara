@@ -255,12 +255,24 @@ public class FlashcardService {
         return res;
     }
 
-    public Page<Flashcard> getAllFlashcardsSortedByLatest(Pageable pageable) {
-        return flashcardRepository.findAllByOrderByLastReviewedDesc(pageable);
+    public Page<Flashcard> getAllFlashcardsSortedByLatest(Long groupId, Pageable pageable) {
+        if (groupId == null) {
+            return flashcardRepository.findAllByOrderByLastReviewedDesc(pageable);
+        }
+
+        FlashcardGroup group = flashcardGroupRepository.findById(groupId)
+                .orElseThrow(() -> new ResourceNotFoundException("Flashcard group not found"));
+        return flashcardRepository.findByFlashcardGroupOrderByLastReviewedDesc(group, pageable);
     }
 
-    public Page<Flashcard> getAllFlashcardsSortedByOldest(Pageable pageable) {
-        return flashcardRepository.findAllByOrderByLastReviewedAsc(pageable);
+    public Page<Flashcard> getAllFlashcardsSortedByOldest(Long groupId, Pageable pageable) {
+        if (groupId == null) {
+            return flashcardRepository.findAllByOrderByLastReviewedAsc(pageable);
+        }
+
+        FlashcardGroup group = flashcardGroupRepository.findById(groupId)
+                .orElseThrow(() -> new ResourceNotFoundException("Flashcard group not found"));
+        return flashcardRepository.findByFlashcardGroupOrderByLastReviewedAsc(group, pageable);
     }
 
     public void markFlashcardAsUnlearned(Long flashcardId) {

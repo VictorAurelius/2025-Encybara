@@ -15,6 +15,10 @@ public interface FlashcardRepository extends JpaRepository<Flashcard, Long>, Jpa
 
         Page<Flashcard> findAllByOrderByLastReviewedAsc(Pageable pageable);
 
+        Page<Flashcard> findByFlashcardGroupOrderByLastReviewedDesc(FlashcardGroup flashcardGroup, Pageable pageable);
+
+        Page<Flashcard> findByFlashcardGroupOrderByLastReviewedAsc(FlashcardGroup flashcardGroup, Pageable pageable);
+
         default Page<Flashcard> findAllByFlashcardGroupAndFilters(FlashcardGroup group, String word,
                         Boolean learnedStatus,
                         String vietnameseMeaning, Pageable pageable) {

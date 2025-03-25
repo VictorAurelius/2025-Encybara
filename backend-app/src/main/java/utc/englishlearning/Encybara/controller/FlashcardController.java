@@ -102,8 +102,10 @@ public class FlashcardController {
     }
 
     @GetMapping("/sorted/latest")
-    public ResponseEntity<RestResponse<Page<ResFlashcardDTO>>> getAllFlashcardsSortedByLatest(Pageable pageable) {
-        Page<Flashcard> flashcards = flashcardService.getAllFlashcardsSortedByLatest(pageable);
+    public ResponseEntity<RestResponse<Page<ResFlashcardDTO>>> getAllFlashcardsSortedByLatest(
+            @RequestParam(value = "groupId", required = false) Long groupId,
+            Pageable pageable) {
+        Page<Flashcard> flashcards = flashcardService.getAllFlashcardsSortedByLatest(groupId, pageable);
         RestResponse<Page<ResFlashcardDTO>> response = new RestResponse<>();
         response.setStatusCode(200);
         response.setMessage("Flashcards sorted by last reviewed retrieved successfully");
@@ -127,8 +129,9 @@ public class FlashcardController {
     }
 
     @GetMapping("/sorted/oldest")
-    public ResponseEntity<RestResponse<Page<ResFlashcardDTO>>> getAllFlashcardsSortedByOldest(Pageable pageable) {
-        Page<Flashcard> flashcards = flashcardService.getAllFlashcardsSortedByOldest(pageable);
+    public ResponseEntity<RestResponse<Page<ResFlashcardDTO>>> getAllFlashcardsSortedByOldest(
+            @RequestParam(value = "groupId", required = true) Long groupId, Pageable pageable) {
+        Page<Flashcard> flashcards = flashcardService.getAllFlashcardsSortedByOldest(groupId, pageable);
         RestResponse<Page<ResFlashcardDTO>> response = new RestResponse<>();
         response.setStatusCode(200);
         response.setMessage("Flashcards sorted by last reviewed retrieved successfully");

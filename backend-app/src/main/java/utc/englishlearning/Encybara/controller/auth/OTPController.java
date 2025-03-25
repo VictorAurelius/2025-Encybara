@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import utc.englishlearning.Encybara.domain.RestResponse;
 import utc.englishlearning.Encybara.domain.User;
+import utc.englishlearning.Encybara.domain.FlashcardGroup;
 import utc.englishlearning.Encybara.domain.request.ErrorResponseDTO;
 import utc.englishlearning.Encybara.domain.request.TokenResponseDTO;
 import utc.englishlearning.Encybara.domain.request.auth.ReqOtpVerificationDTO;
@@ -18,6 +19,7 @@ import utc.englishlearning.Encybara.domain.response.auth.ResCreateUserDTO;
 import utc.englishlearning.Encybara.service.EmailService;
 import utc.englishlearning.Encybara.service.OtpService;
 import utc.englishlearning.Encybara.service.UserService;
+import utc.englishlearning.Encybara.service.FlashcardGroupService;
 import utc.englishlearning.Encybara.util.SecurityUtil;
 
 @RestController
@@ -28,15 +30,16 @@ public class OTPController {
     private final SecurityUtil securityUtil;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final FlashcardGroupService flashcardGroupService;
 
-
-
-    public OTPController(PasswordEncoder passwordEncoder, OtpService otpService, EmailService emailService, SecurityUtil securityUtil, UserService userService) {
+    public OTPController(PasswordEncoder passwordEncoder, OtpService otpService, EmailService emailService,
+            SecurityUtil securityUtil, UserService userService, FlashcardGroupService flashcardGroupService) {
         this.passwordEncoder = passwordEncoder;
         this.otpService = otpService;
         this.emailService = emailService;
         this.securityUtil = securityUtil;
         this.userService = userService;
+        this.flashcardGroupService = flashcardGroupService;
     }
 
     // API gửi lại otp dựa vào id
@@ -50,9 +53,9 @@ public class OTPController {
 
         ReqOtpVerificationDTO temp = otpService.getOtpData(otpID);
 
-        String resendOTP= otpService.updateOtp(otpID);
+        String resendOTP = otpService.updateOtp(otpID);
         // kiem tra phong truong hop resend otp tra ve bi null
-        if(resendOTP == null) {
+        if (resendOTP == null) {
             return new ResponseEntity<>(new ErrorResponseDTO("OTP update failed"), HttpStatus.BAD_REQUEST);
         }
 
@@ -65,16 +68,17 @@ public class OTPController {
         response.setData(new ResRegisterDTO(otpID, "Expires in 2 minutes"));
         return ResponseEntity.ok(response);
     }
+
     @PostMapping("/verify-otp")
-    public ResponseEntity<?> verifyOTP(@Valid @RequestBody ReqOtpVerificationDTO otpRequest){
-        if(!otpService.validateOtp(otpRequest.getOtpID(), otpRequest.getOtp())){
+    public ResponseEntity<?> verifyOTP(@Valid @RequestBody ReqOtpVerificationDTO otpRequest) {
+        if (!otpService.validateOtp(otpRequest.getOtpID(), otpRequest.getOtp())) {
             return ResponseEntity.badRequest().body("Invalid or expired OTP");
         }
         ReqOtpVerificationDTO storedData = otpService.getOtpData(otpRequest.getOtpID());
-        if(storedData == null){
+        if (storedData == null) {
             return ResponseEntity.badRequest().body("Data not found");
         }
-        switch (storedData.getType()){
+        switch (storedData.getType()) {
             case "forgotpassword":
                 return handleForgotPassword(storedData);
             case "register":
@@ -102,9 +106,11 @@ public class OTPController {
                     .body(new ErrorResponseDTO("Error generating token: " + e.getMessage()));
         }
     }
+
     private ResponseEntity<?> handleRegistration(ReqOtpVerificationDTO otpRequest) {
         try {
-            if (!otpService.validateOtp(otpRequest.getOtpID(), otpRequest.getOtp())) { // ham validate viet nguoc de xoa nen de y
+            if (!otpService.validateOtp(otpRequest.getOtpID(), otpRequest.getOtp())) { // ham validate viet nguoc de xoa
+                                                                                       // nen de y
                 return ResponseEntity.badRequest().body(new ErrorResponseDTO("Invalid or expired OTP"));
             }
 
@@ -123,10 +129,14 @@ public class OTPController {
             user.setPassword(encodedPassword);
 
             // Lưu người dùng vào cơ sở dữ liệu
-            userService.handleCreateUser(user);
+            User savedUser = userService.handleCreateUser(user);
+
+            // Create default "New Flashcards" group for the user
+            flashcardGroupService.createFlashcardGroup("New Flashcards", savedUser.getId());
+
             otpService.removeOtpData(otpRequest.getOtpID());
             return ResponseEntity.ok(new ErrorResponseDTO("Registration successful"));
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponseDTO("Error during registration: " + e.getMessage()));
