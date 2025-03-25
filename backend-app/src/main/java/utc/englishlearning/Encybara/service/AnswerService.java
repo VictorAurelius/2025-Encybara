@@ -68,24 +68,22 @@ public class AnswerService {
                 answer.setQuestion(question);
                 answer.setUser(user);
                 answer.setEnrollment(enrollment);
-                answer.setPoint_achieved(reqDto.getPointAchieved() != null ? reqDto.getPointAchieved() : 0);
+                answer.setPoint_achieved(0); // Default to 0 points until graded
                 answer.setImprovement(reqDto.getImprovement());
                 answer.setSessionId(newSessionId);
                 answer = answerRepository.save(answer);
 
-                // Create and save answer text
+                // Create and save answer text with proper bidirectional relationship
                 Answer_Text answerText = new Answer_Text();
                 answerText.setAnsContent(reqDto.getAnswerContent());
                 answerText.setAnswer(answer);
-                answerTextRepository.save(answerText);
+                answerText = answerTextRepository.save(answerText);
 
-                // Grade answer if it's a choice or multiple choice question
-                if (question.getQuesType() == QuestionTypeEnum.CHOICE ||
-                                question.getQuesType() == QuestionTypeEnum.MULTIPLE) {
-                        gradeAnswer(answer.getId());
-                }
+                // Update answer with the text reference
+                answer.setAnswerText(answerText);
+                answer = answerRepository.save(answer);
 
-                return convertToDTO(answer, answerText);
+                return convertToDTO(answer, answer.getAnswerText());
         }
 
         public ResAnswerDTO getAnswerById(Long id) {
@@ -118,12 +116,15 @@ public class AnswerService {
         }
 
         @Transactional
-        public void gradeAnswer(Long answerId) {
+        public ResAnswerDTO gradeAnswer(Long answerId) {
                 Answer answer = answerRepository.findById(answerId)
                                 .orElseThrow(() -> new ResourceNotFoundException("Answer not found"));
 
                 Question question = answer.getQuestion();
-                String userAnswer = answer.getAnswerText().getAnsContent().trim();
+                Answer_Text answerText = answerTextRepository.findByAnswer(answer)
+                                .orElseThrow(() -> new ResourceNotFoundException("Answer text not found for grading"));
+
+                String userAnswer = answerText.getAnsContent().trim();
                 List<Question_Choice> choices = questionChoiceRepository.findByQuestionId(question.getId());
 
                 if (question.getQuesType() == QuestionTypeEnum.MULTIPLE) {
@@ -138,8 +139,9 @@ public class AnswerService {
                         boolean isFullyCorrect = correctChoices.size() == userChoices.size()
                                         && correctChoices.stream()
                                                         .allMatch(correct -> userChoices.stream()
-                                                                        .anyMatch(user -> normalizeAnswer(user).equals(
-                                                                                        normalizeAnswer(correct))));
+                                                                        .anyMatch(user -> normalizeAnswer(user)
+                                                                                        .equals(normalizeAnswer(
+                                                                                                        correct))));
 
                         if (isFullyCorrect) {
                                 answer.setPoint_achieved(question.getPoint());
@@ -154,7 +156,7 @@ public class AnswerService {
                                                 * question.getPoint();
                                 answer.setPoint_achieved((int) Math.round(partialPoint));
                         }
-                } else {
+                } else if (question.getQuesType() == QuestionTypeEnum.CHOICE) {
                         // Handle single choice questions
                         boolean isCorrect = choices.stream()
                                         .filter(Question_Choice::isChoiceKey)
@@ -164,7 +166,8 @@ public class AnswerService {
                         answer.setPoint_achieved(isCorrect ? question.getPoint() : 0);
                 }
 
-                answerRepository.save(answer);
+                answer = answerRepository.save(answer);
+                return convertToDTO(answer, answerText);
         }
 
         public ResAnswerDTO getLatestAnswerByUserAndQuestion(Long questionId, Long userId) {

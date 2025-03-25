@@ -66,23 +66,25 @@ public class AnswerController {
     }
 
     @PutMapping("/grade/{answerId}")
-    public ResponseEntity<RestResponse<Void>> gradeAnswer(
+    public ResponseEntity<RestResponse<ResAnswerDTO>> gradeAnswer(
             @PathVariable("answerId") Long answerId) {
-        answerService.gradeAnswer(answerId);
-        RestResponse<Void> response = new RestResponse<>();
+        ResAnswerDTO gradedAnswer = answerService.gradeAnswer(answerId);
+        RestResponse<ResAnswerDTO> response = new RestResponse<>();
         response.setStatusCode(200);
         response.setMessage("Answer graded successfully");
+        response.setData(gradedAnswer);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/latest")
-    public ResponseEntity<ResAnswerDTO> getLatestAnswer(
+    public ResponseEntity<RestResponse<ResAnswerDTO>> getLatestAnswer(
             @RequestParam("questionId") Long questionId,
             @RequestParam("userId") Long userId) {
         ResAnswerDTO latestAnswer = answerService.getLatestAnswerByUserAndQuestion(questionId, userId);
-        RestResponse<Void> response = new RestResponse<>();
+        RestResponse<ResAnswerDTO> response = new RestResponse<>();
         response.setStatusCode(200);
-        response.setMessage("Lastest answer request successfully");
-        return ResponseEntity.ok(latestAnswer);
+        response.setMessage("Latest answer retrieved successfully");
+        response.setData(latestAnswer);
+        return ResponseEntity.ok(response);
     }
 }
