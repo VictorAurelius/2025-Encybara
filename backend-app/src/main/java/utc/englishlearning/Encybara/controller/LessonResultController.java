@@ -21,17 +21,6 @@ public class LessonResultController {
     @Autowired
     private LessonResultService lessonResultService;
 
-    // @PostMapping
-    // public ResponseEntity<RestResponse<ResLessonResultDTO>> createLessonResult(
-    // @RequestBody ReqCreateLessonResultDTO reqDto) {
-    // ResLessonResultDTO result = lessonResultService.createLessonResult(reqDto);
-    // RestResponse<ResLessonResultDTO> response = new RestResponse<>();
-    // response.setStatusCode(200);
-    // response.setMessage("Lesson result created successfully");
-    // response.setData(result);
-    // return ResponseEntity.ok(response);
-    // }
-
     @PostMapping("/user/{userId}")
     public ResponseEntity<RestResponse<ResLessonResultDTO>> createLessonResultWithUserId(
             @RequestBody ReqCreateLessonResultDTO reqDto, @PathVariable("userId") Long userId) {
@@ -44,10 +33,10 @@ public class LessonResultController {
     }
 
     @GetMapping("/lesson/{lessonId}")
-    public ResponseEntity<RestResponse<Page<Lesson_Result>>> getResultsByLessonId(
+    public ResponseEntity<RestResponse<Page<ResLessonResultDTO>>> getResultsByLessonId(
             @PathVariable("lessonId") Long lessonId, Pageable pageable) {
-        Page<Lesson_Result> results = lessonResultService.getResultsByLessonId(lessonId, pageable);
-        RestResponse<Page<Lesson_Result>> response = new RestResponse<>();
+        Page<ResLessonResultDTO> results = lessonResultService.getResultsByLessonIdAsDTO(lessonId, pageable);
+        RestResponse<Page<ResLessonResultDTO>> response = new RestResponse<>();
         response.setStatusCode(200);
         response.setMessage("Results retrieved successfully");
         response.setData(results);
@@ -55,10 +44,11 @@ public class LessonResultController {
     }
 
     @GetMapping("/user/{userId}/lesson/{lessonId}")
-    public ResponseEntity<RestResponse<Page<Lesson_Result>>> getResultsByUserIdAndLessonId(
+    public ResponseEntity<RestResponse<Page<ResLessonResultDTO>>> getResultsByUserIdAndLessonId(
             @PathVariable("userId") Long userId, @PathVariable("lessonId") Long lessonId, Pageable pageable) {
-        Page<Lesson_Result> results = lessonResultService.getResultsByUserIdAndLessonId(userId, lessonId, pageable);
-        RestResponse<Page<Lesson_Result>> response = new RestResponse<>();
+        Page<ResLessonResultDTO> results = lessonResultService.getResultsByUserIdAndLessonIdAsDTO(userId, lessonId,
+                pageable);
+        RestResponse<Page<ResLessonResultDTO>> response = new RestResponse<>();
         response.setStatusCode(200);
         response.setMessage("Results retrieved successfully");
         response.setData(results);
@@ -66,10 +56,10 @@ public class LessonResultController {
     }
 
     @GetMapping("/user/{userId}/latest")
-    public ResponseEntity<RestResponse<Page<Lesson_Result>>> getLatestResultsByUserId(
+    public ResponseEntity<RestResponse<Page<ResLessonResultDTO>>> getLatestResultsByUserId(
             @PathVariable("userId") Long userId, Pageable pageable) {
-        Page<Lesson_Result> results = lessonResultService.getLatestResultsByUserId(userId, pageable);
-        RestResponse<Page<Lesson_Result>> response = new RestResponse<>();
+        Page<ResLessonResultDTO> results = lessonResultService.getLatestResultsByUserIdAsDTO(userId, pageable);
+        RestResponse<Page<ResLessonResultDTO>> response = new RestResponse<>();
         response.setStatusCode(200);
         response.setMessage("Latest results retrieved successfully");
         response.setData(results);
@@ -77,10 +67,11 @@ public class LessonResultController {
     }
 
     @GetMapping("/user/{userId}/lesson/{lessonId}/latest")
-    public ResponseEntity<RestResponse<List<Lesson_Result>>> getLatestResultsByUserIdAndLessonId(
+    public ResponseEntity<RestResponse<List<ResLessonResultDTO>>> getLatestResultsByUserIdAndLessonId(
             @PathVariable("userId") Long userId, @PathVariable("lessonId") Long lessonId) {
-        List<Lesson_Result> results = lessonResultService.getLatestResultsByUserIdAndLessonId(userId, lessonId);
-        RestResponse<List<Lesson_Result>> response = new RestResponse<>();
+        List<ResLessonResultDTO> results = lessonResultService.getLatestResultsByUserIdAndLessonIdAsDTO(userId,
+                lessonId);
+        RestResponse<List<ResLessonResultDTO>> response = new RestResponse<>();
         response.setStatusCode(200);
         response.setMessage("Latest results retrieved successfully");
         response.setData(results);
