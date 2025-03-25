@@ -68,7 +68,7 @@ public class AnswerService {
                 answer.setQuestion(question);
                 answer.setUser(user);
                 answer.setEnrollment(enrollment);
-                answer.setPoint_achieved(0); // Default to 0 points until graded
+                answer.setPoint_achieved(reqDto.getPointAchieved() != null ? reqDto.getPointAchieved() : 0);
                 answer.setImprovement(reqDto.getImprovement());
                 answer.setSessionId(newSessionId);
                 answer = answerRepository.save(answer);
@@ -158,6 +158,14 @@ public class AnswerService {
                         }
                 } else if (question.getQuesType() == QuestionTypeEnum.CHOICE) {
                         // Handle single choice questions
+                        boolean isCorrect = choices.stream()
+                                        .filter(Question_Choice::isChoiceKey)
+                                        .anyMatch(choice -> normalizeAnswer(choice.getChoiceContent())
+                                                        .equals(normalizeAnswer(userAnswer)));
+
+                        answer.setPoint_achieved(isCorrect ? question.getPoint() : 0);
+                } else if (question.getQuesType() == QuestionTypeEnum.TEXT) {
+                        // Handle text questions - compare with the correct answer choice
                         boolean isCorrect = choices.stream()
                                         .filter(Question_Choice::isChoiceKey)
                                         .anyMatch(choice -> normalizeAnswer(choice.getChoiceContent())
