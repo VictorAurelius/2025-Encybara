@@ -10,6 +10,9 @@ import utc.englishlearning.Encybara.repository.*;
 import utc.englishlearning.Encybara.exception.ResourceNotFoundException;
 
 import java.time.Instant;
+import java.util.Map;
+import java.util.HashMap;
+import utc.englishlearning.Encybara.exception.InvalidOperationException;
 
 @Service
 public class InitialAssessmentService {
@@ -143,15 +146,41 @@ public class InitialAssessmentService {
             // Calculate total points and completion level for the enrollment
             int totalPointsPossible = 0;
             int totalPointsAchieved = 0;
+
+            // Use map to handle duplicate lesson results, keeping highest score for each
+            // lesson
+            Map<Long, Integer> maxPointsByLesson = new HashMap<>();
+            Map<Long, Integer> lessonSumQues = new HashMap<>();
+
             var lessonResults = lessonResultRepository.findByEnrollment(placementEnrollment);
             for (Lesson_Result result : lessonResults) {
                 Lesson lesson = result.getLesson();
-                totalPointsPossible += lesson.getSumQues(); // Each question typically worth 1 point
-                totalPointsAchieved += result.getTotalPoints();
+                Long lessonId = lesson.getId();
+
+                // Keep track of sumQues for each unique lesson
+                lessonSumQues.putIfAbsent(lessonId, lesson.getSumQues());
+
+                // Keep highest score for each lesson
+                maxPointsByLesson.merge(lessonId, result.getTotalPoints(), Math::max);
             }
 
-            // Update enrollment completion metrics
+            // Calculate totals using unique lessons
+            for (Long lessonId : lessonSumQues.keySet()) {
+                totalPointsPossible += lessonSumQues.get(lessonId);
+                totalPointsAchieved += maxPointsByLesson.get(lessonId);
+            }
+
+            // Validate and update enrollment completion metrics
+            if (totalPointsPossible < totalPointsAchieved) {
+                throw new InvalidOperationException("Total points achieved cannot be greater than possible points");
+            }
+
+            // Calculate and validate comLevel
             double comLevel = totalPointsPossible > 0 ? (double) totalPointsAchieved / totalPointsPossible * 100 : 0;
+            if (comLevel > 100.0) {
+                throw new InvalidOperationException("Completion level cannot exceed 100%");
+            }
+
             placementEnrollment.setTotalPoints(totalPointsAchieved);
             placementEnrollment.setComLevel(comLevel);
 
