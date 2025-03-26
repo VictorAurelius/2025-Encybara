@@ -116,22 +116,29 @@ public class LessonResultService {
 
                 Lesson_Result lessonResult;
                 if (existingResult != null) {
-                        // Update existing result
-                        lessonResult = existingResult;
+                        // Update only if new score is better
+                        if (totalPointsAchieved > existingResult.getTotalPoints()) {
+                                lessonResult = existingResult;
+                                lessonResult.setSessionId(reqDto.getSessionId());
+                                lessonResult.setStuTime(reqDto.getStuTime());
+                                lessonResult.setTotalPoints(totalPointsAchieved);
+                                lessonResult.setComLevel(comLevel);
+                                lessonResult = lessonResultRepository.save(lessonResult);
+                        } else {
+                                lessonResult = existingResult; // Keep existing result if new score isn't better
+                        }
                 } else {
                         // Create new result
                         lessonResult = new Lesson_Result();
                         lessonResult.setLesson(lesson);
                         lessonResult.setUser(user);
                         lessonResult.setEnrollment(enrollment);
+                        lessonResult.setSessionId(reqDto.getSessionId());
+                        lessonResult.setStuTime(reqDto.getStuTime());
+                        lessonResult.setTotalPoints(totalPointsAchieved);
+                        lessonResult.setComLevel(comLevel);
+                        lessonResult = lessonResultRepository.save(lessonResult);
                 }
-
-                // Update common fields
-                lessonResult.setSessionId(reqDto.getSessionId());
-                lessonResult.setStuTime(reqDto.getStuTime());
-                lessonResult.setTotalPoints(totalPointsAchieved);
-                lessonResult.setComLevel(comLevel);
-                lessonResult = lessonResultRepository.save(lessonResult);
 
                 return convertToDTO(lessonResult);
         }
@@ -153,17 +160,38 @@ public class LessonResultService {
                                 .mapToInt(Question::getPoint)
                                 .sum();
 
-                double comLevel = totalPointsPossible > 0 ? (double) totalPointsAchieved / totalPointsPossible * 100
+                double comLevel = totalPointsPossible > 0
+                                ? Math.min((double) totalPointsAchieved / totalPointsPossible * 100, 100.0)
                                 : 0;
 
-                Lesson_Result lessonResult = new Lesson_Result();
-                lessonResult.setLesson(lesson);
-                lessonResult.setUser(user);
-                lessonResult.setSessionId(reqDto.getSessionId());
-                lessonResult.setStuTime(reqDto.getStuTime());
-                lessonResult.setTotalPoints(totalPointsAchieved);
-                lessonResult.setComLevel(comLevel);
-                lessonResult = lessonResultRepository.save(lessonResult);
+                // Check for existing result
+                Lesson_Result existingResult = lessonResultRepository.findByLessonIdAndEnrollmentId(
+                                reqDto.getLessonId(), reqDto.getEnrollmentId());
+
+                Lesson_Result lessonResult;
+                if (existingResult != null) {
+                        // Update only if new score is better
+                        if (totalPointsAchieved > existingResult.getTotalPoints()) {
+                                lessonResult = existingResult;
+                                lessonResult.setSessionId(reqDto.getSessionId());
+                                lessonResult.setStuTime(reqDto.getStuTime());
+                                lessonResult.setTotalPoints(totalPointsAchieved);
+                                lessonResult.setComLevel(comLevel);
+                                lessonResult = lessonResultRepository.save(lessonResult);
+                        } else {
+                                lessonResult = existingResult; // Keep existing result if new score isn't better
+                        }
+                } else {
+                        // Create new result
+                        lessonResult = new Lesson_Result();
+                        lessonResult.setLesson(lesson);
+                        lessonResult.setUser(user);
+                        lessonResult.setSessionId(reqDto.getSessionId());
+                        lessonResult.setStuTime(reqDto.getStuTime());
+                        lessonResult.setTotalPoints(totalPointsAchieved);
+                        lessonResult.setComLevel(comLevel);
+                        lessonResult = lessonResultRepository.save(lessonResult);
+                }
 
                 return convertToDTO(lessonResult);
         }
