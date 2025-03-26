@@ -125,4 +125,20 @@ public class GlobalExceptionHandler {
                 "Uploaded file exceeds the maximum allowed size");
         return new ResponseEntity<>(errorResponse, HttpStatus.PAYLOAD_TOO_LARGE);
     }
+
+    @ExceptionHandler(NoSuitableCoursesException.class)
+    public ResponseEntity<RestResponse<String>> handleNoSuitableCoursesException(NoSuitableCoursesException ex) {
+        RestResponse<String> response = new RestResponse<>();
+        response.setStatusCode(HttpStatus.NOT_FOUND.value());
+        response.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<RestResponse<String>> handleIllegalStateException(IllegalStateException ex) {
+        RestResponse<String> response = new RestResponse<>();
+        response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        response.setMessage("Failed to process learning result: " + ex.getMessage());
+        return ResponseEntity.badRequest().body(response);
+    }
 }

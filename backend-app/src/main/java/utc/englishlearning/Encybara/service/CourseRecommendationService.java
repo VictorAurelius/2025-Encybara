@@ -9,6 +9,7 @@ import utc.englishlearning.Encybara.repository.EnrollmentRepository;
 import utc.englishlearning.Encybara.util.constant.CourseTypeEnum;
 import utc.englishlearning.Encybara.util.constant.CourseStatusEnum;
 import utc.englishlearning.Encybara.util.constant.SkillTypeEnum;
+import utc.englishlearning.Encybara.exception.NoSuitableCoursesException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,18 +28,32 @@ public class CourseRecommendationService {
     private EnrollmentRepository enrollmentRepository;
 
     public List<Course> getRecommendedCourses(Learning_Result learningResult) {
-        List<Course> recommendations = new ArrayList<>();
+        try {
+            // Validate learning result data
+            validateLearningResult(learningResult);
 
-        recommendations.addAll(getRecommendedCoursesForSkill(learningResult, SkillTypeEnum.LISTENING));
-        recommendations.addAll(getRecommendedCoursesForSkill(learningResult, SkillTypeEnum.SPEAKING));
-        recommendations.addAll(getRecommendedCoursesForSkill(learningResult, SkillTypeEnum.READING));
-        recommendations.addAll(getRecommendedCoursesForSkill(learningResult, SkillTypeEnum.WRITING));
+            List<Course> recommendations = new ArrayList<>();
 
-        if (isReadyForAllSkills(learningResult)) {
-            recommendations.addAll(getRecommendedAllSkillsCourses(learningResult));
+            recommendations.addAll(getRecommendedCoursesForSkill(learningResult, SkillTypeEnum.LISTENING));
+            recommendations.addAll(getRecommendedCoursesForSkill(learningResult, SkillTypeEnum.SPEAKING));
+            recommendations.addAll(getRecommendedCoursesForSkill(learningResult, SkillTypeEnum.READING));
+            recommendations.addAll(getRecommendedCoursesForSkill(learningResult, SkillTypeEnum.WRITING));
+
+            if (isReadyForAllSkills(learningResult)) {
+                recommendations.addAll(getRecommendedAllSkillsCourses(learningResult));
+            }
+
+            List<Course> filteredRecommendations = filterAndPrioritizeRecommendations(recommendations, learningResult);
+
+            if (filteredRecommendations.isEmpty()) {
+                throw new NoSuitableCoursesException(
+                        "No suitable courses found for your current skill levels. Please try again later when more courses are available.");
+            }
+
+            return filteredRecommendations;
+        } catch (NullPointerException | IllegalArgumentException e) {
+            throw new IllegalStateException("Invalid learning result data: " + e.getMessage(), e);
         }
-
-        return filterAndPrioritizeRecommendations(recommendations, learningResult);
     }
 
     private boolean isReadyForAllSkills(Learning_Result learningResult) {
@@ -243,5 +258,31 @@ public class CourseRecommendationService {
             case WRITING -> SkillTypeEnum.WRITING;
             case ALLSKILLS -> SkillTypeEnum.ALLSKILLS;
         };
+    }
+
+    private void validateLearningResult(Learning_Result learningResult) {
+        if (learningResult == null) {
+            throw new IllegalArgumentException("Learning result cannot be null");
+        }
+        if (learningResult.getUser() == null) {
+            throw new IllegalArgumentException("Learning result must be associated with a user");
+        }
+
+        validateScore(learningResult.getListeningScore(), "listening");
+        validateScore(learningResult.getSpeakingScore(), "speaking");
+        validateScore(learningResult.getReadingScore(), "reading");
+        validateScore(learningResult.getWritingScore(), "writing");
+
+        validateScore(learningResult.getPreviousListeningScore(), "previous listening");
+        validateScore(learningResult.getPreviousSpeakingScore(), "previous speaking");
+        validateScore(learningResult.getPreviousReadingScore(), "previous reading");
+        validateScore(learningResult.getPreviousWritingScore(), "previous writing");
+    }
+
+    private void validateScore(double score, String skillName) {
+        if (score < 0 || score > 7) {
+            throw new IllegalArgumentException(
+                    String.format("Invalid %s score: %.2f (must be between 0 and 7)", skillName, score));
+        }
     }
 }

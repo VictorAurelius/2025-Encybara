@@ -12,7 +12,6 @@ import utc.englishlearning.Encybara.domain.response.lesson.ResLessonResultDTO;
 import utc.englishlearning.Encybara.exception.ResourceNotFoundException;
 import utc.englishlearning.Encybara.repository.*;
 import utc.englishlearning.Encybara.util.SecurityUtil;
-import utc.englishlearning.Encybara.exception.ResourceAlreadyExistsException;
 
 import java.util.List;
 
@@ -95,38 +94,42 @@ public class LessonResultService {
                                 .orElseThrow(() -> new ResourceNotFoundException("Lesson not found"));
 
                 // Check if result already exists
-                if (lessonResultRepository.existsByUserIdAndLessonIdAndSessionIdAndEnrollmentId(
-                                userId, reqDto.getLessonId(), reqDto.getSessionId(), reqDto.getEnrollmentId())) {
-                        throw new ResourceAlreadyExistsException(
-                                        "Lesson result already exists for this user, lesson, session, and enrollment.");
-                }
+                Lesson_Result existingResult = lessonResultRepository.findByLessonIdAndEnrollmentId(
+                                reqDto.getLessonId(), reqDto.getEnrollmentId());
 
+                // Calculate points and completion level
                 List<Question> questions = questionRepository.findByLesson(lesson);
+                User user = userRepository.findById(userId)
+                                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
                 List<Answer> answers = answerRepository.findByUserAndQuestionInAndSessionId(
-                                userRepository.findById(userId)
-                                                .orElseThrow(() -> new ResourceNotFoundException("User not found")),
-                                questions,
-                                reqDto.getSessionId());
-                int totalPointsAchieved = answers.stream().mapToInt(Answer::getPoint_achieved).sum();
+                                user, questions, reqDto.getSessionId());
 
+                int totalPointsAchieved = answers.stream().mapToInt(Answer::getPoint_achieved).sum();
                 int totalPointsPossible = questions.stream()
                                 .mapToInt(Question::getPoint)
                                 .sum();
 
-                double comLevel = totalPointsPossible > 0 ? (double) totalPointsAchieved / totalPointsPossible * 100
+                double comLevel = totalPointsPossible > 0
+                                ? Math.min((double) totalPointsAchieved / totalPointsPossible * 100, 100.0)
                                 : 0;
 
-                User user = userRepository.findById(userId)
-                                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                Lesson_Result lessonResult;
+                if (existingResult != null) {
+                        // Update existing result
+                        lessonResult = existingResult;
+                } else {
+                        // Create new result
+                        lessonResult = new Lesson_Result();
+                        lessonResult.setLesson(lesson);
+                        lessonResult.setUser(user);
+                        lessonResult.setEnrollment(enrollment);
+                }
 
-                Lesson_Result lessonResult = new Lesson_Result();
-                lessonResult.setLesson(lesson);
-                lessonResult.setUser(user);
+                // Update common fields
                 lessonResult.setSessionId(reqDto.getSessionId());
                 lessonResult.setStuTime(reqDto.getStuTime());
                 lessonResult.setTotalPoints(totalPointsAchieved);
-                lessonResult.setEnrollment(enrollment);
                 lessonResult.setComLevel(comLevel);
                 lessonResult = lessonResultRepository.save(lessonResult);
 

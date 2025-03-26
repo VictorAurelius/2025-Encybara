@@ -22,4 +22,8 @@ public interface LessonResultRepository extends JpaRepository<Lesson_Result, Lon
 
     boolean existsByUserIdAndLessonIdAndSessionIdAndEnrollmentId(Long userId, Long lessonId, Long sessionId,
             Long enrollmentId);
+
+    Lesson_Result findByLessonIdAndEnrollmentId(Long lessonId, Long enrollmentId);
+
+    boolean existsByLessonIdAndEnrollmentId(Long lessonId, Long enrollmentId);
 }
