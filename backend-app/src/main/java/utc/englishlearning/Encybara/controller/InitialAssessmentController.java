@@ -3,11 +3,10 @@ package utc.englishlearning.Encybara.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utc.englishlearning.Encybara.domain.Enrollment;
+import utc.englishlearning.Encybara.domain.request.assessment.ReqCompletePlacementDTO;
 import utc.englishlearning.Encybara.domain.response.RestResponse;
 import utc.englishlearning.Encybara.service.InitialAssessmentService;
-import utc.englishlearning.Encybara.repository.EnrollmentRepository;
-import utc.englishlearning.Encybara.exception.ResourceNotFoundException;
+import jakarta.validation.Valid;
 
 /**
  * Controller for handling initial assessment choices when users register.
@@ -19,9 +18,6 @@ public class InitialAssessmentController {
 
     @Autowired
     private InitialAssessmentService initialAssessmentService;
-
-    @Autowired
-    private EnrollmentRepository enrollmentRepository;
 
     /**
      * Handles users who choose to skip the initial assessment.
@@ -44,7 +40,7 @@ public class InitialAssessmentController {
 
     /**
      * Creates enrollment for placement test course.
-     * 
+     *
      * @param userId The ID of the user starting the assessment
      * @return Response indicating successful enrollment in assessment course
      */
@@ -62,17 +58,15 @@ public class InitialAssessmentController {
     /**
      * Completes the placement assessment and creates course recommendations based
      * on results.
-     * 
-     * @param enrollmentId The ID of the placement test enrollment
+     *
+     * @param request The DTO containing completion data including enrollmentId,
+     *                comLevel, and totalPoints
      * @return Response indicating successful completion and recommendation creation
      */
-    @PostMapping("/enrollments/{enrollmentId}/complete")
+    @PostMapping("/complete")
     public ResponseEntity<RestResponse<Void>> completePlacementAssessment(
-            @PathVariable("enrollmentId") Long enrollmentId) {
-        Enrollment placementEnrollment = enrollmentRepository.findById(enrollmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found"));
-
-        initialAssessmentService.completePlacementAssessment(placementEnrollment);
+            @Valid @RequestBody ReqCompletePlacementDTO request) {
+        initialAssessmentService.completePlacementAssessment(request);
 
         RestResponse<Void> response = new RestResponse<>();
         response.setStatusCode(200);

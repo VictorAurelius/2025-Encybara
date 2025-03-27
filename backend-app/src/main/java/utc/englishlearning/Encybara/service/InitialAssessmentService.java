@@ -6,13 +6,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import utc.englishlearning.Encybara.domain.*;
+import utc.englishlearning.Encybara.domain.request.assessment.ReqCompletePlacementDTO;
 import utc.englishlearning.Encybara.repository.*;
 import utc.englishlearning.Encybara.exception.ResourceNotFoundException;
+import utc.englishlearning.Encybara.exception.InvalidOperationException;
 
 import java.time.Instant;
-import java.util.Map;
-import java.util.HashMap;
-import utc.englishlearning.Encybara.exception.InvalidOperationException;
 
 @Service
 public class InitialAssessmentService {
@@ -28,9 +27,6 @@ public class InitialAssessmentService {
 
     @Autowired
     private EnrollmentRepository enrollmentRepository;
-
-    @Autowired
-    private LessonResultRepository lessonResultRepository;
 
     @Autowired
     private CourseRecommendationService courseRecommendationService;
@@ -137,52 +133,24 @@ public class InitialAssessmentService {
     }
 
     @Transactional
-    public void completePlacementAssessment(Enrollment placementEnrollment) {
+    public void completePlacementAssessment(ReqCompletePlacementDTO request) {
         try {
+            // Get enrollment by id
+            Enrollment placementEnrollment = enrollmentRepository.findById(request.getEnrollmentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found"));
+
+            // Validate completion level
+            if (request.getComLevel() > 100.0) {
+                throw new InvalidOperationException("Completion level cannot exceed 100%");
+            }
+
             // Calculate scores based on placement test results
             PlacementAssessmentService.SkillScores scores = placementAssessmentService
                     .calculateSkillScores(placementEnrollment);
 
-            // Calculate total points and completion level for the enrollment
-            int totalPointsPossible = 0;
-            int totalPointsAchieved = 0;
-
-            // Use map to handle duplicate lesson results, keeping highest score for each
-            // lesson
-            Map<Long, Integer> maxPointsByLesson = new HashMap<>();
-            Map<Long, Integer> lessonSumQues = new HashMap<>();
-
-            var lessonResults = lessonResultRepository.findByEnrollment(placementEnrollment);
-            for (Lesson_Result result : lessonResults) {
-                Lesson lesson = result.getLesson();
-                Long lessonId = lesson.getId();
-
-                // Keep track of sumQues for each unique lesson
-                lessonSumQues.putIfAbsent(lessonId, lesson.getSumQues());
-
-                // Keep highest score for each lesson
-                maxPointsByLesson.merge(lessonId, result.getTotalPoints(), Math::max);
-            }
-
-            // Calculate totals using unique lessons
-            for (Long lessonId : lessonSumQues.keySet()) {
-                totalPointsPossible += lessonSumQues.get(lessonId);
-                totalPointsAchieved += maxPointsByLesson.get(lessonId);
-            }
-
-            // Validate and update enrollment completion metrics
-            if (totalPointsPossible < totalPointsAchieved) {
-                throw new InvalidOperationException("Total points achieved cannot be greater than possible points");
-            }
-
-            // Calculate and validate comLevel
-            double comLevel = totalPointsPossible > 0 ? (double) totalPointsAchieved / totalPointsPossible * 100 : 0;
-            if (comLevel > 100.0) {
-                throw new InvalidOperationException("Completion level cannot exceed 100%");
-            }
-
-            placementEnrollment.setTotalPoints(totalPointsAchieved);
-            placementEnrollment.setComLevel(comLevel);
+            // Update enrollment with frontend-provided values
+            placementEnrollment.setTotalPoints(request.getTotalPoints());
+            placementEnrollment.setComLevel(request.getComLevel());
 
             // Set skill-specific score based on course type
             switch (placementEnrollment.getCourse().getCourseType()) {
