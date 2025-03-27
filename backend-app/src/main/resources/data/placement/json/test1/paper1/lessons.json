@@ -67,11 +67,12 @@
     {
         "name": "(PLACEMENT) Speaking",
         "skillType": "SPEAKING",
-        "sumQues": 2,
+        "sumQues": 3,
         "createBy": "admin",
         "questionContents": [
-            "Introduce yourself: Tell us your name, where you are from, and what you do.",
-            "Describe your family: How many people are in your family? What do they do? What do you enjoy doing together?"
+            "Introduce yourself: Tell us your name?",
+            "Introduce yourself: where you are from?",
+            "Introduce yourself: what do you do?"
         ]
     }
 ]

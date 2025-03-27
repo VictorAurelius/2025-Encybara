@@ -73,7 +73,7 @@
         "choices": []
     },
     {
-        "quesContent": "Introduce yourself: Tell us your name, where you are from, and what you do.",
+        "quesContent": "Introduce yourself: Tell us your name?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
         "point": 10,
@@ -81,7 +81,15 @@
         "choices": []
     },
     {
-        "quesContent": "Describe your family: How many people are in your family? What do they do? What do you enjoy doing together?",
+        "quesContent": "Introduce yourself: where you are from?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "Introduce yourself: what do you do?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
         "point": 10,
