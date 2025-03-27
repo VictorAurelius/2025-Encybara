@@ -22,6 +22,12 @@ public class UserEnglishLevelService {
     @Autowired
     private LearningResultRepository learningResultRepository;
 
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
+
+    @Autowired
+    private CourseRecommendationService courseRecommendationService;
+
     @Transactional
     public void setUserEnglishLevel(Long userId, EnglishLevelEnum level) {
         try {
@@ -48,6 +54,27 @@ public class UserEnglishLevelService {
             learningResult.setLastUpdated(Instant.now());
 
             learningResult = learningResultRepository.save(learningResult);
+
+            // Delete old course recommendations (enrollments with proStatus = false)
+            enrollmentRepository.deleteByUserAndProStatusFalse(user);
+
+            // Get new course recommendations based on updated scores
+            var recommendedCourses = courseRecommendationService.getRecommendedCourses(learningResult);
+
+            // Create new enrollment entries for recommendations
+            for (Course course : recommendedCourses) {
+                if (!course.getName().contains("(Placement)")) { // Skip placement course
+                    Enrollment enrollment = new Enrollment();
+                    enrollment.setUser(user);
+                    enrollment.setCourse(course);
+                    enrollment.setLearningResult(learningResult);
+                    enrollment.setEnrollDate(Instant.now());
+                    enrollment.setProStatus(false); // Mark as recommendation
+                    enrollment.setComLevel(0.0);
+                    enrollment.setTotalPoints(0);
+                    enrollmentRepository.save(enrollment);
+                }
+            }
 
             // Update user's English level display name
             user.setEnglishlevel(level.getDisplayName());

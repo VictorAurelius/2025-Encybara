@@ -31,9 +31,6 @@ public class InitialAssessmentService {
     @Autowired
     private CourseRecommendationService courseRecommendationService;
 
-    @Autowired
-    private PlacementAssessmentService placementAssessmentService;
-
     @Transactional
     public void skipInitialAssessment(Long userId) {
         try {
@@ -144,36 +141,32 @@ public class InitialAssessmentService {
                 throw new InvalidOperationException("Completion level cannot exceed 100%");
             }
 
-            // Calculate scores based on placement test results
-            PlacementAssessmentService.SkillScores scores = placementAssessmentService
-                    .calculateSkillScores(placementEnrollment);
-
             // Update enrollment with frontend-provided values
             placementEnrollment.setTotalPoints(request.getTotalPoints());
             placementEnrollment.setComLevel(request.getComLevel());
 
             // Set skill-specific score based on course type
             switch (placementEnrollment.getCourse().getCourseType()) {
-                case LISTENING -> placementEnrollment.setSkillScore(scores.getListeningScore());
-                case SPEAKING -> placementEnrollment.setSkillScore(scores.getSpeakingScore());
-                case READING -> placementEnrollment.setSkillScore(scores.getReadingScore());
-                case WRITING -> placementEnrollment.setSkillScore(scores.getWritingScore());
-                default -> placementEnrollment.setSkillScore((scores.getListeningScore() + scores.getSpeakingScore()
-                        + scores.getReadingScore() + scores.getWritingScore()) / 4.0);
+                case LISTENING -> placementEnrollment.setSkillScore(request.getListeningScore());
+                case SPEAKING -> placementEnrollment.setSkillScore(request.getSpeakingScore());
+                case READING -> placementEnrollment.setSkillScore(request.getReadingScore());
+                case WRITING -> placementEnrollment.setSkillScore(request.getWritingScore());
+                default -> placementEnrollment.setSkillScore((request.getListeningScore() + request.getSpeakingScore()
+                        + request.getReadingScore() + request.getWritingScore()) / 4.0);
             }
 
-            // Update learning result with calculated scores
+            // Update learning result with frontend-provided scores
             Learning_Result learningResult = placementEnrollment.getLearningResult();
-            learningResult.setListeningScore(scores.getListeningScore());
-            learningResult.setSpeakingScore(scores.getSpeakingScore());
-            learningResult.setReadingScore(scores.getReadingScore());
-            learningResult.setWritingScore(scores.getWritingScore());
+            learningResult.setListeningScore(request.getListeningScore());
+            learningResult.setSpeakingScore(request.getSpeakingScore());
+            learningResult.setReadingScore(request.getReadingScore());
+            learningResult.setWritingScore(request.getWritingScore());
 
             // Set previous scores same as current for initial assessment
-            learningResult.setPreviousListeningScore(scores.getListeningScore());
-            learningResult.setPreviousSpeakingScore(scores.getSpeakingScore());
-            learningResult.setPreviousReadingScore(scores.getReadingScore());
-            learningResult.setPreviousWritingScore(scores.getWritingScore());
+            learningResult.setPreviousListeningScore(request.getListeningScore());
+            learningResult.setPreviousSpeakingScore(request.getSpeakingScore());
+            learningResult.setPreviousReadingScore(request.getReadingScore());
+            learningResult.setPreviousWritingScore(request.getWritingScore());
 
             learningResult.setLastUpdated(Instant.now());
 

@@ -20,4 +20,24 @@ public class ReqCompletePlacementDTO {
     @NotNull(message = "Total points is required")
     @Min(value = 0, message = "Total points cannot be negative")
     private int totalPoints;
+
+    @NotNull(message = "Listening score is required")
+    @Min(value = 0, message = "Listening score must be at least 0")
+    @Max(value = 10, message = "Listening score cannot exceed 10")
+    private double listeningScore;
+
+    @NotNull(message = "Speaking score is required")
+    @Min(value = 0, message = "Speaking score must be at least 0")
+    @Max(value = 10, message = "Speaking score cannot exceed 10")
+    private double speakingScore;
+
+    @NotNull(message = "Reading score is required")
+    @Min(value = 0, message = "Reading score must be at least 0")
+    @Max(value = 10, message = "Reading score cannot exceed 10")
+    private double readingScore;
+
+    @NotNull(message = "Writing score is required")
+    @Min(value = 0, message = "Writing score must be at least 0")
+    @Max(value = 10, message = "Writing score cannot exceed 10")
+    private double writingScore;
 }
