@@ -113,6 +113,33 @@ public class PlacementAssessmentService {
         return scores;
     }
 
+    public SkillScores calculateSkillScoresFromTotalPoints(
+            int listeningPoints,
+            int speakingPoints,
+            int readingPoints,
+            int writingPoints) {
+        SkillScores scores = new SkillScores();
+
+        // Convert total points to percentages (assuming max 100 points per skill in
+        // placement)
+        scores.listeningPercentage = calculatePercentage(listeningPoints, 100);
+        scores.speakingPercentage = calculatePercentage(speakingPoints, 100);
+        scores.readingPercentage = calculatePercentage(readingPoints, 100);
+        scores.writingPercentage = calculatePercentage(writingPoints, 100);
+
+        // Convert percentages to level scores
+        scores.listeningScore = mapPercentageToScore(scores.listeningPercentage);
+        scores.speakingScore = mapPercentageToScore(scores.speakingPercentage);
+        scores.readingScore = mapPercentageToScore(scores.readingPercentage);
+        scores.writingScore = mapPercentageToScore(scores.writingPercentage);
+
+        return scores;
+    }
+
+    private double calculatePercentage(int achieved, int possible) {
+        return possible > 0 ? (double) achieved / possible * 100 : 0;
+    }
+
     private double mapPercentageToScore(double percentage) {
         if (percentage <= 20)
             return 1.0;
