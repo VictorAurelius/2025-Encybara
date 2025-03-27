@@ -11,12 +11,44 @@ import utc.englishlearning.Encybara.domain.request.lesson.ReqCreateLessonResultD
 import utc.englishlearning.Encybara.domain.response.lesson.ResLessonResultDTO;
 import utc.englishlearning.Encybara.exception.ResourceNotFoundException;
 import utc.englishlearning.Encybara.repository.*;
-import utc.englishlearning.Encybara.util.SecurityUtil;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class LessonResultService {
+
+        @PostConstruct
+        @Transactional
+        public void cleanupDuplicateLessonResults() {
+                // Get all enrollments
+                List<Enrollment> enrollments = enrollmentRepository.findAll();
+
+                for (Enrollment enrollment : enrollments) {
+                        // Get all lesson results for this enrollment
+                        List<Lesson_Result> results = lessonResultRepository.findByEnrollment(enrollment);
+
+                        // Group by lesson ID and keep only the highest score
+                        Map<Long, Lesson_Result> bestResults = new HashMap<>();
+
+                        for (Lesson_Result result : results) {
+                                Long lessonId = result.getLesson().getId();
+                                if (!bestResults.containsKey(lessonId) ||
+                                                bestResults.get(lessonId).getTotalPoints() < result.getTotalPoints()) {
+                                        bestResults.put(lessonId, result);
+                                }
+                        }
+
+                        // Delete all results except the best ones
+                        for (Lesson_Result result : results) {
+                                if (!bestResults.containsValue(result)) {
+                                        lessonResultRepository.delete(result);
+                                }
+                        }
+                }
+        }
 
         @Autowired
         private LessonResultRepository lessonResultRepository;
@@ -133,59 +165,6 @@ public class LessonResultService {
                         lessonResult.setLesson(lesson);
                         lessonResult.setUser(user);
                         lessonResult.setEnrollment(enrollment);
-                        lessonResult.setSessionId(reqDto.getSessionId());
-                        lessonResult.setStuTime(reqDto.getStuTime());
-                        lessonResult.setTotalPoints(totalPointsAchieved);
-                        lessonResult.setComLevel(comLevel);
-                        lessonResult = lessonResultRepository.save(lessonResult);
-                }
-
-                return convertToDTO(lessonResult);
-        }
-
-        public ResLessonResultDTO createLessonResult(ReqCreateLessonResultDTO reqDto) {
-                User user = userRepository.findByEmail(SecurityUtil.getCurrentUserLogin()
-                                .orElseThrow(() -> new RuntimeException("User not authenticated")));
-
-                Lesson lesson = lessonRepository.findById(reqDto.getLessonId())
-                                .orElseThrow(() -> new ResourceNotFoundException("Lesson not found"));
-
-                List<Question> questions = questionRepository.findByLesson(lesson);
-
-                List<Answer> answers = answerRepository.findByUserAndQuestionInAndSessionId(user, questions,
-                                reqDto.getSessionId());
-                int totalPointsAchieved = answers.stream().mapToInt(Answer::getPoint_achieved).sum();
-
-                int totalPointsPossible = questions.stream()
-                                .mapToInt(Question::getPoint)
-                                .sum();
-
-                double comLevel = totalPointsPossible > 0
-                                ? Math.min((double) totalPointsAchieved / totalPointsPossible * 100, 100.0)
-                                : 0;
-
-                // Check for existing result
-                Lesson_Result existingResult = lessonResultRepository.findByLessonIdAndEnrollmentId(
-                                reqDto.getLessonId(), reqDto.getEnrollmentId());
-
-                Lesson_Result lessonResult;
-                if (existingResult != null) {
-                        // Update only if new score is better
-                        if (totalPointsAchieved > existingResult.getTotalPoints()) {
-                                lessonResult = existingResult;
-                                lessonResult.setSessionId(reqDto.getSessionId());
-                                lessonResult.setStuTime(reqDto.getStuTime());
-                                lessonResult.setTotalPoints(totalPointsAchieved);
-                                lessonResult.setComLevel(comLevel);
-                                lessonResult = lessonResultRepository.save(lessonResult);
-                        } else {
-                                lessonResult = existingResult; // Keep existing result if new score isn't better
-                        }
-                } else {
-                        // Create new result
-                        lessonResult = new Lesson_Result();
-                        lessonResult.setLesson(lesson);
-                        lessonResult.setUser(user);
                         lessonResult.setSessionId(reqDto.getSessionId());
                         lessonResult.setStuTime(reqDto.getStuTime());
                         lessonResult.setTotalPoints(totalPointsAchieved);

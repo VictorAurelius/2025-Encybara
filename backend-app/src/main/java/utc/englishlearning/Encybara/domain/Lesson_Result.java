@@ -7,11 +7,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "lesson_results")
+@Table(name = "lesson_results", uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "lesson_id", "enrollment_id" })
+})
 @Getter
 @Setter
 
