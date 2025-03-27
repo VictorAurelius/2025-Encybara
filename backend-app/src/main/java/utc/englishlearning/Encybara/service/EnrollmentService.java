@@ -25,12 +25,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class EnrollmentService {
-
     @Autowired
     private EnrollmentRepository enrollmentRepository;
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private EnrollmentHelper enrollmentHelper;
 
     @Autowired
     private UserRepository userRepository;
@@ -60,16 +62,8 @@ public class EnrollmentService {
         // Get or create learning result
         Learning_Result learningResult = getOrCreateLearningResult(user);
 
-        Enrollment enrollment = new Enrollment();
-        enrollment.setUser(user);
-        enrollment.setCourse(course);
-        enrollment.setEnrollDate(Instant.now());
-        enrollment.setProStatus(true); // Auto-join the course
-        enrollment.setComLevel(0.0);
-        enrollment.setTotalPoints(0);
-        enrollment.setLearningResult(learningResult);
-
-        enrollment = enrollmentRepository.save(enrollment);
+        // Create enrollment with proStatus=true for direct enrollment using helper
+        Enrollment enrollment = enrollmentHelper.createCourseEnrollment(user, course, learningResult, true);
         return convertToDTO(enrollment);
     }
 

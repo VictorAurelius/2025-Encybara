@@ -28,6 +28,9 @@ public class UserEnglishLevelService {
     @Autowired
     private CourseRecommendationService courseRecommendationService;
 
+    @Autowired
+    private EnrollmentHelper enrollmentHelper;
+
     @Transactional
     public void setUserEnglishLevel(Long userId, EnglishLevelEnum level) {
         try {
@@ -64,15 +67,8 @@ public class UserEnglishLevelService {
             // Create new enrollment entries for recommendations
             for (Course course : recommendedCourses) {
                 if (!course.getName().contains("(Placement)")) { // Skip placement course
-                    Enrollment enrollment = new Enrollment();
-                    enrollment.setUser(user);
-                    enrollment.setCourse(course);
-                    enrollment.setLearningResult(learningResult);
-                    enrollment.setEnrollDate(Instant.now());
-                    enrollment.setProStatus(false); // Mark as recommendation
-                    enrollment.setComLevel(0.0);
-                    enrollment.setTotalPoints(0);
-                    enrollmentRepository.save(enrollment);
+                    // Create enrollment with proStatus=false for recommendations
+                    enrollmentHelper.createCourseEnrollment(user, course, learningResult, false);
                 }
             }
 

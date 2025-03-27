@@ -34,6 +34,9 @@ public class InitialAssessmentService {
     @Autowired
     private PlacementAssessmentService placementAssessmentService;
 
+    @Autowired
+    private EnrollmentHelper enrollmentHelper;
+
     @Transactional
     public void skipInitialAssessment(Long userId) {
         try {
@@ -63,15 +66,7 @@ public class InitialAssessmentService {
             // Create enrollment entries for recommendations
             for (Course course : recommendedCourses) {
                 if (!course.getName().contains("(Placement)")) { // Skip placement course
-                    Enrollment enrollment = new Enrollment();
-                    enrollment.setUser(user);
-                    enrollment.setCourse(course);
-                    enrollment.setLearningResult(learningResult);
-                    enrollment.setEnrollDate(Instant.now());
-                    enrollment.setProStatus(false);
-                    enrollment.setComLevel(0.0);
-                    enrollment.setTotalPoints(0);
-                    enrollmentRepository.save(enrollment);
+                    enrollmentHelper.createCourseEnrollment(user, course, learningResult, false);
                 }
             }
         } catch (RuntimeException e) {
@@ -116,17 +111,8 @@ public class InitialAssessmentService {
                 learningResult = learningResultRepository.save(learningResult);
             }
 
-            // Create enrollment for assessment course
-            Enrollment enrollment = new Enrollment();
-            enrollment.setUser(user);
-            enrollment.setCourse(assessmentCourse);
-            enrollment.setEnrollDate(Instant.now());
-            enrollment.setProStatus(true); // User is actively taking this course
-            enrollment.setComLevel(0.0);
-            enrollment.setTotalPoints(0);
-            enrollment.setLearningResult(learningResult);
-
-            enrollmentRepository.save(enrollment);
+            // Create enrollment for assessment course with proStatus=true
+            enrollmentHelper.createCourseEnrollment(user, assessmentCourse, learningResult, true);
         } catch (RuntimeException e) {
             throw new RuntimeException("Failed to start initial assessment: " + e.getMessage(), e);
         }
@@ -193,15 +179,7 @@ public class InitialAssessmentService {
             User user = placementEnrollment.getUser();
             for (Course course : recommendedCourses) {
                 if (!course.getName().contains("(Placement)")) { // Skip placement course
-                    Enrollment enrollment = new Enrollment();
-                    enrollment.setUser(user);
-                    enrollment.setCourse(course);
-                    enrollment.setLearningResult(learningResult);
-                    enrollment.setEnrollDate(Instant.now());
-                    enrollment.setProStatus(false);
-                    enrollment.setComLevel(0.0);
-                    enrollment.setTotalPoints(0);
-                    enrollmentRepository.save(enrollment);
+                    enrollmentHelper.createCourseEnrollment(user, course, learningResult, false);
                 }
             }
         } catch (RuntimeException e) {
