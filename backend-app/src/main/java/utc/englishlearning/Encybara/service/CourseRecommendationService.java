@@ -86,6 +86,34 @@ public class CourseRecommendationService {
                 course.getDiffLevel() <= currentLevel + MAX_RECOMMENDED_LEVEL_INCREASE;
     }
 
+    /**
+     * Gets recommended courses using explicit range values for flexible
+     * recommendations
+     */
+    public List<Course> getRecommendedCoursesWithRange(Learning_Result learningResult, double lowerBound,
+            double upperBound) {
+        try {
+            validateLearningResult(learningResult);
+
+            List<Course> recommendations = new ArrayList<>();
+
+            // Get courses for each skill type with the provided range
+            for (SkillTypeEnum skill : SkillTypeEnum.values()) {
+                if (skill != SkillTypeEnum.ALLSKILLS) {
+                    recommendations.addAll(courseRepository.findPublicCoursesByTypeAndLevelRange(
+                            mapSkillTypeToCourseType(skill),
+                            lowerBound,
+                            upperBound,
+                            CourseStatusEnum.PUBLIC));
+                }
+            }
+
+            return filterAndPrioritizeRecommendations(recommendations, learningResult);
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("Error getting recommendations with range: " + e.getMessage(), e);
+        }
+    }
+
     private double[] calculateRecommendedDifficultyRange(Learning_Result learningResult, SkillTypeEnum skill) {
         double currentLevel = getSkillLevel(learningResult, skill);
         double lowerBound = currentLevel - 0.5;

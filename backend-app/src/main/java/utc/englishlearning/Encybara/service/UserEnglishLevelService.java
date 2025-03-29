@@ -26,9 +26,6 @@ public class UserEnglishLevelService {
     private EnrollmentRepository enrollmentRepository;
 
     @Autowired
-    private CourseRecommendationService courseRecommendationService;
-
-    @Autowired
     private EnrollmentHelper enrollmentHelper;
 
     @Transactional
@@ -61,16 +58,9 @@ public class UserEnglishLevelService {
             // Delete old course recommendations (enrollments with proStatus = false)
             enrollmentRepository.deleteByUserAndProStatusFalse(user);
 
-            // Get new course recommendations based on updated scores
-            var recommendedCourses = courseRecommendationService.getRecommendedCourses(learningResult);
-
-            // Create new enrollment entries for recommendations
-            for (Course course : recommendedCourses) {
-                if (!course.getName().contains("(Placement)")) { // Skip placement course
-                    // Create enrollment with proStatus=false for recommendations
-                    enrollmentHelper.createCourseEnrollment(user, course, learningResult, false);
-                }
-            }
+            // Create recommendations with adaptive range to ensure we get at least one
+            // course
+            enrollmentHelper.createAdaptiveRecommendations(user, learningResult);
 
             // Update user's English level display name
             user.setEnglishlevel(level.getDisplayName());
