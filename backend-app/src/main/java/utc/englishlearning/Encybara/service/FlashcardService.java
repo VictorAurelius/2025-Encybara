@@ -122,8 +122,8 @@ public class FlashcardService {
         flashcard.setDefinitions(selectedDefinitions.toString());
         flashcard.setExamples(selectedExamples.toString());
         flashcard.setPartOfSpeech(selectedPartOfSpeech.toString());
-        flashcard.setPhoneticText(selectedPhoneticsText.toString());
-        flashcard.setPhoneticAudio(selectedPhoneticsAudio.toString());
+        flashcard.setPhoneticText(selectedPhoneticsText != null ? selectedPhoneticsText : "");
+        flashcard.setPhoneticAudio(selectedPhoneticsAudio != null ? selectedPhoneticsAudio : "");
 
         FlashcardGroup allFlashcardsGroup = flashcardGroupRepository.findByName("New Flashcards");
         if (allFlashcardsGroup == null) {

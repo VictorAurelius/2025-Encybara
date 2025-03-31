@@ -31,7 +31,7 @@
         "createBy": "admin",
         "choices": [
             {
-                "content": "helpdesk supervisor",
+                "content": "software developer",
                 "isCorrect": true
             }
         ]
@@ -44,7 +44,7 @@
         "createBy": "admin",
         "choices": [
             {
-                "content": "software developer",
+                "content": "helpdesk supervisor",
                 "isCorrect": true
             }
         ]
