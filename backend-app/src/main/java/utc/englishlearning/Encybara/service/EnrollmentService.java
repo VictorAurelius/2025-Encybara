@@ -249,10 +249,10 @@ public class EnrollmentService {
      * Creates course recommendations based on user's learning results
      * Uses optimistic locking with READ_COMMITTED isolation to minimize contention
      */
-    @Transactional(isolation = Isolation.READ_COMMITTED, timeout = 30)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<CourseRecommendation> createRecommendations(Long enrollmentId) {
         try {
-            // 1. Load required data
+            // Get enrollment data
             Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
                     .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found"));
 
@@ -260,28 +260,35 @@ public class EnrollmentService {
             User user = enrollment.getUser();
             Learning_Result learningResult = enrollment.getLearningResult();
 
-            // 2. Clean up old recommendations in batches for better performance
+            // Delete existing recommendations first
             deleteExistingRecommendations(user);
 
-            // 3. Calculate overall skill level efficiently
+            // Calculate current level
             double avgScore = (learningResult.getListeningScore() +
                     learningResult.getSpeakingScore() +
                     learningResult.getReadingScore() +
                     learningResult.getWritingScore()) / 4.0;
 
-            // 4. Generate new recommendations with retry support
-            List<Enrollment> recommendations = enrollmentHelper.createProgressiveRecommendations(
-                    user, learningResult, avgScore);
+            try {
+                // Generate recommendations
+                List<Enrollment> recommendations = enrollmentHelper.createProgressiveRecommendations(
+                        user, learningResult, avgScore);
 
-            // 5. Return empty list instead of throwing exception if no recommendations
-            if (recommendations.isEmpty()) {
-                return new ArrayList<>();
+                // Convert and return
+                return recommendations.stream()
+                        .map(e -> createCourseRecommendation(e.getCourse(), learningResult))
+                        .collect(Collectors.toList());
+
+            } catch (Exception e) {
+                // Handle specific database errors gracefully
+                if (e.getMessage() != null &&
+                        (e.getMessage().contains("Duplicate entry") ||
+                                e.getMessage().contains("deadlock") ||
+                                e.getMessage().contains("Lock wait timeout"))) {
+                    return new ArrayList<>(); // Return empty list for concurrent modifications
+                }
+                throw new RuntimeException("Failed to create recommendations: " + e.getMessage(), e);
             }
-
-            // 6. Map to DTOs and return
-            return recommendations.stream()
-                    .map(e -> createCourseRecommendation(e.getCourse(), learningResult))
-                    .collect(Collectors.toList());
         } catch (Exception e) {
             throw new RuntimeException("Failed to create recommendations: " + e.getMessage(), e);
         }
@@ -379,41 +386,27 @@ public class EnrollmentService {
     /**
      * Delete existing recommendations in batches to avoid timeouts
      */
+    /**
+     * Delete existing recommendations with pagination to avoid memory issues
+     */
     private void deleteExistingRecommendations(User user) {
-        int maxRetries = 3;
-        int retryCount = 0;
+        // Use pageable to handle large datasets
+        Page<Enrollment> page = enrollmentRepository.findByUserIdAndProStatus(
+                user.getId(), false, PageRequest.of(0, 50));
 
-        while (retryCount < maxRetries) {
+        if (!page.hasContent()) {
+            return;
+        }
+
+        // Delete each enrollment
+        for (Enrollment enrollment : page.getContent()) {
             try {
-                // Get first page of non-active enrollments
-                Page<Enrollment> page = enrollmentRepository.findByUserIdAndProStatus(
-                        user.getId(), false, PageRequest.of(0, 20));
-
-                // Delete in small batches with flush
-                while (page.hasContent()) {
-                    for (Enrollment enrollment : page.getContent()) {
-                        enrollmentRepository.delete(enrollment);
-                    }
-                    enrollmentRepository.flush();
-
-                    // Get next batch
-                    page = enrollmentRepository.findByUserIdAndProStatus(
-                            user.getId(), false, PageRequest.of(0, 20));
-                }
-                return; // Success
-
+                enrollmentRepository.delete(enrollment);
             } catch (Exception e) {
-                retryCount++;
-                if (retryCount == maxRetries) {
-                    throw new RuntimeException("Failed to delete recommendations after " + maxRetries + " attempts", e);
-                }
-                try {
-                    Thread.sleep(500 * (1 << retryCount)); // Exponential backoff
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
+                // Log and continue if single delete fails
+                System.err.println("Failed to delete enrollment " + enrollment.getId() + ": " + e.getMessage());
             }
         }
+        enrollmentRepository.flush();
     }
 }
