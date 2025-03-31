@@ -111,21 +111,25 @@ public class LearningResultService {
     }
 
     public double calculateNewScore(double currentScore, double evaluationScore) {
-        // Formula: New Score = (80% current score) + (20% evaluation score)
-        return (0.8 * currentScore) + (0.2 * evaluationScore);
+        // Formula: New Score = (60% current score) + (40% evaluation score) for more
+        // significant progress
+        return (0.6 * currentScore) + (0.4 * evaluationScore);
     }
 
     private double calculateEvaluationScore(double diffLevel, double comLevel) {
+        // Convert percentage to decimal
+        double completionRate = comLevel / 100.0;
+
         // Calculate score based on completion percentage
-        if (comLevel <= 0.15)
-            return Math.max(3.0, diffLevel - 2.0); // Minimum 3.0
-        if (comLevel <= 0.30)
-            return Math.max(4.0, diffLevel - 1.5);
-        if (comLevel <= 0.60)
-            return Math.max(5.0, diffLevel - 1.0);
-        if (comLevel <= 0.90)
-            return Math.max(diffLevel, 6.0);
-        return Math.min(7.0, diffLevel + 0.5); // Maximum 7.0
+        if (completionRate <= 0.50)
+            return Math.max(3.0, diffLevel); // At least maintain current level
+        if (completionRate <= 0.65)
+            return Math.max(4.0, diffLevel + 0.5); // Small improvement
+        if (completionRate <= 0.80)
+            return Math.max(5.0, diffLevel + 1.0); // Good improvement
+        if (completionRate <= 0.90)
+            return Math.max(6.0, diffLevel + 1.5); // Significant improvement
+        return Math.min(7.0, diffLevel + 2.0); // Maximum improvement
     }
 
     public ResDetailedLearningResultDTO analyzeRecentProgress(Long userId) {

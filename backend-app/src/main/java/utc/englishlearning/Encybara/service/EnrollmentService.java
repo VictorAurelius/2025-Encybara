@@ -120,38 +120,32 @@ public class EnrollmentService {
         response.setTotalPoints(totalPointsAchieved);
         response.setComLevel(comLevel);
 
-        // Automatically evaluate learning result when course is completed
         // Always evaluate and update learning result scores
         learningResultService.evaluateAndUpdateScores(enrollment);
         Learning_Result learningResult = enrollment.getLearningResult();
 
-        // Only update user level and provide recommendations if completion level is
-        // sufficient
-        if (comLevel >= 60.0) {
+        // Always calculate and update English level based on average score
+        double avgScore = (learningResult.getListeningScore() +
+                learningResult.getSpeakingScore() +
+                learningResult.getReadingScore() +
+                learningResult.getWritingScore()) / 4.0;
 
-            // Calculate and update English level based on average score
-            double avgScore = (learningResult.getListeningScore() +
-                    learningResult.getSpeakingScore() +
-                    learningResult.getReadingScore() +
-                    learningResult.getWritingScore()) / 4.0;
+        // Always update user's English level
+        User user = enrollment.getUser();
+        EnglishLevelEnum level = EnglishLevelEnum.fromScore(avgScore);
+        user.setEnglishlevel(level.getDisplayName());
+        userRepository.save(user);
 
-            // Update user's English level based on average score
-            User user = enrollment.getUser();
-            EnglishLevelEnum level = EnglishLevelEnum.fromScore(avgScore);
-            user.setEnglishlevel(level.getDisplayName());
-            userRepository.save(user);
+        // Always get course recommendations
+        List<Course> recommendedCourses = courseRecommendationService.getRecommendedCourses(learningResult);
 
-            // Get course recommendations
-            List<Course> recommendedCourses = courseRecommendationService.getRecommendedCourses(learningResult);
+        // Always map recommendations to DTOs
+        response.setRecommendations(recommendedCourses.stream()
+                .map(course -> createCourseRecommendation(course, learningResult))
+                .collect(Collectors.toList()));
 
-            // Map recommendations to DTOs
-            response.setRecommendations(recommendedCourses.stream()
-                    .map(course -> createCourseRecommendation(course, learningResult))
-                    .collect(Collectors.toList()));
-
-            // Calculate and set skill progress
-            response.setSkillProgress(calculateSkillProgress(learningResult));
-        }
+        // Always calculate and set skill progress
+        response.setSkillProgress(calculateSkillProgress(learningResult));
 
         return response;
     }
