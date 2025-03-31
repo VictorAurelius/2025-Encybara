@@ -47,9 +47,6 @@ public class EnrollmentService {
     private LearningResultService learningResultService;
 
     @Autowired
-    private CourseRecommendationService courseRecommendationService;
-
-    @Autowired
     private LearningResultRepository learningResultRepository;
 
     @Transactional
@@ -136,12 +133,26 @@ public class EnrollmentService {
         user.setEnglishlevel(level.getDisplayName());
         userRepository.save(user);
 
-        // Always get course recommendations
-        List<Course> recommendedCourses = courseRecommendationService.getRecommendedCourses(learningResult);
+        // Delete old recommendations
+        enrollmentRepository.deleteByUserAndProStatusFalse(user);
 
-        // Always map recommendations to DTOs
-        response.setRecommendations(recommendedCourses.stream()
-                .map(course -> createCourseRecommendation(course, learningResult))
+        // Get current skill level based on course type
+        double currentLevel = switch (enrollment.getCourse().getCourseType()) {
+            case LISTENING -> learningResult.getListeningScore();
+            case SPEAKING -> learningResult.getSpeakingScore();
+            case READING -> learningResult.getReadingScore();
+            case WRITING -> learningResult.getWritingScore();
+            case ALLSKILLS -> (learningResult.getListeningScore() + learningResult.getSpeakingScore() +
+                    learningResult.getReadingScore() + learningResult.getWritingScore()) / 4.0;
+        };
+
+        // Create new recommendations with progressive difficulty
+        List<Enrollment> newRecommendations = enrollmentHelper.createProgressiveRecommendations(
+                user, learningResult, currentLevel);
+
+        // Map new recommendations to DTOs
+        response.setRecommendations(newRecommendations.stream()
+                .map(e -> createCourseRecommendation(e.getCourse(), learningResult))
                 .collect(Collectors.toList()));
 
         // Always calculate and set skill progress

@@ -58,9 +58,8 @@ public class UserEnglishLevelService {
             // Delete old course recommendations (enrollments with proStatus = false)
             enrollmentRepository.deleteByUserAndProStatusFalse(user);
 
-            // Create recommendations with adaptive range to ensure we get at least one
-            // course
-            enrollmentHelper.createAdaptiveRecommendations(user, learningResult);
+            // Create recommendations using current base score as minimum level
+            enrollmentHelper.createProgressiveRecommendations(user, learningResult, baseScore);
 
             // Update user's English level display name
             user.setEnglishlevel(level.getDisplayName());

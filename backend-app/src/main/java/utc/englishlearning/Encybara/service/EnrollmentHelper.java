@@ -6,7 +6,6 @@ import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.repository.EnrollmentRepository;
 import utc.englishlearning.Encybara.exception.DuplicateEnrollmentException;
 import utc.englishlearning.Encybara.exception.NoSuitableCoursesException;
-import utc.englishlearning.Encybara.service.helper.RecommendationRange;
 import java.util.List;
 
 @Service
@@ -31,22 +30,24 @@ public class EnrollmentHelper {
     }
 
     /**
-     * Creates recommendations for a user with adaptive range to ensure at least one
-     * enrollment is created
+     * Creates recommendations with higher or equal difficulty level, ensuring at
+     * least one recommendation
+     * 
+     * @param minLevel Minimum difficulty level for recommendations
      */
-    public List<Enrollment> createAdaptiveRecommendations(User user, Learning_Result learningResult) {
-        RecommendationRange range = new RecommendationRange(
-                (learningResult.getListeningScore() + learningResult.getSpeakingScore() +
-                        learningResult.getReadingScore() + learningResult.getWritingScore()) / 4.0);
-
-        List<Course> recommendedCourses;
+    public List<Enrollment> createProgressiveRecommendations(User user, Learning_Result learningResult,
+            double minLevel) {
+        // Range will only expand upward from minLevel
+        double currentMin = minLevel;
+        double currentMax = minLevel + 0.5;
         List<Enrollment> createdEnrollments = new java.util.ArrayList<>();
 
-        // Keep trying with increasing range until we get at least one valid course
-        do {
+        // Keep trying with increasing upper bound until we get at least one valid
+        // course
+        while (createdEnrollments.isEmpty() && currentMax <= 7.0) {
             try {
-                recommendedCourses = courseRecommendationService.getRecommendedCoursesWithRange(
-                        learningResult, range.getLowerBound(), range.getUpperBound());
+                List<Course> recommendedCourses = courseRecommendationService.getRecommendedCoursesWithRange(
+                        learningResult, currentMin, currentMax);
 
                 // Create enrollments for recommended courses
                 for (Course course : recommendedCourses) {
@@ -62,17 +63,16 @@ public class EnrollmentHelper {
                 }
             } catch (NoSuitableCoursesException e) {
                 // No courses found in current range
-                recommendedCourses = java.util.Collections.emptyList();
             }
 
-            // If no enrollments were created and we can't increase range anymore, throw
-            // exception
-            if (createdEnrollments.isEmpty() && !range.increaseRange()) {
-                throw new NoSuitableCoursesException(
-                        "No suitable courses found even with expanded difficulty range");
-            }
+            // Increase upper bound for next attempt
+            currentMax = Math.min(7.0, currentMax + 0.5);
+        }
 
-        } while (createdEnrollments.isEmpty());
+        if (createdEnrollments.isEmpty()) {
+            throw new NoSuitableCoursesException(
+                    "No suitable courses found even with expanded difficulty range");
+        }
 
         return createdEnrollments;
     }
