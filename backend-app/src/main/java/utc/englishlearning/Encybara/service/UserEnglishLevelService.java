@@ -28,7 +28,7 @@ public class UserEnglishLevelService {
     @Autowired
     private EnrollmentHelper enrollmentHelper;
 
-    @Transactional
+    @Transactional(isolation = org.springframework.transaction.annotation.Isolation.READ_COMMITTED)
     public void setUserEnglishLevel(Long userId, EnglishLevelEnum level) {
         try {
             User user = userRepository.findById(userId)

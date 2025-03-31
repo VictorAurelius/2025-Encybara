@@ -90,7 +90,7 @@ public class EnrollmentService {
         return enrollments.map(this::convertToDTO);
     }
 
-    @Transactional
+    @Transactional(isolation = org.springframework.transaction.annotation.Isolation.READ_COMMITTED)
     public ResEnrollmentWithRecommendationsDTO calculateEnrollmentResult(ReqCalculateEnrollmentResultDTO reqDto) {
         Enrollment enrollment = enrollmentRepository.findById(reqDto.getEnrollmentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found"));
@@ -103,54 +103,52 @@ public class EnrollmentService {
         // Calculate completion level
         double comLevel = totalPointsPossible > 0 ? (double) totalPointsAchieved / totalPointsPossible * 100 : 0;
 
-        // Update enrollment
-        enrollment.setTotalPoints(totalPointsAchieved);
-        // Calculate skill score based on course type
-        double skillScore = (totalPointsAchieved * 100.0) / totalPointsPossible;
-        enrollment.setComLevel(comLevel);
-        enrollment.setSkillScore(skillScore);
-        enrollment = enrollmentRepository.save(enrollment);
-
-        // Create enhanced response DTO
-        ResEnrollmentWithRecommendationsDTO response = new ResEnrollmentWithRecommendationsDTO();
-        response.setEnrollmentId(enrollment.getId());
-        response.setTotalPoints(totalPointsAchieved);
-        response.setComLevel(comLevel);
-
-        // Always evaluate and update learning result scores
-        learningResultService.evaluateAndUpdateScores(enrollment);
+        // 1. Update learning result first (less contention)
         Learning_Result learningResult = enrollment.getLearningResult();
+        learningResultService.evaluateAndUpdateScores(enrollment);
 
-        // Always calculate and update English level based on average score
+        // 2. Calculate user's English level
         double avgScore = (learningResult.getListeningScore() +
                 learningResult.getSpeakingScore() +
                 learningResult.getReadingScore() +
                 learningResult.getWritingScore()) / 4.0;
 
-        // Always update user's English level
-        User user = enrollment.getUser();
-        EnglishLevelEnum level = EnglishLevelEnum.fromScore(avgScore);
-        user.setEnglishlevel(level.getDisplayName());
-        userRepository.save(user);
+        // 3. Update enrollment with completion info
+        enrollment.setTotalPoints(totalPointsAchieved);
+        double skillScore = (totalPointsAchieved * 100.0) / totalPointsPossible;
+        enrollment.setComLevel(comLevel);
+        enrollment.setSkillScore(skillScore);
+        enrollmentRepository.save(enrollment);
 
-        // Delete old recommendations
+        // 4. Create response DTO early
+        ResEnrollmentWithRecommendationsDTO response = new ResEnrollmentWithRecommendationsDTO();
+        response.setEnrollmentId(enrollment.getId());
+        response.setTotalPoints(totalPointsAchieved);
+        response.setComLevel(comLevel);
+
+        // 5. Clean old recommendations
+        User user = enrollment.getUser();
         enrollmentRepository.deleteByUserAndProStatusFalse(user);
 
-        // Get current skill level based on course type
+        // 6. Get current skill level for recommendations
         double currentLevel = switch (enrollment.getCourse().getCourseType()) {
             case LISTENING -> learningResult.getListeningScore();
             case SPEAKING -> learningResult.getSpeakingScore();
             case READING -> learningResult.getReadingScore();
             case WRITING -> learningResult.getWritingScore();
-            case ALLSKILLS -> (learningResult.getListeningScore() + learningResult.getSpeakingScore() +
-                    learningResult.getReadingScore() + learningResult.getWritingScore()) / 4.0;
+            case ALLSKILLS -> avgScore;
         };
 
-        // Create new recommendations with progressive difficulty
+        // 7. Create and save user level update
+        EnglishLevelEnum level = EnglishLevelEnum.fromScore(avgScore);
+        user.setEnglishlevel(level.getDisplayName());
+        userRepository.save(user);
+
+        // 8. Create new recommendations
         List<Enrollment> newRecommendations = enrollmentHelper.createProgressiveRecommendations(
                 user, learningResult, currentLevel);
 
-        // Map new recommendations to DTOs
+        // 9. Add recommendations to response
         response.setRecommendations(newRecommendations.stream()
                 .map(e -> createCourseRecommendation(e.getCourse(), learningResult))
                 .collect(Collectors.toList()));

@@ -2,6 +2,8 @@ package utc.englishlearning.Encybara.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.repository.EnrollmentRepository;
 import utc.englishlearning.Encybara.exception.DuplicateEnrollmentException;
@@ -32,9 +34,11 @@ public class EnrollmentHelper {
     /**
      * Creates recommendations with higher or equal difficulty level, ensuring at
      * least one recommendation
+     * This method must be called within a transaction with READ_COMMITTED isolation
      * 
      * @param minLevel Minimum difficulty level for recommendations
      */
+    @Transactional(propagation = Propagation.MANDATORY)
     public List<Enrollment> createProgressiveRecommendations(User user, Learning_Result learningResult,
             double minLevel) {
         // Range will only expand upward from minLevel
@@ -79,7 +83,9 @@ public class EnrollmentHelper {
 
     /**
      * Safely create course enrollment after checking for duplicates
+     * Must be called within a transaction
      */
+    @Transactional(propagation = Propagation.MANDATORY)
     public Enrollment createCourseEnrollment(User user, Course course, Learning_Result learningResult,
             boolean proStatus) {
         // Skip duplicate check for non-pro status (recommendations)
