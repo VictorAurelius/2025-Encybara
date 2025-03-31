@@ -2,12 +2,16 @@ package utc.englishlearning.Encybara.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
+
 import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.repository.EnrollmentRepository;
 import utc.englishlearning.Encybara.exception.DuplicateEnrollmentException;
 import utc.englishlearning.Encybara.exception.NoSuitableCoursesException;
+
 import java.util.List;
 
 @Service
@@ -15,14 +19,11 @@ public class EnrollmentHelper {
 
     @Autowired
     private EnrollmentRepository enrollmentRepository;
-
     @Autowired
     private CourseRecommendationService courseRecommendationService;
 
     /**
      * Check if an enrollment already exists for the given user and course
-     * 
-     * @throws DuplicateEnrollmentException if duplicate enrollment is found
      */
     public void checkDuplicateEnrollment(User user, Course course) {
         if (enrollmentRepository.existsByUserAndCourseAndProStatusTrue(user, course)) {
@@ -32,28 +33,52 @@ public class EnrollmentHelper {
     }
 
     /**
-     * Creates recommendations with higher or equal difficulty level, ensuring at
-     * least one recommendation
-     * This method must be called within a transaction with READ_COMMITTED isolation
-     * 
-     * @param minLevel Minimum difficulty level for recommendations
+     * Creates recommendations with higher or equal difficulty level
+     * Uses SERIALIZABLE isolation and retries on conflicts
      */
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public List<Enrollment> createProgressiveRecommendations(User user, Learning_Result learningResult,
             double minLevel) {
-        // Range will only expand upward from minLevel
+        int maxRetries = 3;
+        int attempt = 0;
+
+        while (attempt < maxRetries) {
+            try {
+                // Clean old recommendations first
+                enrollmentRepository.deleteByUserAndProStatusFalse(user);
+
+                return createRecommendationsInternal(user, learningResult, minLevel);
+            } catch (DataIntegrityViolationException e) {
+                attempt++;
+                if (attempt == maxRetries) {
+                    throw new RuntimeException("Failed to create recommendations after " + maxRetries + " attempts", e);
+                }
+                // Short sleep before retry
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Interrupted while retrying recommendation creation", ie);
+                }
+            }
+        }
+
+        throw new RuntimeException("Failed to create recommendations after exhausting retries");
+    }
+
+    /**
+     * Internal method to create recommendations
+     */
+    private List<Enrollment> createRecommendationsInternal(User user, Learning_Result learningResult, double minLevel) {
         double currentMin = minLevel;
         double currentMax = minLevel + 0.5;
         List<Enrollment> createdEnrollments = new java.util.ArrayList<>();
 
-        // Keep trying with increasing upper bound until we get at least one valid
-        // course
         while (createdEnrollments.isEmpty() && currentMax <= 7.0) {
             try {
                 List<Course> recommendedCourses = courseRecommendationService.getRecommendedCoursesWithRange(
                         learningResult, currentMin, currentMax);
 
-                // Create enrollments for recommended courses
                 for (Course course : recommendedCourses) {
                     if (!course.getName().contains("(Placement)")) {
                         try {
@@ -66,10 +91,9 @@ public class EnrollmentHelper {
                     }
                 }
             } catch (NoSuitableCoursesException e) {
-                // No courses found in current range
+                // No courses in current range, continue to next range
             }
 
-            // Increase upper bound for next attempt
             currentMax = Math.min(7.0, currentMax + 0.5);
         }
 
@@ -83,12 +107,10 @@ public class EnrollmentHelper {
 
     /**
      * Safely create course enrollment after checking for duplicates
-     * Must be called within a transaction
      */
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transactional(propagation = Propagation.REQUIRED)
     public Enrollment createCourseEnrollment(User user, Course course, Learning_Result learningResult,
             boolean proStatus) {
-        // Skip duplicate check for non-pro status (recommendations)
         if (proStatus) {
             checkDuplicateEnrollment(user, course);
         }
