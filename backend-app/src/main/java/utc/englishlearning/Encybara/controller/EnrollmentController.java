@@ -5,12 +5,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utc.englishlearning.Encybara.domain.request.enrollment.ReqCreateEnrollmentDTO;
-import utc.englishlearning.Encybara.domain.request.enrollment.ReqCalculateEnrollmentResultDTO;
-import utc.englishlearning.Encybara.domain.response.enrollment.ResEnrollmentDTO;
-import utc.englishlearning.Encybara.domain.response.enrollment.ResEnrollmentWithRecommendationsDTO;
+import utc.englishlearning.Encybara.domain.request.enrollment.*;
+import utc.englishlearning.Encybara.domain.response.enrollment.*;
+import utc.englishlearning.Encybara.domain.response.enrollment.ResEnrollmentWithRecommendationsDTO.CourseRecommendation;
 import utc.englishlearning.Encybara.domain.response.RestResponse;
 import utc.englishlearning.Encybara.service.EnrollmentService;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/enrollments")
@@ -61,14 +61,42 @@ public class EnrollmentController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/calculate-result")
-    public ResponseEntity<RestResponse<ResEnrollmentWithRecommendationsDTO>> calculateEnrollmentResult(
-            @RequestBody ReqCalculateEnrollmentResultDTO reqDto) {
-        ResEnrollmentWithRecommendationsDTO result = enrollmentService.calculateEnrollmentResult(reqDto);
-        RestResponse<ResEnrollmentWithRecommendationsDTO> response = new RestResponse<>();
+    /**
+     * Step 1: Save completion info
+     */
+    @PostMapping("/{id}/save-completion")
+    public ResponseEntity<RestResponse<ResEnrollmentDTO>> saveCompletion(@PathVariable("id") Long enrollmentId) {
+        ResEnrollmentDTO result = enrollmentService.saveEnrollmentCompletion(enrollmentId);
+        RestResponse<ResEnrollmentDTO> response = new RestResponse<>();
         response.setStatusCode(200);
-        response.setMessage("Enrollment result calculated successfully");
+        response.setMessage("Completion info saved successfully");
         response.setData(result);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Step 2: Update learning results
+     */
+    @PostMapping("/{id}/update-learning")
+    public ResponseEntity<RestResponse<Void>> updateLearningResults(@PathVariable("id") Long enrollmentId) {
+        enrollmentService.updateLearningResults(enrollmentId);
+        RestResponse<Void> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Learning results updated successfully");
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Step 3: Get recommendations
+     */
+    @PostMapping("/{id}/recommendations")
+    public ResponseEntity<RestResponse<List<CourseRecommendation>>> getRecommendations(
+            @PathVariable("id") Long enrollmentId) {
+        List<CourseRecommendation> recommendations = enrollmentService.createRecommendations(enrollmentId);
+        RestResponse<List<CourseRecommendation>> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Course recommendations created successfully");
+        response.setData(recommendations);
         return ResponseEntity.ok(response);
     }
 

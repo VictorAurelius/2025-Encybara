@@ -1,54 +1,70 @@
 package utc.englishlearning.Encybara.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import utc.englishlearning.Encybara.domain.*;
-import utc.englishlearning.Encybara.domain.request.enrollment.ReqCreateEnrollmentDTO;
-import utc.englishlearning.Encybara.domain.request.enrollment.ReqCalculateEnrollmentResultDTO;
-import utc.englishlearning.Encybara.domain.response.enrollment.ResEnrollmentDTO;
-import utc.englishlearning.Encybara.domain.response.enrollment.ResEnrollmentWithRecommendationsDTO;
-import utc.englishlearning.Encybara.domain.response.enrollment.ResEnrollmentWithRecommendationsDTO.CourseRecommendation;
-import utc.englishlearning.Encybara.domain.response.enrollment.ResEnrollmentWithRecommendationsDTO.SkillProgress;
-import utc.englishlearning.Encybara.exception.ResourceNotFoundException;
-import utc.englishlearning.Encybara.repository.*;
-import utc.englishlearning.Encybara.util.constant.EnglishLevelEnum;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+
+import utc.englishlearning.Encybara.domain.Course;
+import utc.englishlearning.Encybara.domain.Enrollment;
+import utc.englishlearning.Encybara.domain.Learning_Result;
+import utc.englishlearning.Encybara.domain.Lesson;
+import utc.englishlearning.Encybara.domain.Lesson_Result;
+import utc.englishlearning.Encybara.domain.Question;
+import utc.englishlearning.Encybara.domain.User;
+import utc.englishlearning.Encybara.domain.request.enrollment.ReqCreateEnrollmentDTO;
+import utc.englishlearning.Encybara.domain.response.enrollment.ResEnrollmentDTO;
+import utc.englishlearning.Encybara.domain.response.enrollment.ResEnrollmentWithRecommendationsDTO.CourseRecommendation;
+import utc.englishlearning.Encybara.exception.ResourceNotFoundException;
+import utc.englishlearning.Encybara.repository.CourseRepository;
+import utc.englishlearning.Encybara.repository.EnrollmentRepository;
+import utc.englishlearning.Encybara.repository.LearningResultRepository;
+import utc.englishlearning.Encybara.repository.LessonResultRepository;
+import utc.englishlearning.Encybara.repository.QuestionRepository;
+import utc.englishlearning.Encybara.repository.UserRepository;
+import utc.englishlearning.Encybara.util.constant.EnglishLevelEnum;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.stream.Collectors;
 
+/**
+ * Service for managing course enrollments and completion
+ * This service handles enrollment creation, completion tracking, and course
+ * recommendations
+ */
 @Service
 public class EnrollmentService {
+
     @Autowired
     private EnrollmentRepository enrollmentRepository;
-
     @Autowired
     private CourseRepository courseRepository;
-
     @Autowired
     private EnrollmentHelper enrollmentHelper;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private LessonResultRepository lessonResultRepository;
-
     @Autowired
     private QuestionRepository questionRepository;
-
     @Autowired
     private LearningResultService learningResultService;
-
     @Autowired
     private LearningResultRepository learningResultRepository;
 
+    /**
+     * Creates a new course enrollment for a user
+     * 
+     * @param reqCreateEnrollmentDTO enrollment creation request
+     * @return created enrollment details
+     * @throws ResourceNotFoundException if user or course not found
+     */
     @Transactional
     public ResEnrollmentDTO createEnrollment(ReqCreateEnrollmentDTO reqCreateEnrollmentDTO) {
         User user = userRepository.findById(reqCreateEnrollmentDTO.getUserId())
@@ -56,14 +72,173 @@ public class EnrollmentService {
         Course course = courseRepository.findById(reqCreateEnrollmentDTO.getCourseId())
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
 
-        // Get or create learning result
         Learning_Result learningResult = getOrCreateLearningResult(user);
-
-        // Create enrollment with proStatus=true for direct enrollment using helper
         Enrollment enrollment = enrollmentHelper.createCourseEnrollment(user, course, learningResult, true);
         return convertToDTO(enrollment);
     }
 
+    /**
+     * Step 1: Calculate and save completion info with validation
+     * 
+     * @param enrollmentId ID of the enrollment to complete
+     * @return Updated enrollment information
+     * @throws ResourceNotFoundException if enrollment not found
+     * @throws IllegalStateException     if validation fails
+     */
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public ResEnrollmentDTO saveEnrollmentCompletion(Long enrollmentId) {
+        try {
+            Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found"));
+
+            if (!enrollment.isProStatus()) {
+                throw new IllegalStateException("Cannot complete a non-active enrollment");
+            }
+
+            List<Lesson> lessons = enrollment.getCourse().getLessons();
+            if (lessons.isEmpty()) {
+                throw new IllegalStateException("Course has no lessons to complete");
+            }
+
+            int totalPointsPossible = calculateTotalPointsPossible(lessons);
+            if (totalPointsPossible == 0) {
+                throw new IllegalStateException("Course has no points available");
+            }
+
+            int totalPointsAchieved = calculateTotalPointsAchieved(enrollment);
+            if (totalPointsAchieved > totalPointsPossible) {
+                throw new IllegalStateException("Achieved points cannot exceed possible points");
+            }
+
+            double comLevel = (double) totalPointsAchieved / totalPointsPossible * 100;
+            double skillScore = (totalPointsAchieved * 100.0) / totalPointsPossible;
+
+            enrollment.setTotalPoints(totalPointsAchieved);
+            enrollment.setComLevel(comLevel);
+            enrollment.setSkillScore(skillScore);
+            enrollmentRepository.save(enrollment);
+
+            return convertToDTO(enrollment);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to save enrollment completion: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Step 2: Update learning results with validation
+     * 
+     * @param enrollmentId ID of the completed enrollment
+     * @throws ResourceNotFoundException if enrollment not found
+     * @throws IllegalStateException     if validation fails
+     */
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public void updateLearningResults(Long enrollmentId) {
+        try {
+            Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found"));
+
+            if (enrollment.getComLevel() < 80.0) {
+                throw new IllegalStateException("Must complete course (80%+) before updating learning results");
+            }
+
+            Learning_Result learningResult = enrollment.getLearningResult();
+            if (learningResult == null) {
+                throw new IllegalStateException("No learning result found for enrollment");
+            }
+
+            double prevListening = learningResult.getListeningScore();
+            double prevSpeaking = learningResult.getSpeakingScore();
+            double prevReading = learningResult.getReadingScore();
+            double prevWriting = learningResult.getWritingScore();
+
+            learningResultService.evaluateAndUpdateScores(enrollment);
+
+            validateScoreChanges(learningResult, prevListening, prevSpeaking, prevReading, prevWriting);
+
+            double avgScore = (learningResult.getListeningScore() +
+                    learningResult.getSpeakingScore() +
+                    learningResult.getReadingScore() +
+                    learningResult.getWritingScore()) / 4.0;
+
+            User user = enrollment.getUser();
+            EnglishLevelEnum level = EnglishLevelEnum.fromScore(avgScore);
+            user.setEnglishlevel(level.getDisplayName());
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to update learning results: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Step 3: Create course recommendations with validation
+     * 
+     * @param enrollmentId ID of the completed enrollment
+     * @return List of recommended courses
+     * @throws ResourceNotFoundException if enrollment not found
+     * @throws IllegalStateException     if validation fails
+     */
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public List<CourseRecommendation> createRecommendations(Long enrollmentId) {
+        try {
+            Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found"));
+
+            if (!enrollment.isProStatus()) {
+                throw new IllegalStateException("Cannot create recommendations for non-active enrollment");
+            }
+
+            if (enrollment.getComLevel() < 80.0) {
+                throw new IllegalStateException("Cannot create recommendations for incomplete course");
+            }
+
+            Learning_Result learningResult = enrollment.getLearningResult();
+            if (learningResult == null) {
+                throw new IllegalStateException("Learning result not found");
+            }
+
+            validateLearningResultScores(learningResult);
+
+            if (learningResult.getLastUpdated() == null ||
+                    learningResult.getLastUpdated().isBefore(enrollment.getEnrollDate())) {
+                throw new IllegalStateException("Learning results must be updated before getting recommendations");
+            }
+
+            User user = enrollment.getUser();
+            enrollmentRepository.deleteByUserAndProStatusFalse(user);
+
+            double currentLevel = switch (enrollment.getCourse().getCourseType()) {
+                case LISTENING -> validateScore(learningResult.getListeningScore(), "Listening");
+                case SPEAKING -> validateScore(learningResult.getSpeakingScore(), "Speaking");
+                case READING -> validateScore(learningResult.getReadingScore(), "Reading");
+                case WRITING -> validateScore(learningResult.getWritingScore(), "Writing");
+                case ALLSKILLS -> {
+                    double avg = (learningResult.getListeningScore() + learningResult.getSpeakingScore() +
+                            learningResult.getReadingScore() + learningResult.getWritingScore()) / 4.0;
+                    yield validateScore(avg, "Average");
+                }
+            };
+
+            List<Enrollment> newRecommendations = enrollmentHelper.createProgressiveRecommendations(
+                    user, learningResult, currentLevel);
+
+            if (newRecommendations.isEmpty()) {
+                throw new IllegalStateException("No recommendations could be created");
+            }
+
+            return newRecommendations.stream()
+                    .map(e -> createCourseRecommendation(e.getCourse(), learningResult))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create recommendations: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Activates a course enrollment
+     * 
+     * @param id enrollment ID to activate
+     * @throws ResourceNotFoundException if enrollment not found
+     */
     @Transactional
     public void joinCourse(Long id) {
         Enrollment enrollment = enrollmentRepository.findById(id)
@@ -73,6 +248,12 @@ public class EnrollmentService {
         enrollmentRepository.save(enrollment);
     }
 
+    /**
+     * Removes a course enrollment
+     * 
+     * @param id enrollment ID to remove
+     * @throws ResourceNotFoundException if enrollment not found
+     */
     @Transactional
     public void refuseCourse(Long id) {
         Enrollment enrollment = enrollmentRepository.findById(id)
@@ -80,83 +261,88 @@ public class EnrollmentService {
         enrollmentRepository.delete(enrollment);
     }
 
+    /**
+     * Gets paginated enrollments for a user
+     * 
+     * @param userId    user ID
+     * @param proStatus optional filter for active/inactive enrollments
+     * @param pageable  pagination parameters
+     * @return page of enrollments
+     */
     public Page<ResEnrollmentDTO> getEnrollmentsByUserId(Long userId, Boolean proStatus, Pageable pageable) {
-        Page<Enrollment> enrollments;
-        if (proStatus != null) {
-            enrollments = enrollmentRepository.findByUserIdAndProStatus(userId, proStatus, pageable);
-        } else {
-            enrollments = enrollmentRepository.findByUserId(userId, pageable);
-        }
+        Page<Enrollment> enrollments = proStatus != null
+                ? enrollmentRepository.findByUserIdAndProStatus(userId, proStatus, pageable)
+                : enrollmentRepository.findByUserId(userId, pageable);
         return enrollments.map(this::convertToDTO);
     }
 
-    @Transactional(isolation = org.springframework.transaction.annotation.Isolation.READ_COMMITTED)
-    public ResEnrollmentWithRecommendationsDTO calculateEnrollmentResult(ReqCalculateEnrollmentResultDTO reqDto) {
-        Enrollment enrollment = enrollmentRepository.findById(reqDto.getEnrollmentId())
-                .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found"));
+    /**
+     * Gets the most recent enrollment for a course and user
+     * 
+     * @param courseId course ID
+     * @param userId   user ID
+     * @return most recent enrollment
+     * @throws ResourceNotFoundException if no enrollment found
+     */
+    public ResEnrollmentDTO getLatestEnrollmentByCourseIdAndUserId(Long courseId, Long userId) {
+        List<Enrollment> enrollments = enrollmentRepository
+                .findTopByCourseIdAndUserIdOrderByEnrollDateDesc(courseId, userId, PageRequest.of(0, 1));
 
-        // Calculate total points possible and achieved
-        List<Lesson> lessons = enrollment.getCourse().getLessons();
-        int totalPointsPossible = calculateTotalPointsPossible(lessons);
-        int totalPointsAchieved = calculateTotalPointsAchieved(enrollment);
+        Enrollment enrollment = enrollments.isEmpty() ? null : enrollments.get(0);
+        if (enrollment == null) {
+            throw new ResourceNotFoundException("No enrollment found for this course and user");
+        }
+        return convertToDTO(enrollment);
+    }
 
-        // Calculate completion level
-        double comLevel = totalPointsPossible > 0 ? (double) totalPointsAchieved / totalPointsPossible * 100 : 0;
+    private void validateScoreChanges(Learning_Result learningResult,
+            double prevListening, double prevSpeaking, double prevReading, double prevWriting) {
+        if (learningResult.getListeningScore() < prevListening ||
+                learningResult.getSpeakingScore() < prevSpeaking ||
+                learningResult.getReadingScore() < prevReading ||
+                learningResult.getWritingScore() < prevWriting) {
+            throw new IllegalStateException("Skill scores cannot decrease on course completion");
+        }
+    }
 
-        // 1. Update learning result first (less contention)
-        Learning_Result learningResult = enrollment.getLearningResult();
-        learningResultService.evaluateAndUpdateScores(enrollment);
+    private void validateLearningResultScores(Learning_Result learningResult) {
+        validateScore(learningResult.getListeningScore(), "Listening");
+        validateScore(learningResult.getSpeakingScore(), "Speaking");
+        validateScore(learningResult.getReadingScore(), "Reading");
+        validateScore(learningResult.getWritingScore(), "Writing");
+        validateScore(learningResult.getPreviousListeningScore(), "Previous Listening");
+        validateScore(learningResult.getPreviousSpeakingScore(), "Previous Speaking");
+        validateScore(learningResult.getPreviousReadingScore(), "Previous Reading");
+        validateScore(learningResult.getPreviousWritingScore(), "Previous Writing");
+    }
 
-        // 2. Calculate user's English level
-        double avgScore = (learningResult.getListeningScore() +
-                learningResult.getSpeakingScore() +
-                learningResult.getReadingScore() +
-                learningResult.getWritingScore()) / 4.0;
+    private double validateScore(double score, String skillName) {
+        if (score < 0 || score > 7) {
+            throw new IllegalStateException(
+                    String.format("%s score (%.2f) must be between 0 and 7", skillName, score));
+        }
+        return score;
+    }
 
-        // 3. Update enrollment with completion info
-        enrollment.setTotalPoints(totalPointsAchieved);
-        double skillScore = (totalPointsAchieved * 100.0) / totalPointsPossible;
-        enrollment.setComLevel(comLevel);
-        enrollment.setSkillScore(skillScore);
-        enrollmentRepository.save(enrollment);
+    private Learning_Result getOrCreateLearningResult(User user) {
+        Learning_Result learningResult = user.getLearningResult();
 
-        // 4. Create response DTO early
-        ResEnrollmentWithRecommendationsDTO response = new ResEnrollmentWithRecommendationsDTO();
-        response.setEnrollmentId(enrollment.getId());
-        response.setTotalPoints(totalPointsAchieved);
-        response.setComLevel(comLevel);
+        if (learningResult == null) {
+            learningResult = new Learning_Result();
+            learningResult.setUser(user);
+            learningResult.setListeningScore(1.0);
+            learningResult.setSpeakingScore(1.0);
+            learningResult.setReadingScore(1.0);
+            learningResult.setWritingScore(1.0);
+            learningResult.setPreviousListeningScore(1.0);
+            learningResult.setPreviousSpeakingScore(1.0);
+            learningResult.setPreviousReadingScore(1.0);
+            learningResult.setPreviousWritingScore(1.0);
+            learningResult.setLastUpdated(Instant.now());
+            learningResult = learningResultRepository.save(learningResult);
+        }
 
-        // 5. Clean old recommendations
-        User user = enrollment.getUser();
-        enrollmentRepository.deleteByUserAndProStatusFalse(user);
-
-        // 6. Get current skill level for recommendations
-        double currentLevel = switch (enrollment.getCourse().getCourseType()) {
-            case LISTENING -> learningResult.getListeningScore();
-            case SPEAKING -> learningResult.getSpeakingScore();
-            case READING -> learningResult.getReadingScore();
-            case WRITING -> learningResult.getWritingScore();
-            case ALLSKILLS -> avgScore;
-        };
-
-        // 7. Create and save user level update
-        EnglishLevelEnum level = EnglishLevelEnum.fromScore(avgScore);
-        user.setEnglishlevel(level.getDisplayName());
-        userRepository.save(user);
-
-        // 8. Create new recommendations
-        List<Enrollment> newRecommendations = enrollmentHelper.createProgressiveRecommendations(
-                user, learningResult, currentLevel);
-
-        // 9. Add recommendations to response
-        response.setRecommendations(newRecommendations.stream()
-                .map(e -> createCourseRecommendation(e.getCourse(), learningResult))
-                .collect(Collectors.toList()));
-
-        // Always calculate and set skill progress
-        response.setSkillProgress(calculateSkillProgress(learningResult));
-
-        return response;
+        return learningResult;
     }
 
     private CourseRecommendation createCourseRecommendation(Course course, Learning_Result learningResult) {
@@ -165,11 +351,7 @@ public class EnrollmentService {
         recommendation.setCourseName(course.getName());
         recommendation.setCourseType(course.getCourseType());
         recommendation.setDiffLevel(course.getDiffLevel());
-
-        // Generate personalized reason based on skill levels and course type
-        String reason = generateRecommendationReason(course, learningResult);
-        recommendation.setReason(reason);
-
+        recommendation.setReason(generateRecommendationReason(course, learningResult));
         return recommendation;
     }
 
@@ -187,38 +369,8 @@ public class EnrollmentService {
             return "Challenging course to advance your skills";
         } else if (course.getDiffLevel() < currentLevel - 0.5) {
             return "Recommended for skill reinforcement";
-        } else {
-            return "Matches your current level for optimal learning";
         }
-    }
-
-    private SkillProgress calculateSkillProgress(Learning_Result learningResult) {
-        SkillProgress progress = new SkillProgress();
-
-        // Calculate progress for each skill
-        progress.setListeningProgress(learningResult.getListeningScore() - learningResult.getPreviousListeningScore());
-        progress.setSpeakingProgress(learningResult.getSpeakingScore() - learningResult.getPreviousSpeakingScore());
-        progress.setReadingProgress(learningResult.getReadingScore() - learningResult.getPreviousReadingScore());
-        progress.setWritingProgress(learningResult.getWritingScore() - learningResult.getPreviousWritingScore());
-
-        // Determine focus area (skill with lowest score)
-        Map<String, Double> skillScores = new HashMap<>();
-        skillScores.put("Listening", learningResult.getListeningScore());
-        skillScores.put("Speaking", learningResult.getSpeakingScore());
-        skillScores.put("Reading", learningResult.getReadingScore());
-        skillScores.put("Writing", learningResult.getWritingScore());
-
-        progress.setFocusArea(skillScores.entrySet().stream()
-                .min(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .orElse(null));
-
-        progress.setStrongestSkill(skillScores.entrySet().stream()
-                .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .orElse(null));
-
-        return progress;
+        return "Matches your current level for optimal learning";
     }
 
     private int calculateTotalPointsPossible(List<Lesson> lessons) {
@@ -242,45 +394,6 @@ public class EnrollmentService {
         return maxPointsByLesson.values().stream()
                 .mapToInt(Integer::intValue)
                 .sum();
-    }
-
-    public ResEnrollmentDTO getLatestEnrollmentByCourseIdAndUserId(Long courseId, Long userId) {
-        List<Enrollment> enrollments = enrollmentRepository
-                .findTopByCourseIdAndUserIdOrderByEnrollDateDesc(courseId, userId, PageRequest.of(0, 1));
-
-        Enrollment enrollment = enrollments.isEmpty() ? null : enrollments.get(0);
-        if (enrollment == null) {
-            throw new ResourceNotFoundException("No enrollment found for this course and user");
-        }
-        return convertToDTO(enrollment);
-    }
-
-    /**
-     * Gets the existing learning result for a user or creates a new one with base
-     * scores
-     */
-    private Learning_Result getOrCreateLearningResult(User user) {
-        // Try to get existing learning result
-        Learning_Result learningResult = user.getLearningResult();
-
-        if (learningResult == null) {
-            // Create new learning result with base scores
-            learningResult = new Learning_Result();
-            learningResult.setUser(user);
-            learningResult.setListeningScore(1.0);
-            learningResult.setSpeakingScore(1.0);
-            learningResult.setReadingScore(1.0);
-            learningResult.setWritingScore(1.0);
-            learningResult.setPreviousListeningScore(1.0);
-            learningResult.setPreviousSpeakingScore(1.0);
-            learningResult.setPreviousReadingScore(1.0);
-            learningResult.setPreviousWritingScore(1.0);
-            learningResult.setLastUpdated(Instant.now());
-
-            learningResult = learningResultRepository.save(learningResult);
-        }
-
-        return learningResult;
     }
 
     private ResEnrollmentDTO convertToDTO(Enrollment enrollment) {
