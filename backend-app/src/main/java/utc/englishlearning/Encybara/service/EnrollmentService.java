@@ -257,14 +257,15 @@ public class EnrollmentService {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public List<CourseRecommendation> createRecommendations(Long enrollmentId) {
         try {
-            // First validate the enrollment
+            // Delete any existing recommendations synchronously first
             Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
                     .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found"));
-            validateEnrollmentForRecommendations(enrollment);
-
-            // Get necessary data
-            Learning_Result learningResult = enrollment.getLearningResult();
             User user = enrollment.getUser();
+            enrollmentRepository.deleteByUserAndProStatusFalse(user);
+
+            // Then proceed with creating new recommendations
+            validateEnrollmentForRecommendations(enrollment);
+            Learning_Result learningResult = enrollment.getLearningResult();
 
             // Calculate current skill level based on course type
             double currentLevel = switch (enrollment.getCourse().getCourseType()) {
