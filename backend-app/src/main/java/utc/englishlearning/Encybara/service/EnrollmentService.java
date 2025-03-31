@@ -108,7 +108,10 @@ public class EnrollmentService {
 
         // Update enrollment
         enrollment.setTotalPoints(totalPointsAchieved);
+        // Calculate skill score based on course type
+        double skillScore = (totalPointsAchieved * 100.0) / totalPointsPossible;
         enrollment.setComLevel(comLevel);
+        enrollment.setSkillScore(skillScore);
         enrollment = enrollmentRepository.save(enrollment);
 
         // Create enhanced response DTO
@@ -118,11 +121,13 @@ public class EnrollmentService {
         response.setComLevel(comLevel);
 
         // Automatically evaluate learning result when course is completed
-        if (comLevel >= 80.0) {
-            // Update learning result scores
-            // Update learning result scores
-            learningResultService.evaluateAndUpdateScores(enrollment);
-            Learning_Result learningResult = enrollment.getLearningResult();
+        // Always evaluate and update learning result scores
+        learningResultService.evaluateAndUpdateScores(enrollment);
+        Learning_Result learningResult = enrollment.getLearningResult();
+
+        // Only update user level and provide recommendations if completion level is
+        // sufficient
+        if (comLevel >= 60.0) {
 
             // Calculate and update English level based on average score
             double avgScore = (learningResult.getListeningScore() +

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class CourseRecommendationService {
 
     private static final double MAX_RECOMMENDED_LEVEL_INCREASE = 1.0;
-    private static final double MIN_COMPLETION_RATE_FOR_HIGHER_LEVEL = 80.0;
+    private static final double MIN_COMPLETION_RATE_FOR_HIGHER_LEVEL = 60.0;
     private static final double MAX_SKILL_GAP_FOR_ALLSKILLS = 1.0;
 
     @Autowired

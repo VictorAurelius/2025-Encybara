@@ -75,6 +75,12 @@ public class LearningResultService {
         // Calculate evaluation score based on completion level
         double evaluationScore = calculateEvaluationScore(diffLevel, comLevel);
 
+        // Store previous scores before updating
+        result.setPreviousListeningScore(result.getListeningScore());
+        result.setPreviousSpeakingScore(result.getSpeakingScore());
+        result.setPreviousReadingScore(result.getReadingScore());
+        result.setPreviousWritingScore(result.getWritingScore());
+
         // Update relevant skill score based on course type
         switch (enrollment.getCourse().getCourseType()) {
             case LISTENING:
@@ -87,6 +93,13 @@ public class LearningResultService {
                 result.setReadingScore(calculateNewScore(result.getReadingScore(), evaluationScore));
                 break;
             case WRITING:
+                result.setWritingScore(calculateNewScore(result.getWritingScore(), evaluationScore));
+                break;
+            case ALLSKILLS:
+                // Update all skills with the evaluation score
+                result.setListeningScore(calculateNewScore(result.getListeningScore(), evaluationScore));
+                result.setSpeakingScore(calculateNewScore(result.getSpeakingScore(), evaluationScore));
+                result.setReadingScore(calculateNewScore(result.getReadingScore(), evaluationScore));
                 result.setWritingScore(calculateNewScore(result.getWritingScore(), evaluationScore));
                 break;
             default:
