@@ -254,7 +254,7 @@ public class EnrollmentService {
      * @throws ResourceNotFoundException if enrollment not found
      * @throws IllegalStateException     if validation fails
      */
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional
     public List<CourseRecommendation> createRecommendations(Long enrollmentId) {
         try {
             // Delete any existing recommendations synchronously first
