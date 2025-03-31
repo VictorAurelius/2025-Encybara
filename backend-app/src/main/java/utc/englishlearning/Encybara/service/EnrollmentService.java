@@ -254,18 +254,20 @@ public class EnrollmentService {
      * @throws ResourceNotFoundException if enrollment not found
      * @throws IllegalStateException     if validation fails
      */
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<CourseRecommendation> createRecommendations(Long enrollmentId) {
         try {
-            // Delete any existing recommendations synchronously first
+            // First validate the enrollment exists
             Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
                     .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found"));
-            User user = enrollment.getUser();
-            enrollmentRepository.deleteByUserAndProStatusFalse(user);
 
-            // Then proceed with creating new recommendations
+            // Pre-validate before any modifications
             validateEnrollmentForRecommendations(enrollment);
+            User user = enrollment.getUser();
             Learning_Result learningResult = enrollment.getLearningResult();
+
+            // Delete existing recommendations in a separate transaction
+            deleteExistingRecommendations(user);
 
             // Calculate current skill level based on course type
             double currentLevel = switch (enrollment.getCourse().getCourseType()) {
@@ -380,5 +382,33 @@ public class EnrollmentService {
             return "Recommended for skill reinforcement";
         }
         return "Matches your current level for optimal learning";
+    }
+
+    /**
+     * Handles deletion of existing recommendations in a separate transaction
+     * with READ_COMMITTED isolation to prevent lock contention
+     */
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    private void deleteExistingRecommendations(User user) {
+        int maxRetries = 3;
+        int retryCount = 0;
+        Exception lastException = null;
+
+        while (retryCount < maxRetries) {
+            try {
+                enrollmentRepository.deleteByUserAndProStatusFalse(user);
+                return; // Success
+            } catch (Exception e) {
+                lastException = e;
+                retryCount++;
+                try {
+                    Thread.sleep(100 * retryCount); // Exponential backoff
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Interrupted while retrying delete", ie);
+                }
+            }
+        }
+        throw new RuntimeException("Failed to delete recommendations after " + maxRetries + " attempts", lastException);
     }
 }
