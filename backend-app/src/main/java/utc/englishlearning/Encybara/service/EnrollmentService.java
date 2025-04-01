@@ -14,6 +14,8 @@ import utc.englishlearning.Encybara.domain.response.enrollment.ResEnrollmentWith
 import utc.englishlearning.Encybara.exception.ResourceNotFoundException;
 import utc.englishlearning.Encybara.repository.*;
 import utc.englishlearning.Encybara.util.constant.EnglishLevelEnum;
+import utc.englishlearning.Encybara.util.constant.CourseTypeEnum;
+import utc.englishlearning.Encybara.util.constant.CourseStatusEnum;
 
 import java.time.Instant;
 import java.util.*;
@@ -238,214 +240,216 @@ public class EnrollmentService {
 
     /**
      * Step 3: Create course recommendations with validation
-     * Uses SERIALIZABLE isolation to prevent concurrent recommendation creation
      * 
      * @param enrollmentId ID of the completed enrollment
      * @return List of recommended courses
      * @throws ResourceNotFoundException if enrollment not found
      * @throws IllegalStateException     if validation fails
      */
-    /**
-     * Creates course recommendations based on user's learning results
-     * Uses optimistic locking with READ_COMMITTED isolation to minimize contention
-     */
-    @Transactional(isolation = Isolation.SERIALIZABLE, timeout = 30)
-    public synchronized List<CourseRecommendation> createRecommendations(Long enrollmentId) {
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public List<CourseRecommendation> createRecommendations(Long enrollmentId) {
         try {
+            // Get and validate enrollment
             Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
                     .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found"));
 
-            validateEnrollmentForRecommendations(enrollment);
-            User user = enrollment.getUser();
+            if (!enrollment.isProStatus()) {
+                throw new IllegalStateException("Cannot create recommendations for non-active enrollment");
+            }
+
+            // Get learning result
             Learning_Result learningResult = enrollment.getLearningResult();
+            if (learningResult == null) {
+                throw new IllegalStateException("No learning result found for enrollment");
+            }
 
-            // Delete old recommendations and flush
-            deleteExistingRecommendations(user);
-            enrollmentRepository.flush();
-
-            // Calculate score
-            double avgScore = (learningResult.getListeningScore() +
+            // Calculate base score from current learning results
+            double baseScore = (learningResult.getListeningScore() +
                     learningResult.getSpeakingScore() +
                     learningResult.getReadingScore() +
                     learningResult.getWritingScore()) / 4.0;
 
-            // Get current active courses to avoid duplicates
-            Set<Long> existingCourseIds = enrollmentRepository
-                    .findByUserIdAndProStatus(user.getId(), true, PageRequest.of(0, 1000))
-                    .stream()
-                    .map(e -> e.getCourse().getId())
-                    .collect(Collectors.toSet());
+            User user = enrollment.getUser();
 
-            // Get new recommendations
-            List<Enrollment> validRecommendations = new ArrayList<>();
+            // Delete old recommendations before creating new ones
+            enrollmentRepository.deleteByUserAndProStatusFalse(user);
 
+            // Create new recommendations
             try {
-                List<Enrollment> potentialRecommendations = enrollmentHelper.createProgressiveRecommendations(
-                        user, learningResult, avgScore);
-
-                // Save valid recommendations one by one
-                for (Enrollment rec : potentialRecommendations) {
-                    if (!existingCourseIds.contains(rec.getCourse().getId())) {
-                        try {
-                            Enrollment saved = enrollmentRepository.save(rec);
-                            validRecommendations.add(saved);
-                            existingCourseIds.add(saved.getCourse().getId());
-
-                            if (validRecommendations.size() % 10 == 0) {
-                                enrollmentRepository.flush();
-                            }
-                        } catch (Exception e) {
-                            // Skip duplicate entries silently
-                            if (!e.getMessage().contains("Duplicate entry")) {
-                                throw e;
-                            }
-                        }
-                    }
-                }
-
-                if (!validRecommendations.isEmpty()) {
-                    enrollmentRepository.flush();
-                }
-            } catch (Exception e) {
-                // Log error for debugging
-                System.err.println("Error creating recommendations: " + e.getMessage());
-                // Return whatever recommendations we managed to create
-                return validRecommendations.stream()
-                        .map(e1 -> createCourseRecommendation(e1.getCourse(), learningResult))
+                // Try to create progressive recommendations
+                return enrollmentHelper.createProgressiveRecommendations(user, learningResult, baseScore)
+                        .stream()
+                        .map(this::convertToCourseRecommendation)
                         .collect(Collectors.toList());
-            }
+            } catch (Exception e) {
+                // Fallback: Try to find courses matching the user's strongest skill from step 2
+                double listeningLevel = learningResult.getListeningScore();
+                double speakingLevel = learningResult.getSpeakingScore();
+                double readingLevel = learningResult.getReadingScore();
+                double writingLevel = learningResult.getWritingScore();
 
-            return validRecommendations.stream()
-                    .map(e -> createCourseRecommendation(e.getCourse(), learningResult))
-                    .collect(Collectors.toList());
+                // Find the strongest skill
+                CourseTypeEnum recommendedType = CourseTypeEnum.ALLSKILLS;
+                double highestScore = baseScore;
 
-        } catch (Exception e) {
-            System.err.println("Failed to create recommendations: " + e.getMessage());
-            return new ArrayList<>(); // Return empty list instead of throwing error
-        }
-    }
-
-    /**
-     * Validates an enrollment is suitable for recommendations
-     */
-    private void validateEnrollmentForRecommendations(Enrollment enrollment) {
-        if (!enrollment.isProStatus()) {
-            throw new IllegalStateException("Cannot create recommendations for non-active enrollment");
-        }
-
-        if (enrollment.getComLevel() < 80.0) {
-            throw new IllegalStateException("Cannot create recommendations for incomplete course");
-        }
-
-        Learning_Result learningResult = enrollment.getLearningResult();
-        if (learningResult == null) {
-            throw new IllegalStateException("Learning result not found");
-        }
-
-        validateLearningResultScores(learningResult);
-
-        if (learningResult.getLastUpdated() == null ||
-                learningResult.getLastUpdated().isBefore(enrollment.getEnrollDate())) {
-            throw new IllegalStateException("Learning results must be updated before getting recommendations");
-        }
-    }
-
-    /**
-     * Validates all scores in a learning result
-     */
-    private void validateLearningResultScores(Learning_Result learningResult) {
-        validateScore(learningResult.getListeningScore(), "Listening");
-        validateScore(learningResult.getSpeakingScore(), "Speaking");
-        validateScore(learningResult.getReadingScore(), "Reading");
-        validateScore(learningResult.getWritingScore(), "Writing");
-        validateScore(learningResult.getPreviousListeningScore(), "Previous Listening");
-        validateScore(learningResult.getPreviousSpeakingScore(), "Previous Speaking");
-        validateScore(learningResult.getPreviousReadingScore(), "Previous Reading");
-        validateScore(learningResult.getPreviousWritingScore(), "Previous Writing");
-    }
-
-    /**
-     * Validates that a score is within valid range
-     */
-    private double validateScore(double score, String skillName) {
-        if (score < 0 || score > 7) {
-            throw new IllegalStateException(
-                    String.format("%s score (%.2f) must be between 0 and 7", skillName, score));
-        }
-        return score;
-    }
-
-    /**
-     * Creates a course recommendation DTO
-     */
-    private CourseRecommendation createCourseRecommendation(Course course, Learning_Result learningResult) {
-        CourseRecommendation recommendation = new CourseRecommendation();
-        recommendation.setCourseId(course.getId());
-        recommendation.setCourseName(course.getName());
-        recommendation.setCourseType(course.getCourseType());
-        recommendation.setDiffLevel(course.getDiffLevel());
-        recommendation.setReason(generateRecommendationReason(course, learningResult));
-        return recommendation;
-    }
-
-    /**
-     * Generates a reason for the recommendation based on difficulty level
-     * difference
-     */
-    private String generateRecommendationReason(Course course, Learning_Result learningResult) {
-        double currentLevel = switch (course.getCourseType()) {
-            case LISTENING -> learningResult.getListeningScore();
-            case SPEAKING -> learningResult.getSpeakingScore();
-            case READING -> learningResult.getReadingScore();
-            case WRITING -> learningResult.getWritingScore();
-            case ALLSKILLS -> (learningResult.getListeningScore() + learningResult.getSpeakingScore() +
-                    learningResult.getReadingScore() + learningResult.getWritingScore()) / 4.0;
-        };
-
-        if (course.getDiffLevel() > currentLevel + 0.5) {
-            return "Challenging course to advance your skills";
-        } else if (course.getDiffLevel() < currentLevel - 0.5) {
-            return "Recommended for skill reinforcement";
-        }
-        return "Matches your current level for optimal learning";
-    }
-
-    /**
-     * Handles deletion of existing recommendations in a separate transaction
-     * with READ_COMMITTED isolation to prevent lock contention
-     */
-    /**
-     * Delete existing recommendations in batches to avoid timeouts
-     */
-    /**
-     * Delete existing recommendations with pagination to avoid memory issues
-     */
-    @Transactional(isolation = Isolation.SERIALIZABLE)
-    protected void deleteExistingRecommendations(User user) {
-        try {
-            // Get all non-active enrollments in one query
-            List<Enrollment> existingEnrollments = enrollmentRepository
-                    .findByUserIdAndProStatus(user.getId(), false, PageRequest.of(0, 1000))
-                    .getContent();
-
-            if (existingEnrollments.isEmpty()) {
-                return;
-            }
-
-            // Delete in small batches to prevent memory issues
-            int batchSize = 20;
-            for (int i = 0; i < existingEnrollments.size(); i += batchSize) {
-                int end = Math.min(i + batchSize, existingEnrollments.size());
-                List<Enrollment> batch = existingEnrollments.subList(i, end);
-
-                for (Enrollment enrollment : batch) {
-                    enrollmentRepository.delete(enrollment);
+                if (listeningLevel > highestScore) {
+                    highestScore = listeningLevel;
+                    recommendedType = CourseTypeEnum.LISTENING;
                 }
-                enrollmentRepository.flush(); // Flush after each batch
+                if (speakingLevel > highestScore) {
+                    highestScore = speakingLevel;
+                    recommendedType = CourseTypeEnum.SPEAKING;
+                }
+                if (readingLevel > highestScore) {
+                    highestScore = readingLevel;
+                    recommendedType = CourseTypeEnum.READING;
+                }
+                if (writingLevel > highestScore) {
+                    highestScore = writingLevel;
+                    recommendedType = CourseTypeEnum.WRITING;
+                }
+
+                // Try to find a course matching the strongest skill
+                List<Course> matchingCourses = courseRepository.findPublicCoursesByTypeAndLevelRange(
+                        recommendedType,
+                        highestScore - 0.5,
+                        highestScore + 0.5,
+                        CourseStatusEnum.PUBLIC);
+
+                if (!matchingCourses.isEmpty()) {
+                    Course course = matchingCourses.get(0);
+                    Enrollment matchingEnrollment = enrollmentHelper.createCourseEnrollment(
+                            user, course, learningResult, false);
+
+                    return Collections.singletonList(convertToCourseRecommendation(matchingEnrollment));
+                }
+
+                // Ultimate fallback: Try to find a course that matches the most improved skill
+                double listeningImprovement = learningResult.getListeningScore()
+                        - learningResult.getPreviousListeningScore();
+                double speakingImprovement = learningResult.getSpeakingScore()
+                        - learningResult.getPreviousSpeakingScore();
+                double readingImprovement = learningResult.getReadingScore() - learningResult.getPreviousReadingScore();
+                double writingImprovement = learningResult.getWritingScore() - learningResult.getPreviousWritingScore();
+
+                CourseTypeEnum improvedType = CourseTypeEnum.ALLSKILLS;
+                double bestImprovement = 0;
+                double skillLevel = baseScore;
+
+                if (listeningImprovement > bestImprovement) {
+                    bestImprovement = listeningImprovement;
+                    improvedType = CourseTypeEnum.LISTENING;
+                    skillLevel = listeningLevel;
+                }
+                if (speakingImprovement > bestImprovement) {
+                    bestImprovement = speakingImprovement;
+                    improvedType = CourseTypeEnum.SPEAKING;
+                    skillLevel = speakingLevel;
+                }
+                if (readingImprovement > bestImprovement) {
+                    bestImprovement = readingImprovement;
+                    improvedType = CourseTypeEnum.READING;
+                    skillLevel = readingLevel;
+                }
+                if (writingImprovement > bestImprovement) {
+                    bestImprovement = writingImprovement;
+                    improvedType = CourseTypeEnum.WRITING;
+                    skillLevel = writingLevel;
+                }
+
+                List<Course> fallbackCourses = courseRepository.findPublicCoursesByTypeAndLevelRange(
+                        improvedType,
+                        skillLevel - 0.5,
+                        skillLevel + 0.5,
+                        CourseStatusEnum.PUBLIC);
+
+                if (!fallbackCourses.isEmpty()) {
+                    Enrollment fallbackEnrollment = enrollmentHelper.createCourseEnrollment(
+                            user, fallbackCourses.get(0), learningResult, false);
+                    return Collections.singletonList(convertToCourseRecommendation(fallbackEnrollment));
+                }
+
+                // If all else fails, return an ALLSKILLS course at the current level
+                List<Course> finalFallbackCourses = courseRepository.findPublicCoursesByTypeAndLevelRange(
+                        CourseTypeEnum.ALLSKILLS,
+                        baseScore - 0.5,
+                        baseScore + 0.5,
+                        CourseStatusEnum.PUBLIC);
+
+                if (finalFallbackCourses.isEmpty()) {
+                    throw new IllegalStateException("No suitable courses available for recommendations");
+                }
+
+                Enrollment finalFallback = enrollmentHelper.createCourseEnrollment(
+                        user, finalFallbackCourses.get(0), learningResult, false);
+                return Collections.singletonList(convertToCourseRecommendation(finalFallback));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create recommendations: " + e.getMessage(), e);
+        }
+    }
+
+    private CourseRecommendation convertToCourseRecommendation(Enrollment enrollment) {
+        CourseRecommendation recommendation = new CourseRecommendation();
+        recommendation.setCourseId(enrollment.getCourse().getId());
+        recommendation.setCourseName(enrollment.getCourse().getName());
+        recommendation.setCourseType(enrollment.getCourse().getCourseType());
+        recommendation.setDiffLevel(enrollment.getCourse().getDiffLevel());
+
+        Learning_Result lr = enrollment.getLearningResult();
+        CourseTypeEnum courseType = enrollment.getCourse().getCourseType();
+
+        String reason;
+        if (courseType == CourseTypeEnum.ALLSKILLS) {
+            reason = String.format(
+                    "Comprehensive course matching your current skill levels - Listening: %.1f, Speaking: %.1f, Reading: %.1f, Writing: %.1f",
+                    lr.getListeningScore(), lr.getSpeakingScore(), lr.getReadingScore(), lr.getWritingScore());
+        } else {
+            double currentScore;
+            double previousScore;
+            String skillName;
+
+            switch (courseType) {
+                case LISTENING:
+                    currentScore = lr.getListeningScore();
+                    previousScore = lr.getPreviousListeningScore();
+                    skillName = "Listening";
+                    break;
+                case SPEAKING:
+                    currentScore = lr.getSpeakingScore();
+                    previousScore = lr.getPreviousSpeakingScore();
+                    skillName = "Speaking";
+                    break;
+                case READING:
+                    currentScore = lr.getReadingScore();
+                    previousScore = lr.getPreviousReadingScore();
+                    skillName = "Reading";
+                    break;
+                case WRITING:
+                    currentScore = lr.getWritingScore();
+                    previousScore = lr.getPreviousWritingScore();
+                    skillName = "Writing";
+                    break;
+                default:
+                    currentScore = (lr.getListeningScore() + lr.getSpeakingScore() + lr.getReadingScore()
+                            + lr.getWritingScore()) / 4.0;
+                    previousScore = currentScore;
+                    skillName = "Overall";
             }
 
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to delete existing recommendations", e);
+            double improvement = currentScore - previousScore;
+            if (improvement > 0) {
+                reason = String.format(
+                        "Course focused on %s skill (Score: %.1f, Improved: +%.1f). Course difficulty: %.1f",
+                        skillName, currentScore, improvement, enrollment.getCourse().getDiffLevel());
+            } else {
+                reason = String.format(
+                        "Course to enhance your %s skill (Current: %.1f). Course difficulty: %.1f",
+                        skillName, currentScore, enrollment.getCourse().getDiffLevel());
+            }
         }
+
+        recommendation.setReason(reason);
+        return recommendation;
     }
 }
