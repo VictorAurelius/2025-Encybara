@@ -224,18 +224,36 @@ public class EnrollmentService {
     }
 
     private int calculateTotalPointsAchieved(Enrollment enrollment) {
-        Map<Long, Integer> maxPointsByLesson = new HashMap<>();
+        // Get all lessons from the course
+        List<Lesson> courseLessons = enrollment.getCourse().getLessons();
+
+        // Get all lesson results for this enrollment
         List<Lesson_Result> lessonResults = lessonResultRepository.findByEnrollment(enrollment);
+
+        // Group results by lessonId and get the one with highest sessionId for each
+        // lesson
+        Map<Long, Lesson_Result> latestResultsByLesson = new HashMap<>();
 
         for (Lesson_Result result : lessonResults) {
             Long lessonId = result.getLesson().getId();
-            maxPointsByLesson.put(lessonId,
-                    Math.max(maxPointsByLesson.getOrDefault(lessonId, 0), result.getTotalPoints()));
+            Lesson_Result existing = latestResultsByLesson.get(lessonId);
+
+            // Update if this is the first result or has a higher sessionId
+            if (existing == null || result.getSessionId() > existing.getSessionId()) {
+                latestResultsByLesson.put(lessonId, result);
+            }
         }
 
-        return maxPointsByLesson.values().stream()
-                .mapToInt(Integer::intValue)
-                .sum();
+        // Sum up points only from the latest attempts
+        int totalPoints = 0;
+        for (Lesson lesson : courseLessons) {
+            Lesson_Result latestResult = latestResultsByLesson.get(lesson.getId());
+            if (latestResult != null) {
+                totalPoints += latestResult.getTotalPoints();
+            }
+        }
+
+        return totalPoints;
     }
 
     /**
