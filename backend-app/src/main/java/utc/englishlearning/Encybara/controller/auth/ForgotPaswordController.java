@@ -6,7 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import utc.englishlearning.Encybara.domain.RestResponse;
+import utc.englishlearning.Encybara.domain.response.RestResponse;
 import utc.englishlearning.Encybara.domain.response.auth.ResRegisterDTO;
 import utc.englishlearning.Encybara.domain.request.auth.ReqUpdatePasswordDTO;
 import utc.englishlearning.Encybara.domain.request.*;
@@ -40,62 +40,72 @@ public class ForgotPaswordController {
     }
 
     @PostMapping("/send-otp")
-    public ResponseEntity<?> requestResetPassword(@RequestBody Map<String, String> request) {
+    public ResponseEntity<RestResponse<ResRegisterDTO>> requestResetPassword(
+            @RequestBody Map<String, String> request) {
         String email = request.get("email");
+        RestResponse<ResRegisterDTO> response = new RestResponse<>();
 
         if (!userService.isEmailExist(email)) {
-            return ResponseEntity.badRequest().body("Invalid email");
+            response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("Invalid email");
+            return ResponseEntity.badRequest().body(response);
         }
+
         String otp = otpService.generateOtp(email);
         ResCreateUserDTO temp = new ResCreateUserDTO();
         temp.setEmail(email);
 
-        // off dong nay test api cho nhanh
         emailService.sendEmailFromTemplateSync(email, "Your OTP Code", otp);
-
-        // System.out.println(otp);
         String otpID = otpService.saveRegisterData(email, temp, otp, "forgotpassword");
-        RestResponse<ResRegisterDTO> response = new RestResponse<>();
-        response.setStatusCode(HttpStatus.OK.value());
-        response.setMessage("OTP sent to your email. Please verify to complete reset password.");
+
+        response.setStatusCode(200);
+        response.setMessage("OTP sent successfully");
         response.setData(new ResRegisterDTO(otpID, "Expires in 2 minutes"));
+
         return ResponseEntity.ok(response);
     }
 
-    // Gui lai otp khi het thoi gian se goi ben resend cua Auth vi id da map voi
-    // mail
-
     @PostMapping("/update-password")
-    public ResponseEntity<?> updatePassword(
+    public ResponseEntity<RestResponse<String>> updatePassword(
             @RequestHeader("Authorization") String resetToken,
             @RequestBody ReqUpdatePasswordDTO updatePasswordRequest) {
+
+        RestResponse<String> response = new RestResponse<>();
+
         try {
             if (resetToken.startsWith("Bearer ")) {
                 resetToken = resetToken.substring(7);
             }
-            // giải mã token và lấy email
+
             Jwt token = securityUtil.checkValidResetPasswordToken(resetToken);
             String email = token.getSubject();
 
-            // check điều mat khau
             if (!updatePasswordRequest.getNewPassword().equals(updatePasswordRequest.getConfirmPassword())) {
-                return ResponseEntity.badRequest().body(new ErrorResponseDTO("Passwords do not match"));
+                response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("Passwords do not match");
+                return ResponseEntity.badRequest().body(response);
             }
+
             String newPassword = passwordEncoder.encode(updatePasswordRequest.getNewPassword());
             if (!userService.updateUserPassword(email, newPassword)) {
-                return ResponseEntity.badRequest().body(new ErrorResponseDTO("Update password failed"));
+                response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("Update password failed");
+                return ResponseEntity.badRequest().body(response);
             }
-            return ResponseEntity.ok("Password updated successfully");
+
+            response.setStatusCode(HttpStatus.OK.value());
+            response.setMessage("Password updated successfully");
+            response.setData("Password has been updated");
+            return ResponseEntity.ok(response);
 
         } catch (RuntimeException e) {
-            // Xử lý lỗi khi token không hợp lệ hoặc hết hạn
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorResponseDTO(e.getMessage()));
+            response.setStatusCode(HttpStatus.UNAUTHORIZED.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         } catch (Exception e) {
-            // Xử lý các lỗi khác
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponseDTO("An error occurred while updating password: " + e.getMessage()));
+            response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("An error occurred while updating password: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }
