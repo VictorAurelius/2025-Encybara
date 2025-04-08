@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { MdModeEditOutline } from "react-icons/md";
+import { MdAddCircleOutline, MdDelete, MdModeEditOutline } from "react-icons/md";
 import image1 from "assets/img/profile/image1.png";
 import Card from "components/card";
 import LessonList from "./LessonList";
@@ -8,8 +8,8 @@ import EditCourse from "./EditCourses";
 import { API_BASE_URL } from "service/api.config";
 import Access from "views/admin/access";
 import { ALL_PERMISSIONS } from "views/admin/permission/components/modules";
-import { message } from "antd";
-
+import { message, Pagination } from "antd";
+import { Select, Input, Button, Space, Row, Col } from 'antd';
 type RowObj = {
   id: number;
   name: string;
@@ -18,6 +18,8 @@ type RowObj = {
   recomLevel: number;
   courseType: string;
   speciField: string;
+  courseStatus: string; // Thuộc tính mới
+  group: string; // Thuộc tính mới
 };
 
 interface ProjectProps {
@@ -34,25 +36,89 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
   const [courseId, setCourseId] = useState<number | null>(null);
   const [showEditCourse, setShowEditCourse] = useState(false);
   const [courses, setCourses] = useState<RowObj[]>(tableData);
+  const [selectedFilters, setSelectedFilters] = useState({
+    diffLevel: undefined,
+    courseType: undefined,
+    group: undefined,
+    courseStatus: undefined,
+    keyword: undefined
+  });
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [total, setTotal] = useState<number>(0);
   const fetchCourses = async () => {
-    // Thay thế bằng API thực tế để lấy danh sách khóa học
-    const response = await fetch(`${API_BASE_URL}/api/v1/courses`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    const data = await response.json();
-    console.log(data.data.content);
-    setCourses(data.data.content);
+    try {
+      // Xây dựng query params
+      const queryParams = new URLSearchParams({
+        page: currentPage.toString(),
+        size: pageSize.toString()
+      });
+
+      // Thêm filter params từ state vào URL
+      if (selectedFilters.diffLevel) queryParams.append('diffLevel', selectedFilters.diffLevel);
+      if (selectedFilters.courseType) queryParams.append('courseType', selectedFilters.courseType);
+      if (selectedFilters.group) queryParams.append('group', selectedFilters.group);
+      if (selectedFilters.courseStatus) queryParams.append('courseStatus', selectedFilters.courseStatus);
+      if (selectedFilters.keyword) queryParams.append('keyword', selectedFilters.keyword);
+
+      // Gọi API
+      const response = await fetch(`${API_BASE_URL}/api/v1/courses?${queryParams}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch courses");
+      }
+
+      const data = await response.json();
+      console.log(data.data.content);
+      setCourses(data.data.content);
+      setTotal(data.data.totalPages * pageSize);
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+      message.error("Failed to fetch courses");
+    }
   };
 
   useEffect(() => {
     fetchCourses();
-  }, []);
+  }, [currentPage, pageSize, selectedFilters]);
   const handleSuccess = () => {
     fetchCourses(); // Tải lại danh sách khóa học sau khi submit
+  };
+  // Thêm hàm xử lý chuyển đổi status
+  const handleToggleStatus = async (course: RowObj) => {
+    try {
+      const isPublic = course.courseStatus === "PUBLIC";
+      const endpoint = isPublic
+        ? `${API_BASE_URL}/api/v1/courses/${course.id}/make-private`
+        : `${API_BASE_URL}/api/v1/courses/${course.id}/make-public`;
+
+      const response = await fetch(endpoint, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to change course status to ${isPublic ? 'private' : 'public'}`);
+      }
+
+      // Cập nhật UI
+      message.success(`Course status changed to ${isPublic ? 'private' : 'public'} successfully`);
+
+      // Tải lại danh sách khóa học
+      await fetchCourses();
+    } catch (error) {
+      console.error("Error changing course status:", error);
+      message.error("Failed to change course status");
+    }
   };
   const handleAddLesson = async (courseId: number) => {
     setCourseId(courseId);
@@ -124,38 +190,92 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
             Here you can find more details about your projects. Keep you user
             engaged by providing meaningful information.
           </p>
+
         </div>
-        {/* Project 1
-        <div className="flex w-full items-center justify-between rounded-2xl bg-white p-3 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
-          <div className="flex items-center">
-            <div className="">
-              <img className="h-[83px] w-[83px] rounded-lg" src={image1} alt="" />
-            </div>
-            <div className="ml-4">
-              <p className="text-base font-medium text-navy-700 dark:text-white">
-                Technology behind the Blockchain
-              </p>
-              <p className="mt-2 text-sm text-gray-600">
-                Project #1 .
-                <a
-                  className="ml-1 font-medium text-brand-500 hover:text-brand-500 dark:text-white"
-                  href=" "
-                >
-                  See product details
-                </a>
-              </p>
-            </div>
-          </div>
-          <div className="mr-4 flex items-center justify-center text-gray-600 dark:text-white">
-            <MdModeEditOutline />
-          </div>
-          <div className="mr-4 flex items-center justify-center text-gray-600 dark:text-white">
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-              onClick={handleAddCourse}
-            >Add</button>
-          </div>
-        </div> */}
+        <div className="mr-4 flex items-center justify-center text-gray-600 dark:text-white">
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+            onClick={handleAddCourse}
+          >Add</button>
+        </div>
+        <div className="mb-4 mt-2">
+          <Row gutter={16}>
+
+            <Col span={4}>
+              <Select
+                placeholder="Diff Level"
+                style={{ width: '100%' }}
+                value={selectedFilters.diffLevel}
+                onChange={(value) => setSelectedFilters({ ...selectedFilters, diffLevel: value })}
+                allowClear
+                options={[
+                  { value: '1.0', label: 'Level 1' },
+                  { value: '1.5', label: 'Level 2' },
+                  { value: '2.0', label: 'Level 3' },
+                  { value: '2.5', label: 'Level 4' },
+                  { value: '3.0', label: 'Level 5' },
+                  { value: '3.5', label: 'Level 6' },
+                  { value: '4.0', label: 'Level 7' },
+                  { value: '4.5', label: 'Level 8' },
+                  { value: '5.0', label: 'Level 9' },
+                  { value: '5.5', label: 'Level 10' },
+
+
+                ]}
+              />
+            </Col>
+            <Col span={4}>
+              <Select
+                placeholder="Course Type"
+                style={{ width: '100%' }}
+                value={selectedFilters.courseType}
+                onChange={(value) => setSelectedFilters({ ...selectedFilters, courseType: value })}
+                allowClear
+                options={[
+                  { value: 'READING', label: 'Reading' },
+                  { value: 'LISTENING', label: 'Listening' },
+                  { value: 'WRITING', label: 'Writing' },
+                  { value: 'SPEAKING', label: 'Speaking' }
+
+                ]}
+              />
+            </Col>
+            <Col span={4}>
+              <Select
+                placeholder="Group"
+                style={{ width: '100%' }}
+                value={selectedFilters.group}
+                onChange={(value) => setSelectedFilters({ ...selectedFilters, group: value })}
+                allowClear
+                options={[
+                  { value: 'TESTED', label: 'Tested' },
+                  { value: 'KET1', label: 'Cambridge Key English Test 1' },
+                  { value: 'KET2', label: 'Cambridge Key English Test 2' },
+                ]}
+              />
+            </Col>
+            <Col span={4}>
+              <Select
+                placeholder="Status"
+                style={{ width: '100%' }}
+                value={selectedFilters.courseStatus}
+                onChange={(value) => setSelectedFilters({ ...selectedFilters, courseStatus: value })}
+                allowClear
+                options={[
+                  { value: 'PUBLIC', label: 'Public' },
+                  { value: 'PRIVATE', label: 'Private' },
+                  { value: 'PENDING', label: 'Pending' },
+                ]}
+              />
+            </Col>
+            <Col span={2}>
+              <Button type="primary" onClick={fetchCourses}>
+                Filter
+              </Button>
+            </Col>
+          </Row>
+        </div>
+
         {showModal && (
           <div className="fixed inset-0 z-5 ml-20 flex items-center justify-center  mt-20">
             <div className="fixed inset-0  bg-gray-800 bg-opacity-75 opacity-50"></div>
@@ -179,39 +299,98 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
             </div>
           </div>
         )}
-        <div className="mt-0 overflow-x-scroll xl:overflow-x-hidden">
-          <table className="w-full">
-            <thead>
-              <tr className="!border-px !border-gray-400">
-                <th className="border-b border-gray-200 pb-2 pr-4 pt-4 text-start">ID</th>
-                <th className="border-b border-gray-200 pb-2 pr-4 pt-4 text-start">Name</th>
-                <th className="border-b border-gray-200 pb-2 pr-4 pt-4 text-start">Intro</th>
-                <th className="border-b border-gray-200 pb-2 pr-4 pt-4 text-start">Diff Level</th>
-                <th className="border-b border-gray-200 pb-2 pr-4 pt-4 text-start">Recom Level</th>
-                <th className="border-b border-gray-200 pb-2 pr-4 pt-4 text-start">Course Type</th>
-                <th className="border-b border-gray-200 pb-2 pr-4 pt-4 text-start">Special Field</th>
-                <th className="border-b border-gray-200 pb-2 pr-4 pt-4 text-start">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {courses.map(course => (
-                <tr key={course.id}>
-                  <td className="border-b border-gray-200 py-3 pr-4">{course.id}</td>
-                  <td className="border-b border-gray-200 py-3 pr-4">{course.name}</td>
-                  <td className="border-b border-gray-200 py-3 pr-4">{course.intro}</td>
-                  <td className="border-b border-gray-200 py-3 pr-4">{course.diffLevel}</td>
-                  <td className="border-b border-gray-200 py-3 pr-4">{course.recomLevel}</td>
-                  <td className="border-b border-gray-200 py-3 pr-4">{course.courseType}</td>
-                  <td className="border-b border-gray-200 py-3 pr-4">{course.speciField}</td>
-                  <td className="border-b border-gray-200 py-3 pr-4">
-                    <button onClick={() => handleAddLesson(course.id)} className="text-blue-500 hover:underline ml-2">Add</button>
-                    <button onClick={() => handleEdit(course.id)} className="text-yellow-500 hover:underline ml-2">Edit</button>
-                    <button onClick={() => handleDelete(course)} className="text-red-500 hover:underline ml-2">Delete</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+        <div className="w-full">
+          <div className="overflow-hidden rounded-lg border border-gray-200 shadow-md">
+            <div className="overflow-x-auto">
+              <table className="w-full table-fixed border-collapse bg-white text-left text-sm text-gray-500">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[3%]">ID</th>
+                    <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[17%]">Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[33%]">Intro</th>
+                    <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]">Diff Level</th>
+                    <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]">Recom Level</th>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]">Course Type</th>
+                    {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]">Special Field</th> */}
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[9%]">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]">Group</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[14%]">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 border-t border-gray-100">
+                  {courses.map((course, index) => (
+                    <tr key={course.id} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                      <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-900">{course.id}</td>
+                      <td className="px-2 py-4 text-sm text-gray-900">
+                        <div className="font-medium text-gray-700">{course.name}</div>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        <div className="max-h-24 overflow-y-auto pr-2">
+                          {course.intro}
+                        </div>
+                      </td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900">{course.diffLevel}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900">{course.recomLevel}</td>
+                      <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-900">{course.courseType}</td>
+                      {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{course.speciField}</td> */}
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <button
+                          onClick={() => handleToggleStatus(course)}
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full cursor-pointer hover:opacity-80 ${course.courseStatus === "PUBLIC"
+                            ? "bg-green-100 text-green-800 hover:bg-green-200"
+                            : course.courseStatus === "DRAFT"
+                              ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+                              : "bg-red-100 text-red-800 hover:bg-red-200"
+                            }`}
+                          title={`Click to change to ${course.courseStatus === "PUBLIC" ? "Private" : "Public"}`}
+                        >
+                          {course.courseStatus}
+                        </button>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-900">{course.group}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => handleAddLesson(course.id)}
+                            className="text-blue-600 hover:text-blue-900"
+                          >
+                            <MdAddCircleOutline size={20} />
+                          </button>
+                          <button
+                            onClick={() => handleEdit(course.id)}
+                            className="text-yellow-600 hover:text-yellow-900"
+                          >
+                            <MdModeEditOutline size={20} />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(course)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            <MdDelete size={20} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 flex justify-end">
+          <Pagination
+            current={currentPage}
+            total={total}
+            pageSize={pageSize}
+            onChange={(page, size) => {
+              setCurrentPage(page);
+              if (size) setPageSize(size);
+            }}
+            showSizeChanger
+            showTotal={(total) => `Total ${total} items`}
+          />
         </div>
 
       </Card>

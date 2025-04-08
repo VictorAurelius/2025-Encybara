@@ -16,18 +16,16 @@ interface IProps {
     openModalUpload: boolean;
     setOpenModalUpload: (v: boolean) => void;
     reloadTable: () => void;
-    singleQuestion: IQuestion | null;
-    setSingleQuestion: (v: IQuestion | null) => void;
     uploadData: IUpload[] | null;
+    quesID: number;
 }
 
 const { Title } = Typography;
 
 const ModalUpload = (props: IProps) => {
-    const { openModalUpload, setOpenModalUpload, reloadTable, singleQuestion, setSingleQuestion, uploadData } = props;
+    const { openModalUpload, setOpenModalUpload, reloadTable, uploadData, quesID } = props;
     const [form] = Form.useForm();
     const [upload, setUpload] = useState<IUpload | null>(null);
-    const [questionMaterial, setQuestionMaterial] = useState(singleQuestion?.quesMaterial || '');
     const { message, notification } = App.useApp();
     useEffect(() => {
         if (uploadData && uploadData.length > 0) {
@@ -45,14 +43,12 @@ const ModalUpload = (props: IProps) => {
     }, [uploadData, form]);
     const submitUpload = async (valuesForm: any) => {
         const { videoFile } = valuesForm; // Lấy file từ form
-        console.log("videoFile:", videoFile);
         const materLink = videoFile.file.name;
-        console.log("materLink:", materLink);
         const materType = videoFile.file.type.split('/').pop(); // Lấy materType từ uploadData
         const formData = {
             materLink: materLink,
             materType: materType,
-            questionId: singleQuestion?.id,
+            questionId: quesID,
         }
         try {
             const res = await fetch(`${API_BASE_URL}/api/v1/material/assign/question`, {
@@ -63,7 +59,6 @@ const ModalUpload = (props: IProps) => {
                 },
                 body: JSON.stringify(formData),
             });
-
             const data = await res.json();
             if (res.ok) {
                 message.success('Upload material successfully');
@@ -85,10 +80,8 @@ const ModalUpload = (props: IProps) => {
 
     const handleReset = async () => {
         form.resetFields();
-        console.log("form:", form.getFieldsValue());
         setOpenModalUpload(false);
         setUpload(null);
-        setSingleQuestion(null);
     }
     const handleDelete = async (id: number) => {
         console.log("id:", id);

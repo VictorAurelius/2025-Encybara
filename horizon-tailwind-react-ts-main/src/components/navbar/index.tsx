@@ -88,7 +88,7 @@ const Navbar = (props: {
 
     fetchNotifications();
 
-  }, [notifications]);
+  }, []);
   const markAsRead = async (notificationId: number) => {
     try {
       await fetch(`${API_BASE_URL}/api/v1/notifications/read/${notificationId}`, {

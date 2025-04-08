@@ -38,7 +38,7 @@ const UserProfilePage: React.FC = () => {
                 const userData = await userResponse.json();
 
                 console.log("User Data:", userData);
-                const getCourses = await fetch(`${API_BASE_URL}/api/v1/enrollments/user/${userId}?page=1&size=4&proStatus=false`, {
+                const getCourses = await fetch(`${API_BASE_URL}/api/v1/enrollments/user/${userId}?page=1&size=4`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,

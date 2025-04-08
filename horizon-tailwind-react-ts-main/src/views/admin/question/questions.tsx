@@ -30,7 +30,7 @@ const QuestionPage = () => {
     const { message, notification } = App.useApp();
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const [lessonList, setLessonList] = useState<Array<{ id: number; name: string }>>([]);
-
+    const [quesID, setQuesID] = useState<number>(0);
     const reloadTable = async () => {
         setLoading(true);
         try {
@@ -38,7 +38,7 @@ const QuestionPage = () => {
             const queryParams = new URLSearchParams({
                 page: currentPage.toString(),
                 size: pageSize.toString(),
-                point: '5'
+                point: '10'
             });
 
             // Thêm filter params từ state vào URL
@@ -121,6 +121,7 @@ const QuestionPage = () => {
     const handleUploadClick = async (questionId: number) => {
         setOpenModalUpload(true); // Mở modal upload
         try {
+            console.log("questionId", questionId);
             const res = await fetch(`${API_BASE_URL}/api/v1/material/questions/${questionId}`,
                 {
                     method: 'GET',
@@ -133,6 +134,7 @@ const QuestionPage = () => {
             const data = await res.json();
             if (res.ok) {
                 setUploadData(data.data);
+                console.log("dữ liệu đây", data.data);
             } else {
                 notification.error({
                     message: 'Error fetching upload data',
@@ -399,7 +401,7 @@ const QuestionPage = () => {
                             cursor: entity.quesType === 'LISTENING' ? 'pointer' : 'not-allowed',
                         }}
                         onClick={() => {
-
+                            setQuesID(entity.id);
                             if (entity.quesType === 'LISTENING') {
                                 handleUploadClick(entity.id);
 
@@ -474,10 +476,8 @@ const QuestionPage = () => {
                 openModalUpload={openModalUpload}
                 setOpenModalUpload={setOpenModalUpload}
                 reloadTable={reloadTable}
-                singleQuestion={dataInit}
-                setSingleQuestion={setDataInit}
                 uploadData={uploadData}
-
+                quesID={quesID}
             />
         </div>
     )

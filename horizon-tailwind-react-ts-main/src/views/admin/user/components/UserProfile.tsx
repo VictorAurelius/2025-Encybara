@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-table";
 import { useAuth } from "hooks/useAuth";
 import { API_BASE_URL } from "service/api.config";
-import { List, Card, Button, notification } from "antd";
+import { List, Card, Button, notification, message } from "antd";
 import ResultModal, { StudyResult } from './module.result';
 
 interface Review {
@@ -179,7 +179,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, courses, reviews, sched
             setLessons(lessonDetails);
             setSelectedCourseId(courseId);
         } catch (error) {
-            console.error("Error fetching lessons:", error);
+            message.error("Don't have data to show!");
         }
     };
 

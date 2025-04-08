@@ -18,7 +18,8 @@ const EditCourse: React.FC<EditCourseProps> = ({ courseId, onClose, onSuccess })
         diffLevel: 0,
         recomLevel: 0,
         courseType: "",
-        speciField: ""
+        speciField: "",
+        group: "",
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -46,7 +47,8 @@ const EditCourse: React.FC<EditCourseProps> = ({ courseId, onClose, onSuccess })
                         diffLevel: 0,
                         recomLevel: 0,
                         courseType: "",
-                        speciField: ""
+                        speciField: "",
+                        group: ""
                     })
 
                 }
@@ -178,6 +180,14 @@ const EditCourse: React.FC<EditCourseProps> = ({ courseId, onClose, onSuccess })
                         }}
                         placeholder="Enter special field"
                         rules={[{ required: true, message: 'Please enter special field' }]}
+                    />
+                </Col>
+                <Col span={12}>
+                    <ProFormText
+                        name="group"
+                        label="Group "
+                        placeholder="Enter group"
+                        rules={[{ required: true, message: 'Please enter group' }]}
                     />
                 </Col>
             </Row>
