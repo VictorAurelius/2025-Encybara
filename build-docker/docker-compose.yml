@@ -50,9 +50,6 @@ services:
     volumes:
       - ../horizon-tailwind-react-ts-main/build:/usr/share/nginx/html
       - ./default.conf:/etc/nginx/conf.d/default.conf
-    command: >
-      /bin/bash -c "chmod -R 755 /usr/share/nginx/html &&
-                    nginx -g 'daemon off;'"
     depends_on:
       - backend
     networks:
