@@ -21,11 +21,11 @@ import type { TableColumnsType } from "antd";
 import moment from "moment";
 import Access from "../access";
 import { formatScore } from "utils/formatvalue";
+
 const { TabPane } = Tabs;
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-// Định nghĩa interfaces cho dữ liệu
 interface LearningResult {
     id: number;
     listeningScore: number;
@@ -42,8 +42,8 @@ interface LearningResult {
     readingProgress: number;
     writingProgress: number;
     overallProgress: number;
-    userId?: number; // Thêm để lưu trữ tạm thời
-    userName?: string; // Thêm để lưu trữ tạm thời
+    userId?: number;
+    userName?: string;
 }
 
 interface User {
@@ -60,7 +60,7 @@ interface CombinedLearningResult extends LearningResult {
     user: User;
 }
 
-const ALL_USERS = -1; // Giá trị đặc biệt để đánh dấu lựa chọn "Tất cả người dùng"
+const ALL_USERS = -1;
 
 const LearningResults: React.FC = () => {
     const { token } = useAuth();
@@ -71,7 +71,6 @@ const LearningResults: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [selectedUserId, setSelectedUserId] = useState<number | undefined>(ALL_USERS);
 
-    // Lấy danh sách người dùng
     const fetchUsers = async () => {
         try {
             const response = await fetch(`${API_BASE_URL}/api/v1/users`, {
@@ -88,12 +87,8 @@ const LearningResults: React.FC = () => {
 
             const data = await response.json();
             const userList = data.result || [];
-            setUsers(userList); // Lưu danh sách người dùng
-
-            // Đặt giá trị mặc định là "Tất cả người dùng"
+            setUsers(userList);
             setSelectedUserId(ALL_USERS);
-
-            // Quan trọng: truyền userList vào hàm fetchLearningResults để sử dụng dữ liệu mới nhất
             await fetchLearningResults(ALL_USERS, userList);
         } catch (error) {
             console.error("Error fetching users:", error);
@@ -101,11 +96,9 @@ const LearningResults: React.FC = () => {
         }
     };
 
-    // Lấy kết quả học tập của một người dùng cụ thể
     const fetchLearningResults = async (userId: number, userList: User[] = users) => {
         setLoading(true);
         try {
-            // Chọn endpoint dựa vào việc đã chọn tất cả người dùng hay một người dùng cụ thể
             const endpoint = userId === ALL_USERS
                 ? `${API_BASE_URL}/api/v1/admin/learning-results`
                 : `${API_BASE_URL}/api/v1/learning-results/user/${userId}`;
@@ -123,17 +116,14 @@ const LearningResults: React.FC = () => {
             }
 
             const responseData = await response.json();
-            console.log("Dữ liệu:", responseData);
 
             if (userId === ALL_USERS) {
-                // Xử lý trường hợp lấy tất cả kết quả
                 if (responseData && responseData.data.content && Array.isArray(responseData.data.content)) {
                     const combinedResults: CombinedLearningResult[] = await Promise.all(
                         responseData.data.content.map(async (result: LearningResult) => {
-                            // Sử dụng userList thay vì users state để đảm bảo dữ liệu mới nhất
                             const user = userList.find(u => u.id === result.userId) || {
                                 id: result.userId || 0,
-                                name: 'Không xác định',
+                                name: 'Unknown',
                                 email: '',
                                 phone: null,
                                 speciField: null,
@@ -154,10 +144,9 @@ const LearningResults: React.FC = () => {
                 }
             } else {
                 if (responseData && responseData.data) {
-                    // Tìm thông tin người dùng được chọn
                     const selectedUser = userList.find(u => u.id === userId) || {
                         id: userId,
-                        name: 'Không xác định',
+                        name: 'Unknown',
                         email: '',
                         phone: null,
                         speciField: null,
@@ -165,16 +154,13 @@ const LearningResults: React.FC = () => {
                         englishlevel: null
                     };
 
-                    // Xử lý API trả về một mảng kết quả
                     if (Array.isArray(responseData.data)) {
                         const combinedResults: CombinedLearningResult[] = responseData.data.map((result: LearningResult) => ({
                             ...result,
                             user: selectedUser
                         }));
                         setResults(combinedResults);
-                    }
-                    // Hoặc API trả về một đối tượng kết quả duy nhất
-                    else {
+                    } else {
                         const combinedResult: CombinedLearningResult = {
                             ...responseData.data,
                             user: selectedUser
@@ -192,35 +178,28 @@ const LearningResults: React.FC = () => {
             setLoading(false);
         }
     };
+
     useEffect(() => {
         fetchUsers();
     }, []);
-    // Cập nhật useEffect khi selectedUserId thay đổi
+
     useEffect(() => {
         if (selectedUserId !== undefined && selectedUserId !== null) {
-            // Chỉ gọi fetch khi không phải lần đầu tiên (từ fetchUsers đã gọi)
             if (users.length > 0) {
                 fetchLearningResults(selectedUserId);
             }
         }
     }, [selectedUserId]);
 
-
-
-
-
-    // Xem chi tiết kết quả học tập
     const handleViewDetail = (result: CombinedLearningResult) => {
         setSelectedResult(result);
         setDetailModalVisible(true);
     };
 
-    // Cập nhật người dùng được chọn
     const handleUserChange = (userId: number) => {
         setSelectedUserId(userId);
     };
 
-    // Định nghĩa cột cho bảng
     const columns: TableColumnsType<CombinedLearningResult> = [
         {
             title: 'ID',
@@ -229,7 +208,7 @@ const LearningResults: React.FC = () => {
             width: 70,
         },
         {
-            title: 'Người dùng',
+            title: 'User',
             dataIndex: ['user', 'name'],
             key: 'userName',
             width: 150,
@@ -241,14 +220,14 @@ const LearningResults: React.FC = () => {
             width: 200,
         },
         {
-            title: 'Ngày cập nhật',
+            title: 'Last Updated',
             dataIndex: 'lastUpdated',
             key: 'lastUpdated',
             width: 150,
             render: (text) => moment(text).format('DD/MM/YYYY HH:mm'),
         },
         {
-            title: 'Điểm đọc',
+            title: 'Reading Score',
             dataIndex: 'readingScore',
             key: 'readingScore',
             width: 100,
@@ -262,7 +241,7 @@ const LearningResults: React.FC = () => {
             ),
         },
         {
-            title: 'Điểm nghe',
+            title: 'Listening Score',
             dataIndex: 'listeningScore',
             key: 'listeningScore',
             width: 100,
@@ -276,7 +255,7 @@ const LearningResults: React.FC = () => {
             ),
         },
         {
-            title: 'Điểm nói',
+            title: 'Speaking Score',
             dataIndex: 'speakingScore',
             key: 'speakingScore',
             width: 100,
@@ -290,7 +269,7 @@ const LearningResults: React.FC = () => {
             ),
         },
         {
-            title: 'Điểm viết',
+            title: 'Writing Score',
             dataIndex: 'writingScore',
             key: 'writingScore',
             width: 100,
@@ -302,10 +281,9 @@ const LearningResults: React.FC = () => {
                     {formatScore(score, 2)}
                 </span>
             ),
-        }
-        ,
+        },
         {
-            title: 'Hành động',
+            title: 'Actions',
             key: 'action',
             width: 100,
             render: (_, record) => (
@@ -315,21 +293,20 @@ const LearningResults: React.FC = () => {
                     size="small"
                     onClick={() => handleViewDetail(record)}
                 >
-                    Chi tiết
+                    Details
                 </Button>
             ),
         },
     ];
 
-    // Hiển thị chi tiết điểm số dạng thanh tiến trình
     const renderScoreDetail = () => {
         if (!selectedResult) return null;
 
         const scoreData = [
-            { name: 'Đọc', value: selectedResult.readingScore, previousValue: selectedResult.previousReadingScore, progress: selectedResult.readingProgress, color: '#2db7f5' },
-            { name: 'Nghe', value: selectedResult.listeningScore, previousValue: selectedResult.previousListeningScore, progress: selectedResult.listeningProgress, color: '#87d068' },
-            { name: 'Viết', value: selectedResult.writingScore, previousValue: selectedResult.previousWritingScore, progress: selectedResult.writingProgress, color: '#108ee9' },
-            { name: 'Nói', value: selectedResult.speakingScore, previousValue: selectedResult.previousSpeakingScore, progress: selectedResult.speakingProgress, color: '#f50' },
+            { name: 'Reading', value: selectedResult.readingScore, previousValue: selectedResult.previousReadingScore, progress: selectedResult.readingProgress, color: '#2db7f5' },
+            { name: 'Listening', value: selectedResult.listeningScore, previousValue: selectedResult.previousListeningScore, progress: selectedResult.listeningProgress, color: '#87d068' },
+            { name: 'Writing', value: selectedResult.writingScore, previousValue: selectedResult.previousWritingScore, progress: selectedResult.writingProgress, color: '#108ee9' },
+            { name: 'Speaking', value: selectedResult.speakingScore, previousValue: selectedResult.previousSpeakingScore, progress: selectedResult.speakingProgress, color: '#f50' },
         ];
 
         return (
@@ -348,51 +325,46 @@ const LearningResults: React.FC = () => {
                             </div>
                         </div>
                         <Progress
-                            percent={item.value * 20} // Chuyển đổi thang điểm 0-5 sang 0-100
+                            percent={item.value * 20}
                             status={item.value < 2.0 ? "exception" : "active"}
                             strokeColor={item.color}
                             showInfo={false}
                         />
                         {item.previousValue > 0 && (
                             <div className="mt-1">
-                                <Text type="secondary">Điểm trước đó: {formatScore(item.previousValue, 2)}</Text>
+                                <Text type="secondary">Previous Score: {formatScore(item.previousValue, 2)}</Text>
                             </div>
                         )}
                     </div>
                 ))}
-
             </div>
         );
     };
 
-    // Nội dung hiển thị khi không có dữ liệu
     const renderNoData = () => (
         <Empty
             description={
                 <span>
-                    Không có dữ liệu kết quả học tập cho người dùng này
+                    No learning results available for this user
                 </span>
             }
         />
     );
 
     return (
-
-
-
         <div className="flex flex-col gap-5">
-            <Card title="Bộ lọc kết quả học tập" className="w-full">
+            <Card title="Learning Results Filter" className="w-full">
                 <div className="flex flex-wrap gap-4 items-end">
                     <div className="w-64">
-                        <Text strong>Người dùng</Text>
+                        <Text strong>User</Text>
                         <Select
-                            placeholder="Chọn người dùng"
+                            placeholder="Select a user"
                             className="w-full mt-1"
                             value={selectedUserId}
                             onChange={handleUserChange}
                             loading={users.length === 0}
                         >
-                            <Option key={ALL_USERS} value={ALL_USERS}>Tất cả người dùng</Option>
+                            <Option key={ALL_USERS} value={ALL_USERS}>All Users</Option>
                             {users.map(user => (
                                 <Option key={user.id} value={user.id}>{user.name} ({user.email})</Option>
                             ))}
@@ -402,13 +374,13 @@ const LearningResults: React.FC = () => {
             </Card>
 
             <Card
-                title={selectedUserId === ALL_USERS ? "Tất cả kết quả học tập" : "Kết quả học tập"}
+                title={selectedUserId === ALL_USERS ? "All Learning Results" : "Learning Results"}
                 className="w-full"
-                extra={<>Tổng số: {results.length}</>}
+                extra={<>Total: {results.length}</>}
             >
                 {loading ? (
                     <div className="flex justify-center items-center h-64">
-                        <Spin size="large" tip="Đang tải..." />
+                        <Spin size="large" tip="Loading..." />
                     </div>
                 ) : results.length > 0 ? (
                     <Table
@@ -420,7 +392,7 @@ const LearningResults: React.FC = () => {
                                     pageSize: 10,
                                     showSizeChanger: true,
                                     pageSizeOptions: ['10', '20', '50'],
-                                    showTotal: (total) => `Tổng ${total} kết quả`
+                                    showTotal: (total) => `Total ${total} results`
                                 }
                                 : false
                         }
@@ -431,15 +403,14 @@ const LearningResults: React.FC = () => {
                 )}
             </Card>
 
-            {/* Modal chi tiết kết quả */}
             <Modal
                 key={selectedResult?.id || 'detail-modal'}
-                title="Chi tiết kết quả học tập"
+                title="Learning Result Details"
                 open={detailModalVisible}
                 onCancel={() => setDetailModalVisible(false)}
                 width={800}
                 footer={[
-                    <Button key="close" onClick={() => setDetailModalVisible(false)}>Đóng</Button>
+                    <Button key="close" onClick={() => setDetailModalVisible(false)}>Close</Button>
                 ]}
             >
                 {selectedResult && (
@@ -448,26 +419,26 @@ const LearningResults: React.FC = () => {
                             tab={
                                 <span>
                                     <FileTextOutlined />
-                                    Thông tin cơ bản
+                                    Basic Information
                                 </span>
                             }
                             key="1"
                         >
                             <Descriptions bordered column={2}>
-                                <Descriptions.Item label="ID kết quả">{selectedResult.id}</Descriptions.Item>
-                                <Descriptions.Item label="Ngày cập nhật">
+                                <Descriptions.Item label="Result ID">{selectedResult.id}</Descriptions.Item>
+                                <Descriptions.Item label="Last Updated">
                                     {moment(selectedResult.lastUpdated).format('DD/MM/YYYY HH:mm')}
                                 </Descriptions.Item>
-                                <Descriptions.Item label="Người dùng">{selectedResult.user.name}</Descriptions.Item>
+                                <Descriptions.Item label="User">{selectedResult.user.name}</Descriptions.Item>
                                 <Descriptions.Item label="Email">{selectedResult.user.email}</Descriptions.Item>
-                                <Descriptions.Item label="Trình độ tiếng Anh">
-                                    {selectedResult.user.englishlevel || 'Chưa xác định'}
+                                <Descriptions.Item label="English Level">
+                                    {selectedResult.user.englishlevel || 'Not specified'}
                                 </Descriptions.Item>
-                                <Descriptions.Item label="Chuyên ngành">
-                                    {selectedResult.user.speciField || 'Chưa xác định'}
+                                <Descriptions.Item label="Specialization">
+                                    {selectedResult.user.speciField || 'Not specified'}
                                 </Descriptions.Item>
-                                <Descriptions.Item label="Số điện thoại">
-                                    {selectedResult.user.phone || 'Chưa xác định'}
+                                <Descriptions.Item label="Phone">
+                                    {selectedResult.user.phone || 'Not specified'}
                                 </Descriptions.Item>
                             </Descriptions>
                         </TabPane>
@@ -476,7 +447,7 @@ const LearningResults: React.FC = () => {
                             tab={
                                 <span>
                                     <BarChartOutlined />
-                                    Điểm số chi tiết
+                                    Detailed Scores
                                 </span>
                             }
                             key="2"
@@ -487,20 +458,15 @@ const LearningResults: React.FC = () => {
                 )}
             </Modal>
         </div>
-
     );
 };
 
 export default () => (
     <Access
         permission={{ module: "CONTENT_MANAGEMENT" }}
-
     >
         <App>
             <LearningResults />
         </App>
     </Access>
-
-
-
 );
