@@ -122,13 +122,16 @@ const ModalQuestion = (props: IProps) => {
             >
                 <Row gutter={16}>
                     <Col lg={12} md={12} sm={24} xs={24}>
-                        <ProFormText
+                        <ProFormTextArea
                             label="Question Content"
                             name="quesContent"
                             rules={[
                                 { required: true, message: 'Please do not leave blank' },
                             ]}
                             placeholder="Enter question content"
+                            fieldProps={{
+                                autoSize: { minRows: 3, maxRows: 6 }, // Tự động điều chỉnh chiều cao
+                            }}
                         />
                     </Col>
                     <Col lg={12} md={12} sm={24} xs={24}>

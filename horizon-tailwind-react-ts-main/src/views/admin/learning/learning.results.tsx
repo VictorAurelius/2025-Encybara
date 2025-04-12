@@ -20,7 +20,7 @@ import { SearchOutlined, BarChartOutlined, FileTextOutlined } from "@ant-design/
 import type { TableColumnsType } from "antd";
 import moment from "moment";
 import Access from "../access";
-
+import { formatScore } from "utils/formatvalue";
 const { TabPane } = Tabs;
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -87,11 +87,14 @@ const LearningResults: React.FC = () => {
             }
 
             const data = await response.json();
-            setUsers(data.result || []);
+            const userList = data.result || [];
+            setUsers(userList); // Lưu danh sách người dùng
 
             // Đặt giá trị mặc định là "Tất cả người dùng"
             setSelectedUserId(ALL_USERS);
-            await fetchLearningResults(ALL_USERS);
+
+            // Quan trọng: truyền userList vào hàm fetchLearningResults để sử dụng dữ liệu mới nhất
+            await fetchLearningResults(ALL_USERS, userList);
         } catch (error) {
             console.error("Error fetching users:", error);
             setLoading(false);
@@ -99,7 +102,7 @@ const LearningResults: React.FC = () => {
     };
 
     // Lấy kết quả học tập của một người dùng cụ thể
-    const fetchLearningResults = async (userId: number) => {
+    const fetchLearningResults = async (userId: number, userList: User[] = users) => {
         setLoading(true);
         try {
             // Chọn endpoint dựa vào việc đã chọn tất cả người dùng hay một người dùng cụ thể
@@ -127,8 +130,8 @@ const LearningResults: React.FC = () => {
                 if (responseData && responseData.data.content && Array.isArray(responseData.data.content)) {
                     const combinedResults: CombinedLearningResult[] = await Promise.all(
                         responseData.data.content.map(async (result: LearningResult) => {
-                            // Tìm thông tin người dùng
-                            const user = users.find(u => u.id === result.userId) || {
+                            // Sử dụng userList thay vì users state để đảm bảo dữ liệu mới nhất
+                            const user = userList.find(u => u.id === result.userId) || {
                                 id: result.userId || 0,
                                 name: 'Không xác định',
                                 email: '',
@@ -150,9 +153,9 @@ const LearningResults: React.FC = () => {
                     setResults([]);
                 }
             } else {
-                // Xử lý trường hợp lấy kết quả của một người dùng cụ thể
                 if (responseData && responseData.data) {
-                    const user = users.find(u => u.id === userId) || {
+                    // Tìm thông tin người dùng được chọn
+                    const selectedUser = userList.find(u => u.id === userId) || {
                         id: userId,
                         name: 'Không xác định',
                         email: '',
@@ -162,12 +165,22 @@ const LearningResults: React.FC = () => {
                         englishlevel: null
                     };
 
-                    const combinedResult: CombinedLearningResult = {
-                        ...responseData.data,
-                        user
-                    };
-
-                    setResults([combinedResult]);
+                    // Xử lý API trả về một mảng kết quả
+                    if (Array.isArray(responseData.data)) {
+                        const combinedResults: CombinedLearningResult[] = responseData.data.map((result: LearningResult) => ({
+                            ...result,
+                            user: selectedUser
+                        }));
+                        setResults(combinedResults);
+                    }
+                    // Hoặc API trả về một đối tượng kết quả duy nhất
+                    else {
+                        const combinedResult: CombinedLearningResult = {
+                            ...responseData.data,
+                            user: selectedUser
+                        };
+                        setResults([combinedResult]);
+                    }
                 } else {
                     setResults([]);
                 }
@@ -179,16 +192,22 @@ const LearningResults: React.FC = () => {
             setLoading(false);
         }
     };
-
     useEffect(() => {
         fetchUsers();
     }, []);
-
+    // Cập nhật useEffect khi selectedUserId thay đổi
     useEffect(() => {
-        if (selectedUserId) {
-            fetchLearningResults(selectedUserId);
+        if (selectedUserId !== undefined && selectedUserId !== null) {
+            // Chỉ gọi fetch khi không phải lần đầu tiên (từ fetchUsers đã gọi)
+            if (users.length > 0) {
+                fetchLearningResults(selectedUserId);
+            }
         }
     }, [selectedUserId]);
+
+
+
+
 
     // Xem chi tiết kết quả học tập
     const handleViewDetail = (result: CombinedLearningResult) => {
@@ -238,7 +257,7 @@ const LearningResults: React.FC = () => {
                     color: score < 2.0 ? 'red' : score < 3.5 ? 'orange' : 'green',
                     fontWeight: 'bold'
                 }}>
-                    {score.toFixed(2)}
+                    {formatScore(score, 2)}
                 </span>
             ),
         },
@@ -252,7 +271,7 @@ const LearningResults: React.FC = () => {
                     color: score < 2.0 ? 'red' : score < 3.5 ? 'orange' : 'green',
                     fontWeight: 'bold'
                 }}>
-                    {score.toFixed(2)}
+                    {formatScore(score, 2)}
                 </span>
             ),
         },
@@ -266,7 +285,7 @@ const LearningResults: React.FC = () => {
                     color: score < 2.0 ? 'red' : score < 3.5 ? 'orange' : 'green',
                     fontWeight: 'bold'
                 }}>
-                    {score.toFixed(2)}
+                    {formatScore(score, 2)}
                 </span>
             ),
         },
@@ -280,24 +299,11 @@ const LearningResults: React.FC = () => {
                     color: score < 2.0 ? 'red' : score < 3.5 ? 'orange' : 'green',
                     fontWeight: 'bold'
                 }}>
-                    {score.toFixed(2)}
+                    {formatScore(score, 2)}
                 </span>
             ),
-        },
-        {
-            title: 'Điểm tổng',
-            dataIndex: 'overallProgress',
-            key: 'overallProgress',
-            width: 100,
-            render: (score) => (
-                <span style={{
-                    color: score < 2.0 ? 'red' : score < 3.5 ? 'orange' : 'green',
-                    fontWeight: 'bold'
-                }}>
-                    {score.toFixed(2)}
-                </span>
-            ),
-        },
+        }
+        ,
         {
             title: 'Hành động',
             key: 'action',
@@ -333,10 +339,10 @@ const LearningResults: React.FC = () => {
                         <div className="flex justify-between mb-1">
                             <Text strong>{item.name}</Text>
                             <div>
-                                <Text strong>{item.value.toFixed(1)}</Text>
+                                <Text strong>{formatScore(item.value, 2)}</Text>
                                 {item.progress !== 0 && (
                                     <Text type={item.progress > 0 ? "success" : "danger"} style={{ marginLeft: '8px' }}>
-                                        {item.progress > 0 ? `+${item.progress.toFixed(1)}` : item.progress.toFixed(1)}
+                                        {item.progress > 0 ? `+${formatScore(item.progress, 2)}` : formatScore(item.progress, 2)}
                                     </Text>
                                 )}
                             </div>
@@ -349,23 +355,12 @@ const LearningResults: React.FC = () => {
                         />
                         {item.previousValue > 0 && (
                             <div className="mt-1">
-                                <Text type="secondary">Điểm trước đó: {item.previousValue.toFixed(1)}</Text>
+                                <Text type="secondary">Điểm trước đó: {formatScore(item.previousValue, 2)}</Text>
                             </div>
                         )}
                     </div>
                 ))}
-                <div className="mt-4">
-                    <Title level={4} style={{ marginBottom: '16px' }}>Điểm tổng: {selectedResult.overallProgress.toFixed(2)}</Title>
-                    <Progress
-                        percent={selectedResult.overallProgress * 20} // Chuyển đổi thang điểm 0-5 sang 0-100
-                        status={selectedResult.overallProgress < 2.0 ? "exception" : "active"}
-                        strokeColor={{
-                            '0%': '#108ee9',
-                            '100%': '#87d068',
-                        }}
-                        strokeWidth={15}
-                    />
-                </div>
+
             </div>
         );
     };
