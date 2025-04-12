@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "hooks/useAuth";
-import { ModalForm, ProFormSelect, ProFormText } from "@ant-design/pro-components";
+import { ModalForm, ProFormSelect, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Row, Col, message } from "antd";
 import { API_BASE_URL } from "service/api.config";
 
@@ -122,7 +122,7 @@ const EditCourse: React.FC<EditCourseProps> = ({ courseId, onClose, onSuccess })
         >
             <Row gutter={16}>
                 <Col span={12}>
-                    <ProFormText
+                    <ProFormTextArea
                         name="name"
                         label="Course name"
                         placeholder="Enter course name"
@@ -130,7 +130,7 @@ const EditCourse: React.FC<EditCourseProps> = ({ courseId, onClose, onSuccess })
                     />
                 </Col>
                 <Col span={12}>
-                    <ProFormText
+                    <ProFormTextArea
                         name="intro"
                         label="Introduction"
                         placeholder="Enter introduction"
