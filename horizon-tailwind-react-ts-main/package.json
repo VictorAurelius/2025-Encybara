@@ -2,7 +2,6 @@
   "name": "horizon-ui-tailwind-react-ts",
   "version": "2.0.0",
   "private": true,
-  "proxy": "http://localhost:8080",
   "dependencies": {
     "@ant-design/compatible": "^5.1.4",
     "@ant-design/icons": "^5.0.0",
