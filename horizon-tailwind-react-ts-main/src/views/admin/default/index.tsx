@@ -43,7 +43,7 @@ const Dashboard = () => {
     };
     fetchCourse();
     const fetchQuestion = async () => {
-      const res = await fetch(`${API_BASE_URL}/api/v1/questions?point=5`,
+      const res = await fetch(`${API_BASE_URL}/api/v1/questions`,
         {
           method: 'GET',
           headers: {
