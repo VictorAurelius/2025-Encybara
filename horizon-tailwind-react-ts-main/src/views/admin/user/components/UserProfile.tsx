@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-table";
 import { useAuth } from "hooks/useAuth";
 import { API_BASE_URL } from "service/api.config";
-import { List, Card, Button, notification } from "antd";
+import { List, Card, Button, notification, message } from "antd";
 import ResultModal, { StudyResult } from './module.result';
 
 interface Review {
@@ -135,6 +135,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, courses, reviews, sched
                     }, {});
 
                     setCourseDetails(coursesMap);
+
                 }
             } catch (error) {
                 console.error("Error fetching courses:", error);
@@ -179,7 +180,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, courses, reviews, sched
             setLessons(lessonDetails);
             setSelectedCourseId(courseId);
         } catch (error) {
-            console.error("Error fetching lessons:", error);
+            message.error("Don't have data to show!");
         }
     };
 
@@ -204,7 +205,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, courses, reviews, sched
                                 <div key={schedule.id} className="p-3 bg-gray-50 rounded">
                                     {/* Course Name */}
                                     <div className="text-sm font-medium mb-2 break-words">
-                                        {courseDetails[schedule.courseId]?.name || 'Loading...'}
+                                        {+ courseDetails[schedule.courseId]?.name || 'Loading...'}
                                     </div>
 
                                     {/* Schedule Type & Time */}
@@ -217,11 +218,15 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, courses, reviews, sched
                                         </div>
                                     </div>
                                 </div>
-                            ))}
+                            )
+                            )}
                         </div>
                     </Card>
                     <Card title={"Reviews"} style={{ height: 300, width: 250 }}>
                         <div className="space-y-4 overflow-auto max-h-[220px]">
+                            {reviews.length === 0 && (
+                                <div className="text-center text-gray-500">No reviews available</div>
+                            )}
                             {reviews.map((review) => (
                                 <div key={review.id} className="border-b pb-3">
                                     {/* Course Name */}
@@ -291,34 +296,47 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, courses, reviews, sched
                             renderItem={lesson => (
                                 <List.Item>
                                     <Card
-                                        title={lesson.name}
+                                        title={<span className="font-semibold text-lg">{lesson.name}</span>}
                                         className="hover:shadow-lg transition-shadow duration-300"
                                         style={{
                                             height: 'auto',
                                             minHeight: 150,
-                                            borderRadius: '8px',
+                                            borderRadius: '12px',
+                                            overflow: 'hidden',
+                                            border: '1px solid #e5e7eb',
                                         }}
                                         headStyle={{
-                                            background: '#f8f9fa',
-                                            borderBottom: '1px solid #edf2f7',
-                                            borderTopLeftRadius: '8px',
-                                            borderTopRightRadius: '8px',
+                                            background: '#f9fafb',
+                                            borderBottom: '1px solid #e5e7eb',
+                                            borderTopLeftRadius: '12px',
+                                            borderTopRightRadius: '12px',
+                                            padding: '12px 16px',
                                         }}
                                         bodyStyle={{
-                                            padding: '20px',
+                                            padding: '16px',
                                         }}
                                     >
                                         <div className="flex flex-col h-full">
+                                            {/* Skill Type */}
                                             <div className="mb-3">
                                                 <span className="inline-block px-3 py-1 text-sm rounded-full bg-blue-50 text-blue-600">
                                                     {lesson.skillType}
                                                 </span>
                                             </div>
+
+
+
+                                            {/* View Results Button */}
                                             <div className="mt-auto">
                                                 <Button
-                                                    type="link"
+                                                    type="primary"
                                                     onClick={() => handleViewResults(lesson)}
-                                                    className="text-blue-600 hover:text-blue-700"
+                                                    className="w-50"
+                                                    style={{
+                                                        backgroundColor: '#2563eb',
+                                                        borderColor: '#2563eb',
+                                                        color: '#fff',
+                                                    }}
                                                 >
                                                     View Results
                                                 </Button>

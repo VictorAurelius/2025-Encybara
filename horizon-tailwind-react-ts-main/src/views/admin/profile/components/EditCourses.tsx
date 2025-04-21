@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "hooks/useAuth";
-import { ModalForm, ProFormSelect, ProFormText } from "@ant-design/pro-components";
+import { ModalForm, ProFormSelect, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Row, Col, message } from "antd";
 import { API_BASE_URL } from "service/api.config";
 
@@ -18,7 +18,8 @@ const EditCourse: React.FC<EditCourseProps> = ({ courseId, onClose, onSuccess })
         diffLevel: 0,
         recomLevel: 0,
         courseType: "",
-        speciField: ""
+        speciField: "",
+        group: "",
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -46,7 +47,8 @@ const EditCourse: React.FC<EditCourseProps> = ({ courseId, onClose, onSuccess })
                         diffLevel: 0,
                         recomLevel: 0,
                         courseType: "",
-                        speciField: ""
+                        speciField: "",
+                        group: ""
                     })
 
                 }
@@ -120,7 +122,7 @@ const EditCourse: React.FC<EditCourseProps> = ({ courseId, onClose, onSuccess })
         >
             <Row gutter={16}>
                 <Col span={12}>
-                    <ProFormText
+                    <ProFormTextArea
                         name="name"
                         label="Course name"
                         placeholder="Enter course name"
@@ -128,7 +130,7 @@ const EditCourse: React.FC<EditCourseProps> = ({ courseId, onClose, onSuccess })
                     />
                 </Col>
                 <Col span={12}>
-                    <ProFormText
+                    <ProFormTextArea
                         name="intro"
                         label="Introduction"
                         placeholder="Enter introduction"
@@ -178,6 +180,14 @@ const EditCourse: React.FC<EditCourseProps> = ({ courseId, onClose, onSuccess })
                         }}
                         placeholder="Enter special field"
                         rules={[{ required: true, message: 'Please enter special field' }]}
+                    />
+                </Col>
+                <Col span={12}>
+                    <ProFormText
+                        name="group"
+                        label="Group "
+                        placeholder="Enter group"
+                        rules={[{ required: true, message: 'Please enter group' }]}
                     />
                 </Col>
             </Row>

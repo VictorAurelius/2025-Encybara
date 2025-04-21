@@ -16,6 +16,13 @@ FROM openjdk:17-slim
 WORKDIR /backend-app
 EXPOSE 8080
 
+# Install required packages
+RUN apt-get update && \
+    apt-get install -y \
+    ffmpeg \
+    curl && \
+    rm -rf /var/lib/apt/lists/*
+
 # Tạo sẵn cấu trúc thư mục uploads
 RUN mkdir -p /app/uploads/questions /app/uploads/lessons
 

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Modal, List, Card, Tag, Typography, Divider } from 'antd';
-import { ClockCircleOutlined, TrophyOutlined, StarOutlined } from '@ant-design/icons';
-
+import { RiseOutlined, TrophyOutlined, StarOutlined } from '@ant-design/icons';
+import { formatScore } from 'utils/formatvalue';
 const { Title, Text } = Typography;
 
 export interface StudyResult {
     id: number;
-    stuTime: number;    // Thời gian học (giây)
+    diffLevel: number;    // Thời gian học (giây)
     comLevel: number;   // Mức độ hoàn thành
     totalPoints: number; // Tổng điểm
     sessionId: number;
@@ -67,16 +67,16 @@ const ResultModal: React.FC<ResultModalProps> = ({
                         <div className="grid grid-cols-3 gap-4">
                             {/* Thời gian học */}
                             <div className="flex flex-col items-center">
-                                <ClockCircleOutlined className="text-xl text-blue-500 mb-2" />
-                                <Text strong>Study Time</Text>
-                                <Text>{formatTime(result.stuTime)} mins</Text>
+                                <RiseOutlined className="text-xl text-red-500 mb-2" />
+                                <Text strong>Difficulty Level</Text>
+                                <Text>{formatScore(result.diffLevel, 2)}</Text>
                             </div>
 
                             {/* Mức độ hoàn thành */}
                             <div className="flex flex-col items-center">
                                 <StarOutlined className="text-xl text-yellow-500 mb-2" />
                                 <Text strong>Completion</Text>
-                                <Text>{result.comLevel * 100}%</Text>
+                                <Text>{formatScore(result.comLevel, 1)}%</Text>
                             </div>
 
                             {/* Tổng điểm */}
@@ -84,7 +84,7 @@ const ResultModal: React.FC<ResultModalProps> = ({
                                 <TrophyOutlined className="text-xl text-green-500 mb-2" />
                                 <Text strong>Total Points</Text>
                                 <Tag color={getScoreColor(result.totalPoints)} className="mt-1">
-                                    {result.totalPoints} points
+                                    {formatScore(result.totalPoints, 2)} points
                                 </Tag>
                             </div>
                         </div>

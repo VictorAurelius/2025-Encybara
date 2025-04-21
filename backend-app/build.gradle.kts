@@ -47,6 +47,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.jsoup:jsoup:1.14.3")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+	implementation ("net.bramp.ffmpeg:ffmpeg:0.7.0")
+	implementation ("io.projectreactor:reactor-core")
+	implementation ("commons-fileupload:commons-fileupload:1.4")
 }
 tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-parameters")

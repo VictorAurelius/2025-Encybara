@@ -38,7 +38,7 @@ const UserProfilePage: React.FC = () => {
                 const userData = await userResponse.json();
 
                 console.log("User Data:", userData);
-                const getCourses = await fetch(`${API_BASE_URL}/api/v1/enrollments/user/${userId}?page=1&size=4&proStatus=false`, {
+                const getCourses = await fetch(`${API_BASE_URL}/api/v1/enrollments/user/${userId}?page=1&size=100`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -64,7 +64,7 @@ const UserProfilePage: React.FC = () => {
 
                 console.log("Course Details:", courseDetails);
 
-                const reviewData = await fetch(`${API_BASE_URL}/api/v1/reviews/user/${userId}?page=1&size=4`, {
+                const reviewData = await fetch(`${API_BASE_URL}/api/v1/reviews/user/${userId}?page=1&size=100`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -73,7 +73,7 @@ const UserProfilePage: React.FC = () => {
                 });
                 const revdata = await reviewData.json();
 
-                const scheduleData = await fetch(`${API_BASE_URL}/api/v1/schedules/user/${userId}?page=1&size=4`, {
+                const scheduleData = await fetch(`${API_BASE_URL}/api/v1/schedules/user/${userId}?page=1&size=100`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,

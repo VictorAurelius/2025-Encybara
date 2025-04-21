@@ -35,7 +35,7 @@ const ModuleLesson = (props: IProps) => {
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/v1/questions?page=1&size=10&point=5`, {
+                const response = await fetch(`${API_BASE_URL}/api/v1/questions?page=1&size=1000`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,

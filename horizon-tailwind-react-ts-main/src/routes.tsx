@@ -26,6 +26,7 @@ import PermissionPage from "views/admin/permission/permission";
 import RolePage from "views/admin/role/role";
 import QuestionPage from "views/admin/question/questions";
 import DiscussionManagement from "views/admin/forum/forum";
+import LearningResults from "views/admin/learning/learning.results";
 
 // Định nghĩa các role
 export type UserRole = 'SUPER_ADMIN' | 'DOMAIN_ADMIN';
@@ -125,6 +126,13 @@ const routes: RouteItem[] = [
     path: "forum",
     icon: <MdForum className="h-6 w-6" />,
     component: <DiscussionManagement />,
+  },
+  {
+    name: "Result",
+    layout: "/admin",
+    path: "learning",
+    icon: <MdForum className="h-6 w-6" />,
+    component: <LearningResults />,
   }
 ];
 
