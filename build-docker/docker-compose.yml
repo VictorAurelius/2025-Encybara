@@ -33,6 +33,12 @@ services:
       - file.upload-dir=/app/uploads/
       - ffmpeg.path=/usr/bin/ffmpeg
       - ffprobe.path=/usr/bin/ffprobe
+      - springdoc.api-docs.enabled=true
+      - springdoc.swagger-ui.enabled=true
+      - springdoc.swagger-ui.path=/swagger-ui.html
+      - springdoc.api-docs.path=/v3/api-docs
+      - springdoc.swagger-ui.operationsSorter=method
+      - springdoc.swagger-ui.display-request-duration=true
     volumes:
       - upload_data:/app/uploads
     healthcheck:
