@@ -1,0 +1,75 @@
+[
+    {
+        "name": "Paper 1: Reading - Part 1",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "The airport gets very ... at weekends, so Richard travels during the week when it's quieter.",
+            "Richard ... has a coffee when he arrives at the airport.",
+            "Richard ... looking around the shops before he gets on the plane.",
+            "Richard hates it when there's a ..., as he likes to arrive on time.",
+            "Richard often watches films during the flight, or ... to the person next to him."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading - Part 2",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "We’ve just missed the 3 p.m. train.",
+            "Do you want to come to the shops with us?",
+            "I haven’t finished packing my suitcase yet.",
+            "My sister’s just had a baby!",
+            "Is that Shelley in the blue coat?"
+        ]
+    },
+    {
+        "name": "Paper 1: Reading - Part 3",
+        "skillType": "READING",
+        "sumQues": 8,
+        "createBy": "admin",
+        "questionContents": [
+            "Choose an answer for space 28",
+            "Choose an answer for space 29",
+            "Choose an answer for space 30",
+            "Choose an answer for space 31",
+            "Choose an answer for space 32",
+            "Choose an answer for space 33",
+            "Choose an answer for space 34",
+            "Choose an answer for space 35"
+        ]
+    },
+    {
+        "name": "Paper 1: Reading - Part 4",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "This is by the sea and you can lie here in the sun.",
+            "You sleep in a tent when you do this activity.",
+            "You take this meal with you and eat it outside.",
+            "This place has grass and trees and people go there to enjoy being outside.",
+            "You play this sport with a racket and ball."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading - Part 5",
+        "skillType": "READING",
+        "sumQues": 10,
+        "createBy": "admin",
+        "questionContents": [
+            "Write ONE word for space 41",
+            "Write ONE word for space 42",
+            "Write ONE word for space 43",
+            "Write ONE word for space 44",
+            "Write ONE word for space 45",
+            "Write ONE word for space 46",
+            "Write ONE word for space 47",
+            "Write ONE word for space 48",
+            "Write ONE word for space 49",
+            "Write ONE word for space 50"
+        ]
+    }
+]

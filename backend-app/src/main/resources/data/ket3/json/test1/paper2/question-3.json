@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "The show begins at",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "1.15",
+                "isCorrect": true
+            },
+            {
+                "content": "2.00",
+                "isCorrect": false
+            },
+            {
+                "content": "3.30",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "A child's ticket costs",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "25p",
+                "isCorrect": true
+            },
+            {
+                "content": "75p",
+                "isCorrect": false
+            },
+            {
+                "content": "£1.50",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "The holiday reading course is for",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "4 weeks.",
+                "isCorrect": true
+            },
+            {
+                "content": "6 weeks.",
+                "isCorrect": false
+            },
+            {
+                "content": "10 weeks.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "This year from the library, children can win",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "a pen.",
+                "isCorrect": true
+            },
+            {
+                "content": "a school bag.",
+                "isCorrect": false
+            },
+            {
+                "content": "a book.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Jenny should meet Mark again",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "next week.",
+                "isCorrect": false
+            },
+            {
+                "content": "tomorrow.",
+                "isCorrect": true
+            },
+            {
+                "content": "today.",
+                "isCorrect": false
+            }
+        ]
+    }
+]

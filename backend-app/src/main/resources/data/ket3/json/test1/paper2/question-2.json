@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "Each driving lesson costs",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "£14",
+                "isCorrect": true
+            },
+            {
+                "content": "£40",
+                "isCorrect": false
+            },
+            {
+                "content": "£60",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "A lesson is",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "30 minutes.",
+                "isCorrect": true
+            },
+            {
+                "content": "45 minutes.",
+                "isCorrect": false
+            },
+            {
+                "content": "60 minutes.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "The teacher's car is",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "slow.",
+                "isCorrect": true
+            },
+            {
+                "content": "old.",
+                "isCorrect": false
+            },
+            {
+                "content": "big.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Peter failed the test because he",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "drove too fast.",
+                "isCorrect": true
+            },
+            {
+                "content": "didn't see a crossing.",
+                "isCorrect": false
+            },
+            {
+                "content": "didn't stop at the traffic lights.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Peter thinks the teacher is too",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "expensive.",
+                "isCorrect": true
+            },
+            {
+                "content": "unfriendly.",
+                "isCorrect": false
+            },
+            {
+                "content": "young.",
+                "isCorrect": false
+            }
+        ]
+    }
+]

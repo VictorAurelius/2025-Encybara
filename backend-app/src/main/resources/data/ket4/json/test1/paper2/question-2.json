@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "Which bus goes to the sports centre?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "15",
+                "isCorrect": false
+            },
+            {
+                "content": "18",
+                "isCorrect": true
+            },
+            {
+                "content": "25",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "From Monday to Saturday, the sports centre is open from?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "6 a.m.",
+                "isCorrect": true
+            },
+            {
+                "content": "7 a.m.",
+                "isCorrect": false
+            },
+            {
+                "content": "9 a.m.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "If Sue goes swimming, she must take?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Soap",
+                "isCorrect": false
+            },
+            {
+                "content": "A swimming hat",
+                "isCorrect": false
+            },
+            {
+                "content": "A towel",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "At the sports centre, you can buy?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "sandwiches",
+                "isCorrect": true
+            },
+            {
+                "content": "fruit",
+                "isCorrect": false
+            },
+            {
+                "content": "drinks",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Jim and Sue are going to go to the sports centre next?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Wednesday",
+                "isCorrect": false
+            },
+            {
+                "content": "Thursday",
+                "isCorrect": true
+            },
+            {
+                "content": "Saturday",
+                "isCorrect": false
+            }
+        ]
+    }
+]

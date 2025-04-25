@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "If you don't understand a word, you can look in this.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "dictionary",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "You can buy this every week and read about many interesting subjects in it.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "magazine",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "If you write about your daily life in this, you may not want anyone to read it.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "diary",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "You write this for your mother when you answer the phone for her.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "message",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "People buy this every morning to read about what has happened in the world.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "newspaper",
+                "isCorrect": true
+            }
+        ]
+    }
+]

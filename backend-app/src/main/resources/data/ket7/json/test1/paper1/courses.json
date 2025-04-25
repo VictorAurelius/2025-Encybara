@@ -1,0 +1,22 @@
+[
+    {
+        "name": "(Paper 1) Cambridge Key English Test (KET7) - Reading Test 1",
+        "intro": "(Level B1) Strengthen your reading comprehension with this KET7 course! Practice reading short texts, understanding main ideas, and answering questions to boost your confidence and accuracy in English.",
+        "diffLevel": 4.0,
+        "recomLevel": 3.5,
+        "courseType": "READING",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 5,
+        "group": "Cambridge Key English Test 1 (KET7)",
+        "speciField": "EVERYONE",
+        "createBy": "admin",
+        "lessonNames": [
+            "Paper 1: Reading - Part 1",
+            "Paper 1: Reading - Part 2",
+            "Paper 1: Reading - Part 3",
+            "Paper 1: Reading - Part 4",
+            "Paper 1: Reading - Part 5"
+        ]
+    }
+]

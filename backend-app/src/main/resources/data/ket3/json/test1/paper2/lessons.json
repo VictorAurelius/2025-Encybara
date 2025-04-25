@@ -1,0 +1,67 @@
+[
+    {
+        "name": "Paper 2: Listening - Part 1",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "How much is a travel card?",
+            "Jan will need",
+            "Photos are less expensive",
+            "For the travel card, Jan must take",
+            "Jan can get a travel card from"
+        ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 2",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Each driving lesson costs",
+            "A lesson is",
+            "The teacher's car is",
+            "Peter failed the test because he",
+            "Peter thinks the teacher is too"
+        ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 3",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "The show begins at",
+            "A child's ticket costs",
+            "The holiday reading course is for",
+            "This year from the library, children can win",
+            "Jenny should meet Mark again"
+        ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 4",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Complete the phone message - From",
+            "Complete the phone message - Not in school because he has",
+            "Complete the phone message - Students should read pages",
+            "Complete the phone message - David will return to school on",
+            "Complete the phone message - at"
+        ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 5",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Complete the phone message - To",
+            "Complete the phone message - Price of ticket",
+            "Complete the phone message - Telephone no",
+            "Complete the phone message - Place",
+            "Complete the phone message - In"
+        ]
+    }
+]

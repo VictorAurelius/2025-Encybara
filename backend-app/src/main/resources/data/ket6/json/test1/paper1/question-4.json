@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "This keeps food and drink cold.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "fridge",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "You use this to cut things.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "knife",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "You do this to water to make it hot enough for a cup of coffee.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "boil",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Some people put this in their drinks to make them sweet.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "sugar",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "You can make chips with this vegetable.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "potato",
+                "isCorrect": true
+            }
+        ]
+    }
+]

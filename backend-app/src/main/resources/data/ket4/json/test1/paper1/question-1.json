@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "She ... all of them to dinner at her house on Saturday evening.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "phoned",
+                "isCorrect": false
+            },
+            {
+                "content": "invited",
+                "isCorrect": true
+            },
+            {
+                "content": "said",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Louise wrote the things she needed to buy for the meal on a ... of paper.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "piece",
+                "isCorrect": true
+            },
+            {
+                "content": "slice",
+                "isCorrect": false
+            },
+            {
+                "content": "part",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "She was ... on Saturday morning so she went shopping in the afternoon.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "full",
+                "isCorrect": false
+            },
+            {
+                "content": "busy",
+                "isCorrect": true
+            },
+            {
+                "content": "difficult",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Louise ... two hours cooking the meal.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "waited",
+                "isCorrect": false
+            },
+            {
+                "content": "spent",
+                "isCorrect": true
+            },
+            {
+                "content": "passed",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "When the meal was ..., everyone sat down to eat.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "right",
+                "isCorrect": false
+            },
+            {
+                "content": "sure",
+                "isCorrect": false
+            },
+            {
+                "content": "ready",
+                "isCorrect": true
+            }
+        ]
+    }
+]

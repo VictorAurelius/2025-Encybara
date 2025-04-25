@@ -1,0 +1,15 @@
+[
+    {
+        "name": "The examiner will ask you and your partner some questions about daily life, past experiences, and future plans. Examples of topics include school, job, hobbies, or home town.",
+        "skillType": "SPEAKING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "What do you usually do in your free time?",
+            "Can you describe your daily routine?",
+            "What was the most recent activity you enjoyed doing?",
+            "What are your plans for the weekend?",
+            "Can you tell me about a hobby you enjoy and why?"
+        ]
+    }
+]

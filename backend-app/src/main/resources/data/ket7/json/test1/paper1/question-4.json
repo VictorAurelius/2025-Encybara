@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "This is by the sea and you can lie here in the sun.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "beach",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "You sleep in a tent when you do this activity.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "camping",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "You take this meal with you and eat it outside.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "picnic",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "This place has grass and trees and people go there to enjoy being outside.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "park",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "You play this sport with a racket and ball.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "tennis",
+                "isCorrect": true
+            }
+        ]
+    }
+]

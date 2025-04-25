@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "Name of hotel:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "April",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Hotel address:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Leith",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Meeting starts at:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "10.20",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Bring:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "book",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Visit factory on:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Tuesday",
+                "isCorrect": true
+            }
+        ]
+    }
+]

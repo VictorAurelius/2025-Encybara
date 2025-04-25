@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "Day of programme:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Friday",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Start time:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "3.15",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Total number of shows:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "6",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Things to cook:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "snacks",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Date of first programme:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "5th July",
+                "isCorrect": true
+            }
+        ]
+    }
+]

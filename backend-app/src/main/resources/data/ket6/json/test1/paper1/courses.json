@@ -1,0 +1,22 @@
+[
+    {
+        "name": "(Paper 1) Cambridge Key English Test (KET6) - Test 1",
+        "intro": "(Level B1) Enhance your reading comprehension with this KET6 course! Practice text analysis, grammar selection, and vocabulary refinement while honing the ability to extract key information. This course is designed to help you excel in the Cambridge KET6 Reading and Writing exam.",
+        "diffLevel": 3.5,
+        "recomLevel": 3.0,
+        "courseType": "READING",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 5,
+        "group": "Cambridge Key English Test 1 (KET6)",
+        "speciField": "EVERYONE",
+        "createBy": "admin",
+        "lessonNames": [
+            "Paper 1: Reading and Writing - Part 1",
+            "Paper 1: Reading and Writing - Part 2",
+            "Paper 1: Reading and Writing - Part 3",
+            "Paper 1: Reading and Writing - Part 4",
+            "Paper 1: Reading and Writing - Part 5"
+        ]
+    }
+]

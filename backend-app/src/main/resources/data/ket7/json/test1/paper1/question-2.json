@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "We’ve just missed the 3 p.m. train.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Shall I get it?",
+                "isCorrect": false
+            },
+            {
+                "content": "In about an hour.",
+                "isCorrect": false
+            },
+            {
+                "content": "Then let's get the next one.",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Do you want to come to the shops with us?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "That would be great.",
+                "isCorrect": true
+            },
+            {
+                "content": "I don't mind it.",
+                "isCorrect": false
+            },
+            {
+                "content": "Not very often.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "I haven’t finished packing my suitcase yet.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "I'll take you on holiday.",
+                "isCorrect": false
+            },
+            {
+                "content": "When did it happen?",
+                "isCorrect": false
+            },
+            {
+                "content": "Well, hurry up then.",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "My sister’s just had a baby!",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "How lovely!",
+                "isCorrect": true
+            },
+            {
+                "content": "I'd love to!",
+                "isCorrect": false
+            },
+            {
+                "content": "Yes, she does!",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Is that Shelley in the blue coat?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "This is Amanda speaking.",
+                "isCorrect": false
+            },
+            {
+                "content": "She doesn't want to.",
+                "isCorrect": false
+            },
+            {
+                "content": "I think it may be.",
+                "isCorrect": true
+            }
+        ]
+    }
+]

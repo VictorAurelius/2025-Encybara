@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "The class takes ...",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "half an hour.",
+                "isCorrect": false
+            },
+            {
+                "content": "three quarters of an hour.",
+                "isCorrect": true
+            },
+            {
+                "content": "an hour.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "What doesn’t Frank need to take?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "trainers",
+                "isCorrect": true
+            },
+            {
+                "content": "sports clothes",
+                "isCorrect": false
+            },
+            {
+                "content": "drink",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "The teacher needs to know ...",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "if people are beginners.",
+                "isCorrect": true
+            },
+            {
+                "content": "how fit people are.",
+                "isCorrect": false
+            },
+            {
+                "content": "people's age.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "The normal price of classes is ...",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "£5",
+                "isCorrect": false
+            },
+            {
+                "content": "£6",
+                "isCorrect": true
+            },
+            {
+                "content": "£8",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "They will meet ...",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "at Jessica's house.",
+                "isCorrect": false
+            },
+            {
+                "content": "at college.",
+                "isCorrect": false
+            },
+            {
+                "content": "in the café.",
+                "isCorrect": true
+            }
+        ]
+    }
+]

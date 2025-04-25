@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "Tour takes:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "45",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Price of a family ticket:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "22",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Ticket includes:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "tea",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Name of gardens:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Highclere",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What to see in gardens:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "tree",
+                "isCorrect": true
+            }
+        ]
+    }
+]

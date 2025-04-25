@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "He ... Sam how to use it.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "learnt",
+                "isCorrect": false
+            },
+            {
+                "content": "showed",
+                "isCorrect": true
+            },
+            {
+                "content": "studied",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Sam sent an e-mail ... to his friend Billy to tell him about his nice present.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "message",
+                "isCorrect": true
+            },
+            {
+                "content": "programme",
+                "isCorrect": false
+            },
+            {
+                "content": "form",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Billy came to Sam's house and they did their geography ... together.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "subject",
+                "isCorrect": false
+            },
+            {
+                "content": "homework",
+                "isCorrect": true
+            },
+            {
+                "content": "class",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "They were ... because they found some information about rivers on the internet.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "happy",
+                "isCorrect": true
+            },
+            {
+                "content": "interesting",
+                "isCorrect": false
+            },
+            {
+                "content": "pleasant",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Afterwards, they ... playing a new computer game together.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "wanted",
+                "isCorrect": false
+            },
+            {
+                "content": "thanked",
+                "isCorrect": false
+            },
+            {
+                "content": "enjoyed",
+                "isCorrect": true
+            }
+        ]
+    }
+]

@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "On Saturdays, a lot of people visit the library where Elena works and it is always ...",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "busy",
+                "isCorrect": true
+            },
+            {
+                "content": "heavy",
+                "isCorrect": false
+            },
+            {
+                "content": "strong",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "'The job is ... because I meets a lot of different people.'Elena says",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "friendly",
+                "isCorrect": false
+            },
+            {
+                "content": "interesting",
+                "isCorrect": true
+            },
+            {
+                "content": "favourite",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Her job is to ... all the books when people bring them back.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "look",
+                "isCorrect": false
+            },
+            {
+                "content": "watch",
+                "isCorrect": false
+            },
+            {
+                "content": "check",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Elena has to put all the books back on the ... shelf.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "good",
+                "isCorrect": false
+            },
+            {
+                "content": "possible",
+                "isCorrect": false
+            },
+            {
+                "content": "right",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Sometimes people ... to return their books on time.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "think",
+                "isCorrect": false
+            },
+            {
+                "content": "forget",
+                "isCorrect": true
+            },
+            {
+                "content": "mind",
+                "isCorrect": false
+            }
+        ]
+    }
+]

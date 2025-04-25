@@ -1,0 +1,22 @@
+[
+    {
+        "name": "(Paper 1) Cambridge Key English Test (KET4) - Test 1",
+        "intro": "(Level A2) Enhance your reading skills with this comprehensive KET4 course. Practice key techniques such as grammar selection, vocabulary spelling, and extracting essential information from texts. This course is designed to boost your confidence and prepare you thoroughly for the Reading & Writing section of the KET4 exam.",
+        "diffLevel": 2.5,
+        "recomLevel": 2.0,
+        "courseType": "READING",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 5,
+        "group": "Cambridge Key English Test 1 (KET4)",
+        "speciField": "EVERYONE",
+        "createBy": "admin",
+        "lessonNames": [
+            "Paper 1: Reading and Writing - Part 1",
+            "Paper 1: Reading and Writing - Part 2",
+            "Paper 1: Reading and Writing - Part 3",
+            "Paper 1: Reading and Writing - Part 4",
+            "Paper 1: Reading and Writing - Part 5"
+        ]
+    }
+]

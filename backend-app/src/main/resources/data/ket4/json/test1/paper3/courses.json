@@ -1,0 +1,18 @@
+[
+    {
+        "name": "Cambridge Key English Test (KET4) - Speaking Course",
+        "intro": "(Level A2) Improve your speaking skills with this structured KET4 course. Engage in conversation practice covering daily life, past experiences, and future plans. This course is designed to help you build confidence in expressing ideas fluently in English.",
+        "diffLevel": 1.5,
+        "recomLevel": 1.0,
+        "courseType": "SPEAKING",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 1,
+        "group": "Cambridge Key English Test 1 (KET4)",
+        "speciField": "EVERYONE",
+        "createBy": "admin",
+        "lessonNames": [
+            "The examiner will ask you and your partner some questions about daily life, past experiences, and future plans. Examples of topics include school, job, hobbies, or home town."
+        ]
+    }
+]

@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "Name:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "White",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Where:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "ACHILL",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Hotel first built in the year:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "1859",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Number of bedrooms:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "36",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Restaurant famous for:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "fish",
+                "isCorrect": true
+            }
+        ]
+    }
+]

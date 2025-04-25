@@ -1,0 +1,54 @@
+[
+    {
+        "name": "Paper 2: Listening - Part 1",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Choose an answer for space 6",
+            "Choose an answer for space 7",
+            "Choose an answer for space 8",
+            "Choose an answer for space 9",
+            "Choose an answer for space 10"
+        ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 2",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Dawn booked the concert ticket ...",
+            "Dawn’s plane ticket cost ...",
+            "Dawn stayed in ...",
+            "Dawn thought the concert was ...",
+            "Most of the time, Dawn was ..."
+        ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 3",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Day:",
+            "Cost:",
+            "At tennis courts in:",
+            "Starting time:",
+            "Wear:"
+        ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 4",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Name:",
+            "Where:",
+            "Hotel first built in the year:",
+            "Number of bedrooms:",
+            "Restaurant famous for:"
+        ]
+    }
+]

@@ -1,0 +1,75 @@
+[
+    {
+        "name": "Paper 1: Reading and Writing - Part 1",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "On Saturdays, a lot of people visit the library where Elena works and it is always ...",
+            "'The job is ... because I meets a lot of different people.'Elena says",
+            "Her job is to ... all the books when people bring them back.",
+            "Elena has to put all the books back on the ... shelf.",
+            "Sometimes people ... to return their books on time."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 2",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Have a good holiday.",
+            "What about going shopping this afternoon?",
+            "I can't do my homework.",
+            "Which of the boys is your friend?",
+            "I've waited here for two hours!"
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 3",
+        "skillType": "READING",
+        "sumQues": 8,
+        "createBy": "admin",
+        "questionContents": [
+            "Choose an answer for space 28",
+            "Choose an answer for space 29",
+            "Choose an answer for space 30",
+            "Choose an answer for space 31",
+            "Choose an answer for space 32",
+            "Choose an answer for space 33",
+            "Choose an answer for space 34",
+            "Choose an answer for space 35"
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 4",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "If you enjoy camping, you'll need this to sleep in.",
+            "People learn to play music on this.",
+            "If you like reading stories about pop stars, you may need to buy these every week.",
+            "People who like walking in the forest need these to keep their feet dry.",
+            "If you enjoy watching films at home, you may need to rent this."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 5",
+        "skillType": "READING",
+        "sumQues": 10,
+        "createBy": "admin",
+        "questionContents": [
+            "Write ONE word for space 41",
+            "Write ONE word for space 42",
+            "Write ONE word for space 43",
+            "Write ONE word for space 44",
+            "Write ONE word for space 45",
+            "Write ONE word for space 46",
+            "Write ONE word for space 47",
+            "Write ONE word for space 48",
+            "Write ONE word for space 49",
+            "Write ONE word for space 50"
+        ]
+    }
+]

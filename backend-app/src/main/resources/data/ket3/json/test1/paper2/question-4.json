@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "Complete the phone message - From",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "A",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the phone message - Not in school because he has",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "A",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the phone message - Students should read pages",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "A",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the phone message - David will return to school on",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "A",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the phone message - at",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "A",
+                "isCorrect": true
+            }
+        ]
+    }
+]

@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "Have a good holiday.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Thanks,I will.",
+                "isCorrect": true
+            },
+            {
+                "content": "I think so.",
+                "isCorrect": false
+            },
+            {
+                "content": "Yes, very much.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "What about going shopping this afternoon?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "I'm too tired!",
+                "isCorrect": true
+            },
+            {
+                "content": "What a pity!",
+                "isCorrect": false
+            },
+            {
+                "content": "That's not right!",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "I can't do my homework.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Can you be careful?",
+                "isCorrect": false
+            },
+            {
+                "content": "You can't have that.",
+                "isCorrect": false
+            },
+            {
+                "content": "Of course you can.",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Which of the boys is your friend?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "He says I'm right.",
+                "isCorrect": false
+            },
+            {
+                "content": "Yes he is, isn't he?",
+                "isCorrect": false
+            },
+            {
+                "content": "That one over there.",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "I've waited here for two hours!",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Yes you do.",
+                "isCorrect": false
+            },
+            {
+                "content": "I'm sorry about that.",
+                "isCorrect": true
+            },
+            {
+                "content": "It didn't matter.",
+                "isCorrect": false
+            }
+        ]
+    }
+]
