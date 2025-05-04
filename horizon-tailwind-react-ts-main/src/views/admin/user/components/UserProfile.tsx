@@ -204,9 +204,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, courses, reviews, sched
                             {schedules.map((schedule) => (
                                 <div key={schedule.id} className="p-3 bg-gray-50 rounded">
                                     {/* Course Name */}
-                                    <div className="text-sm font-medium mb-2 break-words">
-                                        {+ courseDetails[schedule.courseId]?.name || 'Loading...'}
-                                    </div>
+
 
                                     {/* Schedule Type & Time */}
                                     <div className="text-gray-600">

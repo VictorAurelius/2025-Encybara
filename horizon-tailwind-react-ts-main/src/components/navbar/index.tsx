@@ -89,21 +89,38 @@ const Navbar = (props: {
     fetchNotifications();
 
   }, []);
-  const markAsRead = async (notificationId: number) => {
+  // Cập nhật hàm markAsRead để xử lý chức năng đánh dấu đã đọc VÀ chuyển hướng
+  const markAsRead = async (notificationId: number, targetRoute: string = '/admin/forum') => {
     try {
-      await fetch(`${API_BASE_URL}/api/v1/notifications/read/${notificationId}`, {
+      // Đánh dấu thông báo đã đọc
+      const response = await fetch(`${API_BASE_URL}/api/v1/notifications/read/${notificationId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem("admin_token")}`,
         }
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to mark notification as read');
+      }
+
+      // Cập nhật state để UI hiển thị đúng
+      setNotifications(prev =>
+        prev.map(notif =>
+          notif.id === notificationId
+            ? { ...notif, read: true }
+            : notif
+        )
+      );
+
+      // Chuyển hướng sau khi đánh dấu thành công
+      navigate(targetRoute);
     } catch (error) {
       console.error("Error marking notification as read:", error);
     }
   };
   const handleNotificationClick = async (notificationId: number) => {
-
     navigate('/admin/forum');
   };
   const getUserName = (userId: number) => {
@@ -189,19 +206,19 @@ const Navbar = (props: {
             <div className="flex w-[350px] flex-col bg-white rounded-[20px] shadow-xl dark:!bg-navy-700 dark:text-white">
               {/* Header */}
               <div className="flex justify-between items-center p-4 border-b">
-                <h3 className="font-semibold text-lg">Thông báo</h3>
+                <h3 className="font-semibold text-lg">Notifications</h3>
                 <div className="flex gap-2">
                   <button
                     className={`px-3 py-1 text-sm rounded-full ${activeTab === 'read' ? 'bg-blue-50 text-blue-600' : 'text-gray-600'}`}
                     onClick={() => handleTabChange('read')}
                   >
-                    Đã đọc
+                    Read
                   </button>
                   <button
                     className={`px-3 py-1 text-sm rounded-full ${activeTab === 'unread' ? 'bg-blue-50 text-blue-600' : 'text-gray-600'}`}
                     onClick={() => handleTabChange('unread')}
                   >
-                    Chưa đọc
+                    Unread
                   </button>
                 </div>
               </div>
@@ -211,13 +228,16 @@ const Navbar = (props: {
                 {activeTab === 'unread' && (
                   <div className="p-2">
                     {notifications.filter(n => !n.read).map((notification) => (
-                      <div key={notification.id} className="flex items-start gap-3 p-2 hover:bg-gray-50 cursor-pointer"
-                        onClick={() => markAsRead(notification.id)}
+                      <div
+                        key={notification.id}
+                        className="flex items-start gap-3 p-2 hover:bg-gray-50 cursor-pointer"
+                        onClick={() => markAsRead(notification.id, '/admin/forum')}  // Truyền route đích
                       >
                         <div className="relative">
                           <img
                             src={getUserAvatar(notification.userId)}
                             className="w-10 h-10 rounded-full"
+                            alt="User avatar"
                           />
                           {notification.isLive && (
                             <div className="absolute -top-1 -right-1">
@@ -241,12 +261,15 @@ const Navbar = (props: {
                 {activeTab === 'read' && (
                   <div className="p-2">
                     {notifications.filter(n => n.read).map((notification) => (
-                      <div key={notification.id} className="flex items-start gap-3 p-2 hover:bg-gray-50 cursor-pointer"
-                        onClick={() => handleNotificationClick(notification.id)}>
+                      <div
+                        key={notification.id}
+                        className="flex items-start gap-3 p-2 hover:bg-gray-50 cursor-pointer"
+                        onClick={() => navigate('/admin/forum')}  // Chỉ cần navigate vì đã đọc rồi
+                      >
                         <img
                           src={getUserAvatar(notification.userId)}
                           className="w-10 h-10 rounded-full"
-
+                          alt="User avatar"
                         />
                         <div className="flex-1">
                           <p className="text-sm font-bold">{getUserName(notification.userId)}</p>
@@ -296,24 +319,7 @@ const Navbar = (props: {
           classNames={"py-2 top-6 -left-[130px] md:-left-[130px] w-max"}
           animation="origin-[75%_0%] md:origin-top-mid transition-all duration-300 ease-in-out"
         />
-        <div
-          className="cursor-pointer text-gray-600"
-          onClick={() => {
-            if (darkmode) {
-              document.body.classList.remove("dark");
-              setDarkmode(false);
-            } else {
-              document.body.classList.add("dark");
-              setDarkmode(true);
-            }
-          }}
-        >
-          {darkmode ? (
-            <RiSunFill className="h-4 w-4 text-gray-600 dark:text-white" />
-          ) : (
-            <RiMoonFill className="h-4 w-4 text-gray-600 dark:text-white" />
-          )}
-        </div>
+
         {/* Profile & Dropdown */}
         <Dropdown
           button={

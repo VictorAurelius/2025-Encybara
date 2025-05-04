@@ -118,34 +118,35 @@ const QuestionPage = () => {
         console.log("delete");
     }
 
-    const handleUploadClick = async (questionId: number) => {
-        setOpenModalUpload(true); // Mở modal upload
+    const fetchUploadData = async (questionId: number) => {
         try {
-            console.log("questionId", questionId);
+            console.log("Fetching data for questionId:", questionId);
             const res = await fetch(`${API_BASE_URL}/api/v1/material/questions/${questionId}`,
                 {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
                         'Content-Type': 'application/json',
-                    }
+                    },
                 }
             );
             const data = await res.json();
             if (res.ok) {
                 setUploadData(data.data);
-                console.log("dữ liệu đây", data.data);
+                console.log("Upload data fetched:", data.data);
+                return data.data;
             } else {
-                notification.error({
-                    message: 'Error fetching upload data',
-                    description: data.message || 'Failed to fetch data'
+                notification.success({
+                    message: 'No data found'
                 });
+                return null;
             }
         } catch (error) {
             notification.error({
                 message: 'Network error',
                 description: 'Cannot connect to server'
             });
+            return null;
         }
     };
 
@@ -397,12 +398,14 @@ const QuestionPage = () => {
                     <UploadOutlined
                         style={{
                             fontSize: 20,
-                            color: entity.quesType === 'LISTENING' ? '#ffa500' : '#d9d9d9',
-                            cursor: entity.quesType === 'LISTENING' ? 'pointer' : 'not-allowed',
+                            color: '#ffa500',
+                            cursor: 'pointer',
                         }}
-                        onClick={() => {
+                        onClick={async () => {
                             setQuesID(entity.id);
-                            handleUploadClick(entity.id);
+                            setOpenModalUpload(true);
+                            await fetchUploadData(entity.id); // Lấy dữ liệu trước khi mở modal
+
                         }} />
                 </Space>
             ),
