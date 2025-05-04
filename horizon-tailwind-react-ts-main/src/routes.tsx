@@ -56,7 +56,7 @@ const routes: RouteItem[] = [
     component: <MainDashboard />,
   },
   {
-    name: "Manage admins",
+    name: "Admins",
     layout: "/admin",
     path: "account",
     icon: <MdAdminPanelSettings className="h-6 w-6" />,
@@ -66,14 +66,14 @@ const routes: RouteItem[] = [
     }
   },
   {
-    name: "Manage users",
+    name: "Users",
     layout: "/admin",
     path: "user",
     icon: <MdGroups className="h-6 w-6" />,
     component: <DataTables />,
   },
   {
-    name: "Manage courses",
+    name: "Courses",
     layout: "/admin",
     path: "courses",
     icon: <MdSchool className="h-6 w-6" />,

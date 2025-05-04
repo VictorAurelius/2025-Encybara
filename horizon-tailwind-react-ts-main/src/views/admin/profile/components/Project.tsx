@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { MdAddCircleOutline, MdDelete, MdModeEditOutline } from "react-icons/md";
-import image1 from "assets/img/profile/image1.png";
 import Card from "components/card";
 import LessonList from "./LessonList";
 import { useAuth } from "hooks/useAuth";
 import EditCourse from "./EditCourses";
 import { API_BASE_URL } from "service/api.config";
 import Access from "views/admin/access";
-import { ALL_PERMISSIONS } from "views/admin/permission/components/modules";
 import { message, Pagination } from "antd";
 import { Select, Input, Button, Space, Row, Col } from 'antd';
+import { SearchOutlined } from "@ant-design/icons";
 type RowObj = {
   id: number;
   name: string;
@@ -46,6 +45,8 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
   const [pageSize, setPageSize] = useState<number>(10);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
+  const [groupOptions, setGroupOptions] = useState<string[]>([]);
+
   const fetchCourses = async () => {
     try {
       // Xây dựng query params
@@ -84,19 +85,69 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
     }
   };
 
+  const fetchGroups = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/courses/groups`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch course groups");
+      }
+
+      const data = await response.json();
+      if (data.data && data.data.content) {
+        setGroupOptions(data.data.content);
+      }
+    } catch (error) {
+      console.error("Error fetching course groups:", error);
+      message.error("Failed to fetch course groups");
+    }
+  };
+
+  const resetFilters = () => {
+    setSelectedFilters({
+      diffLevel: undefined,
+      courseType: undefined,
+      group: undefined,
+      courseStatus: undefined,
+      keyword: undefined
+    });
+  };
+
+  useEffect(() => {
+    fetchGroups();
+    fetchCourses();
+  }, [courses]);
+
   useEffect(() => {
     fetchCourses();
-  }, [currentPage, pageSize, selectedFilters]);
+  }, [currentPage, pageSize]);
+
   const handleSuccess = () => {
     fetchCourses(); // Tải lại danh sách khóa học sau khi submit
   };
-  // Thêm hàm xử lý chuyển đổi status
+  // Cập nhật hàm xử lý chuyển đổi status
   const handleToggleStatus = async (course: RowObj) => {
     try {
-      const isPublic = course.courseStatus === "PUBLIC";
-      const endpoint = isPublic
-        ? `${API_BASE_URL}/api/v1/courses/${course.id}/make-private`
-        : `${API_BASE_URL}/api/v1/courses/${course.id}/make-public`;
+      let endpoint;
+      let newStatus;
+
+      // Xác định endpoint và message dựa trên trạng thái hiện tại
+      if (course.courseStatus === "PUBLIC") {
+        endpoint = `${API_BASE_URL}/api/v1/courses/${course.id}/make-private`;
+        newStatus = "private";
+      } else if (course.courseStatus === "PENDING") {
+        endpoint = `${API_BASE_URL}/api/v1/courses/${course.id}/publish`;
+        newStatus = "public";
+      } else {
+        endpoint = `${API_BASE_URL}/api/v1/courses/${course.id}/make-public`;
+        newStatus = "public";
+      }
 
       const response = await fetch(endpoint, {
         method: 'PUT',
@@ -107,11 +158,11 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to change course status to ${isPublic ? 'private' : 'public'}`);
+        throw new Error(`Failed to change course status to ${newStatus}`);
       }
 
       // Cập nhật UI
-      message.success(`Course status changed to ${isPublic ? 'private' : 'public'} successfully`);
+      message.success(`Course status changed to ${newStatus} successfully`);
 
       // Tải lại danh sách khóa học
       await fetchCourses();
@@ -184,96 +235,119 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
       <Card extra={"w-full p-4 h-full"}>
         <div className="mb-8 w-full">
           <h4 className="text-xl font-bold text-navy-700 dark:text-white">
-            All projects
+            All Courses
           </h4>
           <p className="mt-2 text-base text-gray-600">
-            Here you can find more details about your projects. Keep you user
+            Here you can find more details about your courses. Keep your users
             engaged by providing meaningful information.
           </p>
-
         </div>
-        <div className="mr-4 flex items-center justify-center text-gray-600 dark:text-white">
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-            onClick={handleAddCourse}
-          >Add</button>
-        </div>
-        <div className="mb-4 mt-2">
-          <Row gutter={16}>
 
-            <Col span={4}>
-              <Select
-                placeholder="Diff Level"
-                style={{ width: '100%' }}
-                value={selectedFilters.diffLevel}
-                onChange={(value) => setSelectedFilters({ ...selectedFilters, diffLevel: value })}
-                allowClear
-                options={[
-                  { value: '1.0', label: 'Level 1' },
-                  { value: '1.5', label: 'Level 2' },
-                  { value: '2.0', label: 'Level 3' },
-                  { value: '2.5', label: 'Level 4' },
-                  { value: '3.0', label: 'Level 5' },
-                  { value: '3.5', label: 'Level 6' },
-                  { value: '4.0', label: 'Level 7' },
-                  { value: '4.5', label: 'Level 8' },
-                  { value: '5.0', label: 'Level 9' },
-                  { value: '5.5', label: 'Level 10' },
-
-
-                ]}
-              />
-            </Col>
-            <Col span={4}>
-              <Select
-                placeholder="Course Type"
-                style={{ width: '100%' }}
-                value={selectedFilters.courseType}
-                onChange={(value) => setSelectedFilters({ ...selectedFilters, courseType: value })}
-                allowClear
-                options={[
-                  { value: 'READING', label: 'Reading' },
-                  { value: 'LISTENING', label: 'Listening' },
-                  { value: 'WRITING', label: 'Writing' },
-                  { value: 'SPEAKING', label: 'Speaking' }
-
-                ]}
-              />
-            </Col>
-            <Col span={4}>
-              <Select
-                placeholder="Group"
-                style={{ width: '100%' }}
-                value={selectedFilters.group}
-                onChange={(value) => setSelectedFilters({ ...selectedFilters, group: value })}
-                allowClear
-                options={[
-                  { value: 'TESTED', label: 'Tested' },
-                  { value: 'KET1', label: 'Cambridge Key English Test 1' },
-                  { value: 'KET2', label: 'Cambridge Key English Test 2' },
-                ]}
-              />
-            </Col>
-            <Col span={4}>
-              <Select
-                placeholder="Status"
-                style={{ width: '100%' }}
-                value={selectedFilters.courseStatus}
-                onChange={(value) => setSelectedFilters({ ...selectedFilters, courseStatus: value })}
-                allowClear
-                options={[
-                  { value: 'PUBLIC', label: 'Public' },
-                  { value: 'PRIVATE', label: 'Private' },
-                  { value: 'PENDING', label: 'Pending' },
-                ]}
-              />
-            </Col>
-            <Col span={2}>
-              <Button type="primary" onClick={fetchCourses}>
-                Filter
+        {/* Filter section - centered */}
+        <div className="mb-6 flex flex-col items-center">
+          <div className="w-full max-w-4xl">
+            <div className="flex justify-center mb-4">
+              <Button
+                type="primary"
+                size="large"
+                onClick={handleAddCourse}
+                className="bg-blue-500 hover:bg-blue-600"
+              >
+                Add New Course
               </Button>
-            </Col>
-          </Row>
+            </div>
+
+
+
+            <Row gutter={16} className="mb-4">
+              <Col span={6}>
+                <Select
+                  placeholder="Difficulty Level"
+                  style={{ width: '100%' }}
+                  value={selectedFilters.diffLevel}
+                  onChange={(value) => setSelectedFilters({ ...selectedFilters, diffLevel: value })}
+                  allowClear
+                  options={[
+                    { value: '1.0', label: 'Level 1' },
+                    { value: '1.5', label: 'Level 2' },
+                    { value: '2.0', label: 'Level 3' },
+                    { value: '2.5', label: 'Level 4' },
+                    { value: '3.0', label: 'Level 5' },
+                    { value: '3.5', label: 'Level 6' },
+                    { value: '4.0', label: 'Level 7' },
+                    { value: '4.5', label: 'Level 8' },
+                    { value: '5.0', label: 'Level 9' },
+                    { value: '5.5', label: 'Level 10' },
+                  ]}
+                />
+              </Col>
+              <Col span={6}>
+                <Select
+                  placeholder="Course Type"
+                  style={{ width: '100%' }}
+                  value={selectedFilters.courseType}
+                  onChange={(value) => setSelectedFilters({ ...selectedFilters, courseType: value })}
+                  allowClear
+                  options={[
+                    { value: 'READING', label: 'Reading' },
+                    { value: 'LISTENING', label: 'Listening' },
+                    { value: 'WRITING', label: 'Writing' },
+                    { value: 'SPEAKING', label: 'Speaking' },
+                    { value: 'ALLSKILLS', label: 'AllSkills' }
+                  ]}
+                />
+              </Col>
+              <Col span={6}>
+                <Select
+                  placeholder="Select Group"
+                  style={{ width: '100%' }}
+                  value={selectedFilters.group}
+                  onChange={(value) => setSelectedFilters({ ...selectedFilters, group: value })}
+                  allowClear
+                  showSearch
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                  }
+                  options={groupOptions.map(group => ({ value: group, label: group }))}
+                  loading={groupOptions.length === 0}
+                />
+              </Col>
+              <Col span={6}>
+                <Select
+                  placeholder="Status"
+                  style={{ width: '100%' }}
+                  value={selectedFilters.courseStatus}
+                  onChange={(value) => setSelectedFilters({ ...selectedFilters, courseStatus: value })}
+                  allowClear
+                  options={[
+                    { value: 'PUBLIC', label: 'Public' },
+                    { value: 'PRIVATE', label: 'Private' },
+                    { value: 'PENDING', label: 'Pending' },
+                  ]}
+                />
+              </Col>
+            </Row>
+
+            <Row>
+              <Col span={24} className="flex justify-center gap-4">
+                <Button
+                  onClick={resetFilters}
+                  size="large"
+                >
+                  Reset
+                </Button>
+                <Button
+                  type="primary"
+                  onClick={fetchCourses}
+                  size="large"
+                  className="px-8"
+                >
+                  Filter
+                </Button>
+              </Col>
+            </Row>
+          </div>
         </div>
 
         {showModal && (

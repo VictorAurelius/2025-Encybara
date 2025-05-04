@@ -1,5 +1,5 @@
 import { FooterToolbar, ModalForm, ProCard, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
-import { Col, Form, Row, message, notification, Input, Button, Switch, Upload, Typography } from "antd";
+import { Col, Form, Row, message, notification, Input, Button, Switch, Upload, Typography, Table, Empty } from "antd";
 import { API_BASE_URL } from "service/api.config";
 import { useEffect, useState } from "react";
 import { CheckCircleOutlined, VideoCameraOutlined } from "@ant-design/icons";
@@ -37,8 +37,11 @@ const ModalUpload = (props: IProps) => {
             }));
 
             form.setFieldsValue({
-                materials: initialValues, // Giả sử bạn đã tạo một trường materials trong form
+                materials: initialValues,
             });
+        } else {
+            // Reset form khi không có dữ liệu
+            form.resetFields();
         }
     }, [uploadData, form]);
     const submitUpload = async (valuesForm: any) => {
@@ -59,6 +62,7 @@ const ModalUpload = (props: IProps) => {
                 },
                 body: JSON.stringify(formData),
             });
+
             const data = await res.json();
             if (res.ok) {
                 message.success('Upload material successfully');
@@ -72,8 +76,8 @@ const ModalUpload = (props: IProps) => {
             }
         } catch (error) {
             notification.error({
-                message: 'Network error',
-                description: 'Cannot connect to server',
+                message: 'Upload error',
+                description: error instanceof Error ? error.message : 'Cannot connect to server',
             });
         }
     };
@@ -170,7 +174,7 @@ const ModalUpload = (props: IProps) => {
                                     }
                                     return false; // Prevent auto upload
                                 }}
-
+                                listType="picture"
                             >
                                 <p className="ant-upload-drag-icon">
                                     <VideoCameraOutlined style={{ fontSize: '48px', color: '#1890ff' }} />
@@ -186,31 +190,55 @@ const ModalUpload = (props: IProps) => {
                     </ProCard>
                 </Col>
                 <Col span={24}>
-                    {uploadData && uploadData.map((item, index) => (
-                        <div key={index}>
-                            <Title level={5}>{`Uploaded Material ${index + 1}`}
-                                <Button type="link" onClick={() => handleDelete(item.id)}>Delete</Button>
-                            </Title>
-                            <ProFormText
-                                name={`materials[${index}].materType`}
-                                label="Material Type"
-                                initialValue={item.materType}
-
-                            />
-                            <ProFormText
-                                name={`materials[${index}].materLink`}
-                                label="Material Link"
-                                initialValue={item.materLink}
-
-                            />
-                            <ProFormText
-                                name={`materials[${index}].uploadedAt`}
-                                label="Uploaded At"
-                                initialValue={item.uploadedAt}
-
+                    {uploadData && uploadData.length > 0 ? (
+                        <div className="mt-4">
+                            <Title level={5}>Uploaded Materials</Title>
+                            <Table
+                                dataSource={uploadData}
+                                columns={[
+                                    {
+                                        title: 'Type',
+                                        dataIndex: 'materType',
+                                        key: 'materType',
+                                    },
+                                    {
+                                        title: 'Link',
+                                        dataIndex: 'materLink',
+                                        key: 'materLink',
+                                        render: (text) => (
+                                            <a href={text} target="_blank" rel="noopener noreferrer">
+                                                {text}
+                                            </a>
+                                        ),
+                                    },
+                                    {
+                                        title: 'Upload Date',
+                                        dataIndex: 'uploadedAt',
+                                        key: 'uploadedAt',
+                                        render: (text) => new Date(text).toLocaleString(),
+                                    },
+                                    {
+                                        title: 'Action',
+                                        key: 'action',
+                                        render: (_, record) => (
+                                            <Button
+                                                type="link"
+                                                danger
+                                                onClick={() => handleDelete(record.id)}
+                                            >
+                                                Delete
+                                            </Button>
+                                        ),
+                                    },
+                                ]}
+                                pagination={false}
+                                size="small"
+                                bordered
                             />
                         </div>
-                    ))}
+                    ) : (
+                        <Empty description="No materials uploaded yet" />
+                    )}
                 </Col>
             </ModalForm>
         </>

@@ -73,31 +73,31 @@ const Dashboard = () => {
       <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-6">
         <Widget
           icon={<MdBarChart className="h-7 w-7" />}
-          title={"Số người học"}
+          title={"Number of users"}
           subtitle={userCount.toString()}
           onClick={() => navigator('/admin/user')}
         />
         <Widget
           icon={<IoDocuments className="h-6 w-6" />}
-          title={"Tổng khóa học"}
+          title={"Total number of courses"}
           subtitle={courseCount.toString()}
           onClick={() => navigator('/admin/courses')}
         />
         <Widget
           icon={<MdBarChart className="h-7 w-7" />}
-          title={"Tổng số bài học"}
+          title={"Total number of lessons"}
           subtitle={lessonCount.toString()}
           onClick={() => navigator('/admin/courses')}
         />
         <Widget
           icon={<MdDashboard className="h-6 w-6" />}
-          title={"Tổng số câu hỏi:"}
+          title={"Total number of questions"}
           subtitle={questionCount.toString()}
           onClick={() => navigator('/admin/question')}
         />
         <Widget
           icon={<MdBarChart className="h-7 w-7" />}
-          title={"Tổng số ngành"}
+          title={"Total number of specializations"}
           subtitle={"4"}
         />
 
