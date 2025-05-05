@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "Colour of flowers:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "pink",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Season to see flowers:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Spring",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Month to put plant outside:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "September",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Final size of plant:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "40",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Price of plant today:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "8",
+                "isCorrect": true
+            }
+        ]
+    }
+]

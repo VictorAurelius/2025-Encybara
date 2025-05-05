@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "How did you get to the party?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "I caught a bus",
+                "isCorrect": true
+            },
+            {
+                "content": "It was great thanks",
+                "isCorrect": false
+            },
+            {
+                "content": "On Wednesday I think",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Yuri phoned me yesterday from Japan.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Who's calling?",
+                "isCorrect": false
+            },
+            {
+                "content": "How is she?",
+                "isCorrect": true
+            },
+            {
+                "content": "Can I leave a message?",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Is that Stella's new mobile?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "I can't find one",
+                "isCorrect": false
+            },
+            {
+                "content": "She didn't answer",
+                "isCorrect": false
+            },
+            {
+                "content": "She hasn't bought one yet",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "I'm going clothes shopping tomorrow.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Are they in the town centre?",
+                "isCorrect": false
+            },
+            {
+                "content": "How long is it?",
+                "isCorrect": false
+            },
+            {
+                "content": "What do you need to get?",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "The library's closed already.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "It's a pity you can't",
+                "isCorrect": false
+            },
+            {
+                "content": "I can wait until tomorrow",
+                "isCorrect": true
+            },
+            {
+                "content": "Can I borrow it?",
+                "isCorrect": false
+            }
+        ]
+    }
+]

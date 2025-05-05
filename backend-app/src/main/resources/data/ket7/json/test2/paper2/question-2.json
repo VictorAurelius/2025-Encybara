@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "Where is the new shop?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "near the college.",
+                "isCorrect": false
+            },
+            {
+                "content": "outside the town centre.",
+                "isCorrect": false
+            },
+            {
+                "content": "opposite the newsagent's.",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "In the shop you cannot buy?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "clothes",
+                "isCorrect": false
+            },
+            {
+                "content": "bags",
+                "isCorrect": true
+            },
+            {
+                "content": "boots",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "What time does the shop close on a Thursday?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "6 p.m.",
+                "isCorrect": false
+            },
+            {
+                "content": "8 p.m.",
+                "isCorrect": true
+            },
+            {
+                "content": "10 p.m.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "What days does the shop open?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Tuesday to Sunday",
+                "isCorrect": true
+            },
+            {
+                "content": "every day",
+                "isCorrect": false
+            },
+            {
+                "content": "Monday to Friday",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "What should Suzy's friend do if she wants a job?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "phone to manager.",
+                "isCorrect": false
+            },
+            {
+                "content": "go to the shop.",
+                "isCorrect": true
+            },
+            {
+                "content": "write a letter.",
+                "isCorrect": false
+            }
+        ]
+    }
+]

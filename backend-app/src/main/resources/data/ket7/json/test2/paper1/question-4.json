@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "You go on this when you fly from one place to another.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "plane",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "You go to this place when you need to catch a train or coach.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "station",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "When you arrive in a new country, you may have to show this.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "passport",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "If you look at this, it will help you find your way around a new city.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "map",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "You arrive here when you fly into another country.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "airport",
+                "isCorrect": true
+            }
+        ]
+    }
+]

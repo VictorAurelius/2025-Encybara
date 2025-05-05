@@ -1,0 +1,75 @@
+[
+    {
+        "name": "Paper 1: Reading - Part 6",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Sharon ... at her tennis club four times a week.",
+            "Sharon ... lots of competitions and often plays very well in them.",
+            "It's Sharon's birthday soon and she has ... her parents for a new racket.",
+            "When Sharon loses a match, she always feels very ...",
+            "Sharon's friend has just started playing tennis and Sharon is helping her to ..."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading - Part 7",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "How did you get to the party?",
+            "Yuri phoned me yesterday from Japan.",
+            "Is that Stella's new mobile?",
+            "I'm going clothes shopping tomorrow.",
+            "The library's closed already."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading - Part 8",
+        "skillType": "READING",
+        "sumQues": 8,
+        "createBy": "admin",
+        "questionContents": [
+            "Choose an answer for space 28",
+            "Choose an answer for space 29",
+            "Choose an answer for space 30",
+            "Choose an answer for space 31",
+            "Choose an answer for space 32",
+            "Choose an answer for space 33",
+            "Choose an answer for space 34",
+            "Choose an answer for space 35"
+        ]
+    },
+    {
+        "name": "Paper 1: Reading - Part 9",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "You go on this when you fly from one place to another.",
+            "You go to this place when you need to catch a train or coach.",
+            "When you arrive in a new country, you may have to show this.",
+            "If you look at this, it will help you find your way around a new city.",
+            "You arrive here when you fly into another country."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading - Part 10",
+        "skillType": "READING",
+        "sumQues": 10,
+        "createBy": "admin",
+        "questionContents": [
+            "Write ONE word for space 41",
+            "Write ONE word for space 42",
+            "Write ONE word for space 43",
+            "Write ONE word for space 44",
+            "Write ONE word for space 45",
+            "Write ONE word for space 46",
+            "Write ONE word for space 47",
+            "Write ONE word for space 48",
+            "Write ONE word for space 49",
+            "Write ONE word for space 50"
+        ]
+    }
+]

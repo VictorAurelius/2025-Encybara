@@ -1,0 +1,170 @@
+[
+    {
+        "quesContent": "Choose an answer for space 28",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "on",
+                "isCorrect": false
+            },
+            {
+                "content": "in",
+                "isCorrect": true
+            },
+            {
+                "content": "at",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 29",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "fast",
+                "isCorrect": true
+            },
+            {
+                "content": "faster",
+                "isCorrect": false
+            },
+            {
+                "content": "fastest",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 30",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "after",
+                "isCorrect": true
+            },
+            {
+                "content": "until",
+                "isCorrect": false
+            },
+            {
+                "content": "during",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 31",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "who",
+                "isCorrect": false
+            },
+            {
+                "content": "where",
+                "isCorrect": false
+            },
+            {
+                "content": "which",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 32",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "try",
+                "isCorrect": false
+            },
+            {
+                "content": "trying",
+                "isCorrect": true
+            },
+            {
+                "content": "tried",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 33",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "ever",
+                "isCorrect": false
+            },
+            {
+                "content": "yet",
+                "isCorrect": false
+            },
+            {
+                "content": "how",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 34",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "already",
+                "isCorrect": false
+            },
+            {
+                "content": "exactly",
+                "isCorrect": false
+            },
+            {
+                "content": "often",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 35",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "of",
+                "isCorrect": true
+            },
+            {
+                "content": "by",
+                "isCorrect": false
+            },
+            {
+                "content": "to",
+                "isCorrect": false
+            }
+        ]
+    }
+]

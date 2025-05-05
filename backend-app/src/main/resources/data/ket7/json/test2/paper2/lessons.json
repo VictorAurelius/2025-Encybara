@@ -1,0 +1,54 @@
+[
+    {
+        "name": "Paper 2: Listening - Part 1",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Choose an answer for space 6",
+            "Choose an answer for space 7",
+            "Choose an answer for space 8",
+            "Choose an answer for space 9",
+            "Choose an answer for space 10"
+        ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 2",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Where is the new shop?",
+            "In the shop you cannot buy?",
+            "What time does the shop close on a Thursday?",
+            "What days does the shop open?",
+            "What should Suzy's friend do if she wants a job?"
+        ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 3",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Price of flat:",
+            "How far from station:",
+            "Number of bedrooms:",
+            "Furniture in flat:",
+            "Day to see flat:"
+        ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 4",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Cost to join sport centre per year:",
+            "Closing time of cafe:",
+            "Name of receptionist:",
+            "Phone number:",
+            "What to bring to college:"
+        ]
+    }
+]
