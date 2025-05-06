@@ -58,6 +58,14 @@ public class DataManagementService {
         // EFIT Test 1
         courseDataSeeder.seedCourseData("efit", "unit1", "paper1");
         courseDataSeeder.seedCourseData("efit", "unit1", "paper2");
+        courseDataSeeder.seedCourseData("efit", "unit1", "paper3");
+        courseDataSeeder.seedCourseData("efit", "unit1", "paper4");
+        courseDataSeeder.seedCourseData("efit", "unit1", "paper5");
+        courseDataSeeder.seedCourseData("efit", "unit2", "paper1");
+        courseDataSeeder.seedCourseData("efit", "unit2", "paper2");
+        courseDataSeeder.seedCourseData("efit", "unit2", "paper3");
+        courseDataSeeder.seedCourseData("efit", "unit2", "paper4");
+        courseDataSeeder.seedCourseData("efit", "unit2", "paper5");
     }
 
     public void seedPlacementData() {

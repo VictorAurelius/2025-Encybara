@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Encybara.iml" filepath="$PROJECT_DIR$/.idea/Encybara.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/utc.englishlearning.Encybara.main.iml" filepath="$PROJECT_DIR$/.idea/modules/utc.englishlearning.Encybara.main.iml" />
     </modules>
   </component>
 </project>

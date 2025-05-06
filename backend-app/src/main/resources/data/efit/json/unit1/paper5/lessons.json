@@ -1,0 +1,41 @@
+[
+  {
+    "name": "(BM) 1. Reading: Company Description & Job Advertisement",
+    "skillType": "READING",
+    "sumQues": 10,
+    "createBy": "admin",
+    "questionContents": [
+      "Choose an answer for space 1",
+      "Choose an answer for space 2",
+      "Choose an answer for space 3",
+      "Choose an answer for space 4",
+      "Choose an answer for space 5",
+      "Choose an answer for space 6",
+      "Choose an answer for space 7",
+      "Choose an answer for space 8",
+      "Choose an answer for space 9",
+      "Choose an answer for space 10"
+    ]
+  },
+  {
+    "name": "(BM) 2. Speaking: Job Interview Roleplay",
+    "skillType": "SPEAKING",
+    "sumQues": 4,
+    "createBy": "admin",
+    "questionContents": [
+      "What questions should an interviewer ask during a job interview?",
+      "How can a candidate effectively respond to common interview questions?",
+      "What are some strategies for making a good impression in an interview?",
+      "What are common mistakes candidates make during interviews, and how can they be avoided?"
+    ]
+  },
+  {
+    "name": "(BM) 3. Writing: IT Job Advertisement",
+    "skillType": "WRITING",
+    "sumQues": 1,
+    "createBy": "admin",
+    "questionContents": [
+      "Write a job advertisement for an IT job you would like or your current IT job. Use the pattern you identified in the previous exercise."
+    ]
+  }
+]

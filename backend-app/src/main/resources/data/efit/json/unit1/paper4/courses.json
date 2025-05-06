@@ -7,10 +7,14 @@
         "courseType": "ALLSKILLS",
         "numLike": 0,
         "courseStatus": "PUBLIC",
-        "sumLesson": 4,
+        "sumLesson": 3,
         "group": "English for Information Technology - UTC",
         "speciField": "IT",
         "createBy": "admin",
-        "lessonNames": []
+        "lessonNames": [
+            "(ITm) 1. Speaking - Work Meetings",
+            "(ITm) 2. Listening - Workplace Teleconference",
+            "(ITm) 3. Speaking - Making and Responding to Suggestions"
+        ]
     }
 ]

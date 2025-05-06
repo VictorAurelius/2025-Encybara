@@ -1,0 +1,38 @@
+[
+  {
+    "name": "(ITm) 1. Speaking - Work Meetings",
+    "skillType": "SPEAKING",
+    "sumQues": 2,
+    "createBy": "admin",
+    "questionContents": [
+      "What happens in a work meeting?",
+      "Talk about a meeting you've been to. What happened?"
+    ]
+  },
+  {
+    "name": "(ITm) 2. Listening - Workplace Teleconference",
+    "skillType": "LISTENING",
+    "sumQues": 6,
+    "createBy": "admin",
+    "questionContents": [
+      "What suggestion did Fred make?",
+      "What is the problem with that suggestion?",
+      "What was Fred's next suggestion?",
+      "What is the problem with that?",
+      "What was Ulrik's suggestion?",
+      "Whose suggestion was chosen?"
+    ]
+  },
+  {
+    "name": "(ITm) 3. Speaking - Making and Responding to Suggestions",
+    "skillType": "SPEAKING",
+    "sumQues": 4,
+    "createBy": "admin",
+    "questionContents": [
+      "Can you think of four suggestions similar to those in a teleconference?",
+      "How would you respond to different workplace suggestions?",
+      "What are some effective ways to express agreement or disagreement in a discussion?",
+      "How can you ensure a constructive conversation when discussing workplace ideas?"
+    ]
+  }
+]

@@ -1,0 +1,53 @@
+[
+  {
+    "name": "(MH) 1. Speaking: Using Multimedia Hardware",
+    "skillType": "SPEAKING",
+    "sumQues": 3,
+    "createBy": "admin",
+    "questionContents": [
+      "What do you use computers for? List as many uses as you can.",
+      "Which multimedia hardware items do you use for different tasks?",
+      "Who might use each multimedia device, and what would they use them for?"
+    ]
+  },
+  {
+    "name": "(MH) 2. Reading: GUI Components & Functions",
+    "skillType": "READING",
+    "sumQues": 7,
+    "createBy": "admin",
+    "questionContents": [
+      "Choose an answer for space 1",
+      "Choose an answer for space 2",
+      "Choose an answer for space 3",
+      "Choose an answer for space 4",
+      "Choose an answer for space 5",
+      "Choose an answer for space 6",
+      "Choose an answer for space 7"
+    ]
+  },
+  {
+    "name": "(MH) 3. Vocabulary: Electrical & Tech Terms",
+    "skillType": "READING",
+    "sumQues": 8,
+    "createBy": "admin",
+    "questionContents": [
+      "What is the synonym for 'cable'?",
+      "What is the synonym for 'plug (into)'?",
+      "What is the synonym for 'insert'?",
+      "What is the synonym for 'power socket'?",
+      "What is the synonym for 'turn on'?",
+      "What is the synonym for 'press'?",
+      "What is the synonym for 'unplug'?",
+      "What is the synonym for 'switch off'?"
+    ]
+  },
+  {
+    "name": "(MH) 4. Writing: Composing an Email - Transferring Photos",
+    "skillType": "WRITING",
+    "sumQues": 1,
+    "createBy": "admin",
+    "questionContents": [
+      "Write an email explaining how to transfer photographs from a digital camera to a computer. Include instructions for the following steps:\n- Connect the card reader to the computer\n- Open the appropriate software\n- Select the card reader in the drop-down menu\n- Choose the destination folder\n- Click the 'OK' button"
+    ]
+  }
+]

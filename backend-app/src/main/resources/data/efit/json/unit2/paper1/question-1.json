@@ -1,0 +1,149 @@
+[
+    {
+        "quesContent": "What is the difference between peripherals and internal hardware?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "Can you name as many peripherals and internal hardware components as possible?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "Are you able to install any hardware components? If so, which ones?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "Which component is labeled as 'A'?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "CPU socket",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Which component is labeled as 'B'?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "DIMM slot",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Which component is labeled as 'C'?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "SATA socket",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Which component is labeled as 'D'?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "graphics card socket",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Which component is labeled as 'E'?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "audio socket",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Which component is labeled as 'F'?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Ethernet connector",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Which component is labeled as 'G'?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "USB port",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What are the key specifications of a computer?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "How fast is the processor in your computer?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "How much memory does your computer have?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "What is the screen resolution of your computer?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    }
+]

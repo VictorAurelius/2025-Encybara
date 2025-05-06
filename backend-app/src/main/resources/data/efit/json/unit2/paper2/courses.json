@@ -1,0 +1,20 @@
+[
+    {
+        "name": "(Unit 2: IT Systems) GUI Operations",
+        "intro": "This section focuses on IT systems and graphical user interfaces, covering hardware specifications, GUI operations, multimedia types, and OS installation.",
+        "diffLevel": 5.0,
+        "recomLevel": 4.5,
+        "courseType": "ALLSKILLS",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 3,
+        "group": "English for Information Technology - UTC",
+        "speciField": "IT",
+        "createBy": "admin",
+        "lessonNames": [
+            "(GO) 1. Reading: GUI Components",
+            "(GO) 2. Reading: Matching GUI Actions to Results",
+            "(GO) 3. Speaking: Explaining Computer Actions"
+        ]
+    }
+]

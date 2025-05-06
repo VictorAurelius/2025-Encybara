@@ -1,0 +1,34 @@
+[
+    {
+        "quesContent": "How do you open a program?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "What steps are needed to save a file?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "How can you change a program's settings?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "What is the process for deleting a file?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "name": "(Iwr) 1. Speaking - Workplace & College Rules",
+    "skillType": "SPEAKING",
+    "sumQues": 3,
+    "createBy": "admin",
+    "questionContents": [
+      "Do you have any of the rules in your workplace or college?",
+      "Do you think they are good rules or bad rules? Why?",
+      "If you could change one rule at your workplace or college, what would it be and why?"
+    ]
+  },
+  {
+    "name": "(Iwr) 2. Vocabulary: IT & Security Terms",
+    "skillType": "READING",
+    "sumQues": 8,
+    "createBy": "admin",
+    "questionContents": [
+      "Person in charge of IT",
+      "Keeping something safe",
+      "Information such as numbers and details about people",
+      "A secret word that you type into a computer before you can use it",
+      "A group of connected computers",
+      "Having only letters and numbers",
+      "Letters, numbers, punctuation marks, etc.",
+      "People you work with"
+    ]
+  },
+  {
+    "name": "(Iwr) 3. Speaking: Workplace IT Rules",
+    "skillType": "SPEAKING",
+    "sumQues": 8,
+    "createBy": "admin",
+    "questionContents": [
+      "What rules would you set for installing new software?",
+      "Should employees be allowed to connect personal devices to company computers? Why or why not?",
+      "Is playing computer games at work acceptable? Under what conditions?",
+      "What are the advantages and disadvantages of using social networking sites such as Facebook at work?",
+      "Should employees be allowed to use mobile phones during work hours? Explain your reasoning.",
+      "Why might it be important to switch off your computer at night?",
+      "What risks are associated with downloading files at work?",
+      "Should streaming music or video be permitted in a professional environment? Why or why not?"
+    ]
+  },
+  {
+    "name": "(Iwr) 4. Speaking: Technology-related Rules",
+    "skillType": "SPEAKING",
+    "sumQues": 5,
+    "createBy": "admin",
+    "questionContents": [
+      "What technology-related rules exist in your workplace or place of study?",
+      "Do you think these rules are helpful? Why or why not?",
+      "Which rule do you find most difficult to follow? Explain why.",
+      "If you could change one technology-related rule, what would it be?",
+      "How do these rules affect productivity and security in your environment?"
+    ]
+  }
+]

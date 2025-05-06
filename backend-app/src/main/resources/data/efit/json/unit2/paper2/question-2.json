@@ -1,0 +1,93 @@
+[
+    {
+        "quesContent": "What happens when you double-click on the title bar?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "b",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What is the result of clicking on a menu?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "f",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What happens when you right-click on an icon?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "a",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What is the result of sliding the scrollbar down?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "e",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does clicking the 'Minimise' button do?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "d",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Why might you drag the title bar?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "c",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What happens when you select an icon?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "g",
+                "isCorrect": true
+            }
+        ]
+    }
+]

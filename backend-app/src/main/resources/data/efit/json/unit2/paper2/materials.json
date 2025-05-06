@@ -1,0 +1,18 @@
+[
+    {
+        "name": "EFIT Unit 2: Paper 2 - Lesson 1 Image",
+        "materType": "image/png",
+        "materPath": "data/efit/file/unit2/paper2/les1-paper2.png",
+        "lessonName": "(GO) 1. Reading: GUI Components",
+        "questionContent": null,
+        "createBy": "admin"
+    },
+    {
+        "name": "EFIT Unit 2: Paper 2 - Lesson 2 Image",
+        "materType": "image/png",
+        "materPath": "data/efit/file/unit2/paper2/les2-paper2.png",
+        "lessonName": "(GO) 2. Reading: Matching GUI Actions to Results",
+        "questionContent": null,
+        "createBy": "admin"
+    }
+]

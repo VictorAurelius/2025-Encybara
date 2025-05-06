@@ -1,0 +1,77 @@
+[
+    {
+        "name": "(SyS) 1. Speaking: Peripherals vs. Internal Hardware",
+        "skillType": "SPEAKING",
+        "sumQues": 3,
+        "createBy": "admin",
+        "questionContents": [
+            "What is the difference between peripherals and internal hardware?",
+            "Can you name as many peripherals and internal hardware components as possible?",
+            "Are you able to install any hardware components? If so, which ones?"
+        ]
+    },
+    {
+        "name": "(SyS) 2. Reading: Categorizing Computer Hardware",
+        "skillType": "READING",
+        "sumQues": 12,
+        "createBy": "admin",
+        "questionContents": [
+            "Is an external drive an internal component, a peripheral, or a storage device?",
+            "Is a hard disk drive an internal component, a peripheral, or a storage device?",
+            "Are headphones considered an internal component, a peripheral, or a storage device?",
+            "Is an optical drive an internal component, a peripheral, or a storage device?",
+            "Is a keyboard an internal component, a peripheral, or a storage device?",
+            "Is a solid state drive an internal component, a peripheral, or a storage device?",
+            "Is a mouse an internal component, a peripheral, or a storage device?",
+            "Is memory classified as an internal component, a peripheral, or a storage device?",
+            "Is a monitor an internal component, a peripheral, or a storage device?",
+            "Is a power supply unit an internal component, a peripheral, or a storage device?",
+            "Is a printer an internal component, a peripheral, or a storage device?",
+            "Is a screen an internal component, a peripheral, or a storage device?"
+        ]
+    },
+    {
+        "name": "(SyS) 3. Listening: Identifying Motherboard Components",
+        "skillType": "LISTENING",
+        "sumQues": 7,
+        "createBy": "admin",
+        "questionContents": [
+            "Which component is labeled as 'A'?",
+            "Which component is labeled as 'B'?",
+            "Which component is labeled as 'C'?",
+            "Which component is labeled as 'D'?",
+            "Which component is labeled as 'E'?",
+            "Which component is labeled as 'F'?",
+            "Which component is labeled as 'G'?"
+        ]
+    },
+    {
+        "name": "(SyS) 4. Reading: Numerical Prefixes",
+        "skillType": "READING",
+        "sumQues": 9,
+        "createBy": "admin",
+        "questionContents": [
+            "What does the prefix '1000000000000' represent?",
+            "What does the prefix '1000000000' represent?",
+            "What does the prefix '1000000' represent?",
+            "What does the prefix '1000' represent?",
+            "What does the prefix '0.000000001' represent?",
+            "What does the prefix '0.000001' represent?",
+            "What does the prefix '0.001' represent?",
+            "What does the prefix '4' represent?",
+            "What does the prefix '2' represent?"
+        ]
+    },
+    {
+        "name": "(SyS) 5. Speaking: Computer Specifications",
+        "skillType": "SPEAKING",
+        "sumQues": 4,
+        "createBy": "admin",
+        "questionContents": [
+            "What are the key specifications of a computer?",
+            "How fast is the processor in your computer?",
+            "How much memory does your computer have?",
+            "What is the screen resolution of your computer?"
+        ]
+    }
+]

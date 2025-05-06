@@ -1,0 +1,96 @@
+[
+  {
+    "quesContent": "What happens in a work meeting?",
+    "skillType": "SPEAKING",
+    "quesType": "SPEAKING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  },
+  {
+    "quesContent": "Talk about a meeting you've been to. What happened?",
+    "skillType": "SPEAKING",
+    "quesType": "SPEAKING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  },
+  {
+    "quesContent": "What suggestion did Fred make?",
+    "skillType": "LISTENING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "upgrade to a new version of windows",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "What is the problem with that suggestion?",
+    "skillType": "LISTENING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "the computers are too old",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "What was Fred's next suggestion?",
+    "skillType": "LISTENING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "buying more memory",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "What is the problem with that?",
+    "skillType": "LISTENING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "the computers are already full",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "What was Ulrik's suggestion?",
+    "skillType": "LISTENING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "replacing four computers for now and the other four later",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Whose suggestion was chosen?",
+    "skillType": "LISTENING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "Ulrik",
+        "isCorrect": true
+      }
+    ]
+  }
+]

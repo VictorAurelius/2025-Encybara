@@ -1,6 +1,6 @@
 [
   {
-    "quesContent": "Do you have any of the rules in your workplace or college?",
+    "quesContent": "What do you use computers for? List as many uses as you can.",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
     "point": 10,
@@ -8,7 +8,7 @@
     "choices": []
   },
   {
-    "quesContent": "Do you think they are good rules or bad rules? Why?",
+    "quesContent": "Which multimedia hardware items do you use for different tasks?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
     "point": 10,
@@ -16,7 +16,7 @@
     "choices": []
   },
   {
-    "quesContent": "If you could change one rule at your workplace or college, what would it be and why?",
+    "quesContent": "Who might use each multimedia device, and what would they use them for?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
     "point": 10,
@@ -24,105 +24,92 @@
     "choices": []
   },
   {
-    "quesContent": "Person in charge of IT",
+    "quesContent": "Choose an answer for space 1",
     "skillType": "READING",
     "quesType": "TEXT",
     "point": 10,
     "createBy": "admin",
     "choices": [
       {
-        "content": "CIO",
+        "content": "speakers",
         "isCorrect": true
       }
     ]
   },
   {
-    "quesContent": "Keeping something safe",
+    "quesContent": "Choose an answer for space 2",
     "skillType": "READING",
     "quesType": "TEXT",
     "point": 10,
     "createBy": "admin",
     "choices": [
       {
-        "content": "security",
+        "content": "projector",
         "isCorrect": true
       }
     ]
   },
   {
-    "quesContent": "Information such as numbers and details about people",
+    "quesContent": "Choose an answer for space 3",
     "skillType": "READING",
     "quesType": "TEXT",
     "point": 10,
     "createBy": "admin",
     "choices": [
       {
-        "content": "data",
+        "content": "headphones",
         "isCorrect": true
       }
     ]
   },
   {
-    "quesContent": "A secret word that you type into a computer before you can use it",
+    "quesContent": "Choose an answer for space 4",
     "skillType": "READING",
     "quesType": "TEXT",
     "point": 10,
     "createBy": "admin",
     "choices": [
       {
-        "content": "password",
+        "content": "virtual reality goggles",
         "isCorrect": true
       }
     ]
   },
   {
-    "quesContent": "A group of connected computers",
+    "quesContent": "Choose an answer for space 5",
     "skillType": "READING",
     "quesType": "TEXT",
     "point": 10,
     "createBy": "admin",
     "choices": [
       {
-        "content": "network",
+        "content": "microphone",
         "isCorrect": true
       }
     ]
   },
   {
-    "quesContent": "Having only letters and numbers",
+    "quesContent": "Choose an answer for space 6",
     "skillType": "READING",
     "quesType": "TEXT",
     "point": 10,
     "createBy": "admin",
     "choices": [
       {
-        "content": "alphanumeric",
+        "content": "video camera",
         "isCorrect": true
       }
     ]
   },
   {
-    "quesContent": "Letters, numbers, punctuation marks, etc.",
+    "quesContent": "Choose an answer for space 7",
     "skillType": "READING",
     "quesType": "TEXT",
     "point": 10,
     "createBy": "admin",
     "choices": [
       {
-        "content": "characters",
-        "isCorrect": true
-      }
-    ]
-  },
-  {
-    "quesContent": "People you work with",
-    "skillType": "READING",
-    "quesType": "TEXT",
-    "point": 10,
-    "createBy": "admin",
-    "choices": [
-      {
-        "content": "colleagues",
+        "content": "webcam",
         "isCorrect": true
       }
     ]

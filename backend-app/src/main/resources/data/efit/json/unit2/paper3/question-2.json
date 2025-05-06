@@ -1,132 +1,114 @@
 [
   {
-    "quesContent": "Choose an answer for space 1",
+    "quesContent": "What is the synonym for 'cable'?",
     "skillType": "READING",
     "quesType": "TEXT",
     "point": 10,
     "createBy": "admin",
     "choices": [
       {
-        "content": "supplies",
+        "content": "d",
         "isCorrect": true
       }
     ]
   },
   {
-    "quesContent": "Choose an answer for space 2",
+    "quesContent": "What is the synonym for 'plug (into)'?",
     "skillType": "READING",
     "quesType": "TEXT",
     "point": 10,
     "createBy": "admin",
     "choices": [
       {
-        "content": "service centres",
+        "content": "c",
         "isCorrect": true
       }
     ]
   },
   {
-    "quesContent": "Choose an answer for space 3",
+    "quesContent": "What is the synonym for 'insert'?",
     "skillType": "READING",
     "quesType": "TEXT",
     "point": 10,
     "createBy": "admin",
     "choices": [
       {
-        "content": "provide",
+        "content": "b",
         "isCorrect": true
       }
     ]
   },
   {
-    "quesContent": "Choose an answer for space 4",
+    "quesContent": "What is the synonym for 'power socket'?",
     "skillType": "READING",
     "quesType": "TEXT",
     "point": 10,
     "createBy": "admin",
     "choices": [
       {
-        "content": "spreadsheet and database",
+        "content": "f",
         "isCorrect": true
       }
     ]
   },
   {
-    "quesContent": "Choose an answer for space 5",
+    "quesContent": "What is the synonym for 'turn on'?",
     "skillType": "READING",
     "quesType": "TEXT",
     "point": 10,
     "createBy": "admin",
     "choices": [
       {
-        "content": "launched",
+        "content": "g",
         "isCorrect": true
       }
     ]
   },
   {
-    "quesContent": "Choose an answer for space 6",
+    "quesContent": "What is the synonym for 'press'?",
     "skillType": "READING",
     "quesType": "TEXT",
     "point": 10,
     "createBy": "admin",
     "choices": [
       {
-        "content": "client",
+        "content": "a",
         "isCorrect": true
       }
     ]
   },
   {
-    "quesContent": "Choose an answer for space 7",
+    "quesContent": "What is the synonym for 'unplug'?",
     "skillType": "READING",
     "quesType": "TEXT",
     "point": 10,
     "createBy": "admin",
     "choices": [
       {
-        "content": "installing",
+        "content": "h",
         "isCorrect": true
       }
     ]
   },
   {
-    "quesContent": "Choose an answer for space 8",
+    "quesContent": "What is the synonym for 'switch off'?",
     "skillType": "READING",
     "quesType": "TEXT",
     "point": 10,
     "createBy": "admin",
     "choices": [
       {
-        "content": "maintaining",
+        "content": "e",
         "isCorrect": true
       }
     ]
   },
   {
-    "quesContent": "Choose an answer for space 9",
-    "skillType": "READING",
-    "quesType": "TEXT",
+    "quesContent": "Write an email explaining how to transfer photographs from a digital camera to a computer. Include instructions for the following steps:\n- Connect the card reader to the computer\n- Open the appropriate software\n- Select the card reader in the drop-down menu\n- Choose the destination folder\n- Click the 'OK' button",
+    "skillType": "WRITING",
+    "quesType": "WRITING",
     "point": 10,
     "createBy": "admin",
-    "choices": [
-      {
-        "content": "diagnosing",
-        "isCorrect": true
-      }
-    ]
-  },
-  {
-    "quesContent": "Choose an answer for space 10",
-    "skillType": "READING",
-    "quesType": "TEXT",
-    "point": 10,
-    "createBy": "admin",
-    "choices": [
-      {
-        "content": "from time to time",
-        "isCorrect": true
-      }
-    ]
+    "choices": []
   }
 ]

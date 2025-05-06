@@ -1,0 +1,49 @@
+[
+    {
+        "name": "(GO) 1. Reading: GUI Components",
+        "skillType": "READING",
+        "sumQues": 12,
+        "createBy": "admin",
+        "questionContents": [
+            "Choose an answer for space 1",
+            "Choose an answer for space 2",
+            "Choose an answer for space 3",
+            "Choose an answer for space 4",
+            "Choose an answer for space 5",
+            "Choose an answer for space 6",
+            "Choose an answer for space 7",
+            "Choose an answer for space 8",
+            "Choose an answer for space 9",
+            "Choose an answer for space 10",
+            "Choose an answer for space 11",
+            "Choose an answer for space 12"
+        ]
+    },
+    {
+        "name": "(GO) 2. Reading: Matching GUI Actions to Results",
+        "skillType": "READING",
+        "sumQues": 7,
+        "createBy": "admin",
+        "questionContents": [
+            "What happens when you double-click on the title bar?",
+            "What is the result of clicking on a menu?",
+            "What happens when you right-click on an icon?",
+            "What is the result of sliding the scrollbar down?",
+            "What does clicking the 'Minimise' button do?",
+            "Why might you drag the title bar?",
+            "What happens when you select an icon?"
+        ]
+    },
+    {
+        "name": "(GO) 3. Speaking: Explaining Computer Actions",
+        "skillType": "SPEAKING",
+        "sumQues": 4,
+        "createBy": "admin",
+        "questionContents": [
+            "How do you open a program?",
+            "What steps are needed to save a file?",
+            "How can you change a program's settings?",
+            "What is the process for deleting a file?"
+        ]
+    }
+]
