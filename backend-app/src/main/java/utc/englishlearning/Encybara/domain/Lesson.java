@@ -1,10 +1,12 @@
 package utc.englishlearning.Encybara.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 
 import jakarta.persistence.PrePersist;
@@ -30,6 +32,8 @@ public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String name;
     private SkillTypeEnum skillType;
     private String createBy;

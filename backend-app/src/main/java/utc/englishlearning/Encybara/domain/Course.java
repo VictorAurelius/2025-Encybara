@@ -33,6 +33,8 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String name;
     @Lob
     @Column(columnDefinition = "TEXT")
