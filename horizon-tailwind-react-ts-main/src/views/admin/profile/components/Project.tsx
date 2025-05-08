@@ -437,12 +437,7 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
                           >
                             <MdModeEditOutline size={20} />
                           </button>
-                          <button
-                            onClick={() => handleDelete(course)}
-                            className="text-red-600 hover:text-red-900"
-                          >
-                            <MdDelete size={20} />
-                          </button>
+
                         </div>
                       </td>
                     </tr>

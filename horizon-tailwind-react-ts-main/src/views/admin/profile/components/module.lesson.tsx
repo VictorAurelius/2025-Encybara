@@ -65,6 +65,7 @@ const ModuleLesson = (props: IProps) => {
         setListLesson(null);
     }
     const handleQuestionChange = async (newSelectedIds: number[]) => {
+        newSelectedIds = newSelectedIds || [];
         const addedIds = newSelectedIds.filter(id => !selectedQuestionIds.includes(id));
         const removedIds = selectedQuestionIds.filter(id => !newSelectedIds.includes(id));
 
@@ -229,9 +230,7 @@ const ModuleLesson = (props: IProps) => {
                                 name="questionIds"
                                 options={questions}
                                 mode="multiple"
-                                rules={[
-                                    { required: true, message: 'Please select at least one question' },
-                                ]}
+
                                 placeholder="Select question"
                                 onChange={handleQuestionChange}
 
