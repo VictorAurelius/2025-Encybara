@@ -176,7 +176,7 @@ const ForumManagement = () => {
                     ...item,
                     author: {
                         name: userData.name,
-                        avatar: userData.avatar || "https://randomuser.me/api/portraits/men/1.jpg"
+                        avatar: "https://randomuser.me/api/portraits/men/1.jpg"
                     },
                     replies: repliesWithUsers
                 };
@@ -251,7 +251,7 @@ const ForumManagement = () => {
                                         >
                                             <AntdComment
                                                 author={discussion.author?.name}
-                                                avatar={<Avatar src={discussion.author?.avatar} />}
+                                                avatar={<Avatar src={lesson.discussions[0].author?.avatar} />}
                                                 content={discussion.content}
                                                 datetime={discussion.createdAt}
                                                 actions={[
@@ -270,7 +270,7 @@ const ForumManagement = () => {
                                                             <AntdComment
 
                                                                 author={reply.author?.name}
-                                                                avatar={<Avatar src={reply.author?.avatar} />}
+                                                                avatar={<Avatar src={lesson.discussions[0].author?.avatar} />}
                                                                 content={reply.content}
                                                                 datetime={reply.createdAt}
                                                                 actions={[
@@ -359,7 +359,7 @@ const ForumManagement = () => {
                             author: {
                                 id: userData.id,
                                 name: userData.name,
-                                avatar: userData.avatar || "https://randomuser.me/api/portraits/men/1.jpg"
+                                avatar: "https://randomuser.me/api/portraits/men/1.jpg"
                             },
                             course: {
                                 id: course.id,
