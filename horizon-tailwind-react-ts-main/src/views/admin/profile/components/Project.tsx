@@ -182,7 +182,7 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
   };
   const fetchLessons = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/lessons?page=1&size=100`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/lessons?page=1&size=1000`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

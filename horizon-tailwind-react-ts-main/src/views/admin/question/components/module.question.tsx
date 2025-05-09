@@ -273,7 +273,7 @@ const ModalQuestion = (props: IProps) => {
                             label="Point"
                             name="point"
                             valueEnum={{
-                                5: '5'
+                                10: '10'
                             }}
                             rules={[
                                 { required: true, message: 'Please do not leave blank' },
