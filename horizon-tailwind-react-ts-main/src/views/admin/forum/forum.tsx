@@ -110,7 +110,7 @@ const ForumManagement = () => {
         const fetchLessonDiscussions = async () => {
             setLoading(true);
             try {
-                const lessonsRes = await fetch(`${API_BASE_URL}/api/v1/lessons`);
+                const lessonsRes = await fetch(`${API_BASE_URL}/api/v1/lessons?size=200`);
                 const lessonsData = await lessonsRes.json();
 
                 // Fetch và lọc lessons có discussions
@@ -316,7 +316,7 @@ const ForumManagement = () => {
         // Fetch danh sách courses
         const fetchCourses = async () => {
             try {
-                const res = await fetch(`${API_BASE_URL}/api/v1/courses`);
+                const res = await fetch(`${API_BASE_URL}/api/v1/courses?size=100`);
                 const data = await res.json();
                 setCourses(data.data.content || []);
                 // Sau khi có courses, fetch reviews cho từng course
