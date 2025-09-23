@@ -1,0 +1,15 @@
+[
+    {
+        "name": "You and your partner will discuss a given topic. The examiner will ask you to share your opinions and experiences about daily routines, favorite activities, and future plans. You will also describe a memorable experience and explain why it was important to you.",
+        "skillType": "SPEAKING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "What is a hobby or activity you enjoy? Why do you like it?",
+            "Describe a memorable trip or event in your life. What made it special?",
+            "Talk about a goal you want to achieve in the future. How will you accomplish it?",
+            "Do you prefer working alone or in a team? Why?",
+            "If you could travel anywhere in the world, where would you go and why?"
+        ]
+    }
+]

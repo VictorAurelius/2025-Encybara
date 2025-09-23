@@ -1,0 +1,75 @@
+[
+    {
+        "quesContent": "Complete Andy's Notes - Date",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "9 April",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete Andy's Notes - Name of film",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "The Last King",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete Andy's Notes - Starting time",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "8 p.m.",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete Andy's Notes - Ticket price",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "3.50",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete Andy's Notes - Meet Sheila in",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Coffee Bar",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Read the note from your friend Richard.\nWrite a postcard to tell him what he wants to know.\n'It's great that you're coming to see me in England. Tell me when you are coming, how long you want to stay and what you want to do.\nWrite soon!\nRichard'\nWrite 25-35 words.\nWrite your postcard on the answer sheet.",
+        "skillType": "WRITING",
+        "quesType": "WRITING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    }
+]

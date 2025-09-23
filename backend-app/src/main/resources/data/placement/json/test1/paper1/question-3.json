@@ -1,0 +1,99 @@
+[
+    {
+        "quesContent": "Listen to the conversation between a travel agent and a tourist and fill in the blank: Name of tourist",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Dianaconner",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Listen to the conversation between a travel agent and a tourist and fill in the blank: Mobile",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "093465896",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Listen to the conversation between a travel agent and a tourist and fill in the blank: Address (number)",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "18B",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Listen to the conversation between a travel agent and a tourist and fill in the blank: Gather at",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "travel agent's company",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Listen to the conversation between a travel agent and a tourist and fill in the blank: Leave at",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "6 a.m",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Write a short paragraph introducing yourself, including your name, age, occupation, and interests.",
+        "skillType": "WRITING",
+        "quesType": "WRITING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "Introduce yourself: Tell us your name?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "Introduce yourself: where you are from?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "Introduce yourself: what do you do?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    }
+]

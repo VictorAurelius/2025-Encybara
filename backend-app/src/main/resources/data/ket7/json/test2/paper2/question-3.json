@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "Price of flat:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "825",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "How far from station:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "15",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Number of bedrooms:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "2",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Furniture in flat:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "sofa",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Day to see flat:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Monday",
+                "isCorrect": true
+            }
+        ]
+    }
+]

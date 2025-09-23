@@ -1,0 +1,75 @@
+[
+    {
+        "name": "Paper 1: Reading and Writing - Part 1",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "He ... Sam how to use it.",
+            "Sam sent an e-mail ... to his friend Billy to tell him about his nice present.",
+            "Billy came to Sam's house and they did their geography ... together.",
+            "They were ... because they found some information about rivers on the internet.",
+            "Afterwards, they ... playing a new computer game together."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 2",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Who's that man with the green sweater?",
+            "Where's Amanda gone?",
+            "I hate shopping.",
+            "How long did the journey take?",
+            "The room costs £55 a night."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 3",
+        "skillType": "READING",
+        "sumQues": 8,
+        "createBy": "admin",
+        "questionContents": [
+            "Choose an answer for space 28",
+            "Choose an answer for space 29",
+            "Choose an answer for space 30",
+            "Choose an answer for space 31",
+            "Choose an answer for space 32",
+            "Choose an answer for space 33",
+            "Choose an answer for space 34",
+            "Choose an answer for space 35"
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 4",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "If you lose this, you won't be able to get into your house.",
+            "Many people put these on when they want to read something.",
+            "People pay for things with this.",
+            "If it has been windy, you may need to do your hair with this.",
+            "You write important dates in this so you don't forget them."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 5",
+        "skillType": "READING",
+        "sumQues": 10,
+        "createBy": "admin",
+        "questionContents": [
+            "Write ONE word for space 41",
+            "Write ONE word for space 42",
+            "Write ONE word for space 43",
+            "Write ONE word for space 44",
+            "Write ONE word for space 45",
+            "Write ONE word for space 46",
+            "Write ONE word for space 47",
+            "Write ONE word for space 48",
+            "Write ONE word for space 49",
+            "Write ONE word for space 50"
+        ]
+    }
+]

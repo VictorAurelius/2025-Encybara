@@ -1,0 +1,22 @@
+[
+    {
+        "name": "(Paper 1) Cambridge Key English Test (KET5) - Reading Course",
+        "intro": "(Level A2) Strengthen your reading comprehension skills for the Cambridge KET5 exam with this structured course. You will practice essential reading techniques such as identifying key information, understanding vocabulary in context, and answering comprehension questions effectively. This course will help you build confidence and improve your ability to read and process written English efficiently.",
+        "diffLevel": 3.0,
+        "recomLevel": 2.5,
+        "courseType": "READING",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 5,
+        "group": "Cambridge Key English Test 1 (KET5)",
+        "speciField": "EVERYONE",
+        "createBy": "admin",
+        "lessonNames": [
+            "Paper 1: Reading and Writing - Part 1",
+            "Paper 1: Reading and Writing - Part 2",
+            "Paper 1: Reading and Writing - Part 3",
+            "Paper 1: Reading and Writing - Part 4",
+            "Paper 1: Reading and Writing - Part 5"
+        ]
+    }
+]

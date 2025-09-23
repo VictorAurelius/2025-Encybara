@@ -1,0 +1,75 @@
+[
+    {
+        "name": "Paper 1: Reading and Writing - Part 1",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "She ... all of them to dinner at her house on Saturday evening.",
+            "Louise wrote the things she needed to buy for the meal on a ... of paper.",
+            "She was ... on Saturday morning so she went shopping in the afternoon.",
+            "Louise ... two hours cooking the meal.",
+            "When the meal was ..., everyone sat down to eat."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 2",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Are you sure the match starts at two?",
+            "I saw the new Spielberg film last night.",
+            "How did the accident happen?",
+            "Hello, I'd like to speak to Mr Green, please.",
+            "May I leave now?"
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 3",
+        "skillType": "READING",
+        "sumQues": 8,
+        "createBy": "admin",
+        "questionContents": [
+            "Choose an answer for space 28",
+            "Choose an answer for space 29",
+            "Choose an answer for space 30",
+            "Choose an answer for space 31",
+            "Choose an answer for space 32",
+            "Choose an answer for space 33",
+            "Choose an answer for space 34",
+            "Choose an answer for space 35"
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 4",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "If you don't understand a word, you can look in this.",
+            "You can buy this every week and read about many interesting subjects in it.",
+            "If you write about your daily life in this, you may not want anyone to read it.",
+            "You write this for your mother when you answer the phone for her.",
+            "People buy this every morning to read about what has happened in the world."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 5",
+        "skillType": "READING",
+        "sumQues": 10,
+        "createBy": "admin",
+        "questionContents": [
+            "Write ONE word for space 41",
+            "Write ONE word for space 42",
+            "Write ONE word for space 43",
+            "Write ONE word for space 44",
+            "Write ONE word for space 45",
+            "Write ONE word for space 46",
+            "Write ONE word for space 47",
+            "Write ONE word for space 48",
+            "Write ONE word for space 49",
+            "Write ONE word for space 50"
+        ]
+    }
+]

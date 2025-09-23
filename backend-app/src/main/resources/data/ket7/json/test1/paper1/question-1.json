@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "The airport gets very ... at weekends, so Richard travels during the week when it's quieter.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "busy",
+                "isCorrect": true
+            },
+            {
+                "content": "strong",
+                "isCorrect": false
+            },
+            {
+                "content": "heavy",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Richard ... has a coffee when he arrives at the airport.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "already",
+                "isCorrect": false
+            },
+            {
+                "content": "once",
+                "isCorrect": false
+            },
+            {
+                "content": "usually",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Richard ... looking around the shops before he gets on the plane.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "hopes",
+                "isCorrect": false
+            },
+            {
+                "content": "enjoys",
+                "isCorrect": true
+            },
+            {
+                "content": "wants",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Richard hates it when there's a ..., as he likes to arrive on time.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "difference",
+                "isCorrect": false
+            },
+            {
+                "content": "moment",
+                "isCorrect": false
+            },
+            {
+                "content": "delay",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Richard often watches films during the flight, or ... to the person next to him.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "says",
+                "isCorrect": false
+            },
+            {
+                "content": "tells",
+                "isCorrect": false
+            },
+            {
+                "content": "talks",
+                "isCorrect": true
+            }
+        ]
+    }
+]

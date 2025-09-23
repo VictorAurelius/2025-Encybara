@@ -1,0 +1,123 @@
+[
+    {
+        "quesContent": "Which company or companies is getting bigger?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "IBGroup",
+                "isCorrect": true
+            },
+            {
+                "content": "Digital World",
+                "isCorrect": false
+            },
+            {
+                "content": "Futachiba",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Which company or companies develops software?",
+        "skillType": "READING",
+        "quesType": "MULTIPLE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "IBGroup",
+                "isCorrect": true
+            },
+            {
+                "content": "Digital World",
+                "isCorrect": true
+            },
+            {
+                "content": "Futachiba",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Which company or companies makes things in more than one country?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "IBGroup",
+                "isCorrect": false
+            },
+            {
+                "content": "Digital World",
+                "isCorrect": false
+            },
+            {
+                "content": "Futachiba",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Which company or companies has a new product to launch?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "IBGroup",
+                "isCorrect": false
+            },
+            {
+                "content": "Digital World",
+                "isCorrect": true
+            },
+            {
+                "content": "Futachiba",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Which company or companies sells software for use on the internet?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "IBGroup",
+                "isCorrect": true
+            },
+            {
+                "content": "Digital World",
+                "isCorrect": false
+            },
+            {
+                "content": "Futachiba",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "(IT Organisations) Which IT organisation would you prefer to work for?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "(IT Organisations) Why would you prefer to work for this organisation?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    }
+]

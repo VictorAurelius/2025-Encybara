@@ -1,0 +1,178 @@
+[
+    {
+        "quesContent": "(IT Jobs) List any other IT jobs you can think of.",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "(IT Jobs) What do people in these jobs do?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "(IT Jobs) Which jobs would/wouldn't you like to do? Why?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "What do you think Robert's job is?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "support technician",
+                "isCorrect": true
+            },
+            {
+                "content": "database administrator",
+                "isCorrect": false
+            },
+            {
+                "content": "software developer",
+                "isCorrect": false
+            },
+            {
+                "content": "project manager",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Does Robert check emails?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Yes",
+                "isCorrect": true
+            },
+            {
+                "content": "No",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Does Robert have emails waiting for him?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Yes",
+                "isCorrect": true
+            },
+            {
+                "content": "No",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Does Robert visit people at their desks?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Yes",
+                "isCorrect": true
+            },
+            {
+                "content": "No",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Do sales people have problems?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Yes",
+                "isCorrect": true
+            },
+            {
+                "content": "No",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Does Robert attend meetings?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Yes",
+                "isCorrect": true
+            },
+            {
+                "content": "No",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Does Robert visit other companies?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Yes",
+                "isCorrect": false
+            },
+            {
+                "content": "No",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the sentence: Robert _______ checks emails.",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "generally",
+                "isCorrect": true
+            },
+            {
+                "content": "usually",
+                "isCorrect": false
+            },
+            {
+                "content": "normally",
+                "isCorrect": false
+            },
+            {
+                "content": "occasionally",
+                "isCorrect": false
+            }
+        ]
+    }
+]

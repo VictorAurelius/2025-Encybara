@@ -1,0 +1,64 @@
+[
+    {
+        "name": "(IO) 1. Speaking - IT Organisations",
+        "skillType": "SPEAKING",
+        "sumQues": 3,
+        "createBy": "admin",
+        "questionContents": [
+            "(IT Organisations) What technology company would you choose to discuss?",
+            "(IT Organisations) What activities does this company carry out?",
+            "(IT Organisations) Why is this company important in the technology sector?"
+        ]
+    },
+    {
+        "name": "(IO) 2. Vocabulary: Company Profiles",
+        "skillType": "READING",
+        "sumQues": 7,
+        "createBy": "admin",
+        "questionContents": [
+            "A company or companies that sell things (Futachiba)",
+            "Companies that make things to sell (Futachiba)",
+            "Factories (Futachiba)",
+            "Things a company sells (Futachiba)",
+            "Using software that runs and stores information on the internet (IBGroup)",
+            "Customers (IBGroup)",
+            "Start selling a new product (Digital World)"
+        ]
+    },
+    {
+        "name": "(IO) 3. Reading: Company Profiles",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Which company or companies is getting bigger?",
+            "Which company or companies develops software?",
+            "Which company or companies makes things in more than one country?",
+            "Which company or companies has a new product to launch?",
+            "Which company or companies sells software for use on the internet?"
+        ]
+    },
+    {
+        "name": "(IO) 4. Speaking: IT Organisations",
+        "skillType": "SPEAKING",
+        "sumQues": 2,
+        "createBy": "admin",
+        "questionContents": [
+            "(IT Organisations) Which IT organisation would you prefer to work for?",
+            "(IT Organisations) Why would you prefer to work for this organisation?"
+        ]
+    },
+    {
+        "name": "(IO) 5. Listening: IT Companies Conversation",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Complete the sentence (1)",
+            "Complete the sentence (2)",
+            "Complete the sentence (3)",
+            "Complete the sentence (4)",
+            "Complete the sentence (5)"
+        ]
+    }
+]

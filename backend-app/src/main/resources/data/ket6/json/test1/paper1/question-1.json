@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "For some campsites, you have to phone and ... before you go.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "book",
+                "isCorrect": true
+            },
+            {
+                "content": "take",
+                "isCorrect": false
+            },
+            {
+                "content": "spend",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Some people play loud music on campsites so it can be very ...",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "angry",
+                "isCorrect": false
+            },
+            {
+                "content": "busy",
+                "isCorrect": false
+            },
+            {
+                "content": "noisy",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "One of the nicest things about camping is ... breakfast outside.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "doing",
+                "isCorrect": false
+            },
+            {
+                "content": "having",
+                "isCorrect": true
+            },
+            {
+                "content": "putting",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "It is better to use plastic cups and plates for camping because they don’t ... easily.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "break",
+                "isCorrect": true
+            },
+            {
+                "content": "hurt",
+                "isCorrect": false
+            },
+            {
+                "content": "fail",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "One problem with camping is making ... insects don’t get into the tent.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "careful",
+                "isCorrect": false
+            },
+            {
+                "content": "clear",
+                "isCorrect": false
+            },
+            {
+                "content": "sure",
+                "isCorrect": true
+            }
+        ]
+    }
+]

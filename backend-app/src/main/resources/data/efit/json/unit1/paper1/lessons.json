@@ -1,0 +1,98 @@
+[
+    {
+        "name": "(Overview) 1. Speaking for Information Technology",
+        "skillType": "SPEAKING",
+        "sumQues": 3,
+        "createBy": "admin",
+        "questionContents": [
+            "(IT) How do you use IT? Think about work, study and fun."
+        ]
+    },
+    {
+        "name": "(Overview) 2. Writing for Information Technology",
+        "skillType": "WRITING",
+        "sumQues": 3,
+        "createBy": "admin",
+        "questionContents": [
+            "(Overview) What devices do you use?"
+        ]
+    },
+    {
+        "name": "(Overview) 3. Listening: People introducing their jobs",
+        "skillType": "LISTENING",
+        "sumQues": 6,
+        "createBy": "admin",
+        "questionContents": [
+            "What is Maria's job?"
+        ]
+    },
+    {
+        "name": "(JaD) 1. Speaking: Information Technology",
+        "skillType": "SPEAKING",
+        "sumQues": 3,
+        "createBy": "admin",
+        "questionContents": [
+            "(IT) How do you use IT? Think about work, study and fun.",
+            "(IT) What devices do you use?",
+            "(IT) What software do you use?"
+        ]
+    },
+    {
+        "name": "(JaD) 2. Listening: People introducing their jobs",
+        "skillType": "LISTENING",
+        "sumQues": 6,
+        "createBy": "admin",
+        "questionContents": [
+            "What is Maria's job?",
+            "What is Ahmed's job?",
+            "What is Freddy's job?",
+            "What is Hana's job?",
+            "What is Tim's job?",
+            "What is Sophie's job?"
+        ]
+    },
+    {
+        "name": "(JaD) 3. Listening: IT Collocations",
+        "skillType": "LISTENING",
+        "sumQues": 9,
+        "createBy": "admin",
+        "questionContents": [
+            "Complete the collocation: supervise _______",
+            "Complete the collocation: have _______",
+            "Complete the collocation: be responsible _______ IT projects",
+            "Complete the collocation: look _______ computers",
+            "Complete the collocation: install _______",
+            "Complete the collocation: diagnose _______",
+            "Complete the collocation: design _______",
+            "Complete the collocation: maintain _______",
+            "Complete the collocation: write _______ for software"
+        ]
+    },
+    {
+        "name": "(JaD) 4. Speaking: IT Jobs Discussion",
+        "skillType": "SPEAKING",
+        "sumQues": 3,
+        "createBy": "admin",
+        "questionContents": [
+            "(IT Jobs) List any other IT jobs you can think of.",
+            "(IT Jobs) What do people in these jobs do?",
+            "(IT Jobs) Which jobs would/wouldn't you like to do? Why?"
+        ]
+    },
+    {
+        "name": "(JaD) 5. Listening: IT Support Technician Job",
+        "skillType": "LISTENING",
+        "sumQues": 8,
+        "createBy": "admin",
+        "questionContents": [
+            "What do you think Robert's job is?",
+            "Does Robert check emails?",
+            "Does Robert have emails waiting for him?",
+            "Does Robert visit people at their desks?",
+            "Do sales people have problems?",
+            "Does Robert attend meetings?",
+            "Does Robert visit other companies?",
+            "Complete the sentence: Robert _______ checks emails."
+        ]
+    }
+]

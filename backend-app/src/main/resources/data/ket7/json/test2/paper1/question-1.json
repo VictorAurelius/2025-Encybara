@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "Sharon ... at her tennis club four times a week.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "joins",
+                "isCorrect": false
+            },
+            {
+                "content": "enjoys",
+                "isCorrect": false
+            },
+            {
+                "content": "practises",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Sharon ... lots of competitions and often plays very well in them.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "enters",
+                "isCorrect": true
+            },
+            {
+                "content": "takes",
+                "isCorrect": false
+            },
+            {
+                "content": "earns",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "It's Sharon's birthday soon and she has ... her parents for a new racket.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "told",
+                "isCorrect": false
+            },
+            {
+                "content": "asked",
+                "isCorrect": true
+            },
+            {
+                "content": "spoken",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "When Sharon loses a match, she always feels very ...",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "upset",
+                "isCorrect": true
+            },
+            {
+                "content": "difficult",
+                "isCorrect": false
+            },
+            {
+                "content": "worst",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Sharon's friend has just started playing tennis and Sharon is helping her to ...",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "copy",
+                "isCorrect": false
+            },
+            {
+                "content": "know",
+                "isCorrect": false
+            },
+            {
+                "content": "improve",
+                "isCorrect": true
+            }
+        ]
+    }
+]

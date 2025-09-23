@@ -1,0 +1,62 @@
+[
+    {
+        "name": "(Paper 3) Cambridge Key English Test (KET1) - Test 1",
+        "intro": "(Level A1) Master the Speaking component of the Cambridge KET exam with this focused course. Practice essential conversational skills through a variety of familiar topics including work, home, family, hobbies, and daily routines. This course will help you build confidence, improve fluency, and develop the necessary speaking strategies to excel in Part 1 of the KET Speaking test.",
+        "diffLevel": 2.5,
+        "recomLevel": 2.0,
+        "courseType": "SPEAKING",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 5,
+        "group": "Cambridge Key English Test 1 (KET1)",
+        "speciField": "EVERYONE",
+        "createBy": "admin",
+        "lessonNames": [
+            "Speaking - Part 1: Work/Study",
+            "Speaking - Part 1: Home/Hometown",
+            "Speaking - Part 1: Family/Friends",
+            "Speaking - Part 1: Hobbies/Interests",
+            "Speaking - Part 1: Daily Routine"
+        ]
+    },
+    {
+        "name": "Speaking - Part 2: Describe a person",
+        "intro": "(Level A1) Improve your speaking skills for the Cambridge KET exam by practicing detailed descriptions of people. This course helps you develop fluency and confidence in describing family members, friends, famous people, and personalities. You will learn how to organize your ideas clearly and express your feelings and opinions effectively.",
+        "diffLevel": 3.0,
+        "recomLevel": 2.5,
+        "courseType": "SPEAKING",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 5,
+        "group": "Cambridge Key English Test 1 (KET1)",
+        "speciField": "EVERYONE",
+        "createBy": "admin",
+        "lessonNames": [
+            "Describe a family member you spend a lot of time with",
+            "Describe a person who expresses his/her feelings openly",
+            "Describe someone you admire",
+            "Describe a famous person in your country",
+            "Describe a friend who talks a lot"
+        ]
+    },
+    {
+        "name": "Speaking - Part 2: Describe an object/place/event/activity",
+        "intro": "(Level A1-A2) Enhance your speaking skills for the Cambridge KET exam by practicing detailed descriptions of objects, places, events, and activities. This course helps you develop fluency and confidence in expressing ideas clearly and sharing personal experiences. By focusing on real-life scenarios, you'll improve your ability to organize thoughts and communicate effectively in Part 2 of the KET Speaking test.",
+        "diffLevel": 3.5,
+        "recomLevel": 3.0,
+        "courseType": "SPEAKING",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 5,
+        "group": "Cambridge Key English Test 1 (KET1)",
+        "speciField": "EVERYONE",
+        "createBy": "admin",
+        "lessonNames": [
+            "Describe a present you have given someone",
+            "Describe something you own which is very important to you",
+            "Describe a change that could improve your local area",
+            "Describe a time when the weather prevented you from doing something",
+            "Describe an exciting experience you have had"
+        ]
+    }
+]

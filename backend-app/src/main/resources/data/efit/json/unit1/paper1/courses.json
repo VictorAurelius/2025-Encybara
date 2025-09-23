@@ -1,0 +1,40 @@
+[
+    {
+        "name": "(Unit 1: Working on IT) IT Overview",
+        "intro": "In this section the focus is on typical IT-related jobs and the duties performed by people holding those jobs.",
+        "diffLevel": 5.0,
+        "recomLevel": 4.5,
+        "courseType": "ALLSKILLS",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 5,
+        "group": "English for Information Technology - UTC",
+        "speciField": "IT",
+        "createBy": "admin",
+        "lessonNames": [
+            "(Overview) 1. Speaking for Information Technology",
+            "(Overview) 2. Writing for Information Technology",
+            "(Overview) 3. Listening: People introducing their jobs"
+        ]
+    },
+    {
+        "name": "(Unit 1: Working on IT) IT jobs and duties",
+        "intro": "In this section the focus is on typical IT-related jobs and the duties performed by people holding those jobs.",
+        "diffLevel": 5.0,
+        "recomLevel": 4.5,
+        "courseType": "ALLSKILLS",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 5,
+        "group": "English for Information Technology - UTC",
+        "speciField": "IT",
+        "createBy": "admin",
+        "lessonNames": [
+            "(JaD) 1. Speaking: Information Technology",
+            "(JaD) 2. Listening: People introducing their jobs",
+            "(JaD) 3. Listening: IT Collocations",
+            "(JaD) 4. Speaking: IT Jobs Discussion",
+            "(JaD) 5. Listening: IT Support Technician Job"
+        ]
+    }
+]

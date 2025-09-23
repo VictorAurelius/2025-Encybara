@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "Complete the sentence (1)",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "what does your company do",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the sentence (2)",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "who are your customers",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the sentence (3)",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Does your company produce any hardware",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the sentence (4)",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "what are your future plans",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the sentence (5)",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Do you want to come",
+                "isCorrect": true
+            }
+        ]
+    }
+]

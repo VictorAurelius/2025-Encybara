@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "Choose an answer for space 6",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "B",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 7",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "H",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 8",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "E",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 9",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "D",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 10",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "G",
+                "isCorrect": true
+            }
+        ]
+    }
+]

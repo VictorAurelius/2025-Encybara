@@ -1,0 +1,34 @@
+[
+    {
+        "name": "(Paper 4) Cambridge Key English Test (KET7) - Writing Course Test 2",
+        "intro": "(Level B1) Develop your writing skills with this tailored course for Cambridge KET7. Practice crafting clear and structured messages, notes, and short compositions under time constraints. This course focuses on organizing ideas effectively, responding to prompts accurately, and improving written fluency for real-world communication.",
+        "diffLevel": 3.5,
+        "recomLevel": 3.0,
+        "courseType": "WRITING",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 1,
+        "group": "Cambridge Key English Test 2 (KET7)",
+        "speciField": "EVERYONE",
+        "createBy": "admin",
+        "lessonNames": [
+            "Write an email to your friend inviting them to your birthday party. Include details about the time, location, and activities planned."
+        ]
+    },
+    {
+        "name": "(Paper 4) Cambridge Key English Test (KET7) - Writing Course Test 2 - Part 2",
+        "intro": "(Level B1) Strengthen your writing skills with this structured course for Cambridge KET7. Practice composing clear and well-organized emails, messages, and short essays while developing coherence and fluency under timed conditions. This course emphasizes effective communication, response accuracy, and logical idea organization to prepare you for real-world writing tasks.",
+        "diffLevel": 4.0,
+        "recomLevel": 3.5,
+        "courseType": "WRITING",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 1,
+        "group": "Cambridge Key English Test 2 (KET7)",
+        "speciField": "EVERYONE",
+        "createBy": "admin",
+        "lessonNames": [
+            "Write an email to your teacher asking for advice about how to improve your English. Include details about your current challenges and what areas you would like to focus on."
+        ]
+    }
+]

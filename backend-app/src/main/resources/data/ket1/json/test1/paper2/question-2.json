@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "When is the football match?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Saturday morning",
+                "isCorrect": false
+            },
+            {
+                "content": "Saturday afternoon",
+                "isCorrect": true
+            },
+            {
+                "content": "Sunday afternoon",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Where are they going to eat on Saturday evening?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "at home",
+                "isCorrect": false
+            },
+            {
+                "content": "in an Italian restaurant",
+                "isCorrect": false
+            },
+            {
+                "content": "in a Chinese restaurant",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What are they going to do on Sunday morning?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "go for a drive",
+                "isCorrect": true
+            },
+            {
+                "content": "get up late",
+                "isCorrect": false
+            },
+            {
+                "content": "go to the cinema",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Where are they going to have lunch on Sunday?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "in a cafe",
+                "isCorrect": false
+            },
+            {
+                "content": "in a pub",
+                "isCorrect": true
+            },
+            {
+                "content": "at home",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "They can't go to the cinema on Sunday afternoon because",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Carlos doesn't like films.",
+                "isCorrect": false
+            },
+            {
+                "content": "Eric doesn't like films.",
+                "isCorrect": false
+            },
+            {
+                "content": "they don't have time.",
+                "isCorrect": true
+            }
+        ]
+    }
+]

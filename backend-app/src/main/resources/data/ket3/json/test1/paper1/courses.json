@@ -1,0 +1,22 @@
+[
+    {
+        "name": "(Paper 1) Cambridge Key English Test (KET3) - Test 1",
+        "intro": "(Level A1) Dive into your Cambridge KET preparation with this tailored course for KET3. Practice critical reading skills such as grammar selection, vocabulary spelling, and extracting key information from texts. This course is designed to enhance your understanding and ensure your success in the KET3 Reading and Writing exam.",
+        "diffLevel": 2.0,
+        "recomLevel": 1.5,
+        "courseType": "READING",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 5,
+        "group": "Cambridge Key English Test 1 (KET3)",
+        "speciField": "EVERYONE",
+        "createBy": "admin",
+        "lessonNames": [
+            "Paper 1: Reading and Writing - Part 1",
+            "Paper 1: Reading and Writing - Part 2",
+            "Paper 1: Reading and Writing - Part 3",
+            "Paper 1: Reading and Writing - Part 4",
+            "Paper 1: Reading and Writing - Part 5"
+        ]
+    }
+]

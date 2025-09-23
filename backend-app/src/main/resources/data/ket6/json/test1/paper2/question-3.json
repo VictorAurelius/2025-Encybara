@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "Day:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Wednesday",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Cost:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "12",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "At tennis courts in:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "GERALD",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Starting time:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "18.15",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Wear:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "short",
+                "isCorrect": true
+            }
+        ]
+    }
+]

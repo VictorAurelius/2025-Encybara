@@ -1,0 +1,18 @@
+[
+    {
+        "name": "(Paper 4) Cambridge Key English Test (KET5) - Writing Course",
+        "intro": "(Level A2) Strengthen your writing skills for the Cambridge KET5 exam by practicing concise and effective responses to real-world scenarios. This course focuses on composing clear, structured emails, notes, and messages under time constraints. You will refine essential writing strategies, including answering specific questions, organizing ideas logically, and achieving clarity in communication.",
+        "diffLevel": 2.0,
+        "recomLevel": 1.5,
+        "courseType": "WRITING",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 1,
+        "group": "Cambridge Key English Test 1 (KET5)",
+        "speciField": "EVERYONE",
+        "createBy": "admin",
+        "lessonNames": [
+            "Write an email to Mike answering his questions about your new mobile phone in 25 to 35 words."
+        ]
+    }
+]

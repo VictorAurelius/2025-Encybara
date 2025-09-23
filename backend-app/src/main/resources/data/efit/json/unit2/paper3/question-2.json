@@ -1,0 +1,114 @@
+[
+  {
+    "quesContent": "What is the synonym for 'cable'?",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "d",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "What is the synonym for 'plug (into)'?",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "c",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "What is the synonym for 'insert'?",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "b",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "What is the synonym for 'power socket'?",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "f",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "What is the synonym for 'turn on'?",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "g",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "What is the synonym for 'press'?",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "a",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "What is the synonym for 'unplug'?",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "h",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "What is the synonym for 'switch off'?",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "e",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Write an email explaining how to transfer photographs from a digital camera to a computer. Include instructions for the following steps:\n- Connect the card reader to the computer\n- Open the appropriate software\n- Select the card reader in the drop-down menu\n- Choose the destination folder\n- Click the 'OK' button",
+    "skillType": "WRITING",
+    "quesType": "WRITING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  }
+]

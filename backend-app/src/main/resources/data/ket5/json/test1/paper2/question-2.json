@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "The bag is ...",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "small.",
+                "isCorrect": false
+            },
+            {
+                "content": "old.",
+                "isCorrect": false
+            },
+            {
+                "content": "dirty.",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Where is the bag?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "in the classroom",
+                "isCorrect": true
+            },
+            {
+                "content": "on the sports field",
+                "isCorrect": false
+            },
+            {
+                "content": "at the hospital",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "What is inside the bag?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "money",
+                "isCorrect": false
+            },
+            {
+                "content": "a watch",
+                "isCorrect": false
+            },
+            {
+                "content": "clothes",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Maria should take the bag to Zak ...",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "this afternoon.",
+                "isCorrect": false
+            },
+            {
+                "content": "this evening.",
+                "isCorrect": true
+            },
+            {
+                "content": "tomorrow morning.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Zak hurt himself when he was ...",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "playing football.",
+                "isCorrect": false
+            },
+            {
+                "content": "running.",
+                "isCorrect": true
+            },
+            {
+                "content": "changing his clothes.",
+                "isCorrect": false
+            }
+        ]
+    }
+]

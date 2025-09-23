@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "Is it a good film?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "That's right.",
+                "isCorrect": false
+            },
+            {
+                "content": "It's OK.",
+                "isCorrect": true
+            },
+            {
+                "content": "I don't agree.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "I'm going to Tom's party tonight.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Can I go too?",
+                "isCorrect": true
+            },
+            {
+                "content": "Let's go.",
+                "isCorrect": false
+            },
+            {
+                "content": "Was it good?",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "When did you lose your watch?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Once a week.",
+                "isCorrect": false
+            },
+            {
+                "content": "For six days.",
+                "isCorrect": false
+            },
+            {
+                "content": "A month ago.",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Sorry, I don't understand you.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Let me explain.",
+                "isCorrect": true
+            },
+            {
+                "content": "I don't know.",
+                "isCorrect": false
+            },
+            {
+                "content": "What does it mean?",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Shall we ask Paul to come with us?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "I believe it.",
+                "isCorrect": false
+            },
+            {
+                "content": "I'm sure.",
+                "isCorrect": false
+            },
+            {
+                "content": "If you like.",
+                "isCorrect": true
+            }
+        ]
+    }
+]

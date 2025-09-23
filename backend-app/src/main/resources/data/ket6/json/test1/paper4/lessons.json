@@ -1,0 +1,11 @@
+[
+    {
+        "name": "Write a note to Sam including what time to come, what to bring, and how to get to your house. Use 25 to 35 words.",
+        "skillType": "WRITING",
+        "sumQues": 1,
+        "createBy": "admin",
+        "questionContents": [
+            "Write a note to Sam including details on what time to come, what to bring, and directions to your house. Use 25 to 35 words."
+        ]
+    }
+]

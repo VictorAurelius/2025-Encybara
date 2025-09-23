@@ -1,0 +1,130 @@
+[
+  {
+    "quesContent": "Do you have any of the rules in your workplace or college?",
+    "skillType": "SPEAKING",
+    "quesType": "SPEAKING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  },
+  {
+    "quesContent": "Do you think they are good rules or bad rules? Why?",
+    "skillType": "SPEAKING",
+    "quesType": "SPEAKING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  },
+  {
+    "quesContent": "If you could change one rule at your workplace or college, what would it be and why?",
+    "skillType": "SPEAKING",
+    "quesType": "SPEAKING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  },
+  {
+    "quesContent": "Person in charge of IT",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "CIO",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Keeping something safe",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "security",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Information such as numbers and details about people",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "data",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "A secret word that you type into a computer before you can use it",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "password",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "A group of connected computers",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "network",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Having only letters and numbers",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "alphanumeric",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Letters, numbers, punctuation marks, etc.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "characters",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "People you work with",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "colleagues",
+        "isCorrect": true
+      }
+    ]
+  }
+]

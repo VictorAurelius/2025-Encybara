@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "Are you sure the match starts at two?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "It started well.",
+                "isCorrect": false
+            },
+            {
+                "content": "It's all right.",
+                "isCorrect": false
+            },
+            {
+                "content": "I think so.",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "I saw the new Spielberg film last night.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Did I go?",
+                "isCorrect": false
+            },
+            {
+                "content": "Has he come?",
+                "isCorrect": false
+            },
+            {
+                "content": "Was it good?",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "How did the accident happen?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "I can't go there.",
+                "isCorrect": false
+            },
+            {
+                "content": "I didn't see it.",
+                "isCorrect": true
+            },
+            {
+                "content": "I don't know how to.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Hello, I'd like to speak to Mr Green, please.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Sorry, can you say that again?",
+                "isCorrect": true
+            },
+            {
+                "content": "I'm sorry, I'll call again later.",
+                "isCorrect": false
+            },
+            {
+                "content": "I'm afraid I don't know.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "May I leave now?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "When we've finished.",
+                "isCorrect": true
+            },
+            {
+                "content": "Until tomorrow.",
+                "isCorrect": false
+            },
+            {
+                "content": "I don't agree.",
+                "isCorrect": false
+            }
+        ]
+    }
+]

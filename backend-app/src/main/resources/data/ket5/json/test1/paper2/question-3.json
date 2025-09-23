@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "The ‘early morning swim’ starts at:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "6.00",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "The pool is used by:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "school",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Each lesson costs:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "7.5",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "The date of the next course is:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "9th March",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "The teacher’s name is:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "FOWLER",
+                "isCorrect": true
+            }
+        ]
+    }
+]

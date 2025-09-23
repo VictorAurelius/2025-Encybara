@@ -1,0 +1,54 @@
+[
+    {
+        "name": "Paper 2: Listening - Part 1",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Choose an answer for space 6",
+            "Choose an answer for space 7",
+            "Choose an answer for space 8",
+            "Choose an answer for space 9",
+            "Choose an answer for space 10"
+        ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 2",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Jenny was shown how to make the soup by",
+            "How has Jenny improved the soup?",
+            "To make it really good, Jenny adds",
+            "How long does the soup take to make?",
+            "What will they eat next?"
+        ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 3",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Colour of flowers:",
+            "Season to see flowers:",
+            "Month to put plant outside:",
+            "Final size of plant:",
+            "Price of plant today:"
+        ]
+    },
+    {
+        "name": "Paper 2: Listening - Part 4",
+        "skillType": "LISTENING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Travel there by:",
+            "Time to meet:",
+            "Activities:",
+            "How much money to take:",
+            "Meet at end of day at:"
+        ]
+    }
+]

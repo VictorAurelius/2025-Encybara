@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "If you lose this, you won't be able to get into your house.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "key",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Many people put these on when they want to read something.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "glasses",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "People pay for things with this.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "money",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "If it has been windy, you may need to do your hair with this.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "comb",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "You write important dates in this so you don't forget them.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "diary",
+                "isCorrect": true
+            }
+        ]
+    }
+]

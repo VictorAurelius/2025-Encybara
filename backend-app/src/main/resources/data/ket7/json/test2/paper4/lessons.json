@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Write an email to your friend inviting them to your birthday party. Include details about the time, location, and activities planned.",
+        "skillType": "WRITING",
+        "sumQues": 1,
+        "createBy": "admin",
+        "questionContents": [
+            "Write an email to your friend inviting them to your birthday party. Include details about the time, location, and activities planned. Write 25 to 35 words."
+        ]
+    },
+    {
+        "name": "Write an email to your teacher asking for advice about how to improve your English. Include details about your current challenges and what areas you would like to focus on.",
+        "skillType": "WRITING",
+        "sumQues": 1,
+        "createBy": "admin",
+        "questionContents": [
+            "Write an email to your teacher asking for advice about how to improve your English. Include details about your current challenges and what areas you would like to focus on. Write 25 to 35 words."
+        ]
+    }
+]

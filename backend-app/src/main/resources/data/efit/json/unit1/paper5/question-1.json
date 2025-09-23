@@ -1,0 +1,132 @@
+[
+  {
+    "quesContent": "Choose an answer for space 1",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "supplies",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Choose an answer for space 2",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "service centres",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Choose an answer for space 3",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "provide",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Choose an answer for space 4",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "spreadsheet and database",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Choose an answer for space 5",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "launched",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Choose an answer for space 6",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "client",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Choose an answer for space 7",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "installing",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Choose an answer for space 8",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "maintaining",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Choose an answer for space 9",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "diagnosing",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Choose an answer for space 10",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "from time to time",
+        "isCorrect": true
+      }
+    ]
+  }
+]

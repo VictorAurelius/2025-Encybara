@@ -1,0 +1,21 @@
+[
+    {
+        "name": "(Paper 2) Cambridge Key English Test (KET4) - Listening Test 1",
+        "intro": "(Level A2) Strengthen your listening skills with this comprehensive KET4 course. Engage with diverse audio contexts such as conversations, announcements, and interviews. This course is designed to refine your ability to comprehend spoken English, extract key information, and respond effectively in real-life situations.",
+        "diffLevel": 1.5,
+        "recomLevel": 1.0,
+        "courseType": "LISTENING",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 5,
+        "group": "Cambridge Key English Test 1 (KET4)",
+        "speciField": "EVERYONE",
+        "createBy": "admin",
+        "lessonNames": [
+            "Paper 2: Listening - Part 1",
+            "Paper 2: Listening - Part 2",
+            "Paper 2: Listening - Part 3",
+            "Paper 2: Listening - Part 4"
+        ]
+    }
+]

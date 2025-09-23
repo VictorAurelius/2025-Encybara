@@ -1,0 +1,34 @@
+[
+    {
+        "name": "EFIT Unit 1: Paper 2 - Lesson 2 Image",
+        "materType": "image/png",
+        "materPath": "data/efit/file/unit1/paper2/les2-3-paper2.png",
+        "lessonName": "(IO) 2. Vocabulary: Company Profiles",
+        "questionContent": null,
+        "createBy": "admin"
+    },
+    {
+        "name": "EFIT Unit 1: Paper 2 - Lesson 3 Image",
+        "materType": "image/png",
+        "materPath": "data/efit/file/unit1/paper2/les2-3-paper2.png",
+        "lessonName": "(IO) 3. Reading: Company Profiles",
+        "questionContent": null,
+        "createBy": "admin"
+    },
+    {
+        "name": "EFIT Unit 1: Paper 2 - Lesson 5 Image",
+        "materType": "image/png",
+        "materPath": "data/efit/file/unit1/paper2/les5-paper2.png",
+        "lessonName": "(IO) 5. Listening: IT Companies Conversation",
+        "questionContent": null,
+        "createBy": "admin"
+    },
+    {
+        "name": "EFIT Unit 1: Paper 2 - Lesson 5 Audio",
+        "materType": "audio/mp3",
+        "materPath": "data/efit/file/unit1/paper2/les5-paper2.mp3",
+        "lessonName": "(IO) 5. Listening: IT Companies Conversation",
+        "questionContent": null,
+        "createBy": "admin"
+    }
+]

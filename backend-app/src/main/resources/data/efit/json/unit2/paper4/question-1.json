@@ -1,0 +1,210 @@
+[
+  {
+    "quesContent": "Find a word that means 'start again'.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "restart",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Find a word that means 'split a hard drive into parts that act like separate drives'.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "partition",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Find a word that means 'software built into a computer that controls how it starts up'.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "BIOS",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Find a word that means 'the drive that the computer reads first when starting up'.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "boot drive",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Find a word that means 'software comes with this to show you are the owner'.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "product key",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Find a word that means 'settings for a user'.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "user account",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Find a word that means 'switch a computer off and on again'.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "reboot",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Find a word that means 'a series of actions to do something'.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "process",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Find a word that means 'copy data to another place so that you don't lose it'.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "back up",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Find a word that means 'rules about how you can use software'.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "license terms",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Match 'Back up everything' with its purpose.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "d,for",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Match 'Put the DVD in the drive' with its reason.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "e,so",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Match 'Press 'F2' while rebooting the computer' with its function.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "a,to",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Match 'During the installation process, the computer will ask you some questions' with its explanation.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "f,because",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Match 'You might want to partition the hard drive' with its intended use.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "c,to",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Match 'Change the boot drive to the optical drive' with its effect.",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "b,so",
+        "isCorrect": true
+      }
+    ]
+  }
+]

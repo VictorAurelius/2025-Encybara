@@ -1,0 +1,22 @@
+[
+    {
+        "name": "(Unit 1: Working on IT) IT organisations",
+        "intro": "This section looks at the activities of IT companies, such as manufacturing, designing and selling. Little specialist knowledge of IT is needed; the only general knowledge required is basic knowledge of some well-known IT companies such as Apple, Google and Microsoft, and what they do.",
+        "diffLevel": 5.5,
+        "recomLevel": 5.0,
+        "courseType": "ALLSKILLS",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 5,
+        "group": "English for Information Technology - UTC",
+        "speciField": "IT",
+        "createBy": "admin",
+        "lessonNames": [
+            "(IO) 1. Speaking - IT Organisations",
+            "(IO) 2. Vocabulary: Company Profiles",
+            "(IO) 3. Reading: Company Profiles",
+            "(IO) 4. Speaking: IT Organisations",
+            "(IO) 5. Listening: IT Companies Conversation"
+        ]
+    }
+]

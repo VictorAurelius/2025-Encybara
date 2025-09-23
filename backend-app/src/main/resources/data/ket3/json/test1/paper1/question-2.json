@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "Who's that man with the green sweater?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "He's my brother.",
+                "isCorrect": true
+            },
+            {
+                "content": "It's John's.",
+                "isCorrect": false
+            },
+            {
+                "content": "I don't know it.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Where's Amanda gone?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "She's at the station.",
+                "isCorrect": true
+            },
+            {
+                "content": "She'll arrive tomorrow.",
+                "isCorrect": false
+            },
+            {
+                "content": "She's going to leave tonight.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "I hate shopping.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "So do I.",
+                "isCorrect": true
+            },
+            {
+                "content": "Certainly.",
+                "isCorrect": false
+            },
+            {
+                "content": "That's all right.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "How long did the journey take?",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "About 500 kilometres.",
+                "isCorrect": false
+            },
+            {
+                "content": "Almost 5 hours.",
+                "isCorrect": true
+            },
+            {
+                "content": "Last week.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "The room costs £55 a night.",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "I don't take it.",
+                "isCorrect": false
+            },
+            {
+                "content": "Give me two, please.",
+                "isCorrect": false
+            },
+            {
+                "content": "That's a lot.",
+                "isCorrect": true
+            }
+        ]
+    }
+]

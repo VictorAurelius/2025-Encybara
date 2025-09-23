@@ -1,0 +1,138 @@
+[
+    {
+        "name": "Paper 1: Reading and Writing - Part 1",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "You can't drive this way.",
+            "Children do not have to pay.",
+            "You can shop here six days a week.",
+            "Be careful when you stand up.",
+            "We work quickly."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 2",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Nina was very ... because she got lots of presents.",
+            "She ... some friends to her house for a party.",
+            "Her mother made a big chocolate ... with 'Happy Birthday' on the top.",
+            "Nina and her friends has a great time, singing and dancing and ... to their favorite music.",
+            "When they had to go, everybody ... Nina and her mother for the party."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 3",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "It's time for lunch.",
+            "Would you like a drink?",
+            "How much was your new shirt?",
+            "I'm very sorry.",
+            "Do you speak English?"
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Conversation at a garage",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Choose correct letter A-H for space 16",
+            "Choose correct letter A-H for space 17",
+            "Choose correct letter A-H for space 18",
+            "Choose correct letter A-H for space 19",
+            "Choose correct letter A-H for space 20"
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 4",
+        "skillType": "READING",
+        "sumQues": 7,
+        "createBy": "admin",
+        "questionContents": [
+            "Which book is by somebody who has written a lot of books?",
+            "Which book is about somebody who is very poor?",
+            "Which book is about somebody who would like to work in a hospital?",
+            "Which book is by somebody who worked in a school?",
+            "Which book is about a difficult journey?",
+            "Which book is about a man and his son?",
+            "Which book is by a student?"
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 5",
+        "skillType": "READING",
+        "sumQues": 8,
+        "createBy": "admin",
+        "questionContents": [
+            "Choose the best word for space 28",
+            "Choose the best word for space 29",
+            "Choose the best word for space 30",
+            "Choose the best word for space 31",
+            "Choose the best word for space 32",
+            "Choose the best word for space 33",
+            "Choose the best word for space 34",
+            "Choose the best word for space 35"
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 6",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "You need this to travel to some foreign countries.",
+            "You need to buy this before you get on a plane.",
+            "This is where you go to get a plane.",
+            "You put your clothes in this when you travel.",
+            "This person likes visiting different places."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 7",
+        "skillType": "READING",
+        "sumQues": 10,
+        "createBy": "admin",
+        "questionContents": [
+            "Write ONE word for space 41",
+            "Write ONE word for space 42",
+            "Write ONE word for space 43",
+            "Write ONE word for space 44",
+            "Write ONE word for space 45",
+            "Write ONE word for space 46",
+            "Write ONE word for space 47",
+            "Write ONE word for space 48",
+            "Write ONE word for space 49",
+            "Write ONE word for space 50"
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 8",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Complete Andy's Notes - Date",
+            "Complete Andy's Notes - Name of film",
+            "Complete Andy's Notes - Starting time",
+            "Complete Andy's Notes - Ticket price",
+            "Complete Andy's Notes - Meet Sheila in"
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 9",
+        "skillType": "WRITING",
+        "sumQues": 1,
+        "createBy": "admin",
+        "questionContents": [
+            "Read the note from your friend Richard.\nWrite a postcard to tell him what he wants to know.\n'It's great that you're coming to see me in England. Tell me when you are coming, how long you want to stay and what you want to do.\nWrite soon!\nRichard'\nWrite 25-35 words.\nWrite your postcard on the answer sheet."
+        ]
+    }
+]

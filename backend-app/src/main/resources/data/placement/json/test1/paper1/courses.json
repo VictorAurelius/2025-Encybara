@@ -1,0 +1,23 @@
+[
+    {
+        "name": "English Placement Test",
+        "intro": "This course is designed to assess your English proficiency across reading, listening, speaking, and writing skills. It includes a variety of tasks to help determine your current level and provide recommendations for further study.",
+        "diffLevel": 1.0,
+        "recomLevel": 1.0,
+        "courseType": "ALLSKILLS",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 6,
+        "group": "PLACEMENT",
+        "speciField": "EVERYONE",
+        "createBy": "admin",
+        "lessonNames": [
+            "(PLACEMENT) Text - Reading",
+            "(PLACEMENT) Choice - Reading",
+            "(PLACEMENT) Choice - Listening",
+            "(PLACEMENT) Text - Listening",
+            "(PLACEMENT) Writing",
+            "(PLACEMENT) Speaking"
+        ]
+    }
+]

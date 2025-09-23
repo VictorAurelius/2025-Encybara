@@ -1,0 +1,221 @@
+[
+    {
+        "quesContent": "(IT) How do you use IT? Think about work, study and fun.",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "(IT) What devices do you use?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "(IT) What software do you use?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    },
+    {
+        "quesContent": "What is Maria's job?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "software developer",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What is Ahmed's job?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "helpdesk supervisor",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What is Freddy's job?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "project manager",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What is Hana's job?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "support technician",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What is Tim's job?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "database administrator",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What is Sophie's job?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "systems analyst",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: supervise _______",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "a team",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: have _______",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "a problem",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: be responsible _______ IT projects",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "for",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: look _______ computers",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "after",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: install _______",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "software",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: diagnose _______",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "the problem",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: design _______",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "databases",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: maintain _______",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "databases",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: write _______ for software",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "specifications",
+                "isCorrect": true
+            }
+        ]
+    }
+]

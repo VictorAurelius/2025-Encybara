@@ -1,0 +1,22 @@
+[
+    {
+        "name": "(Unit 2: IT Systems) System specifications",
+        "intro": "This section focuses on IT systems, covering hardware specifications, GUI usage, multimedia types, and OS installation.",
+        "diffLevel": 5.0,
+        "recomLevel": 4.5,
+        "courseType": "ALLSKILLS",
+        "numLike": 0,
+        "courseStatus": "PUBLIC",
+        "sumLesson": 5,
+        "group": "English for Information Technology - UTC",
+        "speciField": "IT",
+        "createBy": "admin",
+        "lessonNames": [
+            "(SyS) 1. Speaking: Peripherals vs. Internal Hardware",
+            "(SyS) 2. Reading: Categorizing Computer Hardware",
+            "(SyS) 3. Listening: Identifying Motherboard Components",
+            "(SyS) 4. Reading: Numerical Prefixes",
+            "(SyS) 5. Speaking: Computer Specifications"
+        ]
+    }
+]

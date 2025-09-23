@@ -1,0 +1,158 @@
+[
+    {
+        "quesContent": "Choose an answer for space 1",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "A",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 2",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "L",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 3",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "F",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 4",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "G",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 5",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "B",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 6",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "K",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 7",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "J",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 8",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "C",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 9",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "I",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 10",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "E",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 11",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "D",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose an answer for space 12",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "H",
+                "isCorrect": true
+            }
+        ]
+    }
+]

@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "If you enjoy camping, you'll need this to sleep in.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "tent",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "People learn to play music on this.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "guitar",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "If you like reading stories about pop stars, you may need to buy these every week.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "magazines",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "People who like walking in the forest need these to keep their feet dry.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "boots",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "If you enjoy watching films at home, you may need to rent this.",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "video",
+                "isCorrect": true
+            }
+        ]
+    }
+]

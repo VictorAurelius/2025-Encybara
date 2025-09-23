@@ -1,0 +1,58 @@
+[
+    {
+        "name": "Paper 2 Listening Part 1 Image",
+        "materType": "image/png",
+        "materPath": "data/ket7/file/test3/paper2/part1-paper2.png",
+        "lessonName": "Paper 2: Listening - Part 1",
+        "questionContent": null,
+        "createBy": "admin"
+    },
+    {
+        "name": "Paper 2 Listening Part 3 Image",
+        "materType": "image/png",
+        "materPath": "data/ket7/file/test3/paper2/part3-paper2.png",
+        "lessonName": "Paper 2: Listening - Part 4",
+        "questionContent": null,
+        "createBy": "admin"
+    },
+    {
+        "name": "Paper 2 Listening Part 4 Image",
+        "materType": "image/png",
+        "materPath": "data/ket7/file/test3/paper2/part4-paper2.png",
+        "lessonName": "Paper 2: Listening - Part 4",
+        "questionContent": null,
+        "createBy": "admin"
+    },
+    {
+        "name": "Paper 2 Listening Part 1 Audio",
+        "materType": "audio/mp3",
+        "materPath": "data/ket7/file/test3/paper2/q-part1.mp3",
+        "lessonName": "Paper 2: Listening - Part 1",
+        "questionContent": null,
+        "createBy": "admin"
+    },
+    {
+        "name": "Paper 2 Listening Part 2 Audio",
+        "materType": "audio/mp3",
+        "materPath": "data/ket7/file/test3/paper2/q-part2.mp3",
+        "lessonName": "Paper 2: Listening - Part 2",
+        "questionContent": null,
+        "createBy": "admin"
+    },
+    {
+        "name": "Paper 2 Listening Part 3 Audio",
+        "materType": "audio/mp3",
+        "materPath": "data/ket7/file/test3/paper2/q-part3.mp3",
+        "lessonName": "Paper 2: Listening - Part 3",
+        "questionContent": null,
+        "createBy": "admin"
+    },
+    {
+        "name": "Paper 2 Listening Part 4 Audio",
+        "materType": "audio/mp3",
+        "materPath": "data/ket7/file/test3/paper2/q-part4.mp3",
+        "lessonName": "Paper 2: Listening - Part 4",
+        "questionContent": null,
+        "createBy": "admin"
+    }
+]

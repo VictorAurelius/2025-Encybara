@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "Dawn booked the concert ticket ...",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "on the internet.",
+                "isCorrect": false
+            },
+            {
+                "content": "over the phone.",
+                "isCorrect": true
+            },
+            {
+                "content": "by post.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Dawn’s plane ticket cost ...",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "£230.",
+                "isCorrect": true
+            },
+            {
+                "content": "£300.",
+                "isCorrect": false
+            },
+            {
+                "content": "£350.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Dawn stayed in ...",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "a student hotel.",
+                "isCorrect": false
+            },
+            {
+                "content": "a family friend's home.",
+                "isCorrect": true
+            },
+            {
+                "content": "a campsite.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Dawn thought the concert was ...",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "not very good.",
+                "isCorrect": false
+            },
+            {
+                "content": "too short.",
+                "isCorrect": true
+            },
+            {
+                "content": "too noisy.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Most of the time, Dawn was ...",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "on the beach.",
+                "isCorrect": false
+            },
+            {
+                "content": "on a tour bus.",
+                "isCorrect": false
+            },
+            {
+                "content": "in the shops.",
+                "isCorrect": true
+            }
+        ]
+    }
+]

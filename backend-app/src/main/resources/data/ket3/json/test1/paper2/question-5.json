@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "Complete the phone message - To",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "A",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the phone message - Price of ticket",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "A",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the phone message - Telephone no",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "A",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the phone message - Place",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "A",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the phone message - In",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "A",
+                "isCorrect": true
+            }
+        ]
+    }
+]

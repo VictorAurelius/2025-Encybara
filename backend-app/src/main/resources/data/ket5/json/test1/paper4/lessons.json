@@ -1,0 +1,11 @@
+[
+    {
+        "name": "Write an email to Mike answering his questions about your new mobile phone in 25 to 35 words.",
+        "skillType": "WRITING",
+        "sumQues": 1,
+        "createBy": "admin",
+        "questionContents": [
+            "Write an email to Mike describing the features of your new mobile phone and explaining why you chose it. Use 25 to 35 words."
+        ]
+    }
+]

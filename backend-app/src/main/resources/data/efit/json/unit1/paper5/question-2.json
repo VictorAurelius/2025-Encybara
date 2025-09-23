@@ -1,0 +1,42 @@
+[
+  {
+    "quesContent": "What questions should an interviewer ask during a job interview?",
+    "skillType": "SPEAKING",
+    "quesType": "SPEAKING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  },
+  {
+    "quesContent": "How can a candidate effectively respond to common interview questions?",
+    "skillType": "SPEAKING",
+    "quesType": "SPEAKING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  },
+  {
+    "quesContent": "What are some strategies for making a good impression in an interview?",
+    "skillType": "SPEAKING",
+    "quesType": "SPEAKING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  },
+  {
+    "quesContent": "What are common mistakes candidates make during interviews, and how can they be avoided?",
+    "skillType": "SPEAKING",
+    "quesType": "SPEAKING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  },
+  {
+    "quesContent": "Write a job advertisement for an IT job you would like or your current IT job. Use the pattern you identified in the previous exercise.",
+    "skillType": "WRITING",
+    "quesType": "WRITING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "quesContent": "Can you think of four suggestions similar to those in a teleconference?",
+    "skillType": "SPEAKING",
+    "quesType": "SPEAKING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  },
+  {
+    "quesContent": "How would you respond to different workplace suggestions?",
+    "skillType": "SPEAKING",
+    "quesType": "SPEAKING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  },
+  {
+    "quesContent": "What are some effective ways to express agreement or disagreement in a discussion?",
+    "skillType": "SPEAKING",
+    "quesType": "SPEAKING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  },
+  {
+    "quesContent": "How can you ensure a constructive conversation when discussing workplace ideas?",
+    "skillType": "SPEAKING",
+    "quesType": "SPEAKING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  }
+]

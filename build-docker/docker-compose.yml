@@ -1,0 +1,71 @@
+services:
+  db-mysql:
+    image: mysql:5.7.40
+    restart: always
+    environment:
+      - MYSQL_DATABASE=encybara
+      - MYSQL_ROOT_PASSWORD=123456
+    expose:
+      - "3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p123456" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ../backend-app
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql:3306/encybara?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8mb4
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=123456
+      - englishlearning.upload-file.base-uri=/app/uploads/
+      - file.upload-dir=/app/uploads/
+      - ffmpeg.path=/usr/bin/ffmpeg
+      - ffprobe.path=/usr/bin/ffprobe
+      - springdoc.api-docs.enabled=true
+      - springdoc.swagger-ui.enabled=true
+      - springdoc.swagger-ui.path=/swagger-ui.html
+      - springdoc.api-docs.path=/v3/api-docs
+      - springdoc.swagger-ui.operationsSorter=method
+      - springdoc.swagger-ui.display-request-duration=true
+    volumes:
+      - upload_data:/app/uploads
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      db-mysql:
+        condition: service_healthy
+    networks:
+      - app-network
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  upload_data:

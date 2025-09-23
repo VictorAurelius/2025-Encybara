@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "How much is a travel card?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "£6",
+                "isCorrect": true
+            },
+            {
+                "content": "£16",
+                "isCorrect": false
+            },
+            {
+                "content": "£60",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Jan will need",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "one photo.",
+                "isCorrect": true
+            },
+            {
+                "content": "two photos.",
+                "isCorrect": false
+            },
+            {
+                "content": "four photos.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Photos are less expensive",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "in the photographer's shop.",
+                "isCorrect": true
+            },
+            {
+                "content": "in the library.",
+                "isCorrect": false
+            },
+            {
+                "content": "in the post office.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "For the travel card, Jan must take",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "a letter.",
+                "isCorrect": true
+            },
+            {
+                "content": "her passport.",
+                "isCorrect": false
+            },
+            {
+                "content": "her driving licence.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Jan can get a travel card from",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "her college.",
+                "isCorrect": true
+            },
+            {
+                "content": "the travel agent's.",
+                "isCorrect": false
+            },
+            {
+                "content": "the tourist office.",
+                "isCorrect": false
+            }
+        ]
+    }
+]

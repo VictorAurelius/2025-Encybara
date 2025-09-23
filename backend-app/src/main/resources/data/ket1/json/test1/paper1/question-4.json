@@ -1,0 +1,170 @@
+[
+    {
+        "quesContent": "Choose the best word for space 28",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "came",
+                "isCorrect": true
+            },
+            {
+                "content": "come",
+                "isCorrect": false
+            },
+            {
+                "content": "comes",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose the best word for space 29",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "being",
+                "isCorrect": false
+            },
+            {
+                "content": "be",
+                "isCorrect": false
+            },
+            {
+                "content": "been",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose the best word for space 30",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "has",
+                "isCorrect": false
+            },
+            {
+                "content": "have",
+                "isCorrect": true
+            },
+            {
+                "content": "had",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose the best word for space 31",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "were",
+                "isCorrect": false
+            },
+            {
+                "content": "is",
+                "isCorrect": false
+            },
+            {
+                "content": "are",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose the best word for space 32",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "or",
+                "isCorrect": false
+            },
+            {
+                "content": "if",
+                "isCorrect": false
+            },
+            {
+                "content": "but",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose the best word for space 33",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "them",
+                "isCorrect": true
+            },
+            {
+                "content": "him",
+                "isCorrect": false
+            },
+            {
+                "content": "us",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose the best word for space 34",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "from",
+                "isCorrect": false
+            },
+            {
+                "content": "by",
+                "isCorrect": true
+            },
+            {
+                "content": "to",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "Choose the best word for space 35",
+        "skillType": "READING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "the",
+                "isCorrect": false
+            },
+            {
+                "content": "a",
+                "isCorrect": true
+            },
+            {
+                "content": "any",
+                "isCorrect": false
+            }
+        ]
+    }
+]

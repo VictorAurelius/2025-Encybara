@@ -1,0 +1,117 @@
+[
+  {
+    "quesContent": "What do you use computers for? List as many uses as you can.",
+    "skillType": "SPEAKING",
+    "quesType": "SPEAKING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  },
+  {
+    "quesContent": "Which multimedia hardware items do you use for different tasks?",
+    "skillType": "SPEAKING",
+    "quesType": "SPEAKING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  },
+  {
+    "quesContent": "Who might use each multimedia device, and what would they use them for?",
+    "skillType": "SPEAKING",
+    "quesType": "SPEAKING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  },
+  {
+    "quesContent": "Choose an answer for space 1",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "speakers",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Choose an answer for space 2",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "projector",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Choose an answer for space 3",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "headphones",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Choose an answer for space 4",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "virtual reality goggles",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Choose an answer for space 5",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "microphone",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Choose an answer for space 6",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "video camera",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "quesContent": "Choose an answer for space 7",
+    "skillType": "READING",
+    "quesType": "TEXT",
+    "point": 10,
+    "createBy": "admin",
+    "choices": [
+      {
+        "content": "webcam",
+        "isCorrect": true
+      }
+    ]
+  }
+]

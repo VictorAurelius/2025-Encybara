@@ -1,0 +1,275 @@
+[
+    {
+        "quesContent": "Is an external drive an internal component, a peripheral, or a storage device?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "P,S",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Is a hard disk drive an internal component, a peripheral, or a storage device?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "I,P,S",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Are headphones considered an internal component, a peripheral, or a storage device?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "P",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Is an optical drive an internal component, a peripheral, or a storage device?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "I,P,S",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Is a keyboard an internal component, a peripheral, or a storage device?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "P",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Is a solid state drive an internal component, a peripheral, or a storage device?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "I,P,S",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Is a mouse an internal component, a peripheral, or a storage device?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "P",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Is memory classified as an internal component, a peripheral, or a storage device?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "I",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Is a monitor an internal component, a peripheral, or a storage device?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "P",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Is a power supply unit an internal component, a peripheral, or a storage device?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "I",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Is a printer an internal component, a peripheral, or a storage device?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "P",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Is a screen an internal component, a peripheral, or a storage device?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "P",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does the prefix '1000000000000' represent?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "tera-",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does the prefix '1000000000' represent?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "giga-",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does the prefix '1000000' represent?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "mega-",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does the prefix '1000' represent?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "kilo-",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does the prefix '0.000000001' represent?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "nano-",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does the prefix '0.000001' represent?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "micro-",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does the prefix '0.001' represent?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "milli-",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does the prefix '4' represent?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "quad-",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What does the prefix '2' represent?",
+        "skillType": "READING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "dual-",
+                "isCorrect": true
+            }
+        ]
+    }
+]

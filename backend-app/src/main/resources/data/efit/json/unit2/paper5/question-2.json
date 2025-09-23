@@ -1,0 +1,10 @@
+[
+  {
+    "quesContent": "Write a technical report about a recent IT system issue. Include the following points:\n- Description of the problem\n- Steps taken to diagnose the issue\n- Solutions attempted\n- Final resolution\n- Recommendations for future prevention",
+    "skillType": "WRITING",
+    "quesType": "WRITING",
+    "point": 10,
+    "createBy": "admin",
+    "choices": []
+  }
+]

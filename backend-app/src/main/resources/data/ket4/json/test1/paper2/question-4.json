@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "Monday–Saturday, open from 9 a.m. to:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "19.30",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Name of nearest station:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "North",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Elephant House closed on:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "3rd",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Shop sells books, postcards and:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "T-shirts",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Cost of family ticket:",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "12",
+                "isCorrect": true
+            }
+        ]
+    }
+]

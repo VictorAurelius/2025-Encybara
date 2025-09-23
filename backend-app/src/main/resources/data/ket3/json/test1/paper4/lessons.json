@@ -1,0 +1,11 @@
+[
+    {
+        "name": "Write Paul a postcard. Answer his questions with 25 to 30 words",
+        "skillType": "WRITING",
+        "sumQues": 1,
+        "createBy": "admin",
+        "questionContents": [
+            "Write a postcard to Paul answering his questions:\n- How will you get here?\n- What time will you arrive?\n- What shall we do?\nWrite 25 to 35 words.\nWrite your postcard on the answer sheet."
+        ]
+    }
+]

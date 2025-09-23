@@ -1,0 +1,67 @@
+[
+    {
+        "quesContent": "Complete the information - New address (Road)",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "Warnock",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the information - Opposite",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "bank",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the information - Opens on",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "21st May",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the information - Book a holiday for",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "350",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the information - And get a free",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "travel bag",
+                "isCorrect": true
+            }
+        ]
+    }
+]

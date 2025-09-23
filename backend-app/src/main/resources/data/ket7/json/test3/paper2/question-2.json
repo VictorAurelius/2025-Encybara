@@ -1,0 +1,107 @@
+[
+    {
+        "quesContent": "Jenny was shown how to make the soup by",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "her aunt",
+                "isCorrect": false
+            },
+            {
+                "content": "her friend",
+                "isCorrect": false
+            },
+            {
+                "content": "her mother",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "How has Jenny improved the soup?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "She adds less water.",
+                "isCorrect": true
+            },
+            {
+                "content": "She makes it thinner.",
+                "isCorrect": false
+            },
+            {
+                "content": "She uses bigger cups.",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "To make it really good, Jenny adds",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "milk",
+                "isCorrect": true
+            },
+            {
+                "content": "butter",
+                "isCorrect": false
+            },
+            {
+                "content": "cream",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "quesContent": "How long does the soup take to make?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "about 5 minutes",
+                "isCorrect": false
+            },
+            {
+                "content": "about 10 minutes",
+                "isCorrect": false
+            },
+            {
+                "content": "about 20 minutes",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What will they eat next?",
+        "skillType": "LISTENING",
+        "quesType": "CHOICE",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "fruit cake",
+                "isCorrect": false
+            },
+            {
+                "content": "pasta",
+                "isCorrect": true
+            },
+            {
+                "content": "lemon chicken",
+                "isCorrect": false
+            }
+        ]
+    }
+]

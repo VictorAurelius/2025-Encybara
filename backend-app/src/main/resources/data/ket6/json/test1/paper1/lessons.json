@@ -1,0 +1,75 @@
+[
+    {
+        "name": "Paper 1: Reading and Writing - Part 1",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "For some campsites, you have to phone and ... before you go.",
+            "Some people play loud music on campsites so it can be very ...",
+            "One of the nicest things about camping is ... breakfast outside.",
+            "It is better to use plastic cups and plates for camping because they don’t ... easily.",
+            "One problem with camping is making ... insects don’t get into the tent."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 2",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "Is it a good film?",
+            "I'm going to Tom's party tonight.",
+            "When did you lose your watch?",
+            "Sorry, I don't understand you.",
+            "Shall we ask Paul to come with us?"
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 3",
+        "skillType": "READING",
+        "sumQues": 8,
+        "createBy": "admin",
+        "questionContents": [
+            "Choose an answer for space 28",
+            "Choose an answer for space 29",
+            "Choose an answer for space 30",
+            "Choose an answer for space 31",
+            "Choose an answer for space 32",
+            "Choose an answer for space 33",
+            "Choose an answer for space 34",
+            "Choose an answer for space 35"
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 4",
+        "skillType": "READING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "This keeps food and drink cold.",
+            "You use this to cut things.",
+            "You do this to water to make it hot enough for a cup of coffee.",
+            "Some people put this in their drinks to make them sweet.",
+            "You can make chips with this vegetable."
+        ]
+    },
+    {
+        "name": "Paper 1: Reading and Writing - Part 5",
+        "skillType": "READING",
+        "sumQues": 10,
+        "createBy": "admin",
+        "questionContents": [
+            "Write ONE word for space 41",
+            "Write ONE word for space 42",
+            "Write ONE word for space 43",
+            "Write ONE word for space 44",
+            "Write ONE word for space 45",
+            "Write ONE word for space 46",
+            "Write ONE word for space 47",
+            "Write ONE word for space 48",
+            "Write ONE word for space 49",
+            "Write ONE word for space 50"
+        ]
+    }
+]

@@ -1,0 +1,10 @@
+[
+    {
+        "quesContent": "Write a note to Spencer answering the questions:\n- Where will you meet?\n- What time?\n- What should Spencer bring?\nWrite 25 to 35 words.\nWrite your note on the answer sheet.",
+        "skillType": "WRITING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": []
+    }
+]

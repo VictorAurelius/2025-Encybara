@@ -1,0 +1,15 @@
+[
+    {
+        "name": "Discuss a controversial topic with your partner. The examiner will ask you to express your opinion on subjects like social media influence, environmental responsibility, or personal success. You must justify your views with logical arguments and examples.",
+        "skillType": "SPEAKING",
+        "sumQues": 5,
+        "createBy": "admin",
+        "questionContents": [
+            "How do you think social media influences people's opinions? Give examples.",
+            "Do you believe individuals should take more responsibility for environmental protection? Why or why not?",
+            "What is your definition of personal success? How do you think people achieve it?",
+            "Do you think technology makes life better or worse? Explain your viewpoint.",
+            "If you could change one thing about the world, what would it be and why?"
+        ]
+    }
+]
