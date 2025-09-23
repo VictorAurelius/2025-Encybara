@@ -39,6 +39,8 @@ services:
       - springdoc.api-docs.path=/v3/api-docs
       - springdoc.swagger-ui.operationsSorter=method
       - springdoc.swagger-ui.display-request-duration=true
+      # Fix for Docker/Container processor metrics NullPointerException
+      - management.metrics.enable.processor=false
     volumes:
       - upload_data:/app/uploads
     healthcheck:
