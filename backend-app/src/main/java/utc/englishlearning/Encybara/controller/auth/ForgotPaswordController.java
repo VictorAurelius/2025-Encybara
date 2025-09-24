@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import utc.englishlearning.Encybara.domain.response.RestResponse;
 import utc.englishlearning.Encybara.domain.response.auth.ResRegisterDTO;
 import utc.englishlearning.Encybara.domain.request.auth.ReqUpdatePasswordDTO;
-import utc.englishlearning.Encybara.domain.request.*;
 import utc.englishlearning.Encybara.domain.response.auth.ResCreateUserDTO;
 
 import utc.englishlearning.Encybara.service.EmailService;

@@ -9,8 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
 import utc.englishlearning.Encybara.domain.RestResponse;
 import utc.englishlearning.Encybara.domain.response.speechToText.ResSpeechDTO;
-import utc.englishlearning.Encybara.domain.response.speechToText.SpeechData;
-import utc.englishlearning.Encybara.domain.response.speechToText.SpeechResponseDTO;
 import utc.englishlearning.Encybara.service.AudioConverterService;
 import utc.englishlearning.Encybara.service.GoogleSpeechService;
 
