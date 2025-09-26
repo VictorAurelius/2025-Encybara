@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.repository.*;
 import utc.englishlearning.Encybara.util.constant.GameTypeEnum;
+import utc.englishlearning.Encybara.util.constant.QuestionTypeEnum;
 import utc.englishlearning.Encybara.exception.ResourceNotFoundException;
 
 
@@ -109,6 +110,12 @@ public class GameService {
         }
         
         Question question = availableQuestions.get(0);
+        
+        // Double check: Đảm bảo question là CHOICE type
+        if (!QuestionTypeEnum.CHOICE.equals(question.getQuesType())) {
+            throw new IllegalStateException("Game only supports CHOICE type questions");
+        }
+        
         Map<String, Object> response = new HashMap<>();
         response.put("questionId", question.getId());
         response.put("questionText", question.getQuesContent());
@@ -118,16 +125,14 @@ public class GameService {
         response.put("totalQuestions", session.getGame().getMaxQuestions());
         response.put("timeRemaining", session.getTimeLeft());
         
-        // Lấy choices nếu có
-        if (question.getQuestionChoices() != null && !question.getQuestionChoices().isEmpty()) {
-            List<Map<String, Object>> choices = question.getQuestionChoices().stream()
-                .map(choice -> Map.of(
-                    "id", choice.getId(),
-                    "content", (Object) choice.getChoiceContent()
-                ))
-                .collect(Collectors.toList());
-            response.put("choices", choices);
-        }
+        // Lấy choices (đã guaranteed có choices từ filter)
+        List<Map<String, Object>> choices = question.getQuestionChoices().stream()
+            .map(choice -> Map.of(
+                "id", choice.getId(),
+                "content", (Object) choice.getChoiceContent()
+            ))
+            .collect(Collectors.toList());
+        response.put("choices", choices);
         
         return response;
     }
@@ -199,9 +204,10 @@ public class GameService {
             allQuestions.addAll(lessonQuestions);
         }
         
-        // Loại bỏ questions đã trả lời và shuffle
+        // Loại bỏ questions đã trả lời, chỉ lấy CHOICE questions và có choices
         List<Question> availableQuestions = allQuestions.stream()
             .filter(q -> !excludeIds.contains(q.getId()))
+            .filter(q -> QuestionTypeEnum.CHOICE.equals(q.getQuesType())) // Chỉ lấy câu hỏi trắc nghiệm
             .filter(q -> q.getQuestionChoices() != null && !q.getQuestionChoices().isEmpty())
             .collect(Collectors.toList());
             
@@ -249,7 +255,7 @@ public class GameService {
 
     @Transactional(readOnly = true)
     public GameSession getGameSession(Long sessionId) {
-        return gameSessionRepository.findById(sessionId)
+        return gameSessionRepository.findByIdWithGameAndUser(sessionId)
             .orElseThrow(() -> new ResourceNotFoundException("Session not found"));
     }
 

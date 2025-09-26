@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import utc.englishlearning.Encybara.domain.*;
+import utc.englishlearning.Encybara.domain.dto.response.GameSessionStatusResponse;
 import utc.englishlearning.Encybara.domain.response.RestResponse;
 import utc.englishlearning.Encybara.service.GameService;
 import utc.englishlearning.Encybara.service.UserService;
@@ -195,17 +196,18 @@ public class GameControllerV2 {
     }
 
     @GetMapping("/{sessionId}/status")
-    public ResponseEntity<RestResponse<GameSession>> getGameStatus(@PathVariable Long sessionId) {
+    public ResponseEntity<RestResponse<GameSessionStatusResponse>> getGameStatus(@PathVariable Long sessionId) {
         try {
             GameSession session = gameService.getGameSession(sessionId);
+            GameSessionStatusResponse statusResponse = GameSessionStatusResponse.fromGameSession(session);
             
-            RestResponse<GameSession> response = new RestResponse<>();
+            RestResponse<GameSessionStatusResponse> response = new RestResponse<>();
             response.setStatusCode(200);
             response.setMessage("Game status retrieved successfully");
-            response.setData(session);
+            response.setData(statusResponse);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            RestResponse<GameSession> errorResponse = new RestResponse<>();
+            RestResponse<GameSessionStatusResponse> errorResponse = new RestResponse<>();
             errorResponse.setStatusCode(400);
             errorResponse.setError(e.getMessage());
             return ResponseEntity.badRequest().body(errorResponse);

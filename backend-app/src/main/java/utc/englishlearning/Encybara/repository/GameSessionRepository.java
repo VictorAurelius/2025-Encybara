@@ -80,4 +80,8 @@ public interface GameSessionRepository extends JpaRepository<GameSession, Long> 
         ORDER BY g.score DESC, g.endTime ASC
     """)
     List<GameSession> findCourseLeaderboard(@Param("courseId") Long courseId);
+
+    // Fetch GameSession with eager loading to avoid lazy loading issues
+    @Query("SELECT g FROM GameSession g JOIN FETCH g.game JOIN FETCH g.user WHERE g.id = :sessionId")
+    Optional<GameSession> findByIdWithGameAndUser(@Param("sessionId") Long sessionId);
 }
