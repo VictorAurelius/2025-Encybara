@@ -1,0 +1,868 @@
+{
+	"info": {
+		"_postman_id": "game-system-v2-test",
+		"name": "🎮 Game System V2 API Tests - Updated",
+		"description": "Complete API testing collection for the new Game System with Course integration - Updated for actual endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🔐 Authentication",
+			"item": [
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (responseCode.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set('auth_token', jsonData.data);",
+									"    pm.test('Login successful', function () {",
+									"        pm.response.to.have.status(200);",
+									"    });",
+									"    console.log('Auth Token:', jsonData.data.substring(0, 20) + '...');",
+									"} else {",
+									"    pm.test('Login failed', function () {",
+									"        pm.response.to.have.status(200);",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"student@example.com\",\n    \"password\": \"student123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "📚 Course Preparation",
+			"item": [
+				{
+					"name": "Get Active Courses",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response has courses', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.be.an('array');",
+									"    if (jsonData.data.length > 0) {",
+									"        pm.environment.set('course_id', jsonData.data[0].id);",
+									"        console.log('Course ID set:', jsonData.data[0].id);",
+									"        console.log('Course Name:', jsonData.data[0].name);",
+									"    }",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/courses/getAllActiveForStudent",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"courses",
+								"getAllActiveForStudent"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🎮 Game Management",
+			"item": [
+				{
+					"name": "Create Review Game",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Game created successfully', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response contains game data', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('id');",
+									"    pm.environment.set('game_id', jsonData.data.id);",
+									"    console.log('Game ID created:', jsonData.data.id);",
+									"    console.log('Game Name:', jsonData.data.name);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"courseId\": {{course_id}},\n    \"name\": \"Review Game - Postman Test\",\n    \"description\": \"Testing game creation with CHOICE questions only\",\n    \"gameType\": \"REVIEW\",\n    \"maxQuestions\": 5,\n    \"timeLimit\": 300\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/game/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"game",
+								"create"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Practice Game",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Practice game created successfully', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Game type is PRACTICE', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.gameType).to.eql('PRACTICE');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"courseId\": {{course_id}},\n    \"name\": \"Practice Game - Postman Test\",\n    \"description\": \"Practice specific vocabulary topics\",\n    \"gameType\": \"PRACTICE\",\n    \"maxQuestions\": 3,\n    \"timeLimit\": 180\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/game/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"game",
+								"create"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Games by Course",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response contains games list', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.be.an('array');",
+									"    console.log('Total games for course:', jsonData.data.length);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/game/course/{{course_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"game",
+								"course",
+								"{{course_id}}"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🚀 Game Session Flow",
+			"item": [
+				{
+					"name": "Start Game Session",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Game session started successfully', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Session data returned', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('sessionId');",
+									"    pm.expect(jsonData.data).to.have.property('gameId');",
+									"    pm.expect(jsonData.data).to.have.property('maxQuestions');",
+									"    pm.expect(jsonData.data).to.have.property('timeLimit');",
+									"    ",
+									"    pm.environment.set('session_id', jsonData.data.sessionId);",
+									"    console.log('Game Session started with ID:', jsonData.data.sessionId);",
+									"    console.log('Max Questions:', jsonData.data.maxQuestions);",
+									"    console.log('Time Limit:', jsonData.data.timeLimit + ' seconds');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/game/{{game_id}}/start",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"game",
+								"{{game_id}}",
+								"start"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Next Question",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Question retrieved successfully', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Question data is valid', function () {",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    if (jsonData.data.gameCompleted) {",
+									"        console.log('Game completed!');",
+									"        pm.test('Game completed', function () {",
+									"            pm.expect(jsonData.data).to.have.property('gameCompleted', true);",
+									"        });",
+									"    } else {",
+									"        pm.expect(jsonData.data).to.have.property('questionId');",
+									"        pm.expect(jsonData.data).to.have.property('questionText');",
+									"        pm.expect(jsonData.data).to.have.property('choices');",
+									"        pm.expect(jsonData.data.choices).to.be.an('array');",
+									"        ",
+									"        pm.environment.set('current_question_id', jsonData.data.questionId);",
+									"        ",
+									"        // Lấy choice đầu tiên để test",
+									"        if (jsonData.data.choices.length > 0) {",
+									"            pm.environment.set('choice_id', jsonData.data.choices[0].id);",
+									"        }",
+									"        ",
+									"        console.log('Question:', jsonData.data.questionText);",
+									"        console.log('Question Type:', jsonData.data.questionType);",
+									"        console.log('Progress:', jsonData.data.questionNumber + '/' + jsonData.data.totalQuestions);",
+									"        console.log('Time Remaining:', jsonData.data.timeRemaining + ' seconds');",
+									"    }",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/game/{{session_id}}/question",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"game",
+								"{{session_id}}",
+								"question"
+							]
+						}
+					}
+				},
+				{
+					"name": "Submit Answer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Answer submitted successfully', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Answer result returned', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('correct');",
+									"    pm.expect(jsonData.data).to.have.property('correctChoice');",
+									"    pm.expect(jsonData.data).to.have.property('pointsEarned');",
+									"    ",
+									"    console.log('Answer Correct:', jsonData.data.correct);",
+									"    console.log('Points Earned:', jsonData.data.pointsEarned);",
+									"    console.log('Correct Choice:', jsonData.data.correctChoice);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"questionId\": {{current_question_id}},\n    \"choiceId\": {{choice_id}}\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/game/{{session_id}}/answer",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"game",
+								"{{session_id}}",
+								"answer"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Session Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Session status retrieved', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Session data is complete', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('id');",
+									"    pm.expect(jsonData.data).to.have.property('score');",
+									"    pm.expect(jsonData.data).to.have.property('totalQuestions');",
+									"    pm.expect(jsonData.data).to.have.property('correctAnswers');",
+									"    ",
+									"    console.log('Current Score:', jsonData.data.score);",
+									"    console.log('Accuracy:', jsonData.data.accuracy + '%');",
+									"    console.log('Answered:', jsonData.data.correctAnswers + '/' + jsonData.data.totalQuestions);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/game/{{session_id}}/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"game",
+								"{{session_id}}",
+								"status"
+							]
+						}
+					}
+				},
+				{
+					"name": "End Game Session",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Game session ended successfully', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Final results returned', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('finalScore');",
+									"    pm.expect(jsonData.data).to.have.property('accuracy');",
+									"    pm.expect(jsonData.data).to.have.property('totalQuestions');",
+									"    pm.expect(jsonData.data).to.have.property('correctAnswers');",
+									"    ",
+									"    console.log('=== GAME COMPLETED ===');",
+									"    console.log('Final Score:', jsonData.data.finalScore);",
+									"    console.log('Accuracy:', jsonData.data.accuracy + '%');",
+									"    console.log('Correct Answers:', jsonData.data.correctAnswers + '/' + jsonData.data.totalQuestions);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/game/{{session_id}}/end",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"game",
+								"{{session_id}}",
+								"end"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "📊 Game Statistics",
+			"item": [
+				{
+					"name": "Get Leaderboard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Leaderboard retrieved successfully', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Leaderboard data structure', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('userScore');",
+									"    pm.expect(jsonData.data).to.have.property('topScores');",
+									"    ",
+									"    console.log('User Average Score:', jsonData.data.userScore);",
+									"    console.log('Top Scores Count:', jsonData.data.topScores.length);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/game/leaderboard",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"game",
+								"leaderboard"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "❌ Error Handling Tests",
+			"item": [
+				{
+					"name": "Create Game - Invalid Course",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Error handled correctly', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Error message present', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"    console.log('Error message:', jsonData.error);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"courseId\": 999999,\n    \"name\": \"Invalid Game\",\n    \"description\": \"Testing with invalid course\",\n    \"gameType\": \"REVIEW\",\n    \"maxQuestions\": 10,\n    \"timeLimit\": 300\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/game/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"game",
+								"create"
+							]
+						}
+					}
+				},
+				{
+					"name": "Start Game - Invalid Game ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Error handled correctly', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Error message about invalid game', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"    console.log('Error:', jsonData.error);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/game/999999/start",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"game",
+								"999999",
+								"start"
+							]
+						}
+					}
+				},
+				{
+					"name": "Submit Answer - Invalid Session",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Error handled correctly', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Error about session not found', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"    console.log('Error:', jsonData.error);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"questionId\": 1,\n    \"choiceId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/game/999999/answer",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"game",
+								"999999",
+								"answer"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🔄 Multiple Question Flow",
+			"item": [
+				{
+					"name": "Complete Multiple Questions",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// This script will run multiple questions in sequence",
+									"console.log('Starting multi-question test flow...');"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// This is a placeholder for multi-question flow",
+									"// In practice, you would run Get Question -> Submit Answer multiple times",
+									"pm.test('Multi-question flow placeholder', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"console.log('To test complete flow:');",
+									"console.log('1. Run Start Game Session');",
+									"console.log('2. Run Get Next Question');",
+									"console.log('3. Run Submit Answer');",
+									"console.log('4. Repeat steps 2-3 until game completed');",
+									"console.log('5. Run End Game Session');"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/game/{{session_id}}/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"game",
+								"{{session_id}}",
+								"status"
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global pre-request script",
+					"console.log('🎮 Game System V2 API Test Running...');",
+					"console.log('Base URL:', pm.environment.get('base_url'));",
+					"",
+					"// Check if we have auth token",
+					"if (!pm.environment.get('auth_token')) {",
+					"    console.log('⚠️ No auth token found. Please run Login first.');",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global test script",
+					"pm.test('Response time is acceptable', function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+					"});",
+					"",
+					"// Log response time",
+					"console.log('Response time:', pm.response.responseTime + 'ms');"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "course_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "game_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "session_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "current_question_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "choice_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

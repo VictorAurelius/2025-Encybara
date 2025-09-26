@@ -54,6 +54,10 @@ public class User {
     @JsonIgnore
     private List<Answer> answers;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<GameSession> gameSessions;
+    
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonIgnore
     private Learning_Result learningResult;
