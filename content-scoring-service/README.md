@@ -8,9 +8,10 @@ A professional, production-ready microservice for scoring content similarity bet
 - **Advanced NLP processing** using sentence transformers and spaCy
 - **Content similarity scoring** with cosine similarity calculation
 - **Key point extraction and analysis** from questions
+- **Advanced answer generation** with improvement suggestions and missing concepts identification
 - **Comprehensive validation** with Pydantic models
 - **Production-ready Docker containerization**
-- **Prometheus metrics integration** for monitoring
+- **Prometheus metrics integration** for monitoring (Grafana on port 3100)
 - **Comprehensive test suite** with 80%+ coverage
 - **CI/CD pipeline** with GitHub Actions
 - **Security scanning** with bandit and safety
@@ -39,7 +40,16 @@ Score content similarity between a question and answer.
   "key_points": [
     {"point": "machine learning", "present": true},
     {"point": "artificial intelligence", "present": false}
-  ]
+  ],
+  "advanced_answer": {
+    "suggestion": "Regarding machine learning, a comprehensive answer would address the following aspects...",
+    "improvement_points": [
+      "Provide more detailed explanation",
+      "Include discussion of: artificial intelligence",
+      "Add specific examples to illustrate your points"
+    ],
+    "missing_concepts": ["artificial intelligence"]
+  }
 }
 ```
 

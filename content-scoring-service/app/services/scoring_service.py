@@ -16,7 +16,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import spacy
 from collections import Counter
 
-from app.models import ContentScoringResponse, KeyPoint
+from app.models import ContentScoringResponse, KeyPoint, AdvancedAnswer
 
 logger = logging.getLogger(__name__)
 
@@ -229,7 +229,144 @@ class ContentScoringService:
             result.append(KeyPoint(point=point, present=present))
         
         return result
-    
+
+    def generate_advanced_answer(
+        self,
+        question: str,
+        answer: str,
+        key_points: List[str],
+        key_point_results: List[KeyPoint]
+    ) -> AdvancedAnswer:
+        """
+        Generate advanced answer with suggestions for improvement
+
+        Args:
+            question: Original question text
+            answer: User's answer text
+            key_points: List of key points from question
+            key_point_results: Key point presence results
+
+        Returns:
+            AdvancedAnswer with suggestions and improvements
+        """
+        try:
+            # Find missing key concepts
+            missing_concepts = [
+                kp.point for kp in key_point_results
+                if not kp.present
+            ]
+
+            # Generate improvement points based on analysis
+            improvement_points = []
+
+            # Check answer length
+            if len(answer.split()) < 20:
+                improvement_points.append("Provide more detailed explanation")
+
+            # Check for missing concepts
+            if missing_concepts:
+                improvement_points.append(f"Include discussion of: {', '.join(missing_concepts[:3])}")
+
+            # Check for examples
+            example_words = ['example', 'instance', 'such as', 'like', 'e.g.']
+            if not any(word in answer.lower() for word in example_words):
+                improvement_points.append("Add specific examples to illustrate your points")
+
+            # Check for structure
+            if len(answer) > 100 and answer.count('.') < 2:
+                improvement_points.append("Improve answer structure with clear sentences")
+
+            # Generate advanced suggestion based on question type
+            question_lower = question.lower()
+            answer_clean = self.preprocess_text(answer)
+
+            # Build comprehensive answer suggestion
+            suggestion_parts = []
+
+            # Add main answer incorporating key points
+            if key_points:
+                main_topic = key_points[0] if key_points else "the topic"
+                suggestion_parts.append(
+                    f"Regarding {main_topic}, a comprehensive answer would address the following aspects: "
+                )
+
+            # Include all key concepts
+            if key_points:
+                concept_explanations = []
+                for point in key_points[:5]:  # Limit to top 5 key points
+                    if ' ' in point:
+                        # Multi-word concept
+                        concept_explanations.append(
+                            f"{point.title()} refers to the specific aspect that involves detailed understanding"
+                        )
+                    else:
+                        # Single word concept
+                        concept_explanations.append(
+                            f"The concept of {point} is fundamental to understanding this topic"
+                        )
+
+                suggestion_parts.append(". ".join(concept_explanations[:3]))
+
+            # Add contextual information based on question type
+            if 'what' in question_lower:
+                suggestion_parts.append(
+                    ". This definition should include both theoretical understanding and practical applications"
+                )
+            elif 'how' in question_lower:
+                suggestion_parts.append(
+                    ". The process or mechanism should be explained step-by-step with clear logical flow"
+                )
+            elif 'why' in question_lower:
+                suggestion_parts.append(
+                    ". The reasoning should include cause-and-effect relationships and supporting evidence"
+                )
+            elif 'when' in question_lower:
+                suggestion_parts.append(
+                    ". The temporal aspects and conditions should be clearly specified"
+                )
+            elif 'compare' in question_lower or 'difference' in question_lower:
+                suggestion_parts.append(
+                    ". The comparison should highlight both similarities and differences systematically"
+                )
+
+            # Add improvement from user's answer
+            if len(answer) > 20:
+                suggestion_parts.append(
+                    f". Building upon your answer: '{answer[:100]}...', "
+                    "consider expanding with more specific details and examples"
+                )
+
+            # Create final suggestion
+            suggestion = "".join(suggestion_parts)
+
+            # Ensure suggestion is not too long
+            if len(suggestion) > 500:
+                suggestion = suggestion[:497] + "..."
+
+            # Add technical depth for missing concepts
+            if missing_concepts and 'explain' in question_lower:
+                improvement_points.append("Provide technical details and underlying principles")
+
+            # Check for critical thinking
+            if 'analyze' in question_lower or 'evaluate' in question_lower:
+                if 'however' not in answer_lower and 'but' not in answer_lower:
+                    improvement_points.append("Include critical analysis with different perspectives")
+
+            return AdvancedAnswer(
+                suggestion=suggestion,
+                improvement_points=improvement_points[:5],  # Limit to 5 improvement points
+                missing_concepts=missing_concepts[:5]  # Limit to 5 missing concepts
+            )
+
+        except Exception as e:
+            logger.error(f"Failed to generate advanced answer: {e}")
+            # Return basic advanced answer as fallback
+            return AdvancedAnswer(
+                suggestion="Consider providing a more comprehensive answer that addresses all key aspects of the question.",
+                improvement_points=["Expand on key concepts", "Add specific examples"],
+                missing_concepts=[]
+            )
+
     async def score_content(self, question: str, answer: str) -> ContentScoringResponse:
         """
         Score content similarity between question and answer
@@ -255,21 +392,30 @@ class ContentScoringService:
             
             # Check key points presence in answer
             key_point_results = self.check_key_points_presence(key_points, answer)
-            
+
             # Adjust score based on key points presence
             if key_point_results:
                 present_count = sum(1 for kp in key_point_results if kp.present)
                 key_point_bonus = (present_count / len(key_point_results)) * 0.1  # Max 10% bonus
                 score = min(100.0, score + (key_point_bonus * 100))
                 score = round(score, 2)
-            
+
+            # Generate advanced answer with suggestions
+            advanced_answer = self.generate_advanced_answer(
+                question=question,
+                answer=answer,
+                key_points=key_points,
+                key_point_results=key_point_results
+            )
+
             logger.info(f"Content scoring completed: score={score}, similarity={similarity}")
-            
+
             return ContentScoringResponse(
                 success=True,
                 score=score,
                 similarity=round(similarity, 3),
-                key_points=key_point_results
+                key_points=key_point_results,
+                advanced_answer=advanced_answer
             )
             
         except Exception as e:

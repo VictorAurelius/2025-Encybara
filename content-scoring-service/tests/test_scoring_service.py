@@ -7,7 +7,7 @@ import numpy as np
 from unittest.mock import Mock, patch, MagicMock
 
 from app.services.scoring_service import ContentScoringService
-from app.models import KeyPoint
+from app.models import KeyPoint, AdvancedAnswer
 
 class TestContentScoringService:
     """Test cases for ContentScoringService class"""
@@ -195,19 +195,60 @@ class TestContentScoringService:
         """Test key points presence checking for multi-word phrases"""
         key_points = ["deep learning", "neural network"]
         answer = "Deep learning uses neural networks for pattern recognition."
-        
+
         results = scoring_service.check_key_points_presence(key_points, answer)
-        
+
         assert len(results) == 2
-        
+
         # Both multi-word key points should be found
         dl_result = next((r for r in results if r.point == "deep learning"), None)
         assert dl_result is not None
         assert dl_result.present is True
-        
+
         nn_result = next((r for r in results if r.point == "neural network"), None)
         assert nn_result is not None
         assert nn_result.present is True
+
+    def test_generate_advanced_answer(self, scoring_service):
+        """Test advanced answer generation"""
+        question = "What is machine learning?"
+        answer = "It is AI."
+        key_points = ["machine learning", "algorithms", "data"]
+        key_point_results = [
+            KeyPoint(point="machine learning", present=False),
+            KeyPoint(point="algorithms", present=False),
+            KeyPoint(point="data", present=False)
+        ]
+
+        result = scoring_service.generate_advanced_answer(
+            question, answer, key_points, key_point_results
+        )
+
+        assert isinstance(result, AdvancedAnswer)
+        assert result.suggestion != ""
+        assert len(result.improvement_points) > 0
+        assert len(result.missing_concepts) > 0
+        assert "machine learning" in result.missing_concepts
+
+    def test_generate_advanced_answer_with_good_answer(self, scoring_service):
+        """Test advanced answer generation with good answer"""
+        question = "What is machine learning?"
+        answer = "Machine learning is a subset of artificial intelligence that enables systems to learn and improve from experience without being explicitly programmed. It uses algorithms to analyze data patterns."
+        key_points = ["machine learning", "algorithms", "data"]
+        key_point_results = [
+            KeyPoint(point="machine learning", present=True),
+            KeyPoint(point="algorithms", present=True),
+            KeyPoint(point="data", present=True)
+        ]
+
+        result = scoring_service.generate_advanced_answer(
+            question, answer, key_points, key_point_results
+        )
+
+        assert isinstance(result, AdvancedAnswer)
+        assert result.suggestion != ""
+        # Should have fewer improvement points for good answer
+        assert len(result.missing_concepts) == 0
     
     @pytest.mark.asyncio
     async def test_score_content_success(self, scoring_service):
@@ -215,42 +256,60 @@ class TestContentScoringService:
         # Mock the methods used in score_content
         with patch.object(scoring_service, 'calculate_similarity', return_value=0.85), \
              patch.object(scoring_service, 'extract_key_points', return_value=["ai", "ml"]), \
-             patch.object(scoring_service, 'check_key_points_presence') as mock_check:
-            
+             patch.object(scoring_service, 'check_key_points_presence') as mock_check, \
+             patch.object(scoring_service, 'generate_advanced_answer') as mock_advanced:
+
             # Mock key points results
             mock_check.return_value = [
                 KeyPoint(point="ai", present=True),
                 KeyPoint(point="ml", present=False)
             ]
-            
+
+            # Mock advanced answer
+            mock_advanced.return_value = AdvancedAnswer(
+                suggestion="AI and ML are fundamental concepts...",
+                improvement_points=["Add more detail"],
+                missing_concepts=["ml"]
+            )
+
             question = "What is AI and ML?"
             answer = "AI is artificial intelligence used in technology."
-            
+
             result = await scoring_service.score_content(question, answer)
-            
+
             assert result.success is True
             assert result.score > 0
             assert result.similarity == 0.85
             assert len(result.key_points) == 2
+            assert result.advanced_answer is not None
+            assert result.advanced_answer.suggestion != ""
     
     @pytest.mark.asyncio
     async def test_score_content_with_key_point_bonus(self, scoring_service):
         """Test content scoring with key point bonus"""
         with patch.object(scoring_service, 'calculate_similarity', return_value=0.80), \
              patch.object(scoring_service, 'extract_key_points', return_value=["ai", "ml"]), \
-             patch.object(scoring_service, 'check_key_points_presence') as mock_check:
-            
+             patch.object(scoring_service, 'check_key_points_presence') as mock_check, \
+             patch.object(scoring_service, 'generate_advanced_answer') as mock_advanced:
+
             # All key points present - should get bonus
             mock_check.return_value = [
                 KeyPoint(point="ai", present=True),
                 KeyPoint(point="ml", present=True)
             ]
-            
+
+            # Mock advanced answer
+            mock_advanced.return_value = AdvancedAnswer(
+                suggestion="Complete answer...",
+                improvement_points=[],
+                missing_concepts=[]
+            )
+
             question = "What is AI and ML?"
             answer = "AI and ML are related technologies."
-            
+
             result = await scoring_service.score_content(question, answer)
-            
+
             # Score should be higher than base similarity due to key point bonus
             assert result.score > 80.0  # Base similarity * 100
             assert result.score <= 100.0  # But capped at 100
