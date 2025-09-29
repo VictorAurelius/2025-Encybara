@@ -1,0 +1,66 @@
+# Multi-stage Docker build for Content Scoring Service
+# Stage 1: Build dependencies
+FROM python:3.10-slim as builder
+
+# Set working directory
+WORKDIR /app
+
+# Set build environment variables
+ENV PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy and install Python dependencies
+COPY requirements-prod.txt .
+RUN pip install --upgrade pip && \
+    pip install --user --prefer-binary --only-binary=all -r requirements-prod.txt || \
+    pip install --user -r requirements-prod.txt
+
+# Stage 2: Runtime image
+FROM python:3.10-slim
+
+# Set working directory
+WORKDIR /app
+
+# Set runtime environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
+    PATH="/root/.local/bin:$PATH"
+
+# Install runtime dependencies only
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy Python packages from builder stage
+COPY --from=builder /root/.local /root/.local
+
+# Copy application code and scripts
+COPY app/ ./app/
+COPY scripts/docker-entrypoint.sh ./scripts/
+RUN chmod +x ./scripts/docker-entrypoint.sh
+
+# Download spaCy model (with error handling)
+RUN python -m spacy download en_core_web_sm || echo "Warning: spaCy model download failed, will retry at runtime"
+
+# Create non-root user for security
+RUN groupadd -r appuser && useradd -r -g appuser appuser && \
+    chown -R appuser:appuser /app
+USER appuser
+
+# Expose port
+EXPOSE 5001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:5001/health || exit 1
+
+# Run the application
+CMD ["./scripts/docker-entrypoint.sh"]

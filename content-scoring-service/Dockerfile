@@ -7,7 +7,9 @@ WORKDIR /app
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/app
+    PYTHONPATH=/app \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -15,15 +17,20 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
-COPY requirements.txt .
+# Copy production requirements first for better caching
+COPY requirements-prod.txt .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies with optimization for container build
+RUN pip install --upgrade pip && \
+    pip install --prefer-binary --only-binary=all -r requirements-prod.txt || \
+    pip install -r requirements-prod.txt
 
-# Download spaCy English model
-RUN python -m spacy download en_core_web_sm
+# Download spaCy English model (with error handling)
+RUN python -m spacy download en_core_web_sm || echo "Warning: spaCy model download failed, will retry at runtime"
+
+# Copy startup script
+COPY scripts/docker-entrypoint.sh ./scripts/
+RUN chmod +x ./scripts/docker-entrypoint.sh
 
 # Copy application code
 COPY app/ ./app/
@@ -40,5 +47,5 @@ EXPOSE 5001
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:5001/health || exit 1
 
-# Run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "5001"]
+# Run the application with entrypoint script
+CMD ["./scripts/docker-entrypoint.sh"]

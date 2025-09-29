@@ -2,35 +2,44 @@ version: '3.8'
 
 services:
   content-scoring:
-    build:
+    build: 
       context: .
-      dockerfile: Dockerfile
-    image: content-scoring-service:latest
-    container_name: content-scoring-service
+      dockerfile: Dockerfile.optimized
+    image: content-scoring-service:optimized
+    container_name: content-scoring-prod
     ports:
       - "5001:5001"
     environment:
       - PYTHONPATH=/app
-      - LOG_LEVEL=INFO
+      - LOG_LEVEL=WARNING
+      - ENVIRONMENT=production
     volumes:
-      - ./logs:/app/logs
+      - ./logs:/app/logs:rw
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
       start_period: 60s
-    restart: unless-stopped
+    restart: always
     networks:
       - content-scoring-network
-    depends_on: []
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "1.0"
+        reservations:
+          memory: 512M
+          cpus: "0.5"
 
   prometheus:
     image: prom/prometheus:latest
+    container_name: prometheus
     ports:
       - "9090:9090"
     volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -41,27 +50,34 @@ services:
       - '--web.enable-lifecycle'
     networks:
       - content-scoring-network
+    restart: unless-stopped
     depends_on:
-      - content-scoring
+      content-scoring:
+        condition: service_healthy
 
   grafana:
     image: grafana/grafana:latest
+    container_name: grafana
     ports:
       - "3100:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./monitoring/grafana-dashboards:/etc/grafana/provisioning/dashboards
-      - ./monitoring/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+      - ./monitoring/grafana-dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
     networks:
       - content-scoring-network
+    restart: unless-stopped
     depends_on:
       - prometheus
 
 volumes:
   prometheus_data:
+    driver: local
   grafana_data:
+    driver: local
 
 networks:
   content-scoring-network:
