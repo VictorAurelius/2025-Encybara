@@ -8,9 +8,12 @@ echo "🚀 Starting Content Scoring Service Container"
 # Check if spaCy model is available, download if not
 echo "🔍 Checking spaCy model..."
 if ! python -c "import spacy; spacy.load('en_core_web_sm')" 2>/dev/null; then
-    echo "📦 Downloading spaCy model..."
-    python -m spacy download en_core_web_sm || {
-        echo "⚠️  Warning: Failed to download spaCy model, service may have limited functionality"
+    echo "📦 Downloading spaCy model with progress tracking..."
+    python ./scripts/download-tracker.py --spacy-model en_core_web_sm --threshold 50 || {
+        echo "⚠️ Download tracker failed, using standard download method"
+        python -m spacy download en_core_web_sm || {
+            echo "⚠️  Warning: Failed to download spaCy model, service may have limited functionality"
+        }
     }
 else
     echo "✅ spaCy model already available"
