@@ -1,0 +1,20 @@
+# Ultra-minimal requirements - NO ML libraries (under 1 minute build)
+# Core FastAPI and web server dependencies only
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+
+# Basic utilities
+python-multipart>=0.0.6
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+
+# Monitoring
+prometheus-client>=0.19.0
+
+# Basic text processing (NO heavy ML libraries)
+nltk>=3.8
+numpy>=1.24.3
+
+# Optional: Add mock responses for ML endpoints during development
+# All ML features will return mock/placeholder responses

@@ -10,7 +10,8 @@ A professional, production-ready microservice for scoring content similarity bet
 - **Key point extraction and analysis** from questions
 - **Advanced answer generation** with improvement suggestions and missing concepts identification
 - **Comprehensive validation** with Pydantic models
-- **Production-ready Docker containerization**
+- **Production-ready Docker containerization** with multiple build options
+- **Fast build optimization** for development (under 2 minutes)
 - **Prometheus metrics integration** for monitoring (Grafana on port 3100)
 - **Comprehensive test suite** with 80%+ coverage
 - **CI/CD pipeline** with GitHub Actions
@@ -486,3 +487,107 @@ For support, please:
 ---
 
 **Built with ❤️ for robust content scoring in production environments.**
+
+## 🐳 Docker Build Options
+
+This service provides multiple Docker build strategies optimized for different use cases:
+
+### ⚡ Fast Build (Development)
+**Best for**: Quick development iterations, testing
+**Build time**: ~2-3 minutes
+**Image size**: ~800MB
+
+```bash
+# Using build script (recommended)
+./scripts/build-fast.sh
+
+# Using docker directly
+docker build -f Dockerfile.fast -t content-scoring-service:fast .
+
+# Using docker-compose
+docker-compose -f docker-compose.fast.yml up --build
+```
+
+### 🔄 Cache-Optimized Build
+**Best for**: Frequent rebuilds with dependency changes
+**Build time**: ~3-5 minutes (first build), <1 minute (cached)
+**Image size**: ~1GB
+
+```bash
+# Using build script
+./scripts/build-fast.sh --cache
+
+# Using docker directly
+docker build -f Dockerfile.cache -t content-scoring-service:cached .
+```
+
+### 🏗️ Production Build
+**Best for**: Production deployments with full ML features
+**Build time**: ~10-15 minutes
+**Image size**: ~1.5GB
+
+```bash
+# Using build script
+./scripts/build-fast.sh --full
+
+# Using docker directly
+docker build -f Dockerfile.optimized -t content-scoring-service:full .
+
+# Using docker-compose
+docker-compose -f docker-compose.prod.yml up --build
+```
+
+### 📦 Requirements Comparison
+
+| Feature | Minimal | Production | Full |
+|---------|---------|------------|------|
+| FastAPI Core | ✅ | ✅ | ✅ |
+| Basic NLP | ✅ | ✅ | ✅ |
+| Sentence Transformers | ❌ | ✅ | ✅ |
+| Scikit-learn | ❌ | ✅ | ✅ |
+| spaCy Models | ❌ | ✅ | ✅ |
+| Full ML Pipeline | ❌ | ✅ | ✅ |
+| Build Time | ~2 min | ~10 min | ~15 min |
+
+### 🚀 Quick Start Commands
+
+```bash
+# Fast development build
+./scripts/build-fast.sh
+docker run -p 5001:5001 content-scoring-service:fast
+
+# Test the container
+./scripts/test-container.sh --tag fast
+
+# Production build
+./scripts/build-fast.sh --full
+docker run -p 5001:5001 content-scoring-service:full
+```
+
+
+## ⚡ Ultra-Fast Development Commands
+
+For the fastest development experience with progress tracking:
+
+```bash
+# Ultra-fast build (NO ML - under 1 minute)
+./scripts/build-fast.sh --verbose
+
+# Run ultra-fast container
+docker run -p 5001:5001 content-scoring-service:ultra-fast
+
+# Test ultra-fast container
+./scripts/test-container.sh --tag ultra-fast
+
+# Docker-compose ultra-fast
+docker-compose -f docker-compose.ultra-fast.yml up --build
+
+# All build options with progress
+./scripts/build-fast.sh --help
+```
+
+### Build Time Comparison:
+- **Ultra-Fast (NO ML)**: 30-60 seconds
+- **Minimal (Basic ML)**: 2-3 minutes  
+- **Cache-Optimized**: 3-5 minutes (1 min cached)
+- **Production (Full ML)**: 10-15 minutes

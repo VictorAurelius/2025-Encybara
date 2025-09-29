@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  content-scoring-ultra-fast:
+    build: 
+      context: .
+      dockerfile: Dockerfile.ultra-fast
+    image: content-scoring-service:ultra-fast
+    container_name: content-scoring-ultra-fast
+    ports:
+      - "5001:5001"
+    environment:
+      - PYTHONPATH=/app
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=development
+      - ML_ENABLED=false
+    volumes:
+      - ./logs:/app/logs:rw
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 2
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - content-scoring-network
+
+networks:
+  content-scoring-network:
+    driver: bridge
