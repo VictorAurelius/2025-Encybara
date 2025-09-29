@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  content-scoring-fast:
+    build: 
+      context: .
+      dockerfile: Dockerfile.fast
+    image: content-scoring-service:fast
+    container_name: content-scoring-fast
+    ports:
+      - "5001:5001"
+    environment:
+      - PYTHONPATH=/app
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=development
+    volumes:
+      - ./logs:/app/logs:rw
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - content-scoring-network
+
+networks:
+  content-scoring-network:
+    driver: bridge

@@ -1,0 +1,52 @@
+# Optimized Dockerfile with efficient caching strategy
+FROM python:3.10-slim as base
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
+    PIP_NO_CACHE_DIR=1
+
+# Install system dependencies (cached layer)
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Create app directory (cached layer)
+WORKDIR /app
+
+# Upgrade pip (cached layer)
+RUN pip install --upgrade pip
+
+# Copy requirements files only (for better caching)
+COPY requirements-minimal.txt requirements-prod.txt ./
+
+# Create conditional requirements installation
+RUN if [ "$BUILD_TYPE" = "fast" ] ; then \
+    pip install --prefer-binary -r requirements-minimal.txt ; \
+    else \
+    pip install --prefer-binary -r requirements-prod.txt ; \
+    fi
+
+# Copy scripts (less frequently changed)
+COPY scripts/ ./scripts/
+RUN chmod +x ./scripts/*.sh
+
+# Copy app code last (most frequently changed)
+COPY app/ ./app/
+
+# Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser && \
+    chown -R appuser:appuser /app
+USER appuser
+
+# Expose port
+EXPOSE 5001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:5001/health || exit 1
+
+# Default to fast entrypoint, can be overridden
+CMD ["./scripts/docker-entrypoint-fast.sh"]
