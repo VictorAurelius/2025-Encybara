@@ -75,7 +75,7 @@ monitor_build_progress() {
         echo ""
     } > "$BUILD_LOG_FILE"
     
-    # Use docker build with progress tracking
+    # Use docker build with progress tracking and real-time monitoring
     docker build \
         --progress=plain \
         --no-cache \
@@ -83,12 +83,37 @@ monitor_build_progress() {
         -t "${image_name}:${tag}" \
         "$context" 2>&1 | tee -a "$BUILD_LOG_FILE" | while IFS= read -r line; do
         
-        # Real-time output with progress indication
+        # Real-time output with enhanced progress indication
         echo "$line"
         
-        # Track large download patterns
-        if [[ "$line" =~ "LARGE DOWNLOAD" ]] || [[ "$line" =~ "Downloading" ]] && [[ "$line" =~ "MB" ]]; then
-            echo -e "${CYAN}🔍 [MONITOR] Large download detected: $line${NC}"
+        # Track large download patterns with real-time progress
+        if [[ "$line" =~ "LARGE DOWNLOAD" ]]; then
+            echo -e "${CYAN}🔍 [MONITOR] $line${NC}"
+        elif [[ "$line" =~ "Downloading" ]] && ([[ "$line" =~ "MB)" ]] || [[ "$line" =~ "GB)" ]]); then
+            # Extract size from download line
+            if [[ "$line" =~ \(([0-9]+\.?[0-9]*)[[:space:]]*(MB|GB)\) ]]; then
+                size_value="${BASH_REMATCH[1]}"
+                size_unit="${BASH_REMATCH[2]}"
+                # Convert to MB for comparison
+                if [[ "$size_unit" == "GB" ]]; then
+                    size_mb=$(echo "$size_value * 1024" | bc -l 2>/dev/null || echo "$size_value * 1024" | awk '{print $1 * $3}')
+                else
+                    size_mb="$size_value"
+                fi
+                # Check if it's a large download (>50MB)
+                if (( $(echo "$size_mb >= $SIZE_THRESHOLD_MB" | bc -l 2>/dev/null || echo "$size_mb $SIZE_THRESHOLD_MB" | awk '{print ($1 >= $2)}') )); then
+                    echo -e "${CYAN}🔍 [LARGE DOWNLOAD] $line${NC}"
+                fi
+            fi
+        # Track real-time progress bars
+        elif [[ "$line" =~ "━━━" ]] || [[ "$line" =~ "████" ]]; then
+            if [[ "$line" =~ ([0-9]+\.?[0-9]*)/([0-9]+\.?[0-9]*)[[:space:]]*(MB|GB) ]]; then
+                current="${BASH_REMATCH[1]}"
+                total="${BASH_REMATCH[2]}"
+                unit="${BASH_REMATCH[3]}"
+                percent=$(echo "scale=1; $current * 100 / $total" | bc -l 2>/dev/null || echo "$current $total" | awk '{printf "%.1f", $1 * 100 / $2}')
+                echo -e "${GREEN}📊 [PROGRESS] ${percent}% (${current}/${total} ${unit})${NC}"
+            fi
         fi
         
         # Track pip install progress
@@ -104,6 +129,13 @@ monitor_build_progress() {
         # Track layer caching
         if [[ "$line" =~ "CACHED" ]]; then
             echo -e "${GREEN}⚡ [MONITOR] Using cached layer${NC}"
+        fi
+        
+        # Track errors and warnings
+        if [[ "$line" =~ "ERROR" ]] || [[ "$line" =~ "FAILED" ]]; then
+            echo -e "${RED}❌ [ERROR] $line${NC}"
+        elif [[ "$line" =~ "WARNING" ]] || [[ "$line" =~ "WARN" ]]; then
+            echo -e "${YELLOW}⚠️  [WARNING] $line${NC}"
         fi
     done
     
