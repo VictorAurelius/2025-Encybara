@@ -1,32 +1,42 @@
 version: '3.8'
 
 services:
-  content-scoring:
-    build: .
+  content-scoring-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: content-scoring-service
     ports:
       - "5001:5001"
     environment:
       - PYTHONPATH=/app
       - LOG_LEVEL=INFO
+      - PORT=5001
     volumes:
+      # Mount logs for persistence (optional)
       - ./logs:/app/logs
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
+      start_period: 60s
     restart: unless-stopped
     networks:
       - content-scoring-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.content-scoring.rule=Host(`content-scoring.localhost`)"
+      - "traefik.http.services.content-scoring.loadbalancer.server.port=5001"
 
+  # Prometheus for monitoring (optional)
   prometheus:
     image: prom/prometheus:latest
+    container_name: content-scoring-prometheus
     ports:
       - "9090:9090"
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -36,28 +46,65 @@ services:
       - '--web.enable-lifecycle'
     networks:
       - content-scoring-network
-    depends_on:
-      - content-scoring
+    profiles:
+      - monitoring
 
+  # Grafana for visualization (optional)
   grafana:
     image: grafana/grafana:latest
+    container_name: content-scoring-grafana
     ports:
       - "3100:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin123
     volumes:
-      - grafana_data:/var/lib/grafana
-      - ./monitoring/grafana-dashboards:/etc/grafana/provisioning/dashboards
+      - grafana-storage:/var/lib/grafana
       - ./monitoring/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
     networks:
       - content-scoring-network
+    profiles:
+      - monitoring
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: content-scoring-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - content-scoring-network
+    profiles:
+      - caching
+
+  # NGINX reverse proxy (optional)
+  nginx:
+    image: nginx:alpine
+    container_name: content-scoring-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
     depends_on:
-      - prometheus
+      - content-scoring-service
+    networks:
+      - content-scoring-network
+    profiles:
+      - proxy
 
 volumes:
-  prometheus_data:
-  grafana_data:
+  grafana-storage:
+    driver: local
+  redis-data:
+    driver: local
 
 networks:
   content-scoring-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
