@@ -23,51 +23,37 @@ WORKDIR /app
 # Copy requirements first for better caching
 COPY requirements.txt .
 
-# Install Python dependencies with enhanced download tracking
+# Install Python dependencies with simple but effective tracking
 RUN echo "[BUILD STAGE] Installing Python dependencies with download tracking..." && \
-  pip install -r requirements.txt --progress-bar pretty -v 2>&1 | tee /tmp/install.log | while IFS= read -r line; do \
-  # Track large downloads (>10MB) \
+  (pip install -r requirements.txt --progress-bar on -v 2>&1 || pip install -r requirements.txt -v 2>&1) | while IFS= read -r line; do \
   if echo "$line" | grep -E "Downloading.*\([0-9]+\.?[0-9]*\s*(MB|GB)\)" > /dev/null; then \
-  size=$(echo "$line" | grep -oE "[0-9]+\.?[0-9]*\s*(MB|GB)" | head -1); \
+  size=$(echo "$line" | grep -oE "[0-9]+\.?[0-9]*\s*(MB|GB)" | head -1 || echo "unknown"); \
   if echo "$size" | grep -E "[0-9]+\.?[0-9]*\s*GB" > /dev/null || \
   echo "$size" | grep -E "(1[0-9]|[2-9][0-9]|[0-9]{3,})\.?[0-9]*\s*MB" > /dev/null; then \
   echo "[LARGE DOWNLOAD] $line"; \
-  echo "[LARGE DOWNLOAD] File size: $size - This may take a while..."; \
   else \
   echo "[DOWNLOAD] $line"; \
   fi; \
-  # Track download progress \
-  elif echo "$line" | grep -E "[0-9]+%.*[0-9]+\.?[0-9]*/[0-9]+\.?[0-9]*\s*(MB|KB|GB)" > /dev/null; then \
-  progress=$(echo "$line" | grep -oE "[0-9]+%" | head -1); \
-  sizes=$(echo "$line" | grep -oE "[0-9]+\.?[0-9]*/[0-9]+\.?[0-9]*\s*(MB|KB|GB)" | head -1); \
-  echo "[DOWNLOAD PROGRESS] $progress - $sizes"; \
-  # Track PyTorch downloads \
   elif echo "$line" | grep "torch.*\.whl" > /dev/null; then \
   echo "[PYTORCH DOWNLOAD] $line"; \
-  # Track sentence-transformers downloads \
   elif echo "$line" | grep "sentence-transformers" > /dev/null; then \
   echo "[MODEL DOWNLOAD] $line"; \
-  # Track general downloads \
-  elif echo "$line" | grep "Downloading" > /dev/null && echo "$line" | grep "http" > /dev/null; then \
+  elif echo "$line" | grep "Downloading" > /dev/null; then \
   echo "[DOWNLOAD] $line"; \
-  # Track installation progress \
   elif echo "$line" | grep "Installing collected packages" > /dev/null; then \
   echo "[INSTALL] $line"; \
   elif echo "$line" | grep "Successfully installed" > /dev/null; then \
   echo "[SUCCESS] $line"; \
-  # Track errors \
   elif echo "$line" | grep -E "(ERROR|Failed)" > /dev/null; then \
   echo "[ERROR] $line"; \
   else \
   echo "$line"; \
   fi; \
   done && \
-  echo "[BUILD STAGE] Python dependencies installed successfully" && \
-  echo "[BUILD STAGE] Verifying installations..." && \
-  python -c "import uvicorn; print('Uvicorn installed successfully')" && \
-  python -c "import fastapi; print('FastAPI installed successfully')" && \
-  python -c "import sentence_transformers; print('Sentence transformers installed successfully')" && \
-  echo "[BUILD STAGE] All dependencies verified"
+  echo "[BUILD STAGE] Verifying critical dependencies..." && \
+  python -c "import uvicorn; print('[VERIFY] Uvicorn installed successfully')" && \
+  python -c "import fastapi; print('[VERIFY] FastAPI installed successfully')" && \
+  echo "[BUILD STAGE] All dependencies verified successfully"
 
 # Download spaCy model with tracking (after dependencies are installed)
 RUN echo "[BUILD STAGE] Downloading spaCy English model..." && \
@@ -100,7 +86,10 @@ FROM python:3.10-slim as production
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
   PYTHONUNBUFFERED=1 \
-  PYTHONPATH=/app
+  PYTHONPATH=/app \
+  HF_HOME=/home/appuser/.cache/huggingface \
+  TRANSFORMERS_CACHE=/home/appuser/.cache/huggingface/transformers \
+  SENTENCE_TRANSFORMERS_HOME=/home/appuser/.cache/huggingface/sentence_transformers
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y \
@@ -108,11 +97,15 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get clean
 
-# Create non-root user for security
-RUN groupadd -r appuser && useradd -r -g appuser appuser
+# Create non-root user for security with proper home directory
+RUN groupadd -r appuser && useradd -r -g appuser -m appuser
 
-# Create app directory
+# Create app directory and cache directories
 WORKDIR /app
+
+# Create HuggingFace cache directory with proper permissions
+RUN mkdir -p /home/appuser/.cache/huggingface && \
+  chown -R appuser:appuser /home/appuser
 
 # Copy installed packages from builder stage
 COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages

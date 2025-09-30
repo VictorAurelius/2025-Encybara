@@ -1,9 +1,19 @@
 # 🚀 Quick Start Guide - Content Scoring Service
 
-## 🔧 FIXED: Lỗi uvicorn đã được sửa!
+## 🔧 FINAL FIX: Permission errors đã được sửa!
 
-Tôi đã fix lỗi uvicorn installation trong Dockerfile. Cần rebuild:
+Tôi đã fix lỗi permission `/home/appuser` và HuggingFace cache. Có 2 cách:
 
+### ⚡ Cách 1: Quick Fix (NHANH - không cần rebuild 3000s)
+```bash
+cd content-scoring-service
+
+# Sử dụng quick fix scripts
+./quick-fix.sh      # Linux/macOS
+quick-fix.bat       # Windows
+```
+
+### 🐌 Cách 2: Rebuild hoàn toàn (CHẬM - 3000s)
 ```bash
 cd content-scoring-service
 
@@ -15,6 +25,23 @@ docker build --no-cache -t content-scoring-service .
 
 # Hoặc dùng build script
 ./build.sh --clean --no-cache
+```
+
+## 🚀 Quick Fix Scripts - Giải pháp nhanh
+
+Quick fix sẽ:
+- ✅ Sử dụng image đã build (không rebuild)
+- ✅ Fix permissions bằng environment variables
+- ✅ Chạy service với `/tmp/.cache` thay vì `/home/appuser/.cache`
+- ✅ Tự động kiểm tra health và test API
+- ✅ Tiết kiệm thời gian (vài giây thay vì 3000s)
+
+```bash
+# Linux/macOS
+./quick-fix.sh
+
+# Windows
+quick-fix.bat
 ```
 
 ## ✅ Dockerfile đã được fixed:
@@ -122,18 +149,45 @@ docker compose up -d --scale content-scoring-service=3
 
 ## 🚨 Nếu có vấn đề
 
+### Lỗi permissions (Khuyến nghị: dùng Quick Fix)
 ```bash
-# Kiểm tra logs nếu service không start
-docker compose logs content-scoring-service
+# NHANH: Quick Fix (vài giây)
+./quick-fix.sh      # Linux/macOS
+quick-fix.bat       # Windows
 
-# Kiểm tra port có bị sử dụng không
-netstat -tulpn | grep :5001
-
-# Rebuild nếu cần
+# CHẬM: Rebuild (3000s)
 docker compose down
 docker build --no-cache -t content-scoring-service .
 docker compose up -d
 ```
+
+### Các lỗi khác
+```bash
+# Kiểm tra logs nếu service không start
+docker compose logs content-scoring-service
+
+# Với quick fix
+docker compose -f docker-compose-quick-fix.yml logs content-scoring-service
+
+# Kiểm tra port có bị sử dụng không
+netstat -tulpn | grep :5001     # Linux
+netstat -ano | findstr :5001    # Windows
+
+# Stop tất cả containers
+docker compose down
+docker compose -f docker-compose-quick-fix.yml down
+```
+
+### So sánh Quick Fix vs Rebuild
+
+| Tiêu chí | Quick Fix | Rebuild |
+|----------|-----------|---------|
+| ⏱️ **Thời gian** | Vài giây | ~3000s (50 phút) |
+| 💾 **Tài nguyên** | Ít | Nhiều (download ML packages) |
+| 🎯 **Mục đích** | Fix permissions nhanh | Build hoàn toàn mới |
+| 📁 **Cache location** | `/tmp/.cache` | `/home/appuser/.cache` |
+| 🔐 **User** | root (tạm thời) | appuser |
+| ✅ **Khuyến nghị** | ⭐ Dùng đầu tiên | Chỉ khi Quick Fix không work |
 
 ---
 
