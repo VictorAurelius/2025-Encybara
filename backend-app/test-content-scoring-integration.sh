@@ -91,11 +91,11 @@ evaluate_response=$(curl -s -X POST "$CONTENT_SCORING_API_BASE/evaluate" \
         "prompt": "Basic AI concepts"
     }')
 
-if echo "$evaluate_response" | grep -q "score"; then
-    print_success "Evaluate endpoint working!"
+if echo "$evaluate_response" | grep -q "score" && echo "$evaluate_response" | grep -q "improvements"; then
+    print_success "Evaluate endpoint working! (New format: score + improvements, no evaluation)"
     echo "Response: $evaluate_response"
 else
-    print_error "Evaluate endpoint failed"
+    print_error "Evaluate endpoint failed or wrong format"
     echo "Response: $evaluate_response"
 fi
 

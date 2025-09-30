@@ -5,11 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utc.englishlearning.Encybara.domain.request.perplexity.PerplexityRequest;
-import utc.englishlearning.Encybara.domain.request.perplexity.PerplexitySuggestionRequest;
+import utc.englishlearning.Encybara.domain.request.scoring.ScoringRequest;
+import utc.englishlearning.Encybara.domain.request.scoring.SuggestionRequest;
 import utc.englishlearning.Encybara.domain.response.RestResponse;
-import utc.englishlearning.Encybara.domain.response.perplexity.PerplexityResponse;
-import utc.englishlearning.Encybara.domain.response.perplexity.PerplexitySuggestionResponse;
+import utc.englishlearning.Encybara.domain.response.scoring.ScoringResponse;
+import utc.englishlearning.Encybara.domain.response.scoring.SuggestionResponse;
 import utc.englishlearning.Encybara.exception.ContentScoringException;
 import utc.englishlearning.Encybara.service.ContentScoringService;
 
@@ -22,8 +22,8 @@ public class ContentScoringController {
     private final ContentScoringService contentScoringService;
 
     @PostMapping("/evaluate")
-    public ResponseEntity<RestResponse<PerplexityResponse>> evaluateAnswer(
-            @RequestBody PerplexityRequest request) {
+    public ResponseEntity<RestResponse<ScoringResponse>> evaluateAnswer(
+            @RequestBody ScoringRequest request) {
 
         if (request.getUserAnswer() == null || request.getQuestion() == null) {
             throw new ContentScoringException("User answer and question are required",
@@ -39,17 +39,17 @@ public class ContentScoringController {
             log.info("Evaluating answer via content-scoring-service for question length: {} chars",
                     request.getQuestion().length());
 
-            PerplexityResponse evalResponse = contentScoringService.evaluateAnswer(
+            ScoringResponse evalResponse = contentScoringService.evaluateAnswer(
                     request.getQuestion(),
                     request.getUserAnswer(),
                     request.getPrompt());
 
-            RestResponse<PerplexityResponse> response = new RestResponse<>();
+            RestResponse<ScoringResponse> response = new RestResponse<>();
             response.setStatusCode(HttpStatus.OK.value());
             response.setMessage("Answer evaluated successfully via content-scoring-service");
             response.setData(evalResponse);
 
-            log.info("Successfully evaluated answer with score: {}", evalResponse.getScore());
+            log.info("Successfully evaluated answer with score: {}/10", evalResponse.getScore());
             return ResponseEntity.ok(response);
 
         } catch (ContentScoringException e) {
@@ -64,8 +64,8 @@ public class ContentScoringController {
     }
 
     @PostMapping("/suggest")
-    public ResponseEntity<RestResponse<PerplexitySuggestionResponse>> getSuggestions(
-            @RequestBody PerplexitySuggestionRequest request) {
+    public ResponseEntity<RestResponse<SuggestionResponse>> getSuggestions(
+            @RequestBody SuggestionRequest request) {
 
         if (request.getQuestion() == null || request.getQuestion().trim().isEmpty()) {
             throw new ContentScoringException("Question is required",
@@ -75,12 +75,12 @@ public class ContentScoringController {
         log.warn(
                 "Suggestions endpoint called but temporarily disabled - content-scoring-service doesn't support suggestions yet");
 
-        RestResponse<PerplexitySuggestionResponse> response = new RestResponse<>();
+        RestResponse<SuggestionResponse> response = new RestResponse<>();
         response.setStatusCode(HttpStatus.SERVICE_UNAVAILABLE.value());
         response.setMessage(
                 "Tính năng gợi ý tạm thời không khả dụng. Content-scoring-service chưa hỗ trợ endpoint /suggest.");
 
-        PerplexitySuggestionResponse suggestionResponse = PerplexitySuggestionResponse.builder()
+        SuggestionResponse suggestionResponse = SuggestionResponse.builder()
                 .keyPoints(
                         "Tính năng gợi ý đang được phát triển và sẽ có trong phiên bản tiếp theo của content-scoring-service.")
                 .sampleAnswer("Hiện tại chỉ có chức năng đánh giá câu trả lời. Vui lòng sử dụng endpoint /evaluate.")
@@ -133,8 +133,10 @@ public class ContentScoringController {
         info.put("timeout", "10 seconds");
         info.put("available_endpoints", new String[] { "/evaluate" });
         info.put("disabled_endpoints", new String[] { "/suggest (temporarily)" });
-        info.put("version", "1.0");
+        info.put("version", "2.0");
         info.put("description", "Integration with Python content-scoring-service for ML-based answer evaluation");
+        info.put("score_scale", "0-10 (converted from 0-100)");
+        info.put("response_format", "score + improvements (no evaluation field)");
 
         response.setData(info);
         return ResponseEntity.ok(response);

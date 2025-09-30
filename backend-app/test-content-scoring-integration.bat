@@ -70,13 +70,13 @@ del info_response.txt >nul 2>&1
 REM Test 5: Test evaluate endpoint
 echo [TEST] Test 5: Testing evaluate endpoint...
 curl -s -X POST "%CONTENT_SCORING_API_BASE%/evaluate" -H "Content-Type: application/json" -d "{\"question\": \"What is machine learning?\", \"userAnswer\": \"Machine learning is a subset of AI that uses algorithms to learn from data\", \"prompt\": \"Basic AI concepts\"}" > evaluate_response.txt 2>&1
-findstr "score" evaluate_response.txt >nul
+findstr "score" evaluate_response.txt >nul && findstr "improvements" evaluate_response.txt >nul
 if %errorlevel% equ 0 (
-    echo [SUCCESS] Evaluate endpoint working!
+    echo [SUCCESS] Evaluate endpoint working! (New format: score + improvements, no evaluation)
     echo Response:
     type evaluate_response.txt
 ) else (
-    echo [ERROR] Evaluate endpoint failed
+    echo [ERROR] Evaluate endpoint failed or wrong format
     echo Response:
     type evaluate_response.txt
 )

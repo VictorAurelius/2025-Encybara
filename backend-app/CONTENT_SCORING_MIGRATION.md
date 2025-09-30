@@ -2,30 +2,76 @@
 
 ## 📋 Tổng quan
 
-Dự án đã được chuyển đổi hoàn toàn từ **PerplexityAI API** sang **content-scoring-service**.
+Dự án đã được chuyển đổi hoàn toàn từ **PerplexityAI API** sang **content-scoring-service** với mapping đúng format response mới.
 
 ## 🔄 Những thay đổi đã thực hiện
 
-### 1. Services đã thay đổi
-- ✅ **PerplexityAIService** → **ContentScoringService**
-- ✅ **PerplexityAIController** → **ContentScoringController**
+### 1. Models đã đổi tên hoàn toàn
+- ✅ **PerplexityRequest** → **ScoringRequest**
+- ✅ **PerplexityResponse** → **ScoringResponse** (bỏ evaluation, chỉ giữ score + improvements)
+- ✅ **PerplexitySuggestionRequest** → **SuggestionRequest**
+- ✅ **PerplexitySuggestionResponse** → **SuggestionResponse**
 - ✅ **PerplexityException** → **ContentScoringException**
 
-### 2. Endpoint changes
-- ✅ `/api/v1/content-scoring/evaluate` - **HOẠT ĐỘNG** - Sử dụng content-scoring-service
-- ⚠️ `/api/v1/content-scoring/suggest` - **TẠM THỜI VÔ HIỆU HÓA** - Trả về thông báo
-- ✅ `/api/v1/content-scoring/health` - **MỚI** - Kiểm tra kết nối content-scoring-service
-- ✅ `/api/v1/content-scoring/info` - **MỚI** - Thông tin về integration
+### 2. Response format mới
+**Cũ (PerplexityAI):**
+```json
+{
+  "statusCode": 200,
+  "message": "Answer evaluated successfully",
+  "data": {
+    "score": 8.5,
+    "evaluation": "Good answer...",
+    "improvements": "Try to mention..."
+  }
+}
+```
 
-### 3. Configuration changes
-```properties
-# CŨ (đã xóa)
-# perplexity.api.key=REMOVED
+**Mới (Content-scoring-service):**
+```json
+{
+  "statusCode": 200,
+  "message": "Answer evaluated successfully via content-scoring-service",
+  "data": {
+    "score": 8.5,
+    "improvements": "Gợi ý: Regarding machine learning...\n\nĐiểm cần cải thiện:\n• Provide more detailed explanation\n• Include discussion of: artificial intelligence\n\nKhái niệm còn thiếu: artificial intelligence"
+  }
+}
+```
 
-# MỚI
-content-scoring.service.url=http://localhost:5001
-content-scoring.service.timeout.connect=10
-content-scoring.service.timeout.read=10
+### 3. Score mapping
+- **Content-scoring-service trả về**: Thang 100 (0-100)
+- **API /evaluate trả về**: Thang 10 (0-10)
+- **Conversion**: `scoreIn10 = scoreIn100 / 10.0`
+
+### 4. Advanced_answer mapping
+Content-scoring-service trả về:
+```json
+{
+  "success": true,
+  "score": 85.5,
+  "similarity": 0.855,
+  "key_points": [...],
+  "advanced_answer": {
+    "suggestion": "Regarding machine learning, a comprehensive answer would address...",
+    "improvement_points": [
+      "Provide more detailed explanation",
+      "Include discussion of: artificial intelligence"
+    ],
+    "missing_concepts": ["artificial intelligence"]
+  }
+}
+```
+
+Được mapping thành `improvements` field:
+```
+Gợi ý: [suggestion content]
+
+Điểm cần cải thiện:
+• [improvement_point 1]
+• [improvement_point 2]
+
+Khái niệm còn thiếu: [missing_concepts joined by comma]
 ```
 
 ## 🚀 Cách sử dụng
@@ -33,8 +79,8 @@ content-scoring.service.timeout.read=10
 ### 1. Khởi động content-scoring-service
 ```bash
 cd content-scoring-service
-./quick-fix.sh       # Linux/macOS - NHANH (vài giây)
-quick-fix.bat        # Windows - NHANH (vài giây)
+./quick-fix.sh       # Linux/macOS
+quick-fix.bat        # Windows
 ```
 
 ### 2. Khởi động backend-app
@@ -43,9 +89,9 @@ cd backend-app
 ./gradlew bootRun
 ```
 
-### 3. Test API
+### 3. Test API với format mới
 
-#### Test evaluate endpoint (HOẠT ĐỘNG)
+#### Test evaluate endpoint
 ```bash
 curl -X POST http://localhost:8080/api/v1/content-scoring/evaluate \
   -H "Content-Type: application/json" \
@@ -56,27 +102,16 @@ curl -X POST http://localhost:8080/api/v1/content-scoring/evaluate \
   }'
 ```
 
-**Expected response:**
+**Expected response (NEW FORMAT):**
 ```json
 {
   "statusCode": 200,
   "message": "Answer evaluated successfully via content-scoring-service",
   "data": {
     "score": 8.5,
-    "evaluation": "Good answer covering key concepts...",
-    "improvements": "Try to mention specific algorithms..."
+    "improvements": "Gợi ý: Regarding machine learning, a comprehensive answer would address the following aspects...\n\nĐiểm cần cải thiện:\n• Provide more detailed explanation\n• Include discussion of: artificial intelligence\n• Add specific examples to illustrate your points\n\nKhái niệm còn thiếu: artificial intelligence"
   }
 }
-```
-
-#### Test health check (MỚI)
-```bash
-curl http://localhost:8080/api/v1/content-scoring/health
-```
-
-#### Test service info (MỚI)
-```bash
-curl http://localhost:8080/api/v1/content-scoring/info
 ```
 
 ### 4. Test integration
@@ -86,45 +121,68 @@ cd backend-app
 test-content-scoring-integration.bat     # Windows
 ```
 
-## 📊 So sánh Before/After
+## 📊 Mapping Details
 
-| Aspect | Before (PerplexityAI) | After (Content-scoring-service) |
-|--------|----------------------|--------------------------------|
-| **💰 Cost** | API key costs | Miễn phí (internal) |
-| **⚡ Speed** | ~3-5s | ~1-2s |
-| **🌐 Dependency** | External internet | Internal network |
-| **🔒 Security** | API key exposed | Internal service |
-| **⏱️ Timeout** | 30s default | 10s configured |
-| **🎯 Control** | External service | Full control |
-| **📡 Endpoint** | `/api/v1/perplexity/*` | `/api/v1/content-scoring/*` |
+### Score Conversion
+| Content-scoring-service | API Response | Note |
+|------------------------|--------------|------|
+| 0-100 | 0-10 | Division by 10 |
+| 85.5 | 8.55 | Precise conversion |
+| 100 | 10.0 | Perfect score |
 
-## 🎯 Production Ready Features
+### Response Field Mapping
+| Content-scoring-service | API Response | Source |
+|------------------------|--------------|--------|
+| `score` (0-100) | `score` (0-10) | Direct conversion |
+| `advanced_answer.suggestion` | `improvements` (part 1) | Mapped as "Gợi ý: ..." |
+| `advanced_answer.improvement_points[]` | `improvements` (part 2) | Mapped as "Điểm cần cải thiện:" |
+| `advanced_answer.missing_concepts[]` | `improvements` (part 3) | Mapped as "Khái niệm còn thiếu:" |
+| ~~`evaluation`~~ | ❌ **REMOVED** | No longer exists |
 
-- ✅ **10s timeout** - Tránh hanging requests
-- ✅ **Error messages** - Tiếng Việt, user-friendly
-- ✅ **Health monitoring** - `/health` endpoint
-- ✅ **Graceful fallback** - Service unavailable handling
-- ✅ **Resource optimized** - Removed PerplexityAI dependencies
-- ✅ **Test coverage** - Integration test scripts
-- ✅ **Clean architecture** - ContentScoringController only
+## 🎯 Breaking Changes
 
-## ⚠️ Breaking Changes
+1. **Response structure**: Removed `evaluation` field completely
+2. **Model names**: All "Perplexity" → "Scoring/Suggestion"
+3. **Score scale**: 100 → 10 conversion
+4. **Improvements format**: Rich text from advanced_answer
+5. **Package structure**: `perplexity` → `scoring`
 
-1. **Endpoint paths changed**: `/api/v1/perplexity/*` → `/api/v1/content-scoring/*`
-2. **PerplexityAI files removed**: No backup, clean removal
-3. **Configuration updated**: perplexity.api.key removed
+## 🔧 Technical Implementation
 
-## 🚨 Migration Complete
+### New Package Structure
+```
+domain/
+├── request/scoring/
+│   ├── ScoringRequest.java
+│   └── SuggestionRequest.java
+└── response/scoring/
+    ├── ScoringResponse.java
+    └── SuggestionResponse.java
+```
 
-- ❌ **PerplexityAIController** - REMOVED
-- ❌ **PerplexityAIService** - REMOVED  
-- ❌ **PerplexityException** - REMOVED
-- ✅ **ContentScoringController** - NEW
-- ✅ **ContentScoringService** - NEW
-- ✅ **ContentScoringException** - NEW
+### Service Logic
+```java
+// Score conversion
+double scoreIn100 = responseBody.get("score");
+double scoreIn10 = scoreIn100 / 10.0;
+
+// Improvements mapping
+Map<String, Object> advancedAnswer = responseBody.get("advanced_answer");
+String improvements = extractImprovements(advancedAnswer);
+```
+
+## 🚨 Migration Status
+
+- ❌ **PerplexityAI dependencies** - COMPLETELY REMOVED
+- ✅ **Content-scoring-service integration** - FULLY IMPLEMENTED
+- ✅ **Advanced_answer mapping** - DONE
+- ✅ **Score conversion 100→10** - DONE
+- ✅ **Response format updated** - DONE
+- ✅ **Test scripts updated** - DONE
 
 ---
 
 **Migration Status**: ✅ COMPLETED  
-**Endpoint**: `/api/v1/content-scoring/*`  
-**Ready for production**: YES
+**Response format**: `{score: number, improvements: string}`  
+**Score scale**: 0-10 (converted from 0-100)  
+**Advanced features**: ✅ Mapped from advanced_answer

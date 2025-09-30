@@ -12,11 +12,12 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import utc.englishlearning.Encybara.domain.response.perplexity.PerplexityResponse;
+import utc.englishlearning.Encybara.domain.response.scoring.ScoringResponse;
 import utc.englishlearning.Encybara.exception.ContentScoringException;
 
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -42,9 +43,9 @@ public class ContentScoringService {
      * @param question   The question to evaluate
      * @param userAnswer The user's answer
      * @param prompt     Optional context/prompt (can be null)
-     * @return PerplexityResponse containing score, evaluation, and improvements
+     * @return ScoringResponse containing score (thang 10) and improvements
      */
-    public PerplexityResponse evaluateAnswer(String question, String userAnswer, String prompt) {
+    public ScoringResponse evaluateAnswer(String question, String userAnswer, String prompt) {
         try {
             log.info("Evaluating answer via content-scoring-service for question: {}",
                     question.length() > 50 ? question.substring(0, 50) + "..." : question);
@@ -127,57 +128,54 @@ public class ContentScoringService {
 
     /**
      * Parse response from content-scoring-service API
-     * Expected format: {"score": 8.5, "feedback": "Good answer but...",
-     * "suggestions": "Try to..."}
+     * Expected format:
+     * {
+     * "success": true,
+     * "score": 85.5, // thang 100
+     * "similarity": 0.855,
+     * "key_points": [...],
+     * "advanced_answer": {
+     * "suggestion": "...",
+     * "improvement_points": [...],
+     * "missing_concepts": [...]
+     * }
+     * }
      */
-    private PerplexityResponse parseContentScoringResponse(Map<String, Object> responseBody) {
+    private ScoringResponse parseContentScoringResponse(Map<String, Object> responseBody) {
         try {
             log.debug("Parsing content-scoring-service response: {}", responseBody);
 
-            // Extract score
+            // Extract score (thang 100) và convert sang thang 10
             Object scoreObj = responseBody.get("score");
-            double score = 0.0;
+            double scoreIn100 = 0.0;
             if (scoreObj instanceof Number) {
-                score = ((Number) scoreObj).doubleValue();
+                scoreIn100 = ((Number) scoreObj).doubleValue();
             } else if (scoreObj instanceof String) {
                 try {
-                    score = Double.parseDouble((String) scoreObj);
+                    scoreIn100 = Double.parseDouble((String) scoreObj);
                 } catch (NumberFormatException e) {
                     log.warn("Could not parse score from string: {}", scoreObj);
                 }
             }
 
-            // Extract feedback (evaluation)
-            String evaluation = (String) responseBody.get("feedback");
-            if (evaluation == null) {
-                evaluation = (String) responseBody.get("evaluation");
-            }
-            if (evaluation == null || evaluation.trim().isEmpty()) {
-                evaluation = "Không có đánh giá chi tiết từ content-scoring-service.";
-            }
-
-            // Extract suggestions (improvements)
-            String improvements = (String) responseBody.get("suggestions");
-            if (improvements == null) {
-                improvements = (String) responseBody.get("improvements");
-            }
-            if (improvements == null || improvements.trim().isEmpty()) {
-                improvements = "Không có gợi ý cải thiện từ content-scoring-service.";
-            }
+            // Convert từ thang 100 sang thang 10
+            double scoreIn10 = scoreIn100 / 10.0;
 
             // Validate score range
-            if (score < 0 || score > 10) {
-                log.warn("Score out of range (0-10): {}. Clamping to valid range.", score);
-                score = Math.max(0, Math.min(10, score));
+            if (scoreIn10 < 0 || scoreIn10 > 10) {
+                log.warn("Score out of range (0-10): {}. Clamping to valid range.", scoreIn10);
+                scoreIn10 = Math.max(0, Math.min(10, scoreIn10));
             }
 
-            log.info(
-                    "Successfully parsed content-scoring-service response - Score: {}, Evaluation length: {}, Improvements length: {}",
-                    score, evaluation.length(), improvements.length());
+            // Extract improvements từ advanced_answer
+            String improvements = extractImprovements(responseBody);
 
-            return PerplexityResponse.builder()
-                    .score(score)
-                    .evaluation(evaluation)
+            log.info(
+                    "Successfully parsed content-scoring-service response - Score: {}/100 -> {}/10, Improvements length: {}",
+                    scoreIn100, scoreIn10, improvements.length());
+
+            return ScoringResponse.builder()
+                    .score(scoreIn10)
                     .improvements(improvements)
                     .build();
 
@@ -187,6 +185,55 @@ public class ContentScoringService {
             throw new ContentScoringException(
                     "Không thể phân tích phản hồi từ content-scoring-service: " + e.getMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
+    }
+
+    /**
+     * Extract improvements từ advanced_answer section
+     */
+    private String extractImprovements(Map<String, Object> responseBody) {
+        try {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> advancedAnswer = (Map<String, Object>) responseBody.get("advanced_answer");
+
+            if (advancedAnswer == null) {
+                log.warn("No advanced_answer found in response, using fallback");
+                return "Không có gợi ý cải thiện chi tiết từ content-scoring-service.";
+            }
+
+            StringBuilder improvements = new StringBuilder();
+
+            // Extract suggestion
+            String suggestion = (String) advancedAnswer.get("suggestion");
+            if (suggestion != null && !suggestion.trim().isEmpty()) {
+                improvements.append("Gợi ý: ").append(suggestion).append("\n\n");
+            }
+
+            // Extract improvement_points
+            @SuppressWarnings("unchecked")
+            List<String> improvementPoints = (List<String>) advancedAnswer.get("improvement_points");
+            if (improvementPoints != null && !improvementPoints.isEmpty()) {
+                improvements.append("Điểm cần cải thiện:\n");
+                for (int i = 0; i < improvementPoints.size(); i++) {
+                    improvements.append(String.format("• %s\n", improvementPoints.get(i)));
+                }
+                improvements.append("\n");
+            }
+
+            // Extract missing_concepts
+            @SuppressWarnings("unchecked")
+            List<String> missingConcepts = (List<String>) advancedAnswer.get("missing_concepts");
+            if (missingConcepts != null && !missingConcepts.isEmpty()) {
+                improvements.append("Khái niệm còn thiếu: ");
+                improvements.append(String.join(", ", missingConcepts));
+            }
+
+            String result = improvements.toString().trim();
+            return result.isEmpty() ? "Không có gợi ý cải thiện cụ thể từ content-scoring-service." : result;
+
+        } catch (Exception e) {
+            log.warn("Error extracting improvements from advanced_answer: {}", e.getMessage());
+            return "Không thể trích xuất gợi ý cải thiện từ phản hồi của content-scoring-service.";
         }
     }
 
