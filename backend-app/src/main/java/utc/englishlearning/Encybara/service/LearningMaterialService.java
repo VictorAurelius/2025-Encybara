@@ -19,7 +19,9 @@ import utc.englishlearning.Encybara.exception.StorageException;
 import utc.englishlearning.Encybara.repository.LearningMaterialRepository;
 import utc.englishlearning.Encybara.repository.LessonRepository;
 import utc.englishlearning.Encybara.exception.ResourceNotFoundException;
+import utc.englishlearning.Encybara.domain.Course;
 import utc.englishlearning.Encybara.domain.Question;
+import utc.englishlearning.Encybara.repository.CourseRepository;
 import utc.englishlearning.Encybara.repository.QuestionRepository;
 
 import java.util.List;
@@ -33,16 +35,19 @@ public class LearningMaterialService {
     private final LearningMaterialRepository learningMaterialRepository;
     private final LessonRepository lessonRepository;
     private final QuestionRepository questionRepository;
+    private final CourseRepository courseRepository;
 
     public LearningMaterialService(
             @Value("${englishlearning.upload-file.base-uri}") String baseURI,
             LearningMaterialRepository learningMaterialRepository,
             LessonRepository lessonRepository,
-            QuestionRepository questionRepository) {
+            QuestionRepository questionRepository,
+            CourseRepository courseRepository) {
         this.baseUri = baseURI;
         this.learningMaterialRepository = learningMaterialRepository;
         this.lessonRepository = lessonRepository;
         this.questionRepository = questionRepository;
+        this.courseRepository = courseRepository;
     }
 
     private void validateFolderPath(String folder) throws StorageException {
@@ -233,6 +238,12 @@ public class LearningMaterialService {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Question not found with ID: " + questionId));
         return learningMaterialRepository.findByQuestion(question);
+    }
+
+    public List<Learning_Material> getLearningMaterialsByCourseId(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found with ID: " + courseId));
+        return learningMaterialRepository.findByCourse(course);
     }
 
     public Path getFilePath(String relativePath) {

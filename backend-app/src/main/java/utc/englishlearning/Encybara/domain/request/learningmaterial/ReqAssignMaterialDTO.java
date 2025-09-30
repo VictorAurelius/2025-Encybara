@@ -9,6 +9,7 @@ public class ReqAssignMaterialDTO {
     private String materLink; // Liên kết tài liệu
     private Long questionId; // ID của câu hỏi
     private Long lessonId; // ID của bài học
+    private Long courseId; // ID của khóa học
     private String materType; // Add this line
 
     public String getMaterType() { // Add this method

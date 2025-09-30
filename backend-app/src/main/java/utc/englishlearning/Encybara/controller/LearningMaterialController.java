@@ -22,6 +22,8 @@ import utc.englishlearning.Encybara.service.LearningMaterialService;
 import utc.englishlearning.Encybara.util.annotation.ApiMessage;
 import utc.englishlearning.Encybara.domain.Question;
 import utc.englishlearning.Encybara.domain.Lesson;
+import utc.englishlearning.Encybara.domain.Course;
+import utc.englishlearning.Encybara.repository.CourseRepository;
 import utc.englishlearning.Encybara.repository.LessonRepository;
 import utc.englishlearning.Encybara.domain.Learning_Material;
 import utc.englishlearning.Encybara.repository.LearningMaterialRepository;
@@ -39,18 +41,21 @@ public class LearningMaterialController {
     private final LessonRepository lessonRepository;
     private final LearningMaterialRepository learning_MaterialRepository;
     private final FileStorageService fileStorageService;
+    private final CourseRepository courseRepository;
 
     public LearningMaterialController(
             LearningMaterialService fileService,
             QuestionRepository questionRepository,
             LessonRepository lessonRepository,
             LearningMaterialRepository learning_MaterialRepository,
-            FileStorageService fileStorageService) {
+            FileStorageService fileStorageService,
+            CourseRepository courseRepository) {
         this.fileService = fileService;
         this.questionRepository = questionRepository;
         this.lessonRepository = lessonRepository;
         this.learning_MaterialRepository = learning_MaterialRepository;
         this.fileStorageService = fileStorageService;
+        this.courseRepository = courseRepository;
     }
 
     @PostMapping("/upload/question")
@@ -131,6 +136,46 @@ public class LearningMaterialController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/upload/course")
+    @ApiMessage("Upload material for a course")
+    public ResponseEntity<RestResponse<ResUploadMaterialDTO>> uploadMaterialForCourse(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("folder") String folder,
+            @RequestParam("courseId") Long courseId,
+            @RequestParam(value = "materType", required = false) String materType)
+            throws IOException, StorageException {
+
+        // Validate file
+        if (file == null || file.isEmpty()) {
+            throw new StorageException("File is empty. Please upload a file.");
+        }
+
+        // Get course to ensure it exists
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new LearningMaterialNotFoundException("Course not found"));
+
+        // Save file and get full path
+        String materLink = fileService.store(file, "courses/" + folder);
+
+        // Create material record
+        Learning_Material learningMaterial = new Learning_Material();
+        learningMaterial.setMaterLink(materLink);
+        learningMaterial.setMaterType(materType != null ? materType : "application/octet-stream");
+        learningMaterial.setUploadedAt(Instant.now());
+        learningMaterial.setCourse(course);
+
+        learning_MaterialRepository.save(learningMaterial);
+
+        ResUploadMaterialDTO res = new ResUploadMaterialDTO(materLink, Instant.now(), learningMaterial.getMaterType(),
+                null, null);
+        res.setCourseId(courseId);
+        RestResponse<ResUploadMaterialDTO> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Material uploaded for course successfully");
+        response.setData(res);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/assign/question")
     @ApiMessage("Assign existing material link to a question")
     public ResponseEntity<RestResponse<Void>> assignMaterialToQuestion(
@@ -174,6 +219,29 @@ public class LearningMaterialController {
         RestResponse<Void> response = new RestResponse<>();
         response.setStatusCode(200);
         response.setMessage("Material assigned to lesson successfully");
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/assign/course")
+    @ApiMessage("Assign existing material link to a course")
+    public ResponseEntity<RestResponse<Void>> assignMaterialToCourse(
+            @RequestBody ReqAssignMaterialDTO reqAssignMaterialDTO)
+            throws StorageException {
+        // Get course and verify it exists
+        Course course = courseRepository.findById(reqAssignMaterialDTO.getCourseId())
+                .orElseThrow(() -> new LearningMaterialNotFoundException("Course not found"));
+
+        Learning_Material learningMaterial = new Learning_Material();
+        learningMaterial.setMaterLink(reqAssignMaterialDTO.getMaterLink());
+        learningMaterial.setMaterType(reqAssignMaterialDTO.getMaterType() != null ? reqAssignMaterialDTO.getMaterType()
+                : "application/octet-stream");
+        learningMaterial.setCourse(course);
+        learningMaterial.setUploadedAt(Instant.now());
+        learning_MaterialRepository.save(learningMaterial);
+
+        RestResponse<Void> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Material assigned to course successfully");
         return ResponseEntity.ok(response);
     }
 
@@ -237,6 +305,22 @@ public class LearningMaterialController {
         List<Learning_Material> materials = fileService.getLearningMaterialsByLessonId(lessonId);
         if (materials.isEmpty()) {
             throw new LearningMaterialNotFoundException("No materials found for lesson");
+        }
+
+        RestResponse<List<Learning_Material>> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Learning materials retrieved successfully");
+        response.setData(materials);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/courses/{courseId}")
+    @ApiMessage("Get all learning materials link for a course")
+    public ResponseEntity<RestResponse<List<Learning_Material>>> getLearningMaterialsByCourseId(
+            @PathVariable("courseId") Long courseId) {
+        List<Learning_Material> materials = fileService.getLearningMaterialsByCourseId(courseId);
+        if (materials.isEmpty()) {
+            throw new LearningMaterialNotFoundException("No materials found for course");
         }
 
         RestResponse<List<Learning_Material>> response = new RestResponse<>();
