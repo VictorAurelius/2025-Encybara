@@ -206,14 +206,14 @@ public class ContentScoringService {
             // Extract suggestion
             String suggestion = (String) advancedAnswer.get("suggestion");
             if (suggestion != null && !suggestion.trim().isEmpty()) {
-                improvements.append("Gợi ý: ").append(suggestion).append("\n\n");
+                improvements.append("Suggestions: ").append(suggestion).append("\n\n");
             }
 
             // Extract improvement_points
             @SuppressWarnings("unchecked")
             List<String> improvementPoints = (List<String>) advancedAnswer.get("improvement_points");
             if (improvementPoints != null && !improvementPoints.isEmpty()) {
-                improvements.append("Điểm cần cải thiện:\n");
+                improvements.append("Improvement Points:\n");
                 for (int i = 0; i < improvementPoints.size(); i++) {
                     improvements.append(String.format("• %s\n", improvementPoints.get(i)));
                 }
@@ -224,7 +224,7 @@ public class ContentScoringService {
             @SuppressWarnings("unchecked")
             List<String> missingConcepts = (List<String>) advancedAnswer.get("missing_concepts");
             if (missingConcepts != null && !missingConcepts.isEmpty()) {
-                improvements.append("Khái niệm còn thiếu: ");
+                improvements.append("Missing Concepts: ");
                 improvements.append(String.join(", ", missingConcepts));
             }
 
