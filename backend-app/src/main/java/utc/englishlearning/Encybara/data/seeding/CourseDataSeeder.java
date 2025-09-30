@@ -69,19 +69,6 @@ public class CourseDataSeeder {
             Map<String, Question> questionsByContent = materialLoader.loadQuestions();
             Map<String, List<Map<String, Object>>> materialsByTarget = materialLoader.loadMaterials();
 
-            // Process course materials before processing individual courses
-            List<Map<String, Object>> courseMaterials = materialsByTarget.get("courses");
-            if (courseMaterials != null) {
-                for (Course course : courses) {
-                    for (Map<String, Object> materialData : courseMaterials) {
-                        if (course.getName().equals(materialData.get("courseName"))) {
-                            seedLearningMaterial(materialData, null, null, course, courseGroup, unitNumber,
-                                    paperNumber);
-                        }
-                    }
-                }
-            }
-
             for (Course course : courses) {
                 // Check if course already exists
                 Course existingCourse = courseRepository.findByName(course.getName());
@@ -92,16 +79,27 @@ public class CourseDataSeeder {
 
                 System.out.println(">>> START SEEDING: " + course.getName());
 
-                // Save course
+                // Save course first
                 course.setCreateAt(Instant.now());
-                course = courseRepository.save(course);
+                Course savedCourse = courseRepository.save(course);
+
+                // Process course materials
+                List<Map<String, Object>> courseMaterials = materialsByTarget.get("courses");
+                if (courseMaterials != null) {
+                    for (Map<String, Object> materialData : courseMaterials) {
+                        if (savedCourse.getName().equals(materialData.get("courseName"))) {
+                            seedLearningMaterial(materialData, null, null, savedCourse, courseGroup, unitNumber,
+                                    paperNumber);
+                        }
+                    }
+                }
 
                 // Process each lesson using the lessonNames from Course entity
-                Map<String, Object> courseData = objectMapper.convertValue(course, Map.class);
+                Map<String, Object> courseData = objectMapper.convertValue(savedCourse, Map.class);
                 List<String> lessonNames = (List<String>) courseData.get("lessonNames");
 
                 if (lessonNames != null) {
-                    course.setLessonNames(lessonNames);
+                    savedCourse.setLessonNames(lessonNames);
 
                     for (String lessonName : lessonNames) {
                         Lesson lesson = lessonsByName.get(lessonName);
@@ -112,18 +110,18 @@ public class CourseDataSeeder {
 
                         // Save lesson
                         lesson.setCreateAt(Instant.now());
-                        lesson = lessonRepository.save(lesson);
+                        Lesson savedLesson = lessonRepository.save(lesson);
 
                         // Create course-lesson relationship
                         Course_Lesson courseLesson = new Course_Lesson();
-                        courseLesson.setCourse(course);
-                        courseLesson.setLesson(lesson);
+                        courseLesson.setCourse(savedCourse);
+                        courseLesson.setLesson(savedLesson);
                         courseLessonRepository.save(courseLesson);
 
                         // Process questions from lesson's questionContents
                         List<String> questionContents = lesson.getQuestionContents();
                         if (questionContents != null && !questionContents.isEmpty()) {
-                            processQuestions(questionContents, questionsByContent, lesson);
+                            processQuestions(questionContents, questionsByContent, savedLesson);
                         }
 
                         // Process materials for this lesson
@@ -131,7 +129,7 @@ public class CourseDataSeeder {
                         if (lessonMaterials != null) {
                             for (Map<String, Object> materialData : lessonMaterials) {
                                 if (lessonName.equals(materialData.get("lessonName"))) {
-                                    seedLearningMaterial(materialData, lesson, null, null, courseGroup, unitNumber,
+                                    seedLearningMaterial(materialData, savedLesson, null, null, courseGroup, unitNumber,
                                             paperNumber);
                                 }
                             }
@@ -156,7 +154,7 @@ public class CourseDataSeeder {
                     }
                 }
 
-                System.out.println(">>> END SEEDING: " + course.getName());
+                System.out.println(">>> END SEEDING: " + savedCourse.getName());
             }
         } catch (IOException e) {
             System.err.println("Error seeding course data: " + e.getMessage());
@@ -222,17 +220,33 @@ public class CourseDataSeeder {
                 Learning_Material material = new Learning_Material();
                 material.setMaterLink(materLink);
                 material.setMaterType(materType);
-                material.setLesson(lesson);
-                material.setQuestion(question);
-                material.setCourse(course);
                 material.setUploadedAt(Instant.now());
+
+                // Set relationships in correct order to avoid mixed IDs
+                if (course != null) {
+                    material.setCourse(course);
+                }
+                if (lesson != null) {
+                    material.setLesson(lesson);
+                }
+                if (question != null) {
+                    material.setQuestion(question);
+                }
                 learningMaterialRepository.save(material);
 
                 // Cleanup temp file
                 Files.deleteIfExists(tempFile);
 
-                String target = lesson != null ? "lesson: " + lesson.getName()
-                        : "question: " + question.getQuesContent();
+                String target;
+                if (course != null) {
+                    target = "course: " + course.getName();
+                } else if (lesson != null) {
+                    target = "lesson: " + lesson.getName();
+                } else if (question != null) {
+                    target = "question: " + question.getQuesContent();
+                } else {
+                    target = "unknown";
+                }
                 System.out.println(">>> SEEDED MATERIAL: " + materLink + " for " + target);
             }
         } catch (IOException e) {
