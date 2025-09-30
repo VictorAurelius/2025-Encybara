@@ -38,6 +38,11 @@ public class Learning_Material {
     @JoinColumn(name = "lesson_id", nullable = true)
     private Lesson lesson;
 
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "course_id", nullable = true)
+    private Course course;
+
     public void setLessonId(Long lessonId) {
         this.lesson = new Lesson();
         this.lesson.setId(lessonId);
@@ -48,5 +53,12 @@ public class Learning_Material {
             this.question = new Question();
         }
         this.question.setId(questionId);
+    }
+
+    public void setCourseId(Long courseId) {
+        if (this.course == null) {
+            this.course = new Course();
+        }
+        this.course.setId(courseId);
     }
 }

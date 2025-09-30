@@ -134,6 +134,7 @@ public class TestingMaterialLoader {
         Map<String, List<Map<String, Object>>> materialMap = new HashMap<>();
         materialMap.put("lessons", new ArrayList<>());
         materialMap.put("questions", new ArrayList<>());
+        materialMap.put("courses", new ArrayList<>());
 
         String fullPath = basePath + "materials.json";
         Resource resource = new ClassPathResource(fullPath);
@@ -148,18 +149,22 @@ public class TestingMaterialLoader {
                     new TypeReference<List<Map<String, Object>>>() {
                     });
 
-            // Separate materials by target type (lesson or question)
+            // Separate materials by target type (course, lesson or question)
             for (Map<String, Object> material : materialDataList) {
+                String courseName = (String) material.get("courseName");
                 String lessonName = (String) material.get("lessonName");
                 String questionContent = (String) material.get("questionContent");
 
-                if (lessonName != null) {
+                if (courseName != null) {
+                    materialMap.get("courses").add(material);
+                } else if (lessonName != null) {
                     materialMap.get("lessons").add(material);
                 } else if (questionContent != null) {
                     materialMap.get("questions").add(material);
                 }
             }
 
+            System.out.println("Loaded " + materialMap.get("courses").size() + " course materials");
             System.out.println("Loaded " + materialMap.get("lessons").size() + " lesson materials");
             System.out.println("Loaded " + materialMap.get("questions").size() + " question materials");
         } catch (Exception e) {

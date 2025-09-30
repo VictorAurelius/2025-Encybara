@@ -1,5 +1,12 @@
 [
     {
+        "name": "Paper 1 Course Content",
+        "materType": "md",
+        "materPath": "data/ket3/file/test1/paper1/KET3_paper1.md",
+        "courseName": "(Paper 1) Cambridge Key English Test (KET3) - Test 1",
+        "createBy": "admin"
+    },
+    {
         "name": "Paper 1 Reading Part 3 Image",
         "materType": "image/png",
         "materPath": "data/ket3/file/test1/paper1/part3-paper1.png",

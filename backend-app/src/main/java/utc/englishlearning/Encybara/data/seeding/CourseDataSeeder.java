@@ -69,6 +69,19 @@ public class CourseDataSeeder {
             Map<String, Question> questionsByContent = materialLoader.loadQuestions();
             Map<String, List<Map<String, Object>>> materialsByTarget = materialLoader.loadMaterials();
 
+            // Process course materials before processing individual courses
+            List<Map<String, Object>> courseMaterials = materialsByTarget.get("courses");
+            if (courseMaterials != null) {
+                for (Course course : courses) {
+                    for (Map<String, Object> materialData : courseMaterials) {
+                        if (course.getName().equals(materialData.get("courseName"))) {
+                            seedLearningMaterial(materialData, null, null, course, courseGroup, unitNumber,
+                                    paperNumber);
+                        }
+                    }
+                }
+            }
+
             for (Course course : courses) {
                 // Check if course already exists
                 Course existingCourse = courseRepository.findByName(course.getName());
@@ -118,7 +131,7 @@ public class CourseDataSeeder {
                         if (lessonMaterials != null) {
                             for (Map<String, Object> materialData : lessonMaterials) {
                                 if (lessonName.equals(materialData.get("lessonName"))) {
-                                    seedLearningMaterial(materialData, lesson, null, courseGroup, unitNumber,
+                                    seedLearningMaterial(materialData, lesson, null, null, courseGroup, unitNumber,
                                             paperNumber);
                                 }
                             }
@@ -132,7 +145,8 @@ public class CourseDataSeeder {
                                 if (question != null) {
                                     for (Map<String, Object> materialData : questionMaterials) {
                                         if (quesContent.equals(materialData.get("questionContent"))) {
-                                            seedLearningMaterial(materialData, null, question, courseGroup, unitNumber,
+                                            seedLearningMaterial(materialData, null, question, null, courseGroup,
+                                                    unitNumber,
                                                     paperNumber);
                                         }
                                     }
@@ -179,7 +193,7 @@ public class CourseDataSeeder {
     }
 
     private void seedLearningMaterial(Map<String, Object> materialData, Lesson lesson, Question question,
-            String courseGroup, String testNumber, String paperNumber) {
+            Course course, String courseGroup, String testNumber, String paperNumber) {
         try {
             String sourceFilePath = (String) materialData.get("materPath");
             String materType = (String) materialData.get("materType");
@@ -210,6 +224,7 @@ public class CourseDataSeeder {
                 material.setMaterType(materType);
                 material.setLesson(lesson);
                 material.setQuestion(question);
+                material.setCourse(course);
                 material.setUploadedAt(Instant.now());
                 learningMaterialRepository.save(material);
 
