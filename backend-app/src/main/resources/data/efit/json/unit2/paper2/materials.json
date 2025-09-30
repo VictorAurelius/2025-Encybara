@@ -1,5 +1,12 @@
 [
     {
+        "name": "EFIT Unit 2: Paper 2 - Course Content",
+        "materType": "md",
+        "materPath": "data/efit/file/unit2/paper2/efit_unit2_paper2.md",
+        "courseName": "(Unit 2: IT Systems) GUI Operations",
+        "createBy": "admin"
+    },
+    {
         "name": "EFIT Unit 2: Paper 2 - Lesson 1 Image",
         "materType": "image/png",
         "materPath": "data/efit/file/unit2/paper2/les1-paper2.png",

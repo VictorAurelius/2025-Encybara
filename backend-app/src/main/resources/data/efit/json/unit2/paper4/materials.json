@@ -1,5 +1,12 @@
 [
   {
+    "name": "EFIT Unit 2: Paper 4 - Course Content",
+    "materType": "md",
+    "materPath": "data/efit/file/unit2/paper4/efit_unit2_paper4.md",
+    "courseName": "(Unit 2: IT systems) Operating Systems",
+    "createBy": "admin"
+  },
+  {
     "name": "EFIT Unit 2: Paper 4 - Lesson 2 Image",
     "materType": "image/png",
     "materPath": "data/efit/file/unit2/paper4/les2-paper4.png",

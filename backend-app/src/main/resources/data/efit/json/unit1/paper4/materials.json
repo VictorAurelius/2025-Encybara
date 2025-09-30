@@ -1,5 +1,12 @@
 [
   {
+    "name": "EFIT Unit 1: Paper 4 - Course Content",
+    "materType": "md",
+    "materPath": "data/efit/file/unit1/paper4/efit_unit1_paper4.md",
+    "courseName": "(Unit 1: Working on IT) Meetings",
+    "createBy": "admin"
+  },
+  {
     "name": "EFIT Unit 1: Paper 4 - Lesson 2 Image",
     "materType": "image/png",
     "materPath": "data/efit/file/unit1/paper4/les2-paper4.png",
