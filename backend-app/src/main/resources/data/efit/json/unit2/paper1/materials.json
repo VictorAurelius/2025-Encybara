@@ -1,5 +1,12 @@
 [
     {
+        "name": "EFIT Unit 2: Paper 1 - Course Content",
+        "materType": "md",
+        "materPath": "data/efit/file/unit2/paper1/efit_unit2_paper1.md",
+        "courseName": "(Unit 2: IT Systems) System specifications",
+        "createBy": "admin"
+    },
+    {
         "name": "EFIT Unit 2: Paper 1 - Lesson 2 Image",
         "materType": "image/png",
         "materPath": "data/efit/file/unit2/paper1/les2-paper1.png",

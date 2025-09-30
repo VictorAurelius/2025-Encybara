@@ -17,6 +17,7 @@ public class ResUploadMaterialDTO {
     private Instant uploadedAt;
     private Long questionId;
     private Long lessonId;
+    private Long courseId;
 
     // Constructor with all fields
     public ResUploadMaterialDTO(String materLink, Instant uploadedAt, String materType, Long questionId,

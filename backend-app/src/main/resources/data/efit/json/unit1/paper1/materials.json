@@ -1,5 +1,19 @@
 [
     {
+        "name": "EFIT Unit 1: Paper 1 - Course Content",
+        "materType": "md",
+        "materPath": "data/efit/file/unit1/paper1/efit_unit1_paper1.md",
+        "courseName": "(Unit 1: Working on IT) IT Overview",
+        "createBy": "admin"
+    },
+    {
+        "name": "EFIT Unit 1: Paper 1 - Course Content",
+        "materType": "md",
+        "materPath": "data/efit/file/unit1/paper1/efit_unit1_paper1.md",
+        "courseName": "(Unit 1: Working on IT) IT jobs and duties",
+        "createBy": "admin"
+    },
+    {
         "name": "EFIT Unit 1: Paper 1 - Lesson 1 Image",
         "materType": "image/png",
         "materPath": "data/efit/file/unit1/paper1/les1-paper1.png",

@@ -1,5 +1,12 @@
 [
   {
+    "name": "EFIT Unit 1: Paper 5 - Course Content",
+    "materType": "md",
+    "materPath": "data/efit/file/unit1/paper5/efit_unit1_paper5.md",
+    "courseName": "(Unit 1: Working on IT) Business matters ",
+    "createBy": "admin"
+  },
+  {
     "name": "EFIT Unit 1: Paper 5 - Lesson 1 Image",
     "materType": "image/png",
     "materPath": "data/efit/file/unit1/paper5/les1-paper5.png",

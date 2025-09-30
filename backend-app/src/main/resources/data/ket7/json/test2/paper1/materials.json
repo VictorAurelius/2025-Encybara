@@ -1,5 +1,12 @@
 [
     {
+        "name": "Paper 1 Course Content",
+        "materType": "md",
+        "materPath": "data/ket7/file/test2/paper1/KET7_test2_paper1.md",
+        "courseName": "(Paper 1) Cambridge Key English Test (KET7) - Reading Test 2",
+        "createBy": "admin"
+    },
+    {
         "name": "Paper 1 Reading Part 8 Image",
         "materType": "image/png",
         "materPath": "data/ket7/file/test2/paper1/part8-paper1.png",
