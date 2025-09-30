@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  content-scoring-service:
+    image: content-scoring-service:latest  # Sử dụng image đã build
+    container_name: content-scoring-service
+    ports:
+      - "5001:5001"
+    environment:
+      - PYTHONPATH=/app
+      - LOG_LEVEL=INFO
+      - PORT=5001
+      # HuggingFace cache fix - dùng /tmp có write permission
+      - HF_HOME=/tmp/.cache/huggingface
+      - TRANSFORMERS_CACHE=/tmp/.cache/huggingface/transformers
+      - SENTENCE_TRANSFORMERS_HOME=/tmp/.cache/huggingface/sentence_transformers
+      - HUGGINGFACE_HUB_CACHE=/tmp/.cache/huggingface/hub
+    volumes:
+      # Mount cache directory để persistence
+      - huggingface-cache:/tmp/.cache/huggingface
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    networks:
+      - content-scoring-network
+    # Override user để run as root temporarily (fix permissions)
+    user: "0:0"
+
+volumes:
+  huggingface-cache:
+    driver: local
+
+networks:
+  content-scoring-network:
+    driver: bridge
