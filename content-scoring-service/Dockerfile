@@ -23,10 +23,11 @@ COPY scripts/download-tracker.py ./scripts/
 
 # Install Python dependencies with progress tracking for large downloads
 RUN pip install --upgrade pip && \
-    python ./scripts/download-tracker.py --requirements requirements-prod.txt --threshold 50 || \
+    chmod +x ./scripts/download-tracker.py && \
+    python -u ./scripts/download-tracker.py --requirements requirements-prod.txt --threshold 50 2>&1 | tee /tmp/download-progress.log || \
     (echo "⚠️ Download tracker failed, falling back to standard pip install" && \
-    pip install --prefer-binary --only-binary=all -r requirements-prod.txt || \
-    pip install -r requirements-prod.txt)
+    pip install --progress-bar on --prefer-binary --only-binary=all -r requirements-prod.txt || \
+    pip install --progress-bar on -r requirements-prod.txt)
 
 # Download spaCy English model with progress tracking
 RUN python ./scripts/download-tracker.py --spacy-model en_core_web_sm --threshold 50 || \

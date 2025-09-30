@@ -88,10 +88,11 @@ class DownloadTracker:
                 print(f"   • {pkg}: ~{self._format_size(size)}")
             print()
         
-        # Run pip install with progress tracking
+        # Run pip install with enhanced progress tracking
         cmd = [
             sys.executable, "-m", "pip", "install",
-            "--upgrade", "--progress-bar", "on",
+            "--progress-bar", "on",
+            "--verbose",
             "-r", requirements_file
         ]
         
@@ -99,61 +100,66 @@ class DownloadTracker:
         self.log_download_start(f"pip install {requirements_file}", "", sum(size for _, size in large_packages))
         
         try:
+            import subprocess
+            import threading
+            import queue
+            
+            # Use real-time streaming with threading
             process = subprocess.Popen(
                 cmd,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 universal_newlines=True,
-                bufsize=1
+                bufsize=0  # Unbuffered for real-time output
             )
             
             current_package = None
             current_download_info = {}
             
-            for line in process.stdout:
-                line = line.strip()
+            # Process output line by line in real-time
+            while True:
+                output = process.stdout.readline()
+                if output == '' and process.poll() is not None:
+                    break
                 
-                # Parse Docker build output format (#step timestamp output)
-                docker_line = line
-                if line.startswith('#'):
-                    parts = line.split(' ', 2)
-                    if len(parts) >= 3:
-                        docker_line = parts[2]  # Extract actual content after step number and timestamp
-                
-                # Track individual package downloads with real-time progress
-                if "Downloading" in docker_line:
-                    download_info = self._parse_docker_download_line(docker_line)
-                    if download_info and download_info['size_mb'] >= self.size_threshold / (1024 * 1024):
-                        package_name = download_info['package']
-                        current_package = package_name
-                        current_download_info = download_info
-                        
-                        print(f"\n🔄 [LARGE DOWNLOAD] Starting: {package_name}")
-                        print(f"   📦 Size: {self._format_size(download_info['size_bytes'])}")
-                        print(f"   🔗 File: {download_info['filename']}")
-                        self.log_download_start(f"Package: {package_name}", download_info['filename'], download_info['size_bytes'])
-                
-                # Track real-time download progress (progress bar lines)
-                elif current_package and ("━━━" in docker_line or "█" in docker_line) and ("MB" in docker_line or "%" in docker_line):
-                    progress_info = self._parse_docker_progress_line(docker_line, current_download_info)
-                    if progress_info:
-                        self._display_realtime_progress(current_package, progress_info)
-                        self.log_download_progress(
-                            f"Package: {current_package}",
-                            progress_info['current_bytes'],
-                            progress_info['total_bytes']
-                        )
-                
-                # Print all lines for debugging
-                print(f"  {line}")
-                
-                # Check if download completed
-                if current_package and ("Installing collected packages" in docker_line or "Successfully installed" in docker_line):
-                    if current_download_info:
-                        print(f"\n✅ [LARGE DOWNLOAD] Completed: {current_package}")
-                        self.log_download_complete(f"Package: {current_package}", current_download_info['size_bytes'], True)
-                    current_package = None
-                    current_download_info = {}
+                if output:
+                    line = output.strip()
+                    
+                    # Track individual package downloads with real-time progress
+                    if "Downloading" in line:
+                        download_info = self._parse_pip_download_line(line)
+                        if download_info and download_info['size_mb'] >= self.size_threshold / (1024 * 1024):
+                            package_name = download_info['package']
+                            current_package = package_name
+                            current_download_info = download_info
+                            
+                            print(f"\n🔄 [LARGE DOWNLOAD] Starting: {package_name}")
+                            print(f"   📦 Size: {self._format_size(download_info['size_bytes'])}")
+                            print(f"   🔗 File: {download_info['filename']}")
+                            self.log_download_start(f"Package: {package_name}", download_info['filename'], download_info['size_bytes'])
+                    
+                    # Track real-time download progress (progress bar lines from pip)
+                    elif current_package and ("%" in line or "━━━" in line or "█" in line or "KB/s" in line or "MB/s" in line):
+                        progress_info = self._parse_pip_progress_line(line, current_download_info)
+                        if progress_info:
+                            self._display_realtime_progress(current_package, progress_info)
+                            self.log_download_progress(
+                                f"Package: {current_package}",
+                                progress_info['current_bytes'],
+                                progress_info['total_bytes']
+                            )
+                    
+                    # Print all lines for transparency
+                    print(f"  {line}")
+                    sys.stdout.flush()
+                    
+                    # Check if download completed
+                    if current_package and ("Installing collected packages" in line or "Successfully installed" in line):
+                        if current_download_info:
+                            print(f"\n✅ [LARGE DOWNLOAD] Completed: {current_package}")
+                            self.log_download_complete(f"Package: {current_package}", current_download_info['size_bytes'], True)
+                        current_package = None
+                        current_download_info = {}
             
             process.wait()
             if process.returncode == 0:
@@ -162,10 +168,14 @@ class DownloadTracker:
             else:
                 self.log_download_complete(f"pip install {requirements_file}", 0, False)
                 print("\n❌ pip install failed")
+                return process.returncode
                 
         except Exception as e:
             print(f"❌ Error during pip install: {e}")
             self.log_download_complete(f"pip install {requirements_file}", 0, False)
+            return 1
+        
+        return 0
     
     def track_spacy_download(self, model_name: str):
         """Track spaCy model download"""
@@ -232,8 +242,8 @@ class DownloadTracker:
         
         return large_packages.get(package_name.lower(), 10 * 1024 * 1024)  # Default 10MB
     
-    def _parse_docker_download_line(self, line: str) -> Optional[Dict]:
-        """Parse Docker/pip download line to extract package info and size"""
+    def _parse_pip_download_line(self, line: str) -> Optional[Dict]:
+        """Parse pip download line to extract package info and size"""
         try:
             import re
             
@@ -271,6 +281,115 @@ class DownloadTracker:
             pass
         
         return None
+    
+    def _parse_pip_progress_line(self, line: str, download_info: Dict) -> Optional[Dict]:
+        """Parse pip progress line to extract current progress"""
+        try:
+            import re
+            
+            # Parse pip progress patterns:
+            # Pattern 1: "  50%|██████     | 450MB/900MB [00:30<00:30, 15.0MB/s]"
+            # Pattern 2: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 888.0/888.0 MB 2.8 MB/s  0:00:00"
+            
+            progress_patterns = [
+                # pip style with percentage
+                r'(\d+)%\|[^|]*\|\s*([0-9]+\.?[0-9]*)(MB|KB|GB)/([0-9]+\.?[0-9]*)(MB|KB|GB).*?([0-9]+\.?[0-9]*)(MB|KB|GB)/s',
+                # Unicode progress bar style
+                r'[━█░▓▒]+\s+([0-9]+\.?[0-9]*)/([0-9]+\.?[0-9]*)\s*(MB|KB|GB).*?([0-9]+\.?[0-9]*)\s*(MB|KB|GB)/s',
+                # Simple progress without speed
+                r'[━█░▓▒]+\s+([0-9]+\.?[0-9]*)/([0-9]+\.?[0-9]*)\s*(MB|KB|GB)',
+            ]
+            
+            for pattern in progress_patterns:
+                match = re.search(pattern, line)
+                if match:
+                    if len(match.groups()) >= 3:  # Pattern 2 or 3
+                        current_value = float(match.group(1))
+                        total_value = float(match.group(2))
+                        unit = match.group(3)
+                        
+                        # Extract speed if available
+                        speed_mbps = 0
+                        if len(match.groups()) >= 5:
+                            try:
+                                speed_value = float(match.group(4))
+                                speed_unit = match.group(5)
+                                if speed_unit == "KB":
+                                    speed_mbps = speed_value / 1024
+                                elif speed_unit == "MB":
+                                    speed_mbps = speed_value
+                                elif speed_unit == "GB":
+                                    speed_mbps = speed_value * 1024
+                            except:
+                                pass
+                        
+                        # Convert to bytes
+                        multiplier = 1
+                        if unit == "KB":
+                            multiplier = 1024
+                        elif unit == "MB":
+                            multiplier = 1024 * 1024
+                        elif unit == "GB":
+                            multiplier = 1024 * 1024 * 1024
+                        
+                        current_bytes = int(current_value * multiplier)
+                        total_bytes = int(total_value * multiplier)
+                        
+                        return {
+                            'current_bytes': current_bytes,
+                            'total_bytes': total_bytes,
+                            'current_mb': current_value if unit == "MB" else current_value / 1024 if unit == "KB" else current_value * 1024,
+                            'total_mb': total_value if unit == "MB" else total_value / 1024 if unit == "KB" else total_value * 1024,
+                            'progress_percent': (current_bytes / total_bytes * 100) if total_bytes > 0 else 0,
+                            'speed_mbps': speed_mbps,
+                            'unit': unit
+                        }
+                    
+                    elif len(match.groups()) >= 7:  # Pattern 1
+                        percent = float(match.group(1))
+                        current_value = float(match.group(2))
+                        current_unit = match.group(3)
+                        total_value = float(match.group(4))
+                        total_unit = match.group(5)
+                        speed_value = float(match.group(6))
+                        speed_unit = match.group(7)
+                        
+                        # Convert to bytes
+                        def to_bytes(value, unit):
+                            if unit == "KB":
+                                return value * 1024
+                            elif unit == "MB":
+                                return value * 1024 * 1024
+                            elif unit == "GB":
+                                return value * 1024 * 1024 * 1024
+                            return value
+                        
+                        current_bytes = int(to_bytes(current_value, current_unit))
+                        total_bytes = int(to_bytes(total_value, total_unit))
+                        speed_mbps = speed_value
+                        if speed_unit == "KB":
+                            speed_mbps = speed_value / 1024
+                        elif speed_unit == "GB":
+                            speed_mbps = speed_value * 1024
+                        
+                        return {
+                            'current_bytes': current_bytes,
+                            'total_bytes': total_bytes,
+                            'current_mb': current_bytes / (1024 * 1024),
+                            'total_mb': total_bytes / (1024 * 1024),
+                            'progress_percent': percent,
+                            'speed_mbps': speed_mbps,
+                            'unit': total_unit
+                        }
+                        
+        except Exception as e:
+            pass
+        
+        return None
+    
+    def _parse_docker_download_line(self, line: str) -> Optional[Dict]:
+        """Parse Docker/pip download line to extract package info and size (legacy)"""
+        return self._parse_pip_download_line(line)
     
     def _parse_docker_progress_line(self, line: str, download_info: Dict) -> Optional[Dict]:
         """Parse Docker/pip progress bar line to extract current progress"""

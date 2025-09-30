@@ -148,27 +148,31 @@ def test_parsing_functions():
         "Downloading small-package-1.0.0-py3-none-any.whl (2.1 KB)",
     ]
     
-    print("📝 Testing download line parsing:")
+    print("📝 Testing pip download line parsing:")
     for line in test_download_lines:
-        result = tracker._parse_docker_download_line(line)
+        result = tracker._parse_pip_download_line(line)
         if result:
             print(f"   ✅ {result['package']}: {tracker._format_size(result['size_bytes'])}")
         else:
             print(f"   ❌ Failed to parse: {line}")
     
-    # Test progress line parsing
+    # Test progress line parsing - both pip and docker formats
     test_progress_lines = [
+        # Docker/unicode format
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 888.0/888.0 MB 2.8 MB/s eta 0:00:00",
         "━━━━━░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 356.8/888.0 MB 2.3 MB/s eta 0:03:52",
         "████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 15.2/37.7 MB 2.0 MB/s eta 0:00:11",
+        # pip format
+        "  50%|██████     | 450MB/900MB [00:30<00:30, 15.0MB/s]",
+        "  75%|███████████| 666MB/888MB [01:20<00:20, 12.5MB/s]",
     ]
     
     print("\n📊 Testing progress line parsing:")
     dummy_info = {'size_bytes': 888 * 1024 * 1024}
     for line in test_progress_lines:
-        result = tracker._parse_docker_progress_line(line, dummy_info)
+        result = tracker._parse_pip_progress_line(line, dummy_info)
         if result:
-            print(f"   ✅ Progress: {result['progress_percent']:.1f}% ({result['current_mb']:.1f}/{result['total_mb']:.1f} MB)")
+            print(f"   ✅ Progress: {result['progress_percent']:.1f}% ({result['current_mb']:.1f}/{result['total_mb']:.1f} MB) @ {result['speed_mbps']:.1f} MB/s")
         else:
             print(f"   ❌ Failed to parse: {line}")
 

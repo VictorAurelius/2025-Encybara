@@ -22,6 +22,13 @@
 # Chạy test với dữ liệu mô phỏng
 cd content-scoring-service
 python scripts/test-download-tracker.py
+
+# Test parser functions only (safe)
+python scripts/test-pip-tracking.py
+
+# Test actual pip tracking (downloads packages)
+python scripts/test-pip-tracking.py
+# Chọn 'y' khi được hỏi về actual pip install
 ```
 
 ### 3. Monitor Manual Downloads
@@ -112,7 +119,20 @@ chmod +x scripts/build-docker-with-monitoring.sh
 
 ### Test Parsing Functions
 ```bash
+# Test tất cả functions
 python scripts/test-download-tracker.py
+
+# Test riêng pip parsing
+python scripts/test-pip-tracking.py
+
+# Debug individual components
+python -c "
+from scripts.download_tracker import DownloadTracker
+tracker = DownloadTracker()
+line = 'Downloading torch-2.8.0-cp310-cp310-manylinux_2_28_x86_64.whl (888.0 MB)'
+result = tracker._parse_pip_download_line(line)
+print(f'Parsed: {result}')
+"
 ```
 
 ### Kiểm Tra Log Build
@@ -130,6 +150,18 @@ tail -f /tmp/docker-build-$(date +%Y%m%d)*.log
 2. **Chạy `--no-cache`** để đảm bảo tracking chính xác
 3. **Monitor logs** trong `/tmp/` để debug issues
 4. **Test với simulated data** trước khi build thật
+5. **Debug từng bước**:
+   ```bash
+   # Test parser functions trước
+   python scripts/test-pip-tracking.py
+   
+   # Test actual tracking
+   python scripts/download-tracker.py --requirements requirements-prod.txt --threshold 10
+   
+   # Cuối cùng test Docker build
+   ./scripts/build-docker-with-monitoring.sh
+   ```
+6. **Kiểm tra buffering issues**: Nếu không thấy real-time progress, có thể là do Python buffering. Script đã được cập nhật với `bufsize=0` và `sys.stdout.flush()`
 
 ## 📈 Performance Impact
 
