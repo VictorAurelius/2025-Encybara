@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   content-scoring-service:
     image: content-scoring-service:latest  # Sử dụng image đã build
@@ -38,3 +36,6 @@ volumes:
 networks:
   content-scoring-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
