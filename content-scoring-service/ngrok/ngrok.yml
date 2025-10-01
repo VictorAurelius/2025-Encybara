@@ -7,7 +7,7 @@ version: "2"
 # ----------------------------------------------------------------
 # Replace this with your authtoken from https://dashboard.ngrok.com/get-started/your-authtoken
 # Example: authtoken: 29a2b...
-authtoken: <YOUR_NGROK_AUTH_TOKEN_HERE>
+authtoken: 33RzjpvLWHRqcfUdoHqdM42am8J_413xRQLhDiAY5LZ51TyDB
 
 # ----------------------------------------------------------------
 # Tunnels Definition
@@ -19,8 +19,8 @@ tunnels:
     # Protocol to use (http, tcp, tls)
     proto: http
     # The address to forward traffic to.
-    # "content-scoring-service" is the service name in docker-compose.yml
-    # "5001" is the port the service is listening on inside the Docker network.
-    addr: content-scoring-service:5001
+    # Use host.docker.internal to connect to services on the host machine
+    # This works when content-scoring-service is running on host port 5001
+    addr: host.docker.internal:5001
     # Optional: If you have a paid Ngrok plan, you can use a static domain.
     # domain: your-static-domain.ngrok-free.app

@@ -500,15 +500,23 @@ Service sẽ sẵn sàng tại: http://localhost:5001
 
 ### 3. Chạy Service với Tunnel
 
-Sử dụng `profile` **`tunnel`** để khởi chạy cả `content-scoring-service` và `ngrok` service.
+**Quan trọng**: Cần chạy theo đúng thứ tự để tránh lỗi kết nối.
 
 ```bash
-# Chạy service và tunnel
+# Bước 1: Chạy content-scoring-service trước (để ngrok có thể kết nối)
+docker-compose up -d content-scoring-service
+
+# Bước 2: Đợi service khởi động (khoảng 30-60s), sau đó chạy ngrok
 docker-compose --profile tunnel up -d
 
-# Nếu muốn chạy cả monitoring và tunnel
+# Hoặc chạy tất cả cùng lúc (nếu đã build image trước đó)
+docker-compose --profile tunnel up -d
+
+# Với monitoring
 docker-compose --profile monitoring --profile tunnel up -d
 ```
+
+**Lưu ý**: Ngrok sẽ kết nối đến `content-scoring-service` qua `host.docker.internal:5001`, có nghĩa là service phải đang chạy và expose port 5001 ra host.
 
 ### 4. Lấy Public URL
 

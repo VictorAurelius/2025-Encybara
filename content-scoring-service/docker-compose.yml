@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   content-scoring-service:
     build:
@@ -112,8 +110,9 @@ services:
       - "--all"
       - "--config"
       - "/etc/ngrok.yml"
-    depends_on:
-      - content-scoring-service
+    # Add extra_hosts to allow ngrok to reach host services
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - content-scoring-network
     profiles:
