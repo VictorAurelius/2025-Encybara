@@ -1,28 +1,55 @@
 # Multi-stage Dockerfile with download tracking for Pronunciation Assessment Service
-FROM condaforge/mambaforge:latest as base
+FROM condaforge/mambaforge:latest AS base
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV CONDA_DEFAULT_ENV=aligner
 ENV PATH="/opt/conda/envs/aligner/bin:$PATH"
 
-# Install system dependencies with progress tracking
+# Set timezone to avoid interactive prompts
+ENV TZ=Asia/Ho_Chi_Minh
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies with retry logic and progress tracking
 RUN echo "[INSTALL] Installing system dependencies..." && \
-    apt-get update && apt-get install -y \
+    # Update package list with retry
+    for i in 1 2 3; do \
+    apt-get update && break || { \
+    echo "[INSTALL] Update attempt $i failed, retrying..."; \
+    sleep 5; \
+    }; \
+    done && \
+    # Install packages with retry and --fix-missing
+    for i in 1 2 3; do \
+    apt-get install -y --fix-missing \
+    tzdata \
     sox \
     libsox-fmt-all \
     ffmpeg \
     curl \
     pv \
-    && rm -rf /var/lib/apt/lists/* \
-    && echo "[INSTALL] ✓ System dependencies installed"
+    && break || { \
+    echo "[INSTALL] Install attempt $i failed, retrying..."; \
+    apt-get clean && \
+    apt-get update && \
+    sleep 10; \
+    }; \
+    done && \
+    # Configure timezone
+    ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata && \
+    # Clean up
+    rm -rf /var/lib/apt/lists/* && \
+    echo "[INSTALL] ✓ System dependencies installed"
 
 # Stage 2: Create conda environment with download tracking
-FROM base as conda-env
+FROM base AS conda-env
 
 # Create conda environment with MFA and dependencies
 RUN echo "[LARGE DOWNLOAD] Creating conda environment with MFA packages..." && \
     echo "[LARGE DOWNLOAD] This may take several minutes..." && \
+    for attempt in 1 2 3; do \
+    echo "[LARGE DOWNLOAD] Attempt $attempt/3 - Creating conda environment..." && \
     mamba create -n aligner -c conda-forge \
     montreal-forced-aligner \
     python=3.10 \
@@ -31,15 +58,18 @@ RUN echo "[LARGE DOWNLOAD] Creating conda environment with MFA packages..." && \
     numpy \
     scipy \
     flask \
-    soundfile \
+    pysoundfile \
     textgrid \
-    pympi-ling \
-    -y \
-    && mamba clean -afy \
-    && echo "[LARGE DOWNLOAD] ✓ Conda environment created successfully"
+    -y && break || \
+    (echo "[LARGE DOWNLOAD] Attempt $attempt failed, retrying in 30s..." && sleep 30); \
+    done && \
+    echo "[LARGE DOWNLOAD] Installing additional packages via pip..." && \
+    /opt/conda/envs/aligner/bin/pip install pympi-ling && \
+    mamba clean -afy && \
+    echo "[LARGE DOWNLOAD] ✓ Conda environment created successfully"
 
 # Stage 3: Application setup
-FROM conda-env as app-setup
+FROM conda-env AS app-setup
 
 # Activate the environment
 SHELL ["/bin/bash", "-c"]
@@ -63,7 +93,7 @@ RUN mkdir -p /app/mfa_data /app/temp /app/logs && \
     chmod 777 /app/mfa_data /app/temp /app/logs
 
 # Stage 4: Download MFA models with tracking
-FROM app-setup as model-download
+FROM app-setup AS model-download
 
 # Download MFA acoustic model with progress tracking
 RUN echo "[LARGE DOWNLOAD] Downloading MFA acoustic models..." && \
@@ -87,7 +117,7 @@ RUN echo "[LARGE DOWNLOAD] Downloading MFA acoustic models..." && \
     && echo "[LARGE DOWNLOAD] ✓ All MFA models downloaded successfully"
 
 # Stage 5: Final application image
-FROM model-download as final
+FROM model-download AS final
 
 # Copy application files
 COPY . /app/

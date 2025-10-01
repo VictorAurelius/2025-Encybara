@@ -60,6 +60,7 @@ MONITORING=false
 CACHING=false
 PROXY=false
 TUNNEL=false
+SIMPLE=false
 PROFILES=""
 
 while [[ $# -gt 0 ]]; do
@@ -92,6 +93,10 @@ while [[ $# -gt 0 ]]; do
             MONITORING=true
             CACHING=true
             PROXY=true
+            shift
+            ;;
+        --simple)
+            SIMPLE=true
             shift
             ;;
         --help)
@@ -237,8 +242,30 @@ if [ "$NO_CACHE" = true ]; then
     BUILD_ARGS="--no-cache"
 fi
 
-# Build the main service
-docker build $BUILD_ARGS -t pronunciation-assessment-service .
+# Handle simple Dockerfile option
+if [ "$SIMPLE" = true ]; then
+    print_status "Using simple Dockerfile for unreliable networks..."
+    cp Dockerfile Dockerfile.backup 2>/dev/null || true
+    cp Dockerfile.simple Dockerfile
+    BUILD_ARGS="$BUILD_ARGS --no-cache"
+fi
+
+# Set Docker build timeout environment variables
+export DOCKER_BUILDKIT=1
+export BUILDKIT_PROGRESS=plain
+
+# Build the main service with extended timeout
+print_status "Building with extended timeout (this may take 10-15 minutes)..."
+timeout 1800 docker build $BUILD_ARGS --build-arg BUILDKIT_INLINE_CACHE=1 -t pronunciation-assessment-service . || {
+    print_error "Docker build failed or timed out after 30 minutes"
+    exit 1
+}
+
+# Restore original Dockerfile if using simple version
+if [ "$SIMPLE" = true ] && [ -f "Dockerfile.backup" ]; then
+    print_status "Restoring original Dockerfile..."
+    mv Dockerfile.backup Dockerfile
+fi
 
 print_success "Docker image built successfully"
 
@@ -321,6 +348,11 @@ if [ "$TUNNEL" = true ]; then
     print_status "• Ngrok Web Interface: http://localhost:4041"
     print_warning "⚠️  Lưu ý: Cần cấu hình authtoken trong ngrok/ngrok.yml trước khi sử dụng tunnel!"
     print_status "   Xem public URL tại: http://localhost:4041"
+fi
+
+if [ "$SIMPLE" = true ]; then
+    print_warning "⚠️  Sử dụng simple Dockerfile - không có audio processing dependencies"
+    print_status "   Chỉ thích hợp cho development/testing với text endpoints"
 fi
 
 print_status "=========================================="

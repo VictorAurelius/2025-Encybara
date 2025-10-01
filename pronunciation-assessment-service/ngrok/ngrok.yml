@@ -1,6 +1,6 @@
 # Ngrok Configuration for Pronunciation Assessment Service
 version: "2"
-authtoken: # Add your ngrok authtoken here
+authtoken: 33RzjpvLWHRqcfUdoHqdM42am8J_413xRQLhDiAY5LZ51TyDB
 api:
   addr: localhost:4040
   web_addr: 0.0.0.0:4040
