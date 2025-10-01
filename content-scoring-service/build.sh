@@ -41,6 +41,7 @@ show_usage() {
     echo "  --monitoring     Build kèm theo monitoring stack (Prometheus + Grafana)"
     echo "  --caching        Build kèm theo Redis caching"
     echo "  --proxy          Build kèm theo NGINX reverse proxy"
+    echo "  --tunnel         Build kèm theo Ngrok tunnel (cho EC2-to-local connectivity)"
     echo "  --all            Build tất cả services (monitoring + caching + proxy)"
     echo "  --help           Hiển thị help này"
     echo ""
@@ -48,6 +49,7 @@ show_usage() {
     echo "  $0                          # Build service cơ bản"
     echo "  $0 --clean --no-cache       # Clean build từ đầu"
     echo "  $0 --monitoring             # Build với monitoring"
+    echo "  $0 --tunnel                 # Build với Ngrok tunnel"
     echo "  $0 --all                    # Build tất cả services"
 }
 
@@ -57,6 +59,7 @@ NO_CACHE=false
 MONITORING=false
 CACHING=false
 PROXY=false
+TUNNEL=false
 PROFILES=""
 
 while [[ $# -gt 0 ]]; do
@@ -79,6 +82,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --proxy)
             PROXY=true
+            shift
+            ;;
+        --tunnel)
+            TUNNEL=true
             shift
             ;;
         --all)
@@ -110,6 +117,10 @@ fi
 
 if [ "$PROXY" = true ]; then
     PROFILES="$PROFILES,proxy"
+fi
+
+if [ "$TUNNEL" = true ]; then
+    PROFILES="$PROFILES,tunnel"
 fi
 
 # Remove leading comma
@@ -283,7 +294,16 @@ if [ "$PROXY" = true ]; then
     print_status "• NGINX Proxy: http://localhost:80"
 fi
 
+if [ "$TUNNEL" = true ]; then
+    print_status "• Ngrok Web Interface: http://localhost:4040"
+    print_warning "⚠️  Lưu ý: Cần cấu hình authtoken trong ngrok/ngrok.yml trước khi sử dụng tunnel!"
+    print_status "   Xem public URL tại: http://localhost:4040"
+fi
+
 print_status "======================================"
+if [ "$TUNNEL" = true ]; then
+    print_status "To view tunnel logs: $COMPOSE_CMD logs -f ngrok"
+fi
 print_status "To view logs: $COMPOSE_CMD logs -f content-scoring-service"
 print_status "To stop services: $COMPOSE_CMD down"
 print_status "======================================"
