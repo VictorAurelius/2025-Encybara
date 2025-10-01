@@ -1,0 +1,28 @@
+# Ngrok Configuration for Pronunciation Assessment Service
+version: "2"
+authtoken: # Add your ngrok authtoken here
+api:
+  addr: localhost:4040
+  web_addr: 0.0.0.0:4040
+
+tunnels:
+  pronunciation-assessment:
+    addr: host.docker.internal:5000
+    proto: http
+    schemes: [https, http]
+    # Optional: custom subdomain (requires paid plan)
+    # subdomain: pronunciation-assessment
+    # Optional: custom domain (requires paid plan)
+    # hostname: pronunciation.yourdomain.com
+    inspect: true
+    # Request logging
+    log_level: info
+    # Health check endpoint
+    health_check_path: "/health"
+
+log_level: info
+log_format: logfmt
+log: stdout
+
+# Web interface configuration
+web_addr: 0.0.0.0:4040

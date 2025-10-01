@@ -16,7 +16,7 @@ This guide helps you run the Pronunciation Assessment Service locally without Do
 
 **Important**: Run all commands from the `pronunciation-assessment-service` directory (project root), not from the `scripts/` directory.
 
-### For Linux/macOS:
+### For Linux/macOS/Windows:
 ```bash
 # Navigate to project root (if not already there)
 cd pronunciation-assessment-service
@@ -31,34 +31,18 @@ cd pronunciation-assessment-service
 ./scripts/test-local.sh
 
 # 4. Stop the service
-./scripts/stop-local.sh
+# Just press Ctrl+C in the terminal running the service
 ```
 
-### For Windows:
-```cmd
-REM Navigate to project root (if not already there)
-cd pronunciation-assessment-service
-
-REM 1. Install dependencies
-scripts\install-deps.bat
-
-REM 2. Run the service
-scripts\run-local.bat
-
-REM 3. Test the service (in another terminal)
-scripts\test-local.bat
-
-REM 4. Stop the service
-scripts\stop-local.bat
-```
+**Note**: All scripts work on Windows Git Bash, Linux, and macOS.
 
 ## Available Scripts
 
 ### Installation Scripts
 - **`install-deps.sh`**: Sets up Python virtual environment and installs all dependencies
   - Creates `venv/` directory if it doesn't exist
-  - Installs packages from `requirements.txt`
-  - Handles cross-platform compatibility
+  - Installs packages from `requirements.txt` or `requirements-py313.txt` (Python 3.13)
+  - Handles cross-platform compatibility (Windows/Linux/macOS)
 
 ### Runtime Scripts
 - **`run-local.sh`**: Starts the Flask service locally
@@ -66,6 +50,7 @@ scripts\stop-local.bat
   - Sets Flask environment variables
   - Runs on `http://localhost:5000`
   - Shows startup logs and keeps running
+  - Works from both project root and scripts directory
 
 ### Testing Scripts
 - **`test-local.sh`**: Comprehensive service testing
@@ -73,12 +58,6 @@ scripts\stop-local.bat
   - Validates health check endpoint
   - Tests API endpoints
   - Provides detailed test results
-
-### Cleanup Scripts
-- **`stop-local.sh`**: Gracefully stops the running service
-  - Finds and terminates Flask process
-  - Cleans up port usage
-  - Provides stop confirmation
 
 ## Service Endpoints
 
