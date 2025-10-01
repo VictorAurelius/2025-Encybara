@@ -550,11 +550,10 @@ Khi bạn khởi chạy container `backend-app` trên EC2, hãy thêm cờ `-e` 
 NGROK_URL="https://random-string.ngrok-free.app"
 
 # Chạy container backend-app với biến môi trường
-docker run -d \
-  -p 8080:8080 \
-  -e CONTENT_SCORING_SERVICE_URL=${NGROK_URL} \
-  --name backend-app \
-  your-backend-app-image:latest
+docker run -d -p 8080:8080 \
+  -e CONTENT_SCORING_SERVICE_URL=https://dural-rozanne-inquisitorial.ngrok-free.dev \
+  --name backend-app your-backend-app-image:latest
+
 ```
 
 **Giải thích:**
