@@ -41,6 +41,9 @@ services:
       - springdoc.swagger-ui.display-request-duration=true
       # Fix for Docker/Container processor metrics NullPointerException
       - management.metrics.enable.processor=false
+      # Content Scoring Service URL (Ngrok tunnel)
+      - CONTENT_SCORING_SERVICE_URL=https://dural-rozanne-inquisitorial.ngrok-free.dev
+      - content-scoring.service.url=https://dural-rozanne-inquisitorial.ngrok-free.dev
     volumes:
       - upload_data:/app/uploads
     healthcheck:

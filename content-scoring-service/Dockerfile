@@ -104,8 +104,11 @@ RUN groupadd -r appuser && useradd -r -g appuser -m appuser
 WORKDIR /app
 
 # Create HuggingFace cache directory with proper permissions
-RUN mkdir -p /home/appuser/.cache/huggingface && \
-  chown -R appuser:appuser /home/appuser
+RUN mkdir -p /home/appuser/.cache/huggingface/transformers && \
+  mkdir -p /home/appuser/.cache/huggingface/sentence_transformers && \
+  mkdir -p /home/appuser/.cache/huggingface/hub && \
+  chown -R appuser:appuser /home/appuser/.cache && \
+  chmod -R 755 /home/appuser/.cache
 
 # Copy installed packages from builder stage
 COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
@@ -130,4 +133,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD curl -f http://localhost:5001/health || exit 1
 
 # Set the default command - use python module approach for better compatibility
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "5001"]
+# Clear any lock files before starting the service
+CMD ["sh", "-c", "find /home/appuser/.cache -name '*.lock' -delete 2>/dev/null || true && python -m uvicorn app.main:app --host 0.0.0.0 --port 5001"]

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   content-scoring-service:
     build:
@@ -95,6 +93,31 @@ services:
       - content-scoring-network
     profiles:
       - proxy
+
+  # Ngrok for exposing local service to the internet (optional)
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: content-scoring-ngrok
+    ports:
+      # Ngrok web interface for inspecting traffic
+      - "4040:4040"
+    volumes:
+      # Mount the ngrok config file
+      - ./ngrok/ngrok.yml:/etc/ngrok.yml
+    command:
+      # Start the tunnel defined in ngrok.yml
+      - "start"
+      - "--all"
+      - "--config"
+      - "/etc/ngrok.yml"
+    # Add extra_hosts to allow ngrok to reach host services
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - content-scoring-network
+    profiles:
+      # Use --profile tunnel to run this service
+      - tunnel
 
 volumes:
   grafana-storage:
