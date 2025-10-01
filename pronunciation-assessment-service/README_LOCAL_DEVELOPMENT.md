@@ -4,14 +4,23 @@
 This guide helps you run the Pronunciation Assessment Service locally without Docker for development purposes.
 
 ## Prerequisites
-- Python 3.8 or higher
+- Python 3.6 or higher (tested with 3.8+, supports 3.13)
 - pip (Python package installer)
 - curl (for testing)
 
+**Note**:
+- The scripts will automatically detect whether your Python is installed as `python` or `python3` command
+- For Python 3.13, compatible package versions are automatically selected
+
 ## Quick Start
+
+**Important**: Run all commands from the `pronunciation-assessment-service` directory (project root), not from the `scripts/` directory.
 
 ### For Linux/macOS:
 ```bash
+# Navigate to project root (if not already there)
+cd pronunciation-assessment-service
+
 # 1. Install dependencies
 ./scripts/install-deps.sh
 
@@ -23,6 +32,24 @@ This guide helps you run the Pronunciation Assessment Service locally without Do
 
 # 4. Stop the service
 ./scripts/stop-local.sh
+```
+
+### For Windows:
+```cmd
+REM Navigate to project root (if not already there)
+cd pronunciation-assessment-service
+
+REM 1. Install dependencies
+scripts\install-deps.bat
+
+REM 2. Run the service
+scripts\run-local.bat
+
+REM 3. Test the service (in another terminal)
+scripts\test-local.bat
+
+REM 4. Stop the service
+scripts\stop-local.bat
 ```
 
 ## Available Scripts
@@ -125,24 +152,94 @@ taskkill /PID <PID> /F  # Windows
 
 ### Virtual Environment Issues
 If you encounter virtual environment problems:
+
+**Linux/macOS:**
 ```bash
 # Remove and recreate
-rm -rf venv/  # Linux/macOS
-rmdir /s venv  # Windows
-
+rm -rf venv/
 # Reinstall
-./scripts/install-deps.sh  # Linux/macOS
-scripts\install-deps.bat  # Windows
+./scripts/install-deps.sh
+```
+
+**Windows:**
+```cmd
+# Remove and recreate
+rmdir /s venv
+# Reinstall
+scripts\install-deps.bat
+```
+
+**Git Bash on Windows:**
+```bash
+# Remove and recreate
+rm -rf venv/
+# Reinstall (Git Bash can run .sh files)
+./scripts/install-deps.sh
+```
+
+### Virtual Environment Activation Issues (Windows)
+If you see "venv/bin/activate: No such file or directory":
+- This is automatically handled by the updated scripts
+- Windows uses `venv/Scripts/activate` instead of `venv/bin/activate`
+- The scripts now detect the correct path automatically
+
+### Python Command Detection Issues
+If the script says "Python 3 is not installed" but you have Python:
+```bash
+# Check what Python commands are available
+python --version    # Should show Python 3.x.x
+python3 --version   # May or may not be available
+
+# If only 'python' is available (common on Windows), the script will auto-detect it
+# If you see version like "Python 3.13.7", you're all set
+```
+
+### Python 3.13 Compatibility Issues
+If you encounter `AttributeError: module 'pkgutil' has no attribute 'ImpImporter'`:
+- This is automatically handled by the install script
+- Python 3.13 uses `requirements-py313.txt` with compatible package versions
+- The script will automatically detect Python 3.13 and use the correct file
+
+**For manual installation:**
+```bash
+# Python 3.13 users
+pip install -r requirements-py313.txt
+
+# Other Python versions
+pip install -r requirements.txt
 ```
 
 ### Dependencies Issues
 If packages fail to install:
+
+**Basic dependency installation:**
 ```bash
 # Upgrade pip first
 python -m pip install --upgrade pip
 
 # Install dependencies manually
 pip install -r requirements.txt
+```
+
+**Setuptools/Build Backend Issues:**
+If you see errors like "Cannot import 'setuptools.build_meta'":
+```bash
+# Install/upgrade essential build tools
+pip install --upgrade pip setuptools wheel
+
+# Then try installing dependencies again
+pip install -r requirements.txt
+```
+
+**For corrupted virtual environment:**
+```bash
+# Remove and recreate virtual environment
+rm -rf venv/  # Linux/macOS
+rmdir /s venv  # Windows
+
+# Run install script again
+./scripts/install-deps.sh  # Linux/macOS
+scripts\install-deps.bat  # Windows
 ```
 
 ### Permission Issues (Linux/macOS)

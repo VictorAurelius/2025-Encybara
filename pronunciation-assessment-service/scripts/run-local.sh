@@ -68,7 +68,22 @@ fi
 
 # Activate virtual environment
 echo -e "${YELLOW}Activating virtual environment...${NC}"
-source $VENV_DIR/bin/activate
+
+# Detect the correct activation script path (Windows vs Linux/macOS)
+if [ -f "$VENV_DIR/Scripts/activate" ]; then
+    # Windows path
+    source $VENV_DIR/Scripts/activate
+elif [ -f "$VENV_DIR/bin/activate" ]; then
+    # Linux/macOS path
+    source $VENV_DIR/bin/activate
+else
+    echo -e "${RED}Error: Virtual environment activation script not found${NC}"
+    echo "Expected locations:"
+    echo "  Windows: $VENV_DIR/Scripts/activate"
+    echo "  Linux/macOS: $VENV_DIR/bin/activate"
+    echo "Please run: ${BLUE}./scripts/install-deps.sh${NC} first"
+    exit 1
+fi
 
 # Check if Flask is installed
 if ! python -c "import flask" 2>/dev/null; then
