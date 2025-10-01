@@ -64,7 +64,7 @@ RUN echo "[LARGE DOWNLOAD] Creating conda environment with MFA packages..." && \
     (echo "[LARGE DOWNLOAD] Attempt $attempt failed, retrying in 30s..." && sleep 30); \
     done && \
     echo "[LARGE DOWNLOAD] Installing additional packages via pip..." && \
-    /opt/conda/envs/aligner/bin/pip install pympi-ling && \
+    /opt/conda/envs/aligner/bin/pip install pympi-ling psutil && \
     mamba clean -afy && \
     echo "[LARGE DOWNLOAD] ✓ Conda environment created successfully"
 
