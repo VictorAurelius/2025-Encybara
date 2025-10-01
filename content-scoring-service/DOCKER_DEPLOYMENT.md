@@ -476,3 +476,89 @@ chmod +x build.sh
 Service sẽ sẵn sàng tại: http://localhost:5001
 
 **Liên hệ hỗ trợ:** Tạo issue trong repository hoặc liên hệ team development.
+
+---
+
+## 🌐 Exposing Service for Remote Development (EC2 to Local)
+
+Để cho phép một service chạy trên EC2 (hoặc bất kỳ môi trường remote nào) gọi đến `content-scoring-service` đang chạy trên máy local của bạn, chúng ta sử dụng Ngrok để tạo một "tunnel" an toàn.
+
+### 1. Yêu cầu
+
+- **Tài khoản Ngrok**: Đăng ký tài khoản tại [ngrok.com](https://ngrok.com/).
+- **Ngrok Authtoken**: Lấy authtoken từ dashboard của Ngrok.
+
+### 2. Cấu hình
+
+1.  Mở file `content-scoring-service/ngrok/ngrok.yml`.
+2.  Thay thế giá trị `<YOUR_NGROK_AUTH_TOKEN_HERE>` bằng authtoken của bạn.
+
+    ```yaml
+    # content-scoring-service/ngrok/ngrok.yml
+    authtoken: 29a2b... # Thay bằng token của bạn
+    ```
+
+### 3. Chạy Service với Tunnel
+
+Sử dụng `profile` **`tunnel`** để khởi chạy cả `content-scoring-service` và `ngrok` service.
+
+```bash
+# Chạy service và tunnel
+docker-compose --profile tunnel up -d
+
+# Nếu muốn chạy cả monitoring và tunnel
+docker-compose --profile monitoring --profile tunnel up -d
+```
+
+### 4. Lấy Public URL
+
+Sau khi container `ngrok` khởi động, bạn có thể lấy public URL theo hai cách:
+
+1.  **Qua Ngrok Web Interface**:
+    - Mở trình duyệt và truy cập `http://localhost:4040`.
+    - Bạn sẽ thấy giao diện của Ngrok hiển thị URL public (ví dụ: `https://random-string.ngrok-free.app`).
+
+2.  **Qua Docker Logs**:
+    ```bash
+    docker-compose logs ngrok
+    ```
+    Output sẽ chứa URL:
+    ```
+    ...
+    t=2025-10-01T05:00:00Z level=info msg="started tunnel" obj=tunnels name=content-scoring-api addr=http://content-scoring-service:5001 url=https://random-string.ngrok-free.app
+    ...
+    ```
+
+### 5. Sử dụng trên EC2
+
+Để `backend-app` trên EC2 có thể gọi đến `content-scoring-service` qua Ngrok URL mà không cần build lại image, chúng ta sẽ truyền URL này vào container thông qua **biến môi trường**.
+
+Khi bạn khởi chạy container `backend-app` trên EC2, hãy thêm cờ `-e` (hoặc `--env`) để set biến môi trường `CONTENT_SCORING_SERVICE_URL`.
+
+**Ví dụ lệnh `docker run` cho `backend-app` trên EC2:**
+
+```bash
+# Lấy URL từ Ngrok (ví dụ: https://random-string.ngrok-free.app)
+NGROK_URL="https://random-string.ngrok-free.app"
+
+# Chạy container backend-app với biến môi trường
+docker run -d \
+  -p 8080:8080 \
+  -e CONTENT_SCORING_SERVICE_URL=${NGROK_URL} \
+  --name backend-app \
+  your-backend-app-image:latest
+```
+
+**Giải thích:**
+- `-e CONTENT_SCORING_SERVICE_URL=${NGROK_URL}`: Lệnh này sẽ tạo một biến môi trường tên là `CONTENT_SCORING_SERVICE_URL` bên trong container.
+- Spring Boot sẽ tự động phát hiện biến môi trường này và sử dụng giá trị của nó để ghi đè lên cấu hình `content-scoring.service.url`.
+
+Với cách này, mỗi khi Ngrok URL thay đổi, bạn chỉ cần **khởi động lại container `backend-app`** với biến môi trường mới mà **không cần build lại image hay sửa code**.
+
+### 6. Dừng Tunnel
+
+Khi không cần sử dụng nữa, bạn có thể dừng các service trên máy local như bình thường:
+
+```bash
+docker-compose down
+```
