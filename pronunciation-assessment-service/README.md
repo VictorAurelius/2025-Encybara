@@ -28,6 +28,14 @@ A professional RESTful microservice for pronunciation assessment using Montreal 
 git clone <repository-url>
 cd pronunciation-assessment-service
 
+## ⚠️ IMPORTANT SAFETY NOTICE
+
+**Safe Docker Cleanup:** 
+- Script `./build.sh --clean` đã được cập nhật để CHỈ xóa containers và images của project này
+- KHÔNG ảnh hưởng đến các Docker projects khác (content-scoring-service, etc.)
+- Không chạy `docker system prune` để bảo vệ dữ liệu của các containers khác
+
+
 # Build Docker image (first build takes ~10-15 minutes)
 ./scripts/build.sh
 
@@ -363,3 +371,113 @@ For support and questions:
 - 🔍 Search existing issues or create a new one
 
 **Ready to assess pronunciation? Start with `./scripts/build.sh && ./scripts/run.sh` and begin testing!** 🎤✨
+
+## 🚀 Simple Build Option
+
+Cho những trường hợp network không ổn định hoặc Docker build thường xuyên bị timeout:
+
+### Dockerfile.simple
+- Không cài đặt audio processing dependencies phức tạp
+- Download packages nhỏ hơn và nhanh hơn
+- Thích hợp cho development/testing với text-based endpoints
+- Không hỗ trợ pronunciation assessment với audio files
+
+### Sử dụng Simple Build
+
+```bash
+# Build với simple Dockerfile
+./build.sh --simple
+
+# Kết hợp với các options khác
+./build.sh --simple --monitoring
+./build.sh --simple --clean --no-cache
+```
+
+### Khi nào sử dụng Simple Build
+
+✅ **Sử dụng khi:**
+- Network không ổn định, thường xuyên timeout
+- Chỉ cần test basic endpoints
+- Development với text-based features
+- Container size nhỏ gọn
+
+❌ **Không sử dụng khi:**
+- Cần xử lý audio files
+- Production environment
+- Cần full pronunciation assessment features
+
+
+## 🔧 Troubleshooting Docker Build Issues
+
+### 1. Conda Package Resolution Errors
+
+**Lỗi:** `pympi-ling does not exist` hoặc `soundfile does not exist`
+
+**Giải pháp:**
+```bash
+# Package names đã được sửa trong Dockerfile:
+# - soundfile -> pysoundfile (có sẵn trong conda-forge)
+# - pympi-ling -> install qua pip thay vì conda
+
+# Build với retry logic:
+./build.sh --clean --no-cache
+```
+
+### 2. Docker Build Timeout
+
+**Lỗi:** Build bị timeout sau 51 giây
+
+**Giải pháp:**
+```bash
+# Build script đã có extended timeout (30 phút):
+export DOCKER_BUILDKIT=1
+export BUILDKIT_PROGRESS=plain
+./build.sh --all
+
+# Hoặc manual build với timeout:
+timeout 1800 docker build --no-cache -t pronunciation-assessment-service .
+```
+
+### 3. Network Connection Issues
+
+**Lỗi:** Connection timeout khi download packages
+
+**Giải pháp:**
+```bash
+# Sử dụng simple Dockerfile (không có audio processing):
+./build.sh --simple
+
+# Hoặc retry build:
+for i in {1..3}; do
+    ./build.sh --clean && break
+    echo "Retry $i/3..."
+    sleep 30
+done
+```
+
+### 4. Memory Issues
+
+**Lỗi:** Out of memory during build
+
+**Giải pháp:**
+```bash
+# Tăng Docker memory limits trong Docker Desktop
+# Hoặc build với resource constraints:
+docker build --memory=4g --memory-swap=8g -t pronunciation-assessment-service .
+```
+
+### 5. Container Startup Issues
+
+**Lỗi:** Container exits immediately
+
+**Giải pháp:**
+```bash
+# Kiểm tra logs:
+docker logs pronunciation-assessment-service
+
+# Debug container:
+docker run -it --rm pronunciation-assessment-service:latest /bin/bash
+
+# Health check extended timeout (3 phút):
+# start_period: 180s trong docker-compose.yml
+```

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Content Scoring Service - Build Script
+# Pronunciation Assessment Service - Build Script
 # Script để build tất cả container với một câu lệnh
 
 set -e  # Exit on any error
@@ -31,7 +31,7 @@ print_error() {
 
 # Function to show usage
 show_usage() {
-    echo "Content Scoring Service - Build Script"
+    echo "Pronunciation Assessment Service - Build Script"
     echo ""
     echo "Usage: $0 [OPTIONS]"
     echo ""
@@ -60,6 +60,7 @@ MONITORING=false
 CACHING=false
 PROXY=false
 TUNNEL=false
+SIMPLE=false
 PROFILES=""
 
 while [[ $# -gt 0 ]]; do
@@ -94,6 +95,10 @@ while [[ $# -gt 0 ]]; do
             PROXY=true
             shift
             ;;
+        --simple)
+            SIMPLE=true
+            shift
+            ;;
         --help)
             show_usage
             exit 0
@@ -126,9 +131,9 @@ fi
 # Remove leading comma
 PROFILES=${PROFILES#,}
 
-print_status "======================================"
-print_status "Content Scoring Service - Build Script"
-print_status "======================================"
+print_status "=========================================="
+print_status "Pronunciation Assessment Service - Build Script"
+print_status "=========================================="
 
 # Check if Docker is running
 if ! docker info > /dev/null 2>&1; then
@@ -158,11 +163,11 @@ if [ "$CLEAN" = true ]; then
     $COMPOSE_CMD down --volumes --remove-orphans || true
     
     # Remove ONLY this project's images (more specific)
-    docker images | grep "^content-scoring-service " | awk '{print $3}' | xargs -r docker rmi -f || true
+    docker images | grep "^pronunciation-assessment-service " | awk '{print $3}' | xargs -r docker rmi -f || true
     
     # WARNING: Do NOT run system prune as it affects other projects
     print_warning "⚠️  Skipping system prune to avoid affecting other Docker projects"
-    print_status "Only removed content-scoring-service images and containers"
+    print_status "Only removed pronunciation-assessment-service images and containers"
     
     print_success "Safe cleanup completed"
 fi
@@ -170,6 +175,7 @@ fi
 # Create necessary directories
 print_status "Creating necessary directories..."
 mkdir -p logs
+mkdir -p temp
 mkdir -p nginx
 mkdir -p monitoring
 
@@ -182,25 +188,47 @@ events {
 }
 
 http {
-    upstream content_scoring {
-        server content-scoring-service:5001;
+    upstream pronunciation_assessment {
+        server pronunciation-assessment-service:5000;
     }
 
     server {
         listen 80;
         server_name localhost;
 
+        # Increase client max body size for audio file uploads
+        client_max_body_size 10M;
+
         location / {
-            proxy_pass http://content_scoring;
+            proxy_pass http://pronunciation_assessment;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
+            
+            # Increase timeouts for audio processing
+            proxy_connect_timeout 60s;
+            proxy_send_timeout 60s;
+            proxy_read_timeout 60s;
         }
 
         location /health {
-            proxy_pass http://content_scoring/health;
+            proxy_pass http://pronunciation_assessment/health;
             access_log off;
+        }
+
+        # API endpoints for pronunciation assessment
+        location /api/ {
+            proxy_pass http://pronunciation_assessment/api/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            
+            # Extended timeouts for processing
+            proxy_connect_timeout 120s;
+            proxy_send_timeout 120s;
+            proxy_read_timeout 120s;
         }
     }
 }
@@ -215,8 +243,30 @@ if [ "$NO_CACHE" = true ]; then
     BUILD_ARGS="--no-cache"
 fi
 
-# Build the main service
-docker build $BUILD_ARGS -t content-scoring-service .
+# Handle simple Dockerfile option
+if [ "$SIMPLE" = true ]; then
+    print_status "Using simple Dockerfile for unreliable networks..."
+    cp Dockerfile Dockerfile.backup 2>/dev/null || true
+    cp Dockerfile.simple Dockerfile
+    BUILD_ARGS="$BUILD_ARGS --no-cache"
+fi
+
+# Set Docker build timeout environment variables
+export DOCKER_BUILDKIT=1
+export BUILDKIT_PROGRESS=plain
+
+# Build the main service with extended timeout
+print_status "Building with extended timeout (this may take 10-15 minutes)..."
+timeout 1800 docker build $BUILD_ARGS --build-arg BUILDKIT_INLINE_CACHE=1 -t pronunciation-assessment-service . || {
+    print_error "Docker build failed or timed out after 30 minutes"
+    exit 1
+}
+
+# Restore original Dockerfile if using simple version
+if [ "$SIMPLE" = true ] && [ -f "Dockerfile.backup" ]; then
+    print_status "Restoring original Dockerfile..."
+    mv Dockerfile.backup Dockerfile
+fi
 
 print_success "Docker image built successfully"
 
@@ -241,7 +291,7 @@ if [ -n "$COMPOSE_ARGS" ]; then
     if ! $COMPOSE_CMD up -d $COMPOSE_ARGS 2>/dev/null; then
         print_warning "Profiles not supported in this docker-compose version"
         print_status "Starting basic service only..."
-        $COMPOSE_CMD up -d content-scoring-service
+        $COMPOSE_CMD up -d pronunciation-assessment-service
     fi
 else
     $COMPOSE_CMD up -d
@@ -255,7 +305,7 @@ sleep 10
 
 # Check if the main service is healthy
 for i in {1..30}; do
-    if curl -s http://localhost:5001/health > /dev/null 2>&1; then
+    if curl -s http://localhost:5000/health > /dev/null 2>&1; then
         print_success "Service is healthy and ready!"
         break
     else
@@ -273,38 +323,43 @@ print_status "Service Status:"
 $COMPOSE_CMD ps
 
 # Show useful URLs
-print_status "======================================"
+print_status "=========================================="
 print_success "Build completed successfully!"
-print_status "======================================"
+print_status "=========================================="
 print_status "Available endpoints:"
-print_status "• Main Service: http://localhost:5001"
-print_status "• API Documentation: http://localhost:5001/docs"
-print_status "• Health Check: http://localhost:5001/health"
-print_status "• Metrics: http://localhost:5001/metrics"
+print_status "• Main Service: http://localhost:5000"
+print_status "• Health Check: http://localhost:5000/health"
+print_status "• Service Info: http://localhost:5000/api/info"
+print_status "• Pronunciation Assessment: http://localhost:5000/api/pronunciation-assessment"
 
 if [ "$MONITORING" = true ]; then
-    print_status "• Prometheus: http://localhost:9090"
-    print_status "• Grafana: http://localhost:3100 (admin/admin123)"
+    print_status "• Prometheus: http://localhost:9091"
+    print_status "• Grafana: http://localhost:3101 (admin/admin123)"
 fi
 
 if [ "$CACHING" = true ]; then
-    print_status "• Redis: localhost:6379"
+    print_status "• Redis: localhost:6380"
 fi
 
 if [ "$PROXY" = true ]; then
-    print_status "• NGINX Proxy: http://localhost:80"
+    print_status "• NGINX Proxy: http://localhost:81"
 fi
 
 if [ "$TUNNEL" = true ]; then
-    print_status "• Ngrok Web Interface: http://localhost:4040"
+    print_status "• Ngrok Web Interface: http://localhost:4041"
     print_warning "⚠️  Lưu ý: Cần cấu hình authtoken trong ngrok/ngrok.yml trước khi sử dụng tunnel!"
-    print_status "   Xem public URL tại: http://localhost:4040"
+    print_status "   Xem public URL tại: http://localhost:4041"
 fi
 
-print_status "======================================"
+if [ "$SIMPLE" = true ]; then
+    print_warning "⚠️  Sử dụng simple Dockerfile - không có audio processing dependencies"
+    print_status "   Chỉ thích hợp cho development/testing với text endpoints"
+fi
+
+print_status "=========================================="
 if [ "$TUNNEL" = true ]; then
     print_status "To view tunnel logs: $COMPOSE_CMD logs -f ngrok"
 fi
-print_status "To view logs: $COMPOSE_CMD logs -f content-scoring-service"
+print_status "To view logs: $COMPOSE_CMD logs -f pronunciation-assessment-service"
 print_status "To stop services: $COMPOSE_CMD down"
-print_status "======================================"
+print_status "=========================================="
