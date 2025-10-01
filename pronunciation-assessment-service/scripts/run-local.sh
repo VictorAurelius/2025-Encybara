@@ -49,20 +49,33 @@ if lsof -Pi :$PORT -sTCP:LISTEN -t >/dev/null 2>&1; then
     fi
 fi
 
-# Check if required files exist
-if [ ! -f "app.py" ]; then
+# Check if required files exist - look in current directory and parent directory
+if [ -f "app.py" ]; then
+    # Running from project root
+    APP_DIR="."
+elif [ -f "../app.py" ]; then
+    # Running from scripts directory
+    APP_DIR=".."
+else
     echo -e "${RED}Error: app.py not found${NC}"
-    echo -e "${YELLOW}Please make sure you're in the pronunciation-assessment-service directory${NC}"
+    echo -e "${YELLOW}Please run from either:${NC}"
+    echo "  - pronunciation-assessment-service/ directory: ${BLUE}./scripts/run-local.sh${NC}"
+    echo "  - pronunciation-assessment-service/scripts/ directory: ${BLUE}./run-local.sh${NC}"
+    echo ""
+    echo "Current directory: $(pwd)"
     exit 1
 fi
 
-if [ ! -f "gop_scorer.py" ]; then
-    echo -e "${RED}Error: gop_scorer.py not found${NC}"
+echo -e "${GREEN}✓ Found app.py in: $APP_DIR${NC}"
+
+# Check other required files
+if [ ! -f "$APP_DIR/gop_scorer.py" ]; then
+    echo -e "${RED}Error: gop_scorer.py not found in $APP_DIR${NC}"
     exit 1
 fi
 
-if [ ! -f "utils.py" ]; then
-    echo -e "${RED}Error: utils.py not found${NC}"
+if [ ! -f "$APP_DIR/utils.py" ]; then
+    echo -e "${RED}Error: utils.py not found in $APP_DIR${NC}"
     exit 1
 fi
 
@@ -101,8 +114,14 @@ echo -e "${GREEN}✓ Environment configured${NC}"
 echo -e "${YELLOW}Starting Flask development server...${NC}"
 echo ""
 
-# Create temp directory if it doesn't exist
-mkdir -p temp
+# Create temp directory if it doesn't exist (in the app directory)
+mkdir -p "$APP_DIR/temp"
+
+# Change to the app directory if needed
+if [ "$APP_DIR" != "." ]; then
+    echo -e "${YELLOW}Changing to app directory: $APP_DIR${NC}"
+    cd "$APP_DIR"
+fi
 
 # Start the application
 echo -e "${BLUE}Starting $SERVICE_NAME...${NC}"
