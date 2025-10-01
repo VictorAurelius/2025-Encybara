@@ -154,16 +154,17 @@ print_status "Using compose command: $COMPOSE_CMD"
 if [ "$CLEAN" = true ]; then
     print_status "Cleaning up old containers and images..."
     
-    # Stop and remove containers
+    # Stop and remove ONLY this project's containers
     $COMPOSE_CMD down --volumes --remove-orphans || true
     
-    # Remove images
-    docker images | grep content-scoring | awk '{print $3}' | xargs -r docker rmi -f || true
+    # Remove ONLY this project's images (more specific)
+    docker images | grep "^content-scoring-service " | awk '{print $3}' | xargs -r docker rmi -f || true
     
-    # Prune unused resources
-    docker system prune -f
+    # WARNING: Do NOT run system prune as it affects other projects
+    print_warning "⚠️  Skipping system prune to avoid affecting other Docker projects"
+    print_status "Only removed content-scoring-service images and containers"
     
-    print_success "Cleanup completed"
+    print_success "Safe cleanup completed"
 fi
 
 # Create necessary directories

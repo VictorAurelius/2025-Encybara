@@ -16,6 +16,14 @@ A professional, production-ready microservice for scoring content similarity bet
 - **CI/CD pipeline** with GitHub Actions
 - **Security scanning** with bandit and safety
 
+## ⚠️ IMPORTANT SAFETY NOTICE
+
+**Safe Docker Cleanup:** 
+- Script `./build.sh --clean` đã được cập nhật để CHỈ xóa containers và images của project này
+- KHÔNG ảnh hưởng đến các Docker projects khác (pronunciation-assessment-service, etc.)
+- Không chạy `docker system prune` để bảo vệ dữ liệu của các containers khác
+
+
 ## 📋 API Specification
 
 ### Endpoints

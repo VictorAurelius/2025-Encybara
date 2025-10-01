@@ -28,6 +28,14 @@ A professional RESTful microservice for pronunciation assessment using Montreal 
 git clone <repository-url>
 cd pronunciation-assessment-service
 
+## ⚠️ IMPORTANT SAFETY NOTICE
+
+**Safe Docker Cleanup:** 
+- Script `./build.sh --clean` đã được cập nhật để CHỈ xóa containers và images của project này
+- KHÔNG ảnh hưởng đến các Docker projects khác (content-scoring-service, etc.)
+- Không chạy `docker system prune` để bảo vệ dữ liệu của các containers khác
+
+
 # Build Docker image (first build takes ~10-15 minutes)
 ./scripts/build.sh
 
