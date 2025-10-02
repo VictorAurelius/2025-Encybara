@@ -17,7 +17,6 @@ const UserProfilePage: React.FC = () => {
     const [scheduleData, setScheduleData] = useState<any>([]);
 
     useEffect(() => {
-        console.log("Fetched User ID:", userId);
 
         if (!userId) {
             console.error("User ID is undefined or empty");
@@ -37,7 +36,6 @@ const UserProfilePage: React.FC = () => {
                 });
                 const userData = await userResponse.json();
 
-                console.log("User Data:", userData);
                 const getCourses = await fetch(`${API_BASE_URL}/api/v1/enrollments/user/${userId}?page=1&size=100`, {
                     method: 'GET',
                     headers: {
@@ -62,7 +60,6 @@ const UserProfilePage: React.FC = () => {
                     })
                 );
 
-                console.log("Course Details:", courseDetails);
 
                 const reviewData = await fetch(`${API_BASE_URL}/api/v1/reviews/user/${userId}?page=1&size=100`, {
                     method: 'GET',

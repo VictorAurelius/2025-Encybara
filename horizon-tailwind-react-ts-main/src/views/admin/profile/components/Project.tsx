@@ -17,8 +17,8 @@ type RowObj = {
   recomLevel: number;
   courseType: string;
   speciField: string;
-  courseStatus: string; // Thuộc tính mới
-  group: string; // Thuộc tính mới
+  courseStatus: string; 
+  group: string; 
 };
 
 interface ProjectProps {
@@ -49,13 +49,11 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
 
   const fetchCourses = async () => {
     try {
-      // Xây dựng query params
       const queryParams = new URLSearchParams({
         page: currentPage.toString(),
         size: pageSize.toString()
       });
 
-      // Thêm filter params từ state vào URL
       if (selectedFilters.diffLevel) queryParams.append('diffLevel', selectedFilters.diffLevel);
       if (selectedFilters.courseType) queryParams.append('courseType', selectedFilters.courseType);
       if (selectedFilters.group) queryParams.append('group', selectedFilters.group);
@@ -418,7 +416,7 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
                               : "bg-red-100 text-red-800 hover:bg-red-200"
                             }`}
                           title={`Click to change to ${course.courseStatus === "PUBLIC" ? "Private" : "Public"}`}
-                        >
+                        > 
                           {course.courseStatus}
                         </button>
                       </td>
