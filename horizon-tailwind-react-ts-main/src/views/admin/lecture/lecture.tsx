@@ -1,23 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Button, List, Upload, message, Popconfirm, Select, Card, Tooltip } from "antd";
-import { UploadOutlined, DeleteOutlined, FileTextOutlined, InfoCircleOutlined } from "@ant-design/icons";
-import lectureService, { Course, Lesson, LectureMaterial } from "../../../service/lecture.service";
+import { Button, Table, Upload, message, Popconfirm, Modal, Spin, Tooltip, Space } from "antd";
+import { UploadOutlined, DeleteOutlined, FileTextOutlined, EyeOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import lectureService, { Course, LectureMaterial } from "../../../service/lecture.service";
 import { useCache } from "../../../hooks/useCache";
-
+import { useAuth } from "hooks/useAuth";
+import 'styles/markdown.css';
 const LecturePage: React.FC = () => {
+  const { token } = useAuth();
+  const { getCacheStats } = useCache();
   const [materials, setMaterials] = useState<LectureMaterial[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedLesson, setSelectedLesson] = useState<number | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
-  const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
-  const [lessons, setLessons] = useState<Lesson[]>([]); // Add lessons state
-  const { clearCache, getCacheStats } = useCache();
-
-  // Fetch courses and their lessons
+  const [markdownVisible, setMarkdownVisible] = useState<boolean>(false);
+  const [markdownContent, setMarkdownContent] = useState<string>('');
+  const [markdownLoading, setMarkdownLoading] = useState<boolean>(false);
+  const [currentFileName, setCurrentFileName] = useState<string>('');
+  // Fetch courses with materials
   const fetchCourses = async () => {
     try {
       setLoading(true);
-      const coursesData = await lectureService.getCourses();
+      console.log('📋 Fetching courses with materials...');
+      const coursesData = await lectureService.getCoursesWithMaterials(token);
       setCourses(coursesData);
     } catch (error) {
       console.error('Error fetching courses:', error);
@@ -27,26 +30,23 @@ const LecturePage: React.FC = () => {
     }
   };
 
-  // Fetch lessons for selected course
-  const fetchLessons = async (lessonIds: number[]) => {
+  // Fetch all materials from all courses
+  const fetchMaterials = async () => {
     try {
       setLoading(true);
-      const lessonsData = await lectureService.getLessonsByIds(lessonIds);
-      setLessons(lessonsData);
-    } catch (error) {
-      console.error('Error fetching lessons:', error);
-      message.error('Failed to fetch lessons');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Fetch materials for selected lesson
-  const fetchMaterials = async (lessonId: number) => {
-    try {
-      setLoading(true);
-      const materials = await lectureService.getMaterialsByLessonId(lessonId);
-      setMaterials(materials);
+      console.log('📄 Fetching all materials from all courses...');
+      
+      const allMaterials: LectureMaterial[] = [];
+      for (const course of courses) {
+        try {
+          const courseMaterials = await lectureService.getMaterialsByCourseId(course.id, token);
+          allMaterials.push(...courseMaterials);
+        } catch (error) {
+          console.error(`Error fetching materials for course ${course.id}:`, error);
+        }
+      }
+      
+      setMaterials(allMaterials);
     } catch (error) {
       console.error("Error fetching materials:", error);
       message.error("Failed to fetch lecture materials");
@@ -55,29 +55,41 @@ const LecturePage: React.FC = () => {
     }
   };
 
-  const handleUpload = async (file: File) => {
-    if (!selectedLesson) {
-      message.error('Please select a lesson first');
-      return false;
-    }
-
+  // Read markdown content
+  const readMarkdown = async (materLink: string, fileName: string) => {
     try {
-      await lectureService.uploadMaterial(file, selectedLesson);
+      setMarkdownLoading(true);
+      setCurrentFileName(fileName);
+      console.log(`� Reading markdown content from: ${materLink}`);
+      const htmlContent = await lectureService.renderMarkdownToHtml(materLink);
+      setMarkdownContent(htmlContent);
+      setMarkdownVisible(true);
+    } catch (error) {
+      console.error('Error reading markdown:', error);
+      message.error('Failed to read markdown file');
+    } finally {
+      setMarkdownLoading(false);
+    }
+  };
+
+  const handleUpload = async (file: File, courseId: number) => {
+    try {
+      console.log(`📤 Uploading file for course ${courseId}`);
+      await lectureService.uploadMaterial(file, courseId);
       message.success("Lecture uploaded successfully");
-      fetchMaterials(selectedLesson);
+      fetchMaterials();
     } catch (error) {
       console.error("Error uploading lecture:", error);
       message.error("Failed to upload lecture");
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (!selectedLesson) return;
-    
+  const handleDelete = async (id: number, courseId: number) => {
     try {
-      await lectureService.deleteMaterial(id);
+      console.log(`🗑️ Deleting material ${id} from course ${courseId}`);
+      await lectureService.deleteMaterial(id, courseId);
       message.success("Lecture deleted successfully");
-      fetchMaterials(selectedLesson);
+      fetchMaterials();
     } catch (error) {
       console.error("Error deleting lecture:", error);
       message.error("Failed to delete lecture");
@@ -89,34 +101,12 @@ const LecturePage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedLesson) {
-      fetchMaterials(selectedLesson);
+    if (courses.length > 0) {
+      fetchMaterials();
     }
-  }, [selectedLesson]);
+  }, [courses]);
 
-  const handleCourseChange = (value: number) => {
-    setSelectedCourse(value);
-    setSelectedLesson(null);
-    setMaterials([]);
-    
-    // Fetch lessons for selected course
-    const selectedCourseData = courses.find((c: Course) => c.id === value);
-    if (selectedCourseData?.lessonIds) {
-      fetchLessons(selectedCourseData.lessonIds);
-    } else {
-      setLessons([]);
-    }
-  };
-
-  const handleLessonChange = (value: number) => {
-    setSelectedLesson(value);
-  };
-
-  console.log('Available courses:', courses);
-  console.log('Available lessons:', lessons);
-  console.log('Selected course ID:', selectedCourse);
-  console.log('Selected lesson ID:', selectedLesson);
-  console.log('Cache stats:', getCacheStats());
+      console.log('Available courses:', courses);
   
   return (
     <div className="mt-3 grid h-full">
@@ -126,115 +116,138 @@ const LecturePage: React.FC = () => {
             <h4 className="text-xl font-bold text-navy-700">Lecture Materials</h4>
             
             <div className="flex gap-2">
-              <Tooltip title={`Cache: ${getCacheStats().size} items`}>
-                <Button 
-                  icon={<InfoCircleOutlined />}
-                  size="small"
-                  onClick={() => {
-                    const stats = getCacheStats();
-                    message.info(`Cache contains ${stats.size} items: ${stats.keys.join(', ')}`);
-                  }}
-                >
-                  Cache Info
-                </Button>
-              </Tooltip>
-              
-              <Button 
-                size="small"
-                onClick={() => {
-                  clearCache();
-                  message.success('Cache cleared successfully');
-                }}
-                type="dashed"
-              >
-                Clear Cache
-              </Button>
+              <div className="text-sm text-gray-500 flex items-center mr-4">
+                Total: {materials.length} materials from {courses.length} courses
+              </div>
             </div>
-          </div>
-          
-          <div className="flex gap-4 mb-4">
-            <Select<number>
-              className="w-64"
-              placeholder="Select Course"
-              value={selectedCourse}
-              onChange={handleCourseChange}
-              showSearch
-              optionFilterProp="children"
-            >
-              {courses.map((course: Course) => (
-                <Select.Option key={course.id} value={course.id}>
-                  {course.name || `Course ${course.id}`}
-                </Select.Option>
-              ))}
-            </Select>
-
-            <Select<number>
-              className="w-64"
-              placeholder="Select Lesson"
-              value={selectedLesson}
-              onChange={handleLessonChange}
-              disabled={!selectedCourse}
-              showSearch
-              optionFilterProp="children"
-            >
-              {lessons.map((lesson: Lesson) => (
-                <Select.Option key={lesson.id} value={lesson.id}>
-                  {lesson.name || `Lesson ${lesson.id}`}
-                </Select.Option>
-              ))}
-            </Select>
-
-            <Upload
-              accept=".md"
-              showUploadList={false}
-              beforeUpload={(file: File) => {
-                handleUpload(file);
-                return false;
-              }}
-              disabled={!selectedLesson}
-            >
-              <Button 
-                icon={<UploadOutlined />}
-                disabled={!selectedLesson}
-                className="bg-blue-500 text-white hover:bg-blue-600"
-              >
-                Upload Lecture
-              </Button>
-            </Upload>
           </div>
         </div>
 
-        <List<LectureMaterial>
+        <Table<LectureMaterial>
           loading={loading}
           dataSource={materials}
-          grid={{ gutter: 16, column: 3 }}
-          locale={{ emptyText: selectedLesson ? 'No lectures found' : 'Please select a lesson' }}
-          renderItem={(item: LectureMaterial) => (
-            <List.Item key={item.id}>
-              <Card
-                hoverable
-                className="shadow-sm"
-                actions={[
+          rowKey="id"
+          locale={{ emptyText: 'No lecture materials found' }}
+          pagination={{
+            pageSize: 10,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`
+          }}
+          columns={[
+            {
+              title: 'Course',
+              key: 'course',
+              width: '25%',
+              render: (_, record: LectureMaterial) => {
+                // For now, we'll use the first course as default since we don't have courseId in LectureMaterial
+                const course = courses[0] || { id: 1, name: 'Default Course' };
+                return (
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
+                    <span className="font-medium text-navy-700">
+                      {course?.name || `Course ${course.id}`}
+                    </span>
+                  </div>
+                );
+              }
+            },
+            {
+              title: 'Material',
+              dataIndex: 'materLink',
+              key: 'material',
+              width: '45%',
+              render: (materLink: string, record: LectureMaterial) => (
+                <div>
+                  <div className="flex items-center mb-1">
+                    <FileTextOutlined className="text-blue-500 mr-2" />
+                    <span className="font-medium text-gray-800">
+                      {lectureService.getFileName(materLink)}
+                    </span>
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    <Tooltip title={new Date(record.uploadedAt).toLocaleString()}>
+                      Uploaded: {new Date(record.uploadedAt).toLocaleDateString()}
+                    </Tooltip>
+                  </div>
+                </div>
+              )
+            },
+            {
+              title: 'Actions',
+              key: 'actions',
+              width: '30%',
+              render: (_, record: LectureMaterial) => (
+                <Space size="middle">
+                  <Upload
+                    accept=".md"
+                    showUploadList={false}
+                    beforeUpload={(file: File) => {
+                      const defaultCourseId = courses[0]?.id || 1;
+                      handleUpload(file, defaultCourseId);
+                      return false;
+                    }}
+                  >
+                    <Button 
+                      icon={<UploadOutlined />}
+                      size="small"
+                      className="bg-green-500 text-white hover:bg-green-600 border-green-500"
+                    >
+                      Upload
+                    </Button>
+                  </Upload>
+                  
+                  <Button
+                    type="primary"
+                    icon={<EyeOutlined />}
+                    size="small"
+                    onClick={() => readMarkdown(record.materLink, lectureService.getFileName(record.materLink))}
+                    loading={markdownLoading}
+                  >
+                    View
+                  </Button>
+                  
                   <Popconfirm
-                    key="delete"
                     title="Are you sure you want to delete this lecture?"
-                    onConfirm={() => handleDelete(item.id)}
+                    onConfirm={() => {
+                      const defaultCourseId = courses[0]?.id || 1;
+                      handleDelete(record.id, defaultCourseId);
+                    }}
                     okText="Yes"
                     cancelText="No"
                   >
-                    <DeleteOutlined />
+                    <Button 
+                      danger 
+                      icon={<DeleteOutlined />} 
+                      size="small"
+                    >
+                      Delete
+                    </Button>
                   </Popconfirm>
-                ]}
-              >
-                <Card.Meta
-                  avatar={<FileTextOutlined className="text-2xl text-blue-500" />}
-                  title={lectureService.getFileName(item.materLink)}
-                  description={`Uploaded: ${new Date(item.uploadedAt).toLocaleString()}`}
-                />
-              </Card>
-            </List.Item>
-          )}
+                </Space>
+              )
+            }
+          ]}
         />
+
+        {/* Markdown Viewer Modal */}
+        <Modal
+          title={`Viewing: ${currentFileName}`}
+          open={markdownVisible}
+          onCancel={() => setMarkdownVisible(false)}
+          footer={null}
+          width="80%"
+          style={{ top: 20 }}
+        >
+          <Spin spinning={markdownLoading}>
+            <div className="max-h-[70vh] overflow-y-auto">
+              <div 
+                className="markdown-content"
+                dangerouslySetInnerHTML={{ __html: markdownContent }}
+              />
+            </div>
+          </Spin>
+        </Modal>
       </div>
     </div>
   );
