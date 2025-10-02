@@ -330,4 +330,16 @@ public class LearningMaterialController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/courses-with-materials")
+    @ApiMessage("Get all course IDs that have learning materials")
+    public ResponseEntity<RestResponse<List<Long>>> getCoursesWithLearningMaterials() {
+        List<Long> courseIds = fileService.getCoursesWithLearningMaterials();
+
+        RestResponse<List<Long>> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Course IDs with learning materials retrieved successfully");
+        response.setData(courseIds);
+        return ResponseEntity.ok(response);
+    }
+
 }

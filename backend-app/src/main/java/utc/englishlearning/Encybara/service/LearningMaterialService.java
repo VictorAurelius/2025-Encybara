@@ -246,6 +246,10 @@ public class LearningMaterialService {
         return learningMaterialRepository.findByCourse(course);
     }
 
+    public List<Long> getCoursesWithLearningMaterials() {
+        return learningMaterialRepository.findDistinctCourseIds();
+    }
+
     public Path getFilePath(String relativePath) {
         return Paths.get(baseUri, relativePath);
     }
