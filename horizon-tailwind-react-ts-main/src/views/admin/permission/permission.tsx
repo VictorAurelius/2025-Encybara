@@ -58,7 +58,7 @@ const PermissionPage = () => {
         reloadTable(); // Gọi lại khi component mount hoặc khi currentPage/pageSize thay đổi
     }, [currentPage, pageSize]);
 
-    const tableRef = useRef<ActionType>();
+    const tableRef = useRef<ActionType>(null);
 
     const handleDeletePermission = async (id: number | undefined) => {
         if (!id) return;

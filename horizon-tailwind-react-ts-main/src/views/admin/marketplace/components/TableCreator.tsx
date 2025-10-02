@@ -26,7 +26,7 @@ interface TableTopCreatorsProps {
 const TableTopCreators: React.FC<TableTopCreatorsProps> = ({ tableData, reloadTable }) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [dataInit, setDataInit] = useState<IAdmin | null>(null);
-  const tableRef = useRef<ActionType>();
+  const tableRef = useRef<ActionType>(null);
   const handleEdit = (row: IAdmin) => {
     setDataInit(row);
     setOpenModal(true);

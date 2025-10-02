@@ -14,7 +14,7 @@ import { App } from 'antd';
 
 const RolePage = () => {
     const { message, notification } = App.useApp();
-    const tableRef = useRef<ActionType>();
+    const tableRef = useRef<ActionType>(null);
 
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [dataInit, setDataInit] = useState<IRole | null>(null);
