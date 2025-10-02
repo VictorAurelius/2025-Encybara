@@ -1,4 +1,4 @@
-package main.java.utc.englishlearning.Encybara.controller;
+package utc.englishlearning.Encybara.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
