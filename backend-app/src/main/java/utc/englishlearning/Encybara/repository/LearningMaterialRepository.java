@@ -22,4 +22,8 @@ public interface LearningMaterialRepository extends JpaRepository<Learning_Mater
     // Phương thức để lấy tất cả courseId có learning materials
     @Query("SELECT DISTINCT lm.course.id FROM Learning_Material lm WHERE lm.course IS NOT NULL")
     List<Long> findDistinctCourseIds();
+
+    // Phương thức để lấy thông tin course (id và name) có learning materials
+    @Query("SELECT DISTINCT lm.course FROM Learning_Material lm WHERE lm.course IS NOT NULL")
+    List<Course> findDistinctCoursesWithMaterials();
 }
