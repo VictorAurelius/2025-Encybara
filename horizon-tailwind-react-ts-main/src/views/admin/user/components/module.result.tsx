@@ -56,9 +56,6 @@ const ResultModal: React.FC<ResultModalProps> = ({
                         key={result.id}
                     >
                         <div className="flex justify-between items-center mb-2">
-                            <Tag color="purple" className="text-base">
-                                Attempt #{index + 1}
-                            </Tag>
                             <Text type="secondary">ID: {result.id}</Text>
                         </div>
 

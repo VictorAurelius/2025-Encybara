@@ -2,9 +2,9 @@ import { Lesson } from "./LessonList";
 import { FooterToolbar, ModalForm, ProCard, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Col, Form, Row, message, notification } from "antd";
 import { useEffect, useState } from "react";
-import { API_BASE_URL } from "service/api.config";
 import { CheckSquareOutlined } from "@ant-design/icons";
 import { useAuth } from "hooks/useAuth";
+import lessonService from "../../../../service/lesson.service";
 
 interface IProps {
     openModal: boolean;
@@ -34,30 +34,26 @@ const ModuleLesson = (props: IProps) => {
 
     useEffect(() => {
         const fetchQuestions = async () => {
+            if (!listLesson?.skillType) return;
+            
             try {
-                const response = await fetch(`${API_BASE_URL}/api/v1/questions?page=1&size=1000`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-                const data = await response.json();
-                const filteredQuestions = data.data.content
-                    .filter((q: any) => q.skillType === listLesson?.skillType)
-                    .map((q: any) => ({
-                        label: q.quesContent,
-                        value: q.id,
-
-                    }));
-                setQuestions(filteredQuestions);
+                console.log(`❓ Fetching questions for skill ${listLesson.skillType}...`);
+                const questionsData = await lessonService.getQuestionsBySkillType(listLesson.skillType);
+                
+                const formattedQuestions = questionsData.map((q: any) => ({
+                    label: q.quesContent,
+                    value: q.id,
+                }));
+                
+                setQuestions(formattedQuestions);
             } catch (error) {
                 console.error("Error fetching questions:", error);
+                message.error("Failed to fetch questions");
             }
         };
 
         fetchQuestions();
-    }, [token, selectedQuestionIds]);
+    }, [listLesson?.skillType]);
 
     const handleReset = async () => {
         form.resetFields();
@@ -69,108 +65,54 @@ const ModuleLesson = (props: IProps) => {
         const addedIds = newSelectedIds.filter(id => !selectedQuestionIds.includes(id));
         const removedIds = selectedQuestionIds.filter(id => !newSelectedIds.includes(id));
 
-        if (addedIds.length > 0) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/v1/lessons/${listLesson?.id}/questions`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ questionIds: addedIds }),
-                });
+        if (!listLesson?.id) return;
 
-                if (response.ok) {
-                    message.success("Add question successfully");
-                } else {
-                    const data = await response.json();
-                    message.error(`Add question failed: ${data.message}`);
-                }
-            } catch (error) {
-                console.error("Error adding question:", error);
-                message.error("Add question failed");
+        try {
+            if (addedIds.length > 0) {
+                console.log(`➕ Adding questions ${addedIds} to lesson ${listLesson.id}`);
+                await lessonService.addQuestionsToLesson(listLesson.id, addedIds);
+                message.success("Questions added successfully");
             }
-        }
 
-        if (removedIds.length > 0) {
-            try {
+            if (removedIds.length > 0) {
+                console.log(`⟖ Removing questions ${removedIds} from lesson ${listLesson.id}`);
                 for (const questionId of removedIds) {
-                    const response = await fetch(`${API_BASE_URL}/api/v1/lessons/${listLesson?.id}/questions`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ questionId }),
-                    });
-
-                    if (response.ok) {
-                        message.success(`Delete question ${questionId} successfully`);
-                    } else {
-                        const data = await response.json();
-                        message.error(`Delete question ${questionId} failed: ${data.message}`);
-                    }
+                    await lessonService.removeQuestionFromLesson(listLesson.id, questionId);
                 }
-            } catch (error) {
-                console.error("Error removing question:", error);
-                message.error("Delete question failed");
+                message.success(`Questions removed successfully`);
             }
-        }
 
-        setSelectedQuestionIds(newSelectedIds);
+            setSelectedQuestionIds(newSelectedIds);
+        } catch (error) {
+            console.error("Error updating questions:", error);
+            message.error("Failed to update questions");
+        }
     };
     const submitLesson = async (values: any) => {
-        const { name, skillType, questionIds } = values;
-        const lesson = {
-            name,
-            skillType
-        }
-        console.log("lesson", lesson);
-        if (listLesson?.id) {
-            const res = await fetch(`${API_BASE_URL}/api/v1/lessons/${listLesson.id}`, {
-                method: "PUT",
-                body: JSON.stringify(lesson),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-            });
-
-            const data = await res.json();
-            if (res.ok) {
-                message.success("Update lesson successfully");
-                handleReset();
-                reloadTable();
+        const { name, skillType } = values;
+        const lesson = { name, skillType };
+        
+        try {
+            if (listLesson?.id) {
+                console.log(`🔄 Updating lesson ${listLesson.id}`);
+                await lessonService.updateLesson(listLesson.id, lesson);
+                message.success("Lesson updated successfully");
             } else {
-                notification.error({
-                    message: 'An error occurred',
-                    description: data.message
-                });
+                console.log('🆕 Creating new lesson');
+                await lessonService.createLesson(lesson);
+                message.success("Lesson created successfully");
             }
-        } else {
-            const res = await fetch(`${API_BASE_URL}/api/v1/lessons`, {
-                method: "POST",
-                body: JSON.stringify(lesson),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+            
+            handleReset();
+            reloadTable();
+        } catch (error) {
+            console.error("Error submitting lesson:", error);
+            notification.error({
+                message: 'An error occurred',
+                description: 'Failed to save lesson'
             });
-
-            const data = await res.json();
-            if (res.ok) {
-                message.success("Create lesson successfully");
-                handleReset();
-                reloadTable();
-            } else {
-                notification.error({
-                    message: 'An error occurred',
-                    description: data.message
-                });
-            }
         }
-
-    }
+    };
     return (
         <>
             <ModalForm

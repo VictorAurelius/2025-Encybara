@@ -15,7 +15,6 @@ const LecturePage: React.FC = () => {
   const [markdownContent, setMarkdownContent] = useState<string>('');
   const [markdownLoading, setMarkdownLoading] = useState<boolean>(false);
   const [currentFileName, setCurrentFileName] = useState<string>('');
-
   // Fetch courses with materials
   const fetchCourses = async () => {
     try {

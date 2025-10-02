@@ -22,7 +22,7 @@ export interface IAdmin {
 
 interface IRoleOption {
     label: string;
-    value: string;
+    value: number; // Change to number to match backend
 }
 
 interface IProps {
@@ -45,8 +45,14 @@ const ModalAdmin = (props: IProps) => {
                 ...dataInit,
                 role: { label: dataInit.role?.name, value: dataInit.role?.id }
             });
+            
+            // Check if form received the values
+            setTimeout(() => {
+                console.log('Form role value after set:', form.getFieldValue('role'));
+            }, 100);
         }
     }, [dataInit, form]);
+    
     const submitAdmin = async (valuesForm: any) => {
         const { name, email, password, field, role } = valuesForm;
         if (dataInit?.id) {
@@ -112,9 +118,7 @@ const ModalAdmin = (props: IProps) => {
     }
 
     const handleReset = async () => {
-        console.log("form1:", form.getFieldsValue());
         form.resetFields();
-        console.log("form2:", form.getFieldsValue());
         setDataInit(null);
         setRoles([]);
         setOpenModal(false);
@@ -124,14 +128,12 @@ const ModalAdmin = (props: IProps) => {
     async function fetchRoleList(name: string): Promise<IRoleOption[]> {
         const res = await fetch(`${API_BASE_URL}/api/v1/roles`);
         const data = await res.json();
-        console.log("data", data);
         if (data) {
-
             const list = data.result;
             const temp = list.map((item: any) => {
                 return {
                     label: item.name as string,
-                    value: item.id as string
+                    value: item.id // Keep as number to match dataInit.role.id
                 }
             })
             return temp;
@@ -210,16 +212,13 @@ const ModalAdmin = (props: IProps) => {
 
                         >
                             <DebounceSelect
-                                allowClear
-                                showSearch
-                                defaultValue={roles}
-                                value={roles}
-                                placeholder="Select role"
-                                fetchOptions={fetchRoleList}
-                                onChange={(newValue: any) => {
-                                    setRoles(newValue as IRoleOption[]);
-                                }}
-                                style={{ width: '100%' }}
+                            allowClear
+                            showSearch
+                            value={form.getFieldValue('role')}
+                            placeholder="Select role"
+                            fetchOptions={fetchRoleList}
+                            onChange={newValue => form.setFieldsValue({ role: newValue })}
+                            style={{ width: '100%' }}
                             />
                         </ProForm.Item>
 

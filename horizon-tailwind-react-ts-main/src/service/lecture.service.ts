@@ -2,7 +2,6 @@ import ApiService from './api.service';
 import { globalCache } from './cache.service';
 import { API_BASE_URL } from './api.config';
 import { marked } from 'marked';
-
 export interface Course {
   id: number;
   name: string;
@@ -53,8 +52,7 @@ class LectureService {
       
       // Cache for 10 minutes
       globalCache.set(cacheKey, courses, 10 * 60 * 1000);
-      console.log('📦 Courses with materials cached');
-      
+      console.log('📦 Courses with materials cached');    
       return courses;
     } catch (error) {
       console.error('Error fetching courses with materials:', error);
@@ -181,7 +179,6 @@ class LectureService {
       
       // Invalidate related caches
       this.invalidateMaterialsCache(courseId);
-      
       return response.data;
     } catch (error) {
       console.error('Error uploading material:', error);
@@ -193,7 +190,6 @@ class LectureService {
     try {
       console.log(`🗑️ Deleting material ${id}`);
       await this.apiService.delete(`/api/v1/material/${id}`);
-      
       // Invalidate related caches
       this.invalidateMaterialsCache(courseId);
       

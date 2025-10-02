@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "hooks/useAuth";
 import { ModalForm, ProFormSelect, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Row, Col, message } from "antd";
-import { API_BASE_URL } from "service/api.config";
+import profileService from "../../../../service/profile.service";
 
 interface EditCourseProps {
     courseId: number;
@@ -28,19 +28,11 @@ const EditCourse: React.FC<EditCourseProps> = ({ courseId, onClose, onSuccess })
         const fetchCourse = async () => {
             try {
                 if (courseId) {
-                    const response = await fetch(`${API_BASE_URL}/api/v1/courses/${courseId}`, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                        },
-                    });
-                    if (!response.ok) {
-                        throw new Error("Failed to fetch course data");
-                    }
-                    const data = await response.json();
-                    setCourseData(data.data);
-                }
-                else {
+                    console.log(`📋 Fetching course ${courseId} details...`);
+                    const course = await profileService.getCourseById(courseId);
+                    setCourseData(course);
+                } else {
+                    console.log('🆕 Setting up for new course creation');
                     setCourseData({
                         name: "",
                         intro: "",
@@ -49,58 +41,38 @@ const EditCourse: React.FC<EditCourseProps> = ({ courseId, onClose, onSuccess })
                         courseType: "",
                         speciField: "",
                         group: ""
-                    })
-
+                    });
                 }
             } catch (error) {
                 console.error("Error fetching course data:", error);
                 setError("Failed to fetch course data");
+                message.error("Failed to fetch course data");
             } finally {
                 setLoading(false);
             }
         };
 
         fetchCourse();
-    }, [courseId, token]);
+    }, [courseId]);
 
     const handleSubmit = async (values: any) => {
         try {
             if (courseId) {
-                const response = await fetch(`${API_BASE_URL}/api/v1/courses/${courseId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    body: JSON.stringify(values),
-                });
-                if (!response.ok) {
-                    throw new Error("Failed to update course");
-                }
-
+                console.log(`🔄 Updating course ${courseId}`);
+                await profileService.updateCourse(courseId, values);
                 message.success("Course updated successfully!");
-                onSuccess();
-                onClose();
             } else {
-                const response = await fetch(`${API_BASE_URL}/api/v1/courses`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    body: JSON.stringify(values),
-                });
-                if (!response.ok) {
-                    throw new Error("Failed to update course");
-                }
-
-                message.success("Course updated successfully!");
-                onSuccess();
-                onClose();
+                console.log('🆕 Creating new course');
+                await profileService.createCourse(values);
+                message.success("Course created successfully!");
             }
+            
+            onSuccess();
+            onClose();
         } catch (error) {
-            console.error("Error updating course:", error);
-            setError("Failed to update course");
+            console.error("Error saving course:", error);
+            message.error("Failed to save course");
+            setError("Failed to save course");
         }
     };
 

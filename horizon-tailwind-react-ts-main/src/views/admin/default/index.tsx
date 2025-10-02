@@ -95,12 +95,6 @@ const Dashboard = () => {
           subtitle={questionCount.toString()}
           onClick={() => navigator('/admin/question')}
         />
-        <Widget
-          icon={<MdBarChart className="h-7 w-7" />}
-          title={"Total number of specializations"}
-          subtitle={"4"}
-        />
-
       </div>
 
       <div className="mt-0 grid grid-cols-2 gap-5 w-full">

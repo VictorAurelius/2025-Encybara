@@ -72,7 +72,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, courses, reviews, sched
             }
 
             const data = await res.json();
-            console.log("data:", data.data.content);
             setSelectedLessonResults(data.data.content);
             setIsResultModalOpen(true);
         } catch (error) {
@@ -106,11 +105,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, courses, reviews, sched
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Lấy courseIds từ cả reviews và schedules
                 const courseIdsFromReviews = reviews ? reviews.map(review => review.courseId) : [];
                 const courseIdsFromSchedules = schedules ? schedules.map(schedule => schedule.courseId) : [];
 
-                // Gộp và loại bỏ các courseId trùng lặp
                 const allCourseIds = [...new Set([...courseIdsFromReviews, ...courseIdsFromSchedules])];
 
                 if (allCourseIds.length > 0) {
@@ -201,12 +198,11 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, courses, reviews, sched
                     </Card>
                     <Card title={"Schedule"} style={{ height: 300, width: 250 }}>
                         <div className="space-y-2 overflow-auto max-h-[220px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                            {schedules.length === 0 && (
+                                <div className="text-center text-gray-500">No schedules available</div>
+                            )}
                             {schedules.map((schedule) => (
                                 <div key={schedule.id} className="p-3 bg-gray-50 rounded">
-                                    {/* Course Name */}
-
-
-                                    {/* Schedule Type & Time */}
                                     <div className="text-gray-600">
                                         <div className="font-semibold">
                                             {schedule.isDaily ? "Daily" : "Weekly"}
@@ -292,7 +288,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, courses, reviews, sched
                             grid={{ gutter: 16, column: 2 }}
                             dataSource={lessons}
                             renderItem={lesson => (
-                                <List.Item>
+                                <List.Item >
                                     <Card
                                         title={<span className="font-semibold text-lg">{lesson.name}</span>}
                                         className="hover:shadow-lg transition-shadow duration-300"
@@ -314,7 +310,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, courses, reviews, sched
                                             padding: '16px',
                                         }}
                                     >
-                                        <div className="flex flex-col h-full">
+                                        <div className="flex flex-col h-full justify-between align-center items-center">
                                             {/* Skill Type */}
                                             <div className="mb-3">
                                                 <span className="inline-block px-3 py-1 text-sm rounded-full bg-blue-50 text-blue-600">
