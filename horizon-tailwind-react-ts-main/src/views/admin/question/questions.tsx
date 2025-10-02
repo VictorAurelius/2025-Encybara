@@ -1,17 +1,20 @@
 import DataTable from "../permission/components/data.table";
-import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined, UploadOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined, UploadOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { ActionType, ProColumns } from '@ant-design/pro-components';
-import { Button, Popconfirm, Space, Dropdown, Input } from "antd";
+import { Button, Popconfirm, Space, Dropdown, Input, Tooltip } from "antd";
 import { useState, useRef, useEffect } from 'react';
 import ModalQuestion from "./components/module.question";
-import { API_BASE_URL } from "service/api.config";
 import { IQuestion } from "./components/module.question";
 import ModalUpload from "./components/module.upload";
 import { App } from 'antd';
 import Access from "../access";
+import questionService from "../../../service/question.service";
+import { useCache } from "../../../hooks/useCache";
+import { API_BASE_URL } from "service/api.config";
 
 
 const QuestionPage = () => {
+    const { getCacheStats } = useCache();
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [openModalUpload, setOpenModalUpload] = useState<boolean>(false);
     const [dataInit, setDataInit] = useState<IQuestion | null>(null);
@@ -34,41 +37,28 @@ const QuestionPage = () => {
     const reloadTable = async () => {
         setLoading(true);
         try {
-            // Xây dựng query params
-            const queryParams = new URLSearchParams({
-                page: currentPage.toString(),
-                size: pageSize.toString(),
-                point: '10'
-            });
-
-            // Thêm filter params từ state vào URL
-            if (selectedFilters.quesType) queryParams.append('quesType', selectedFilters.quesType);
-            if (selectedFilters.skillType) queryParams.append('skillType', selectedFilters.skillType);
-            if (selectedFilters.keyword) queryParams.append('keyword', selectedFilters.keyword);
-
-            const res = await fetch(`${API_BASE_URL}/api/v1/questions?${queryParams}`);
-            const data = await res.json();
-            const resLesson = await fetch(`${API_BASE_URL}/api/v1/lessons`);
-            const dataLesson = await resLesson.json();
-            const questionLessonMap: { [key: number]: Array<{ id: number, name: string }> } = {};
-            dataLesson.data.content.forEach((lesson: any) => {
-                if (lesson.questionIds && Array.isArray(lesson.questionIds)) {
-                    lesson.questionIds.forEach((qId: number) => {
-                        if (!questionLessonMap[qId]) {
-                            questionLessonMap[qId] = [];
-                        }
-                        questionLessonMap[qId].push({
-                            id: lesson.id,
-                            name: lesson.name
-                        });
-                    });
-                }
-            });
+            console.log('❓ Fetching questions and lesson map...');
+            
+            // Fetch questions with filters and pagination
+            const questionsData = await questionService.getQuestions(
+                {
+                    quesType: selectedFilters.quesType,
+                    skillType: selectedFilters.skillType,
+                    keyword: selectedFilters.keyword,
+                    point: 10
+                },
+                { page: currentPage, size: pageSize }
+            );
+            
+            // Fetch question-lesson mapping
+            const questionLessonMap = await questionService.getQuestionLessonMap();
+            
             setLessonMap(questionLessonMap);
-            setDataSource(data.data.content);
-            setTotal(data.data.totalPages * 10);
+            setDataSource(questionsData.content);
+            setTotal(questionsData.totalPages * pageSize);
         } catch (error) {
             console.error("Error fetching data:", error);
+            message.error("Failed to fetch questions");
         } finally {
             setLoading(false);
         }
@@ -80,9 +70,14 @@ const QuestionPage = () => {
 
     useEffect(() => {
         const fetchLessons = async () => {
-            const res = await fetch(`${API_BASE_URL}/api/v1/lessons`);
-            const data = await res.json();
-            setLessonList(data.data.content);
+            try {
+                console.log('📚 Fetching lessons list...');
+                const lessons = await questionService.getAllLessons();
+                setLessonList(lessons);
+            } catch (error) {
+                console.error("Error fetching lessons:", error);
+                message.error("Failed to fetch lessons");
+            }
         };
         fetchLessons();
     }, []);
@@ -95,32 +90,21 @@ const QuestionPage = () => {
         if (!id) return;
 
         try {
-            const res = await fetch(`${API_BASE_URL}/api/v1/questions/${id}`, {
-                method: 'DELETE',
-            });
-
-            if (res.ok) {
-                message.success('Delete question successfully');
-                reloadTable();
-            } else {
-                const errorData = await res.json();
-                notification.error({
-                    message: 'An error occurred',
-                    description: errorData.error || 'Cannot delete question'
-                });
-            }
+            console.log(`🗑️ Deleting question ${id}`);
+            await questionService.deleteQuestion(id);
+            message.success('Question deleted successfully');
+            reloadTable();
         } catch (error) {
-            notification.error({
-                message: 'Network error',
-                description: 'Cannot connect to server'
-            });
+            console.error('Error deleting question:', error);
+            message.error('Failed to delete question');
         }
-        console.log("delete");
-    }
+    };
 
     const fetchUploadData = async (questionId: number) => {
         try {
             console.log("Fetching data for questionId:", questionId);
+            // This would need to be implemented in questionService if needed
+            // For now keeping the direct API call as it's specific to material management
             const res = await fetch(`${API_BASE_URL}/api/v1/material/questions/${questionId}`,
                 {
                     method: 'GET',
@@ -128,27 +112,37 @@ const QuestionPage = () => {
                         'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
                         'Content-Type': 'application/json',
                     },
-                }
-            );
-            const data = await res.json();
-            if (res.ok) {
-                setUploadData(data.data);
-                console.log("Upload data fetched:", data.data);
-                return data.data;
-            } else {
-                notification.success({
-                    message: 'No data found'
                 });
-                return null;
+            if (res.ok) {
+                const data = await res.json();
+                setUploadData(data);
+                setQuesID(questionId);
+                setOpenModalUpload(true);
             }
         } catch (error) {
-            notification.error({
-                message: 'Network error',
-                description: 'Cannot connect to server'
-            });
-            return null;
+            console.error('Error fetching upload data:', error);
         }
     };
+
+    const handleDeleteSelected = async () => {
+        if (selectedRowKeys.length === 0) {
+            message.warning('Please select questions to delete');
+            return;
+        }
+
+        try {
+            console.log(`🗑️ Deleting selected questions: ${selectedRowKeys}`);
+            const questionIds = selectedRowKeys.map(key => Number(key));
+            await questionService.deleteMultipleQuestions(questionIds);
+            message.success(`Deleted ${questionIds.length} questions successfully`);
+            setSelectedRowKeys([]);
+            reloadTable();
+        } catch (error) {
+            console.error('Error deleting selected questions:', error);
+            message.error('Failed to delete selected questions');
+        }
+    };
+           
 
     const handleQuestionLesson = async (lessonId: number, action: 'add' | 'remove', questionId?: number) => {
         try {
@@ -439,7 +433,7 @@ const QuestionPage = () => {
                         console.log('Selected keys:', keys);
                     }
                 }}
-                toolBarRender={(_action, _rows): any => [
+                toolBarRender={() => [
                     <Button
                         key="add"
                         icon={<PlusOutlined />}
