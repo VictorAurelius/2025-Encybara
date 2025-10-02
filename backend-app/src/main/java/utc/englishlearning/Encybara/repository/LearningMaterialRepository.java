@@ -1,6 +1,7 @@
 package utc.englishlearning.Encybara.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import utc.englishlearning.Encybara.domain.Course;
 import utc.englishlearning.Encybara.domain.Learning_Material;
 import utc.englishlearning.Encybara.domain.Lesson;
@@ -17,4 +18,8 @@ public interface LearningMaterialRepository extends JpaRepository<Learning_Mater
     List<Learning_Material> findByQuestion(Question question);
 
     List<Learning_Material> findByCourse(Course course);
+
+    // Phương thức để lấy tất cả courseId có learning materials
+    @Query("SELECT DISTINCT lm.course.id FROM Learning_Material lm WHERE lm.course IS NOT NULL")
+    List<Long> findDistinctCourseIds();
 }
