@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Button, List, Upload, message, Popconfirm, Select, Card } from "antd";
-import { UploadOutlined, DeleteOutlined, FileTextOutlined } from "@ant-design/icons";
+import { Button, List, Upload, message, Popconfirm, Select, Card, Tooltip } from "antd";
+import { UploadOutlined, DeleteOutlined, FileTextOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import lectureService, { Course, Lesson, LectureMaterial } from "../../../service/lecture.service";
+import { useCache } from "../../../hooks/useCache";
 
 const LecturePage: React.FC = () => {
   const [materials, setMaterials] = useState<LectureMaterial[]>([]);
@@ -10,6 +11,7 @@ const LecturePage: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]); // Add lessons state
+  const { clearCache, getCacheStats } = useCache();
 
   // Fetch courses and their lessons
   const fetchCourses = async () => {
@@ -110,15 +112,45 @@ const LecturePage: React.FC = () => {
     setSelectedLesson(value);
   };
 
-      console.log('Available courses:', courses);
+  console.log('Available courses:', courses);
   console.log('Available lessons:', lessons);
   console.log('Selected course ID:', selectedCourse);
   console.log('Selected lesson ID:', selectedLesson);
+  console.log('Cache stats:', getCacheStats());
+  
   return (
     <div className="mt-3 grid h-full">
       <div className="w-full rounded-[20px] bg-white p-4">
         <div className="mb-6">
-          <h4 className="text-xl font-bold text-navy-700 mb-4">Lecture Materials</h4>
+          <div className="flex justify-between items-center mb-4">
+            <h4 className="text-xl font-bold text-navy-700">Lecture Materials</h4>
+            
+            <div className="flex gap-2">
+              <Tooltip title={`Cache: ${getCacheStats().size} items`}>
+                <Button 
+                  icon={<InfoCircleOutlined />}
+                  size="small"
+                  onClick={() => {
+                    const stats = getCacheStats();
+                    message.info(`Cache contains ${stats.size} items: ${stats.keys.join(', ')}`);
+                  }}
+                >
+                  Cache Info
+                </Button>
+              </Tooltip>
+              
+              <Button 
+                size="small"
+                onClick={() => {
+                  clearCache();
+                  message.success('Cache cleared successfully');
+                }}
+                type="dashed"
+              >
+                Clear Cache
+              </Button>
+            </div>
+          </div>
           
           <div className="flex gap-4 mb-4">
             <Select<number>

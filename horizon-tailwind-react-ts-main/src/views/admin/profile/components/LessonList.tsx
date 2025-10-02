@@ -1,10 +1,11 @@
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { useAuth } from "hooks/useAuth";
 import React, { useEffect, useRef, useState } from "react";
-import { API_BASE_URL } from "service/api.config";
-import { Button, message, Popconfirm } from "antd";
+import { Button, message, Popconfirm, Tooltip } from "antd";
 import ModuleLesson from "./module.lesson";
 import { notification } from "antd";
+import lessonService from "../../../../service/lesson.service";
+import { useCache } from "../../../../hooks/useCache";
 
 export interface Lesson {
     id: number;
@@ -21,6 +22,7 @@ interface LessonListProps {
 
 const LessonList: React.FC<LessonListProps> = ({ lessons, courseId, fetchLessons }) => {
     const { token } = useAuth();
+    const { getCacheStats } = useCache();
     const [openModal, setOpenModal] = useState(false);
     const [selectedLessons, setSelectedLessons] = useState<number[]>([]);
     const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
@@ -28,85 +30,43 @@ const LessonList: React.FC<LessonListProps> = ({ lessons, courseId, fetchLessons
         // Fetch lessons in the course and set them as selected
         const fetchCourseLessons = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/v1/courses/${courseId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    const courseLessonIds = data.data.lessonIds;
-                    console.log("courseLessonIds:", courseLessonIds);
-                    console.log("lessonIds", courseLessonIds.lessonIds);
-                    setSelectedLessons(courseLessonIds);
-                }
+                console.log(`📋 Fetching course ${courseId} lesson details...`);
+                const courseDetails = await lessonService.getCourseDetails(courseId);
+                console.log("courseLessonIds:", courseDetails);
+                setSelectedLessons(courseDetails.lessonIds || []);
             } catch (error) {
                 console.error("Error fetching course lessons:", error);
+                message.error("Failed to fetch course lessons");
             }
         };
 
         fetchCourseLessons();
-    }, [courseId, token]);
+    }, [courseId]);
     const toggleSelectLesson = async (lessonId: number) => {
         const isSelected = selectedLessons.includes(lessonId);
 
-        if (isSelected) {
-            // Gọi API để xóa bài học khỏi khóa học
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/v1/courses/${courseId}/lessons`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ lessonId }),
+        try {
+            if (isSelected) {
+                console.log(`⟖ Removing lesson ${lessonId} from course ${courseId}`);
+                await lessonService.removeLessonFromCourse(courseId, lessonId);
+                setSelectedLessons(prevSelected => prevSelected.filter(id => id !== lessonId));
+                message.success("Lesson removed successfully");
+            } else {
+                console.log(`➕ Adding lesson ${lessonId} to course ${courseId}`);
+                await lessonService.addLessonsToCourse(courseId, [lessonId]);
+                setSelectedLessons(prevSelected => [...prevSelected, lessonId]);
+                notification.success({
+                    message: "Add lesson successfully",
+                    placement: "topLeft",
                 });
-
-                if (response.ok) {
-                    setSelectedLessons(prevSelected => prevSelected.filter(id => id !== lessonId));
-                    message.success("Lesson removed successfully");
-                    console.log("response", notification);
-                } else {
-                    notification.error({
-                        message: "Error",
-                        description: "Failed to remove lesson",
-                        placement: "topRight",
-                    });
-
-                }
-            } catch (error) {
-                console.error("Error removing lesson:", error);
             }
-        } else {
-            // Gọi API để thêm bài học vào khóa học
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/v1/courses/${courseId}/lessons`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ lessonIds: [lessonId] }),
-                });
-                console.log("response", response, "lessonid", lessonId);
-                if (response.ok) {
-                    setSelectedLessons(prevSelected => [...prevSelected, lessonId]);
-                    notification.success({
-                        message: "Add lesson successfully",
-                        placement: "topLeft",
-                    });
-                } else {
-                    notification.error({
-                        message: "Error",
-                        description: "Failed to add lesson",
-                        placement: "topRight",
-                    });
-                }
-            } catch (error) {
-                console.error("Error adding lesson:", error);
-            }
+        } catch (error) {
+            console.error("Error toggling lesson:", error);
+            notification.error({
+                message: "Error",
+                description: isSelected ? "Failed to remove lesson" : "Failed to add lesson",
+                placement: "topRight",
+            });
         }
     };
 
@@ -116,21 +76,13 @@ const LessonList: React.FC<LessonListProps> = ({ lessons, courseId, fetchLessons
     };
     const handleDeleteLesson = async (lessonId: number) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/v1/lessons/${lessonId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                }
-            });
-            if (response.ok) {
-                message.success("Lesson removed successfully");
-                fetchLessons();
-            } else {
-                message.error("Failed to remove lesson");
-            }
+            console.log(`🗑️ Deleting lesson ${lessonId}`);
+            await lessonService.deleteLesson(lessonId);
+            message.success("Lesson deleted successfully");
+            fetchLessons();
         } catch (error) {
-            console.error("Error removing lesson:", error);
+            console.error("Error deleting lesson:", error);
+            message.error("Failed to delete lesson");
         }
     };
 
@@ -138,7 +90,11 @@ const LessonList: React.FC<LessonListProps> = ({ lessons, courseId, fetchLessons
         <div className="bg-white">
             <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-bold text-gray-800">Lesson List</h3>
-                <Button type="primary" className="hover:opacity-90" onClick={() => setOpenModal(true)}>Add Lesson</Button>
+                <div className="flex gap-2">    
+                    <Button type="primary" className="hover:opacity-90" onClick={() => setOpenModal(true)}>
+                        Add Lesson
+                    </Button>
+                </div>
             </div>
 
             <div className="mt-8">

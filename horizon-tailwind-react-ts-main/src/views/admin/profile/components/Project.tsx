@@ -4,11 +4,12 @@ import Card from "components/card";
 import LessonList from "./LessonList";
 import { useAuth } from "hooks/useAuth";
 import EditCourse from "./EditCourses";
-import { API_BASE_URL } from "service/api.config";
 import Access from "views/admin/access";
-import { message, Pagination } from "antd";
-import { Select, Input, Button, Space, Row, Col } from 'antd';
-import { SearchOutlined } from "@ant-design/icons";
+import { message, Pagination, Spin, Modal } from "antd";
+import { Select, Input, Button, Space, Row, Col, Tooltip } from 'antd';
+import { SearchOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import profileService, { Course, CourseFilters } from "../../../../service/profile.service";
+import { useCache } from "../../../../hooks/useCache";
 type RowObj = {
   id: number;
   name: string;
@@ -27,6 +28,9 @@ interface ProjectProps {
 
 const Project: React.FC<ProjectProps> = ({ tableData }) => {
   const { token } = useAuth();
+  const { getCacheStats } = useCache();
+  
+  // States
   const [showModal, setShowModal] = useState(false);
   const [lessons, setLessons] = useState<any[]>([]);
   const [loadingLessons, setLoadingLessons] = useState(true);
@@ -35,7 +39,7 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
   const [courseId, setCourseId] = useState<number | null>(null);
   const [showEditCourse, setShowEditCourse] = useState(false);
   const [courses, setCourses] = useState<RowObj[]>(tableData);
-  const [selectedFilters, setSelectedFilters] = useState({
+  const [selectedFilters, setSelectedFilters] = useState<CourseFilters>({
     diffLevel: undefined,
     courseType: undefined,
     group: undefined,
@@ -46,63 +50,31 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
   const [groupOptions, setGroupOptions] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchCourses = async () => {
     try {
-      const queryParams = new URLSearchParams({
-        page: currentPage.toString(),
-        size: pageSize.toString()
-      });
-
-      if (selectedFilters.diffLevel) queryParams.append('diffLevel', selectedFilters.diffLevel);
-      if (selectedFilters.courseType) queryParams.append('courseType', selectedFilters.courseType);
-      if (selectedFilters.group) queryParams.append('group', selectedFilters.group);
-      if (selectedFilters.courseStatus) queryParams.append('courseStatus', selectedFilters.courseStatus);
-      if (selectedFilters.keyword) queryParams.append('keyword', selectedFilters.keyword);
-
-      // Gọi API
-      const response = await fetch(`${API_BASE_URL}/api/v1/courses?${queryParams}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch courses");
-      }
-
-      const data = await response.json();
-      console.log(data.data.content);
-      setCourses(data.data.content);
-      setTotal(data.data.totalPages * pageSize);
+      setLoading(true);      
+      const coursesData = await profileService.getCourses(
+        selectedFilters,
+        { page: currentPage, size: pageSize }
+      );
+      
+      setCourses(coursesData.content);
+      setTotal(coursesData.totalElements);
     } catch (error) {
       console.error("Error fetching courses:", error);
       message.error("Failed to fetch courses");
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchGroups = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/courses/groups`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch course groups");
-      }
-
-      const data = await response.json();
-      if (data.data && data.data.content) {
-        setGroupOptions(data.data.content);
-      }
+      const groups = await profileService.getCourseGroups();
+      setGroupOptions(groups);
     } catch (error) {
-      console.error("Error fetching course groups:", error);
       message.error("Failed to fetch course groups");
     }
   };
@@ -117,89 +89,58 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
     });
   };
 
+  // Effects
   useEffect(() => {
     fetchGroups();
-    fetchCourses();
-  }, [courses]);
+  }, []);
 
   useEffect(() => {
     fetchCourses();
-  }, [currentPage, pageSize]);
+  }, [currentPage, pageSize, selectedFilters]);
 
   const handleSuccess = () => {
     fetchCourses(); // Tải lại danh sách khóa học sau khi submit
   };
-  // Cập nhật hàm xử lý chuyển đổi status
+  // Event handlers
   const handleToggleStatus = async (course: RowObj) => {
     try {
-      let endpoint;
-      let newStatus;
-
-      // Xác định endpoint và message dựa trên trạng thái hiện tại
-      if (course.courseStatus === "PUBLIC") {
-        endpoint = `${API_BASE_URL}/api/v1/courses/${course.id}/make-private`;
-        newStatus = "private";
-      } else if (course.courseStatus === "PENDING") {
-        endpoint = `${API_BASE_URL}/api/v1/courses/${course.id}/publish`;
-        newStatus = "public";
-      } else {
-        endpoint = `${API_BASE_URL}/api/v1/courses/${course.id}/make-public`;
-        newStatus = "public";
-      }
-
-      const response = await fetch(endpoint, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to change course status to ${newStatus}`);
-      }
-
-      // Cập nhật UI
-      message.success(`Course status changed to ${newStatus} successfully`);
-
-      // Tải lại danh sách khóa học
-      await fetchCourses();
+      
+      await profileService.toggleCourseStatus(course.id, course.courseStatus);
+      
+      message.success(`Course status updated successfully`);
+      fetchCourses(); // Reload courses
     } catch (error) {
-      console.error("Error changing course status:", error);
-      message.error("Failed to change course status");
+      console.error("Error toggling course status:", error);
+      message.error("Failed to update course status");
     }
   };
   const handleAddLesson = async (courseId: number) => {
     setCourseId(courseId);
     setShowModal(true);
-    await fetchLessons();
+    // Fetch lessons cho courseId được chọn thay vì hardcode 1
+    await fetchLessonsForCourse(courseId);
   };
-  const handleAddCourse = () => {
-    setEditingCourseId(null); // Đặt courseId là null
-    setShowEditCourse(true); // Hiển thị modal
-  };
-  const fetchLessons = async () => {
+
+  const fetchLessonsForCourse = async (courseId: number) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/lessons?page=1&size=1000`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch lessons");
-      }
-
-      const data = await response.json();
-      setLessons(data.data.content);
+      setLoadingLessons(true);
+      console.log(`📚 Fetching lessons for course ${courseId}...`);
+      
+      const lessons = await profileService.getLessonsByCourseId(courseId);
+      setLessons(lessons);
+      setErrorLessons(null);
     } catch (error) {
       console.error("Error fetching lessons:", error);
       setErrorLessons("Failed to fetch lessons");
+      message.error("Failed to fetch lessons");
     } finally {
       setLoadingLessons(false);
     }
+  };
+
+  const handleAddCourse = () => {
+    setEditingCourseId(null);
+    setShowEditCourse(true);
   };
   const handleEdit = (id: number) => {
     setEditingCourseId(id);
@@ -211,17 +152,15 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
   };
 
   const handleDelete = async (row: RowObj) => {
-    const res = await fetch(`${API_BASE_URL}/api/v1/courses/${row.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    if (res.ok) {
-      fetchCourses();
-      message.success("Delete course successfully");
-    } else {
+    try {
+      console.log(`🗑️ Deleting course ${row.id}`);
+      
+      await profileService.deleteCourse(row.id);
+      
+      message.success("Course deleted successfully");
+      fetchCourses(); // Reload courses
+    } catch (error) {
+      console.error("Error deleting course:", error);
       message.error("Failed to delete course");
     }
   };
@@ -232,13 +171,13 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
     >
       <Card extra={"w-full p-4 h-full"}>
         <div className="mb-8 w-full">
-          <h4 className="text-xl font-bold text-navy-700 dark:text-white">
-            All Courses
-          </h4>
-          <p className="mt-2 text-base text-gray-600">
-            Here you can find more details about your courses. Keep your users
-            engaged by providing meaningful information.
-          </p>
+              <h4 className="text-xl font-bold text-navy-700 dark:text-white">
+                All Courses
+              </h4>
+              <p className="mt-2 text-base text-gray-600">
+                Here you can find more details about your courses. Keep your users
+                engaged by providing meaningful information.
+              </p>
         </div>
 
         {/* Filter section - centered */}
@@ -348,34 +287,40 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
           </div>
         </div>
 
-        {showModal && (
-          <div className="fixed inset-0 z-5 ml-20 flex items-center justify-center  mt-20">
-            <div className="fixed inset-0  bg-gray-800 bg-opacity-75 opacity-50"></div>
-            <div className="relative bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl mx-4">
-              <LessonList lessons={lessons} courseId={courseId} fetchLessons={fetchLessons} />
-              <div className="flex justify-end mt-4"> {/* Căn nút Close sang phải */}
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 transition-colors"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Lesson Modal using Ant Design */}
+        <Modal
+          title={`Lessons for Course ${courseId}`}
+          open={showModal}
+          onCancel={() => setShowModal(false)}
+          width={800}
+          footer={null}
+          className="lesson-modal"
+        >
+          <LessonList 
+            lessons={lessons} 
+            courseId={courseId} 
+            fetchLessons={() => fetchLessonsForCourse(courseId || 1)} 
+          />
+        </Modal>
+
+        {/* Edit Course Modal */}
         {showEditCourse && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg w-3/4 max-w-4xl mt-10">
-              <EditCourse courseId={editingCourseId} onClose={handleCloseEdit} onSuccess={handleSuccess} />
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white p-6 rounded-lg w-3/4 max-w-4xl mt-10 max-h-[90vh] overflow-y-auto">
+              <EditCourse 
+                courseId={editingCourseId} 
+                onClose={handleCloseEdit} 
+                onSuccess={handleSuccess} 
+              />
             </div>
           </div>
         )}
 
         <div className="w-full">
-          <div className="overflow-hidden rounded-lg border border-gray-200 shadow-md">
-            <div className="overflow-x-auto">
-              <table className="w-full table-fixed border-collapse bg-white text-left text-sm text-gray-500">
+          <Spin spinning={loading}>
+            <div className="overflow-hidden rounded-lg border border-gray-200 shadow-md">
+              <div className="overflow-x-auto">
+                <table className="w-full table-fixed border-collapse bg-white text-left text-sm text-gray-500">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[3%]">ID</th>
@@ -435,7 +380,6 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
                           >
                             <MdModeEditOutline size={20} />
                           </button>
-
                         </div>
                       </td>
                     </tr>
@@ -444,6 +388,7 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
               </table>
             </div>
           </div>
+          </Spin>
         </div>
 
         <div className="mt-4 flex justify-end">
