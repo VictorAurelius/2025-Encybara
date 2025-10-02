@@ -31,6 +31,37 @@ export interface PaginatedResponse<T> {
 class LectureService {
   protected apiService = ApiService();
 
+  async getAllCourses(token: string): Promise<Course[]> {
+    const cacheKey = 'all_courses';
+    
+    // Check cache first
+    const cached = globalCache.get<Course[]>(cacheKey);
+    if (cached) {
+      console.log('📦 Using cached all courses');
+      return cached;
+    }
+
+    try {
+      console.log('🌐 Fetching all courses from API');
+      const response = await this.apiService.get<ServerResponse<Course[]>>(
+        '/api/v1/courses', // This endpoint should return all courses
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log('Fetched courses:', response.data);
+      const courses = response.data || [];
+      
+      
+      // Cache for 10 minutes
+      globalCache.set(cacheKey, courses, 10 * 60 * 1000);
+      console.log('📦 All courses cached');
+      
+      return courses;
+    } catch (error) {
+      console.error('Error fetching all courses:', error);
+      throw error;
+    }
+  }
+
   async getCoursesWithMaterials(token:string): Promise<Course[]> {
     const cacheKey = 'courses_with_materials';
     
