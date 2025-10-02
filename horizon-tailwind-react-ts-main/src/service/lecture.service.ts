@@ -205,7 +205,12 @@ class LectureService {
       console.log(`📤 Uploading material for course ${courseId}`);
       const response = await this.apiService.post<ServerResponse<LectureMaterial>>(
         '/api/v1/material/upload/course',
-        formData
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
       );
       
       // Invalidate related caches
