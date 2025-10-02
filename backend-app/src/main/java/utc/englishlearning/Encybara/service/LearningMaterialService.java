@@ -25,6 +25,8 @@ import utc.englishlearning.Encybara.repository.CourseRepository;
 import utc.englishlearning.Encybara.repository.QuestionRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import utc.englishlearning.Encybara.domain.response.course.ResCourseWithMaterialsDTO;
 
 @Service
 public class LearningMaterialService {
@@ -248,6 +250,13 @@ public class LearningMaterialService {
 
     public List<Long> getCoursesWithLearningMaterials() {
         return learningMaterialRepository.findDistinctCourseIds();
+    }
+
+    public List<ResCourseWithMaterialsDTO> getCoursesWithLearningMaterialsInfo() {
+        List<Course> courses = learningMaterialRepository.findDistinctCoursesWithMaterials();
+        return courses.stream()
+                .map(course -> new ResCourseWithMaterialsDTO(course.getId(), course.getName()))
+                .collect(Collectors.toList());
     }
 
     public Path getFilePath(String relativePath) {

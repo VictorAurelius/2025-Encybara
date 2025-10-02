@@ -30,6 +30,7 @@ import utc.englishlearning.Encybara.repository.LearningMaterialRepository;
 import utc.englishlearning.Encybara.repository.QuestionRepository;
 import utc.englishlearning.Encybara.domain.response.RestResponse;
 import utc.englishlearning.Encybara.domain.response.learningmaterial.ResUploadMaterialDTO;
+import utc.englishlearning.Encybara.domain.response.course.ResCourseWithMaterialsDTO;
 import utc.englishlearning.Encybara.domain.request.learningmaterial.ReqAssignMaterialDTO;
 
 @RestController
@@ -331,14 +332,14 @@ public class LearningMaterialController {
     }
 
     @GetMapping("/courses-with-materials")
-    @ApiMessage("Get all course IDs that have learning materials")
-    public ResponseEntity<RestResponse<List<Long>>> getCoursesWithLearningMaterials() {
-        List<Long> courseIds = fileService.getCoursesWithLearningMaterials();
+    @ApiMessage("Get all courses that have learning materials")
+    public ResponseEntity<RestResponse<List<ResCourseWithMaterialsDTO>>> getCoursesWithLearningMaterials() {
+        List<ResCourseWithMaterialsDTO> courses = fileService.getCoursesWithLearningMaterialsInfo();
 
-        RestResponse<List<Long>> response = new RestResponse<>();
+        RestResponse<List<ResCourseWithMaterialsDTO>> response = new RestResponse<>();
         response.setStatusCode(200);
-        response.setMessage("Course IDs with learning materials retrieved successfully");
-        response.setData(courseIds);
+        response.setMessage("Courses with learning materials retrieved successfully");
+        response.setData(courses);
         return ResponseEntity.ok(response);
     }
 
