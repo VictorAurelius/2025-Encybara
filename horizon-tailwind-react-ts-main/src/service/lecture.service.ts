@@ -1,5 +1,7 @@
 import ApiService from './api.service';
 import { globalCache } from './cache.service';
+import { API_BASE_URL } from './api.config';
+import { marked } from 'marked';
 
 export interface Course {
   id: number;
@@ -30,7 +32,7 @@ export interface PaginatedResponse<T> {
 class LectureService {
   protected apiService = ApiService();
 
-  async getCoursesWithMaterials(): Promise<Course[]> {
+  async getCoursesWithMaterials(token:string): Promise<Course[]> {
     const cacheKey = 'courses_with_materials';
     
     // Check cache first
@@ -43,7 +45,8 @@ class LectureService {
     try {
       console.log('🌐 Fetching courses with materials from API');
       const response = await this.apiService.get<ServerResponse<Course[]>>(
-        '/api/v1/material/courses-with-materials'
+        '/api/v1/material/courses-with-materials',
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       
       const courses = response.data || [];
@@ -59,7 +62,7 @@ class LectureService {
     }
   }
 
-  async getMaterialsByCourseId(courseId: number): Promise<LectureMaterial[]> {
+  async getMaterialsByCourseId(courseId: number,token: string): Promise<LectureMaterial[]> {
     const cacheKey = `course_materials_${courseId}`;
     
     // Check cache first
@@ -72,7 +75,10 @@ class LectureService {
     try {
       console.log(`🌐 Fetching materials for course ${courseId} from API`);
       const response = await this.apiService.get<ServerResponse<LectureMaterial[]>>(
-        `/api/v1/material/courses/${courseId}`
+        `/api/v1/material/courses/${courseId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
       );
 
       const materials = response.data || [];
@@ -100,21 +106,61 @@ class LectureService {
 
     try {
       console.log('🌐 Fetching markdown content from:', materLink);
-      const response = await fetch(materLink);
+      
+      // Replace http://0.0.0.0:8080 with API_BASE_URL and encode spaces
+      const processedLink = materLink
+        .replace('http://0.0.0.0:8080', API_BASE_URL)
+        .replace(/ /g, '%20');
+      
+      const response = await fetch(processedLink);
       
       if (!response.ok) {
         throw new Error(`Failed to fetch markdown: ${response.statusText}`);
       }
       
-      const content = await response.text();
+      const rawContent = await response.text();
       
       // Cache for 15 minutes (markdown content rarely changes)
-      globalCache.set(cacheKey, content, 15 * 60 * 1000);
+      globalCache.set(cacheKey, rawContent, 15 * 60 * 1000);
       console.log('📦 Markdown content cached');
       
-      return content;
+      return rawContent;
     } catch (error) {
       console.error('Error reading markdown content:', error);
+      throw error;
+    }
+  }
+
+  async renderMarkdownToHtml(materLink: string): Promise<string> {
+    const cacheKey = `markdown_html_${btoa(materLink)}`;
+    
+    // Check cache first for rendered HTML
+    const cached = globalCache.get<string>(cacheKey);
+    if (cached) {
+      console.log('📦 Using cached rendered markdown HTML');
+      return cached;
+    }
+
+    try {
+      // Get raw markdown content
+      const rawContent = await this.readMarkdownContent(materLink);
+      
+      // Configure marked options for better rendering
+      marked.setOptions({
+        breaks: true,
+        gfm: true
+      });
+      
+      // Render markdown to HTML
+      const htmlContent = await marked(rawContent);
+      
+      // Cache rendered HTML for 20 minutes
+      globalCache.set(cacheKey, htmlContent, 20 * 60 * 1000);
+      console.log('📦 Rendered markdown HTML cached');
+      
+      return htmlContent;
+    } catch (error) {
+      console.error('Error rendering markdown to HTML:', error);
       throw error;
     }
   }
@@ -174,6 +220,7 @@ class LectureService {
   clearAllLectureCache(): void {
     globalCache.invalidatePattern('course_materials_.*');
     globalCache.invalidatePattern('markdown_.*');
+    globalCache.invalidatePattern('markdown_html_.*');
     globalCache.delete('courses_with_materials');
     console.log('🗑️ Cleared all lecture cache');
   }
@@ -183,6 +230,7 @@ class LectureService {
     const lectureKeys = stats.keys.filter((key: string) => 
       key.startsWith('course_materials_') || 
       key.startsWith('markdown_') ||
+      key.startsWith('markdown_html_') ||
       key === 'courses_with_materials'
     );
     
@@ -195,6 +243,11 @@ class LectureService {
   // Helper method to get file name from material link
   getFileName(materLink: string): string {
     return materLink.split('/').pop() || 'Unknown File';
+  }
+
+  // Helper method to process material link (replace base URL)
+  processMaterLink(materLink: string): string {
+    return materLink.replace('http://0.0.0.0:8080', API_BASE_URL);
   }
 }
 
