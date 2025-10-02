@@ -42,6 +42,7 @@ show_usage() {
     echo "  --caching        Build kèm theo Redis caching"
     echo "  --proxy          Build kèm theo NGINX reverse proxy"
     echo "  --tunnel         Build kèm theo Ngrok tunnel (cho EC2-to-local connectivity)"
+    echo "  --simple         Sử dụng Dockerfile đơn giản cho network không ổn định"
     echo "  --all            Build tất cả services (monitoring + caching + proxy)"
     echo "  --help           Hiển thị help này"
     echo ""
@@ -50,6 +51,7 @@ show_usage() {
     echo "  $0 --clean --no-cache       # Clean build từ đầu"
     echo "  $0 --monitoring             # Build với monitoring"
     echo "  $0 --tunnel                 # Build với Ngrok tunnel"
+    echo "  $0 --simple                 # Build với Dockerfile đơn giản"
     echo "  $0 --all                    # Build tất cả services"
 }
 
