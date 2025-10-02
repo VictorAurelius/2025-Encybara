@@ -1,9 +1,9 @@
 # Ngrok Configuration for Pronunciation Assessment Service
 version: "2"
 authtoken: 33RzjpvLWHRqcfUdoHqdM42am8J_413xRQLhDiAY5LZ51TyDB
-api:
-  addr: localhost:4040
-  web_addr: 0.0.0.0:4040
+
+# Web interface configuration
+web_addr: 0.0.0.0:4040
 
 tunnels:
   pronunciation-assessment:
@@ -15,14 +15,8 @@ tunnels:
     # Optional: custom domain (requires paid plan)
     # hostname: pronunciation.yourdomain.com
     inspect: true
-    # Request logging
-    log_level: info
-    # Health check endpoint
-    health_check_path: "/health"
 
+# Logging configuration
 log_level: info
 log_format: logfmt
 log: stdout
-
-# Web interface configuration
-web_addr: 0.0.0.0:4040
