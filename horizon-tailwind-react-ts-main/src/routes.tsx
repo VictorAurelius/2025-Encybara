@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import Access from "views/admin/access";
 
 // Admin Imports
@@ -21,12 +21,14 @@ import {
   MdLogin,
   MdQuiz,
   MdForum,
+  MdBook,
 } from "react-icons/md";
 import PermissionPage from "views/admin/permission/permission";
 import RolePage from "views/admin/role/role";
 import QuestionPage from "views/admin/question/questions";
 import DiscussionManagement from "views/admin/forum/forum";
 import LearningResults from "views/admin/learning/learning.results";
+import LecturePage from "views/admin/lecture/lecture";
 
 // Định nghĩa các role
 export type UserRole = 'SUPER_ADMIN' | 'DOMAIN_ADMIN';
@@ -133,6 +135,16 @@ const routes: RouteItem[] = [
     path: "learning",
     icon: <MdForum className="h-6 w-6" />,
     component: <LearningResults />,
+  },
+  {
+    name: "Lectures",
+    layout: "/admin",
+    path: "lectures",
+    icon: <MdBook className="h-6 w-6" />,
+    component: <LecturePage />,
+    permission: {
+      module: "CONTENT_MANAGEMENT"
+    }
   }
 ];
 

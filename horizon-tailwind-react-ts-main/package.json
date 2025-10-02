@@ -21,7 +21,6 @@
     "@testing-library/user-event": "^14.5.2",
     "@types/jest": "^25.2.3",
     "@types/node": "^12.20.55",
-    "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "antd": "^5.13.1",
     "apexcharts": "^3.35.5",
@@ -69,6 +68,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react": "^19.1.15",
     "@types/react-calendar": "^3.5.2",
     "@types/react-lottie": "^1.2.10",
     "@types/react-router-dom": "^5.3.3",
