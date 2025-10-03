@@ -37,7 +37,6 @@ const QuestionPage = () => {
     const reloadTable = async () => {
         setLoading(true);
         try {
-            console.log('❓ Fetching questions and lesson map...');
             
             // Fetch questions with filters and pagination
             const questionsData = await questionService.getQuestions(
@@ -71,7 +70,6 @@ const QuestionPage = () => {
     useEffect(() => {
         const fetchLessons = async () => {
             try {
-                console.log('📚 Fetching lessons list...');
                 const lessons = await questionService.getAllLessons();
                 setLessonList(lessons);
             } catch (error) {
@@ -90,7 +88,6 @@ const QuestionPage = () => {
         if (!id) return;
 
         try {
-            console.log(`🗑️ Deleting question ${id}`);
             await questionService.deleteQuestion(id);
             message.success('Question deleted successfully');
             reloadTable();
@@ -102,7 +99,6 @@ const QuestionPage = () => {
 
     const fetchUploadData = async (questionId: number) => {
         try {
-            console.log("Fetching data for questionId:", questionId);
             // This would need to be implemented in questionService if needed
             // For now keeping the direct API call as it's specific to material management
             const res = await fetch(`${API_BASE_URL}/api/v1/material/questions/${questionId}`,
@@ -131,7 +127,6 @@ const QuestionPage = () => {
         }
 
         try {
-            console.log(`🗑️ Deleting selected questions: ${selectedRowKeys}`);
             const questionIds = selectedRowKeys.map(key => Number(key));
             await questionService.deleteMultipleQuestions(questionIds);
             message.success(`Deleted ${questionIds.length} questions successfully`);

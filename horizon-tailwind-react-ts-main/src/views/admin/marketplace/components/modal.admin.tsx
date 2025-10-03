@@ -45,11 +45,6 @@ const ModalAdmin = (props: IProps) => {
                 ...dataInit,
                 role: { label: dataInit.role?.name, value: dataInit.role?.id }
             });
-            
-            // Check if form received the values
-            setTimeout(() => {
-                console.log('Form role value after set:', form.getFieldValue('role'));
-            }, 100);
         }
     }, [dataInit, form]);
     

@@ -28,11 +28,9 @@ const EditCourse: React.FC<EditCourseProps> = ({ courseId, onClose, onSuccess })
         const fetchCourse = async () => {
             try {
                 if (courseId) {
-                    console.log(`📋 Fetching course ${courseId} details...`);
                     const course = await profileService.getCourseById(courseId);
                     setCourseData(course);
                 } else {
-                    console.log('🆕 Setting up for new course creation');
                     setCourseData({
                         name: "",
                         intro: "",
@@ -58,11 +56,9 @@ const EditCourse: React.FC<EditCourseProps> = ({ courseId, onClose, onSuccess })
     const handleSubmit = async (values: any) => {
         try {
             if (courseId) {
-                console.log(`🔄 Updating course ${courseId}`);
                 await profileService.updateCourse(courseId, values);
                 message.success("Course updated successfully!");
             } else {
-                console.log('🆕 Creating new course');
                 await profileService.createCourse(values);
                 message.success("Course created successfully!");
             }

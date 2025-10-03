@@ -29,7 +29,6 @@ const TableTopCreators: React.FC<TableTopCreatorsProps> = ({ tableData, reloadTa
   const tableRef = useRef<ActionType>(null);
   const handleEdit = (row: IAdmin) => {
     setDataInit(row);
-    console.log("row:", row);
     setOpenModal(true);
     tableRef.current?.reset();
   };
