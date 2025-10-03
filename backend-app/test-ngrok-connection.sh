@@ -19,6 +19,8 @@ echo -e "${YELLOW}Current Environment Variables:${NC}"
 echo -e "CONTENT_SCORING_SERVICE_URL: ${CONTENT_SCORING_URL:-'(Not set)'}"
 echo -e "PRONUNCIATION_SERVICE_URL: ${PRONUNCIATION_URL:-'(Not set)'}"
 echo ""
+echo -e "${YELLOW}Default Ngrok URL: https://dural-rozanne-inquisitorial.ngrok-free.dev${NC}"
+echo ""
 
 # Test if Ngrok URLs are accessible
 if [[ -n "$CONTENT_SCORING_URL" ]]; then

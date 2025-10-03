@@ -21,20 +21,19 @@ prompt_for_service_urls() {
     echo -e "   ${YELLOW}2. Sử dụng localhost (http://localhost:port)${NC}"
     echo -e "   ${YELLOW}3. Để trống (test configuration errors)${NC}"
     echo -e "   ${YELLOW}(Cả 2 services sẽ dùng chung URL với ports khác nhau)${NC}"
-    read -p "   Nhập Ngrok URL (hoặc ENTER để localhost, 'skip' để không set): " ngrok_base_url
+    read -p "   Nhập Ngrok URL (hoặc ENTER để default, 'skip' để không set): " ngrok_base_url
+    
+    # Set default if empty
+    if [[ -z "$ngrok_base_url" ]]; then
+        ngrok_base_url="https://dural-rozanne-inquisitorial.ngrok-free.dev"
+        echo -e "   ${GREEN}Using default Ngrok URL: $ngrok_base_url${NC}"
+    fi
     
     if [[ "$ngrok_base_url" == "skip" ]]; then
         # Don't set URLs - let application show configuration errors
         PRONUNCIATION_SERVICE_URL=""
         CONTENT_SCORING_SERVICE_URL=""
         echo -e "   ${YELLOW}Không set URLs - services sẽ báo lỗi configuration${NC}"
-    elif [[ -z "$ngrok_base_url" ]]; then
-        # Use localhost URLs
-        PRONUNCIATION_SERVICE_URL="http://localhost:5000"
-        CONTENT_SCORING_SERVICE_URL="http://localhost:5001"
-        echo -e "   ${GREEN}Sử dụng localhost:${NC}"
-        echo -e "   ${GREEN}  - Pronunciation: $PRONUNCIATION_SERVICE_URL${NC}"
-        echo -e "   ${GREEN}  - Content Scoring: $CONTENT_SCORING_SERVICE_URL${NC}"
     else
         # Remove trailing slash if present
         ngrok_base_url=$(echo "$ngrok_base_url" | sed 's|/$||')
@@ -75,13 +74,18 @@ if [[ "$1" == "--auto" || -n "$CI" || -n "$GITHUB_ACTIONS" ]]; then
         echo -e "${GREEN}Using unified Ngrok URL: $NGROK_URL${NC}"
         echo -e "${GREEN}  - Both services use the same tunnel${NC}"
     else
-        # Use environment variables only, no defaults
-        PRONUNCIATION_SERVICE_URL=${PRONUNCIATION_SERVICE_URL:-""}
-        CONTENT_SCORING_SERVICE_URL=${CONTENT_SCORING_SERVICE_URL:-""}
-        if [[ -z "$PRONUNCIATION_SERVICE_URL" && -z "$CONTENT_SCORING_SERVICE_URL" ]]; then
-            echo -e "${YELLOW}No service URLs configured - services will show configuration error${NC}"
-        else
+        # Check if individual URLs are provided
+        if [[ -n "$PRONUNCIATION_SERVICE_URL" || -n "$CONTENT_SCORING_SERVICE_URL" ]]; then
+            # Use provided individual URLs
+            PRONUNCIATION_SERVICE_URL=${PRONUNCIATION_SERVICE_URL:-""}
+            CONTENT_SCORING_SERVICE_URL=${CONTENT_SCORING_SERVICE_URL:-""}
             echo -e "${GREEN}Using individual service URLs from environment${NC}"
+        else
+            # Use default Ngrok URL
+            DEFAULT_NGROK="https://dural-rozanne-inquisitorial.ngrok-free.dev"
+            PRONUNCIATION_SERVICE_URL="$DEFAULT_NGROK"
+            CONTENT_SCORING_SERVICE_URL="$DEFAULT_NGROK"
+            echo -e "${GREEN}Using default Ngrok URL: $DEFAULT_NGROK${NC}"
         fi
     fi
 else
