@@ -1,0 +1,156 @@
+#!/bin/bash
+
+# Build All Services Script
+# Builds both content-scoring-service and backend-app with one command
+
+set -e  # Exit on any error
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Function to print colored output
+print_status() {
+    echo -e "${BLUE}[BUILD ALL]${NC} $1"
+}
+
+print_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Function to show usage
+show_usage() {
+    echo "Build All Services Script"
+    echo ""
+    echo "Usage: $0 [OPTIONS]"
+    echo ""
+    echo "Options:"
+    echo "  --clean          Clean build (remove old containers and images)"
+    echo "  --no-cache       Build without cache"
+    echo "  --tunnel         Include Ngrok tunnel for content-scoring-service"
+    echo "  --help           Show this help"
+    echo ""
+    echo "Examples:"
+    echo "  $0                      # Build all services normally"
+    echo "  $0 --clean --no-cache   # Clean rebuild everything"
+    echo "  $0 --tunnel             # Build with Ngrok tunnel"
+}
+
+# Parse command line arguments
+CLEAN=false
+NO_CACHE=false
+TUNNEL=false
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --clean)
+            CLEAN=true
+            shift
+            ;;
+        --no-cache)
+            NO_CACHE=true
+            shift
+            ;;
+        --tunnel)
+            TUNNEL=true
+            shift
+            ;;
+        --help)
+            show_usage
+            exit 0
+            ;;
+        *)
+            print_error "Unknown option: $1"
+            show_usage
+            exit 1
+            ;;
+    esac
+done
+
+print_status "======================================"
+print_status "Building All Services"
+print_status "======================================"
+
+# Check if Docker is running
+if ! docker info > /dev/null 2>&1; then
+    print_error "Docker is not running. Please start Docker first."
+    exit 1
+fi
+
+# Build content-scoring-service first
+print_status "Building content-scoring-service..."
+cd content-scoring-service
+
+BUILD_ARGS=""
+if [ "$CLEAN" = true ]; then
+    BUILD_ARGS="$BUILD_ARGS --clean"
+fi
+
+if [ "$NO_CACHE" = true ]; then
+    BUILD_ARGS="$BUILD_ARGS --no-cache"
+fi
+
+if [ "$TUNNEL" = true ]; then
+    BUILD_ARGS="$BUILD_ARGS --tunnel"
+fi
+
+# Use quick fix to avoid long rebuild times
+if [ -f "./quick-fix.sh" ]; then
+    print_status "Using quick fix for content-scoring-service..."
+    ./quick-fix.sh
+else
+    print_status "Building content-scoring-service normally..."
+    ./build.sh $BUILD_ARGS
+fi
+
+cd ..
+
+# Build backend-app
+print_status "Building backend-app..."
+cd backend-app
+
+if [ -f "./build.sh" ]; then
+    print_status "Building backend-app with build script..."
+    ./build.sh
+else
+    print_error "backend-app build script not found!"
+    exit 1
+fi
+
+cd ..
+
+print_success "======================================"
+print_success "All services built successfully!"
+print_success "======================================"
+print_status "Service URLs:"
+print_status "• Content Scoring Service: http://localhost:5001"
+print_status "• Backend API: http://localhost:8080"
+print_status "• API Documentation: http://localhost:8080/swagger-ui.html"
+
+if [ "$TUNNEL" = true ]; then
+    print_status "• Ngrok Tunnel Interface: http://localhost:4040"
+fi
+
+print_status ""
+print_status "To test services:"
+print_status "• Content Scoring: cd content-scoring-service && ./test-ngrok-public.sh"
+print_status "• Backend Integration: cd backend-app && ./test-content-scoring.sh"
+print_status "• Pronunciation: cd backend-app && ./test-pronunciation.sh"
+
+print_status ""
+print_status "To view logs:"
+print_status "• Content Scoring: docker-compose -f content-scoring-service/docker-compose.yml logs -f"
+print_status "• Backend: docker-compose -f build-docker/docker-compose.yml logs -f backend"
+
+print_success "======================================"

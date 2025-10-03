@@ -31,8 +31,6 @@ services:
       - SPRING_DATASOURCE_PASSWORD=123456
       - englishlearning.upload-file.base-uri=/app/uploads/
       - file.upload-dir=/app/uploads/
-      - ffmpeg.path=/usr/bin/ffmpeg
-      - ffprobe.path=/usr/bin/ffprobe
       - springdoc.api-docs.enabled=true
       - springdoc.swagger-ui.enabled=true
       - springdoc.swagger-ui.path=/swagger-ui.html
@@ -41,9 +39,10 @@ services:
       - springdoc.swagger-ui.display-request-duration=true
       # Fix for Docker/Container processor metrics NullPointerException
       - management.metrics.enable.processor=false
-      # Content Scoring Service URL (Ngrok tunnel)
-      - CONTENT_SCORING_SERVICE_URL=https://dural-rozanne-inquisitorial.ngrok-free.dev
-      - content-scoring.service.url=https://dural-rozanne-inquisitorial.ngrok-free.dev
+      # Content Scoring Service URL (Environment variable or default)
+      - content-scoring.service.url=${CONTENT_SCORING_SERVICE_URL:-http://localhost:5001}
+      # Pronunciation Assessment Service URL (Environment variable or default)
+      - PRONUNCIATION_SERVICE_URL=${PRONUNCIATION_SERVICE_URL:-http://localhost:5000}
     volumes:
       - upload_data:/app/uploads
     healthcheck:

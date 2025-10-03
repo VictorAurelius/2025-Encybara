@@ -19,7 +19,6 @@ EXPOSE 8080
 # Install required packages
 RUN apt-get update && \
     apt-get install -y \
-    ffmpeg \
     curl && \
     rm -rf /var/lib/apt/lists/*
 
@@ -42,5 +41,8 @@ COPY --from=build /backend-app/source/build/libs/*.jar backend-app.jar
 # Thêm health check
 HEALTHCHECK --interval=30s --timeout=3s \
     CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# Define environment variable for pronunciation service URL
+ENV PRONUNCIATION_SERVICE_URL=http://localhost:5000
 
 ENTRYPOINT ["java", "-jar", "backend-app.jar"]

@@ -42,6 +42,7 @@ show_usage() {
     echo "  --caching        Build kèm theo Redis caching"
     echo "  --proxy          Build kèm theo NGINX reverse proxy"
     echo "  --tunnel         Build kèm theo Ngrok tunnel (cho EC2-to-local connectivity)"
+    echo "  --simple         Sử dụng Dockerfile đơn giản cho network không ổn định"
     echo "  --all            Build tất cả services (monitoring + caching + proxy)"
     echo "  --help           Hiển thị help này"
     echo ""
@@ -50,6 +51,7 @@ show_usage() {
     echo "  $0 --clean --no-cache       # Clean build từ đầu"
     echo "  $0 --monitoring             # Build với monitoring"
     echo "  $0 --tunnel                 # Build với Ngrok tunnel"
+    echo "  $0 --simple                 # Build với Dockerfile đơn giản"
     echo "  $0 --all                    # Build tất cả services"
 }
 
@@ -290,8 +292,31 @@ if [ -n "$COMPOSE_ARGS" ]; then
     print_status "Attempting to start with profiles..."
     if ! $COMPOSE_CMD up -d $COMPOSE_ARGS 2>/dev/null; then
         print_warning "Profiles not supported in this docker-compose version"
-        print_status "Starting basic service only..."
+        print_status "Starting services manually..."
+        
+        # Start basic service first
         $COMPOSE_CMD up -d pronunciation-assessment-service
+        
+        # Start additional services manually based on flags
+        if [ "$MONITORING" = true ]; then
+            print_status "Starting monitoring services..."
+            $COMPOSE_CMD up -d prometheus grafana || true
+        fi
+        
+        if [ "$CACHING" = true ]; then
+            print_status "Starting Redis cache..."
+            $COMPOSE_CMD up -d redis || true
+        fi
+        
+        if [ "$PROXY" = true ]; then
+            print_status "Starting NGINX proxy..."
+            $COMPOSE_CMD up -d nginx || true
+        fi
+        
+        if [ "$TUNNEL" = true ]; then
+            print_status "Starting Ngrok tunnel..."
+            $COMPOSE_CMD up -d ngrok || true
+        fi
     fi
 else
     $COMPOSE_CMD up -d

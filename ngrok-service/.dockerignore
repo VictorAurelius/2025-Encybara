@@ -1,0 +1,8 @@
+# Ignore unnecessary files for container build
+logs/*
+*.log
+.git
+.gitignore
+README.md
+start-container.sh
+docker-compose.yml
