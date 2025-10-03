@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  ngrok:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: unified-ngrok-service
+    restart: unless-stopped
+    ports:
+      - "4040:4040"  # Ngrok web interface
+    networks:
+      - ngrok-network
+    extra_hosts:
+      # Allow ngrok to access host services
+      - "host.docker.internal:host-gateway"
+    environment:
+      - NGROK_CONFIG_PATH=/ngrok/ngrok.yml
+    volumes:
+      # Mount config for easy updates
+      - ./ngrok.yml:/ngrok/ngrok.yml:ro
+      # Optional: Mount logs directory
+      - ./logs:/ngrok/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4040/api/tunnels"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "service.name=unified-ngrok"
+      - "service.description=Unified ngrok tunnel service"
+      - "service.ports=pronunciation-assessment:5000,content-scoring:5001"
+
+networks:
+  ngrok-network:
+    driver: bridge
+    name: ngrok-unified-network

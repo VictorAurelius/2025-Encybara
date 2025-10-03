@@ -1,16 +1,18 @@
 #!/bin/bash
 
-# Start unified ngrok service for both pronunciation-assessment-service and content-scoring-service
-echo "Starting unified ngrok service for both services..."
+# Start unified ngrok service as Docker container
+echo "🐳 Starting unified ngrok service as Docker container..."
 
 # Navigate to ngrok-service directory
 cd ngrok-service
 
-# Start ngrok with the unified configuration
-ngrok start --all --config=ngrok.yml --log=stdout
-
-echo "Unified ngrok service started with pooling-enabled for both pronunciation-assessment-service and content-scoring-service."
-echo "Web interface available at: http://localhost:4040"
-echo "Tunnels:"
-echo "  - pronunciation-assessment: port 5000"
-echo "  - content-scoring: port 5001"
+# Check if container startup script exists
+if [ -f "start-container.sh" ]; then
+    echo "📦 Using containerized ngrok service..."
+    chmod +x start-container.sh
+    ./start-container.sh
+else
+    echo "❌ Container startup script not found!"
+    echo "Please run from the correct directory or check if start-container.sh exists"
+    exit 1
+fi

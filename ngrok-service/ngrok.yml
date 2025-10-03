@@ -19,8 +19,8 @@ tunnels:
   content-scoring:
     addr: host.docker.internal:5001
     proto: http
+    schemes: [https, http]
     inspect: true
-    bind_tls: true
 
 # Logging configuration
 log_level: info

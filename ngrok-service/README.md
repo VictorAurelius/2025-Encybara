@@ -41,7 +41,47 @@ cd ngrok-service
 ### Check Web Interface
 Open your browser and navigate to: `http://localhost:4040`
 
-## 📝 Service Mapping
+## 🐳 Container Management
+
+### Container Operations
+```bash
+# Start container
+docker-compose up -d
+
+# Stop container
+docker-compose down
+
+# Restart container
+docker-compose restart
+
+# View logs
+docker-compose logs -f
+
+# Container status
+docker-compose ps
+
+# Build image
+docker-compose build --no-cache
+```
+
+### Health Monitoring
+```bash
+# Check container health
+docker-compose ps
+
+# Monitor from host
+./monitor.sh
+
+# API health check
+curl http://localhost:4040/api/tunnels
+```
+
+### Volume Management
+- **Configuration**: `./ngrok.yml` mounted as read-only
+- **Logs**: `./logs/` directory for persistent logs
+- **Network**: Custom bridge network for isolation
+
+##  Service Mapping
 
 | Service | Local Port | Tunnel Name | Target |
 |---------|------------|-------------|--------|
@@ -56,43 +96,66 @@ Make sure to update the `authtoken` in `ngrok.yml` with your own Ngrok auth toke
 2. Get your auth token from the dashboard
 3. Replace the token in `ngrok.yml`
 
-## 🌐 Pooling-Enabled
+## 🌐 Container Benefits
 
-This configuration enables pooling for both services, allowing:
-- Multiple tunnels from a single ngrok instance
-- Efficient resource usage
-- Centralized management
-- Single web interface for monitoring
+This containerized setup provides:
+- **Isolation**: Ngrok runs in isolated container environment
+- **Portability**: Same behavior across different systems
+- **Resource Control**: Container resource limits and management
+- **Easy Deployment**: Simple docker-compose commands
+- **Health Monitoring**: Built-in health checks
+- **Log Management**: Persistent log storage
+- **Network Isolation**: Custom Docker network
+- **Pooling-Enabled**: Multiple tunnels from single container
 
 ## 🛠️ Troubleshooting
 
-### Check if ngrok is running:
+### Check container status:
 ```bash
+docker-compose ps
 curl http://localhost:4040/api/tunnels
 ```
 
-### View logs:
+### View container logs:
 ```bash
-# Check ngrok process
-ps aux | grep ngrok
-
-# If running in Docker
-docker logs ngrok-container-name
+docker-compose logs -f
+docker logs unified-ngrok-service
 ```
 
-### Restart service:
+### Restart container:
 ```bash
-# Stop any running ngrok processes
-pkill ngrok
+# Restart service
+docker-compose restart
 
-# Start again
-./start-ngrok.sh
+# Full rebuild and restart
+docker-compose down
+docker-compose build --no-cache
+docker-compose up -d
 ```
+
+### Common Issues:
+- **Port 4040 in use**: Stop other ngrok instances
+- **Docker not running**: Start Docker Desktop
+- **Config errors**: Check `ngrok.yml` syntax
+- **Network issues**: Verify `host.docker.internal` resolution
 
 ## 📋 Migration Notes
 
-This unified service replaces the individual ngrok configurations that were previously located in:
-- `pronunciation-assessment-service/ngrok/`
-- `content-scoring-service/ngrok/`
+### Container Migration:
+This containerized service replaces:
+- Individual ngrok configurations in services
+- Manual ngrok CLI installations
+- Host-based ngrok processes
 
-All ngrok-related files have been centralized here for better management and to avoid conflicts.
+### Benefits of Container Approach:
+- ✅ **No CLI Installation**: Ngrok included in container
+- ✅ **Consistent Environment**: Same behavior everywhere
+- ✅ **Easy Management**: Docker Compose commands
+- ✅ **Resource Control**: Container limits and monitoring
+- ✅ **Clean Isolation**: No host system dependencies
+- ✅ **Health Monitoring**: Built-in health checks
+
+### Backward Compatibility:
+- Same web interface: `http://localhost:4040`
+- Same API endpoints for tunnel information
+- Same tunnel URLs and functionality
