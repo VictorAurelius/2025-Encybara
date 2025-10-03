@@ -11,13 +11,31 @@ echo -e "${YELLOW}  NGROK CONNECTION TEST${NC}"
 echo -e "${YELLOW}============================================${NC}"
 echo ""
 
-# Get current environment variables
-CONTENT_SCORING_URL=${CONTENT_SCORING_SERVICE_URL}
-PRONUNCIATION_URL=${PRONUNCIATION_SERVICE_URL}
+# Get current environment variables from host and container
+HOST_CONTENT_SCORING_URL=${CONTENT_SCORING_SERVICE_URL}
+HOST_PRONUNCIATION_URL=${PRONUNCIATION_SERVICE_URL}
+
+# Try to get environment variables from running container
+CONTAINER_CONTENT_URL=""
+CONTAINER_PRONUNCIATION_URL=""
+
+cd ../build-docker 2>/dev/null || cd .
+backend_container=$(docker-compose ps -q backend 2>/dev/null)
+if [[ -n "$backend_container" ]]; then
+    CONTAINER_CONTENT_URL=$(docker exec "$backend_container" printenv CONTENT_SCORING_SERVICE_URL 2>/dev/null || echo "")
+    CONTAINER_PRONUNCIATION_URL=$(docker exec "$backend_container" printenv PRONUNCIATION_SERVICE_URL 2>/dev/null || echo "")
+fi
+cd ../backend-app 2>/dev/null || cd .
 
 echo -e "${YELLOW}Current Environment Variables:${NC}"
-echo -e "CONTENT_SCORING_SERVICE_URL: ${CONTENT_SCORING_URL:-'(Not set)'}"
-echo -e "PRONUNCIATION_SERVICE_URL: ${PRONUNCIATION_URL:-'(Not set)'}"
+echo -e "Host - CONTENT_SCORING_SERVICE_URL: ${HOST_CONTENT_SCORING_URL:-'(Not set)'}"
+echo -e "Host - PRONUNCIATION_SERVICE_URL: ${HOST_PRONUNCIATION_URL:-'(Not set)'}"
+echo -e "Container - CONTENT_SCORING_SERVICE_URL: ${CONTAINER_CONTENT_URL:-'(Not set)'}"
+echo -e "Container - PRONUNCIATION_SERVICE_URL: ${CONTAINER_PRONUNCIATION_URL:-'(Not set)'}"
+
+# Use container values if available, otherwise host values
+CONTENT_SCORING_URL=${CONTAINER_CONTENT_URL:-$HOST_CONTENT_SCORING_URL}
+PRONUNCIATION_URL=${CONTAINER_PRONUNCIATION_URL:-$HOST_PRONUNCIATION_URL}
 echo ""
 echo -e "${YELLOW}Default Ngrok URL: https://dural-rozanne-inquisitorial.ngrok-free.dev${NC}"
 echo ""
@@ -89,15 +107,49 @@ backend_health=$(curl -s --max-time 5 "http://localhost:8080/actuator/health" 2>
 if [[ $? -eq 0 ]]; then
     echo -e "${GREEN}✓ Backend-App is running${NC}"
     
-    # Test content scoring via backend
-    if [[ -n "$CONTENT_SCORING_URL" ]]; then
-        echo -n "  Content scoring via backend: "
-        backend_content=$(curl -s --max-time 10 "http://localhost:8080/api/v1/content-scoring/health" 2>/dev/null)
-        if [[ $? -eq 0 ]]; then
-            echo -e "${GREEN}✓ Accessible${NC}"
+    # Check what URLs the backend is actually using
+    echo ""
+    echo -e "${YELLOW}Backend Configuration:${NC}"
+    
+    # Test content scoring service info endpoint to see actual URL
+    echo -n "  Content Scoring Service: "
+    CONTENT_INFO=$(curl -s --max-time 10 "http://localhost:8080/api/v1/content-scoring/info" 2>/dev/null)
+    if [[ $? -eq 0 && -n "$CONTENT_INFO" ]]; then
+        SERVICE_URL=$(echo "$CONTENT_INFO" | grep -o '"service_url":"[^"]*"' | sed 's/"service_url":"\([^"]*\)"/\1/')
+        if [[ -n "$SERVICE_URL" ]]; then
+            echo -e "${GREEN}$SERVICE_URL${NC}"
         else
-            echo -e "${RED}✗ Not accessible${NC}"
+            echo -e "${RED}Could not parse service URL${NC}"
+            echo "    Response: $CONTENT_INFO"
         fi
+    else
+        echo -e "${RED}Could not get service info${NC}"
+    fi
+    
+    # Test pronunciation service info endpoint to see actual URL
+    echo -n "  Pronunciation Service: "
+    PRONUNCIATION_INFO=$(curl -s --max-time 10 "http://localhost:8080/api/v1/pronunciation/info" 2>/dev/null)
+    if [[ $? -eq 0 && -n "$PRONUNCIATION_INFO" ]]; then
+        SERVICE_URL=$(echo "$PRONUNCIATION_INFO" | grep -o '"service_url":"[^"]*"' | sed 's/"service_url":"\([^"]*\)"/\1/')
+        if [[ -n "$SERVICE_URL" ]]; then
+            echo -e "${GREEN}$SERVICE_URL${NC}"
+        else
+            echo -e "${RED}Could not parse service URL${NC}"
+            echo "    Response: $PRONUNCIATION_INFO"
+        fi
+    else
+        echo -e "${RED}Could not get service info${NC}"
+    fi
+    
+    echo ""
+    
+    # Test content scoring via backend
+    echo -n "  Content scoring health: "
+    backend_content=$(curl -s --max-time 10 "http://localhost:8080/api/v1/content-scoring/health" 2>/dev/null)
+    if [[ $? -eq 0 ]]; then
+        echo -e "${GREEN}✓ Accessible${NC}"
+    else
+        echo -e "${RED}✗ Not accessible${NC}"
     fi
     
     # Test pronunciation via backend  
