@@ -12,6 +12,7 @@ export interface LectureMaterial {
   materLink: string;
   materType: string;
   uploadedAt: string;
+  courseId?: number;
 }
 
 export interface ServerResponse<T> {

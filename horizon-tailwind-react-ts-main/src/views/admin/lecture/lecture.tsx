@@ -66,7 +66,12 @@ const LecturePage: React.FC = () => {
         try {
           const courseMaterials = await lectureService.getMaterialsByCourseId(course.id, token);
           if (courseMaterials.length > 0) {
-            allMaterials.push(...courseMaterials);
+            // Add courseId to each material
+            const materialsWithCourseId = courseMaterials.map(material => ({
+              ...material,
+              courseId: course.id
+            }));
+            allMaterials.push(...materialsWithCourseId);
             coursesWithMaterials.push(course.id);
           }
         } catch (error) {
@@ -208,8 +213,10 @@ const LecturePage: React.FC = () => {
               key: 'course',
               width: '35%',
               render: (_, record: LectureMaterial) => {
-                // For now, we'll use the first course as default since we don't have courseId in LectureMaterial
-                const course = courses[0] || { id: 1, name: 'Default Course' };
+                // Find the course this material belongs to
+                const course = allCourses.find(c => c.id === record.courseId) || 
+                              courses.find(c => c.id === record.courseId) || 
+                              { id: record.courseId || 0, name: 'Unknown Course' };
                 return (
                   <div className="flex items-center">
                     <div className="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
@@ -260,8 +267,8 @@ const LecturePage: React.FC = () => {
                   <Popconfirm
                     title="Are you sure you want to delete this lecture?"
                     onConfirm={() => {
-                      const defaultCourseId = courses[0]?.id || 1;
-                      handleDelete(record.id, defaultCourseId);
+                      const courseId = record.courseId || courses[0]?.id || 1;
+                      handleDelete(record.id, courseId);
                     }}
                     okText="Yes"
                     cancelText="No"
