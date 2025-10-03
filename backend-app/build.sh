@@ -12,41 +12,34 @@ prompt_for_service_urls() {
     echo -e "${YELLOW}  BACKEND-APP SERVICE CONFIGURATION${NC}"
     echo -e "${YELLOW}==================================================${NC}"
     echo ""
-    echo -e "${YELLOW}Vui lòng nhập public URL của các microservices:${NC}"
+    echo -e "${YELLOW}Unified Ngrok Service Configuration:${NC}"
     echo ""
     
-    # Pronunciation Assessment Service URL
-    echo -e "${YELLOW}1. Pronunciation Assessment Service URL:${NC}"
+    # Unified Ngrok URL
+    echo -e "${YELLOW}Ngrok Public URL (for both services):${NC}"
     echo -e "   ${YELLOW}Ví dụ: https://abc123.ngrok-free.app${NC}"
-    echo -e "   ${YELLOW}Hoặc để trống để sử dụng localhost (http://localhost:5000)${NC}"
-    read -p "   Nhập URL: " pronunciation_url
+    echo -e "   ${YELLOW}Hoặc để trống để sử dụng localhost${NC}"
+    echo -e "   ${YELLOW}(Cả 2 services sẽ dùng chung URL này với ports khác nhau)${NC}"
+    read -p "   Nhập Ngrok URL: " ngrok_base_url
     
-    if [[ -z "$pronunciation_url" ]]; then
+    if [[ -z "$ngrok_base_url" ]]; then
+        # Use localhost URLs
         PRONUNCIATION_SERVICE_URL="http://localhost:5000"
-        echo -e "   ${GREEN}Sử dụng localhost: $PRONUNCIATION_SERVICE_URL${NC}"
-    else
-        # Remove trailing slash if present
-        pronunciation_url=$(echo "$pronunciation_url" | sed 's|/$||')
-        PRONUNCIATION_SERVICE_URL="$pronunciation_url"
-        echo -e "   ${GREEN}Đã thiết lập: $PRONUNCIATION_SERVICE_URL${NC}"
-    fi
-    
-    echo ""
-    
-    # Content Scoring Service URL
-    echo -e "${YELLOW}2. Content Scoring Service URL:${NC}"
-    echo -e "   ${YELLOW}Ví dụ: https://def456.ngrok-free.app${NC}"
-    echo -e "   ${YELLOW}Hoặc để trống để sử dụng localhost (http://localhost:5001)${NC}"
-    read -p "   Nhập URL: " content_scoring_url
-    
-    if [[ -z "$content_scoring_url" ]]; then
         CONTENT_SCORING_SERVICE_URL="http://localhost:5001"
-        echo -e "   ${GREEN}Sử dụng localhost: $CONTENT_SCORING_SERVICE_URL${NC}"
+        echo -e "   ${GREEN}Sử dụng localhost:${NC}"
+        echo -e "   ${GREEN}  - Pronunciation: $PRONUNCIATION_SERVICE_URL${NC}"
+        echo -e "   ${GREEN}  - Content Scoring: $CONTENT_SCORING_SERVICE_URL${NC}"
     else
         # Remove trailing slash if present
-        content_scoring_url=$(echo "$content_scoring_url" | sed 's|/$||')
-        CONTENT_SCORING_SERVICE_URL="$content_scoring_url"
-        echo -e "   ${GREEN}Đã thiết lập: $CONTENT_SCORING_SERVICE_URL${NC}"
+        ngrok_base_url=$(echo "$ngrok_base_url" | sed 's|/$||')
+        
+        # Use same base URL with different ports
+        PRONUNCIATION_SERVICE_URL="${ngrok_base_url}:5000"
+        CONTENT_SCORING_SERVICE_URL="${ngrok_base_url}:5001"
+        
+        echo -e "   ${GREEN}Unified Ngrok configuration:${NC}"
+        echo -e "   ${GREEN}  - Pronunciation: $PRONUNCIATION_SERVICE_URL${NC}"
+        echo -e "   ${GREEN}  - Content Scoring: $CONTENT_SCORING_SERVICE_URL${NC}"
     fi
     
     echo ""
@@ -56,8 +49,20 @@ prompt_for_service_urls() {
 # Check for non-interactive mode (CI/CD or automated builds)
 if [[ "$1" == "--auto" || -n "$CI" || -n "$GITHUB_ACTIONS" ]]; then
     echo -e "${YELLOW}Auto mode detected, using environment variables or defaults${NC}"
-    PRONUNCIATION_SERVICE_URL=${PRONUNCIATION_SERVICE_URL:-"http://localhost:5000"}
-    CONTENT_SCORING_SERVICE_URL=${CONTENT_SCORING_SERVICE_URL:-"http://localhost:5001"}
+    
+    # Check if unified NGROK_URL is provided
+    if [[ -n "$NGROK_URL" ]]; then
+        # Remove trailing slash if present
+        NGROK_URL=$(echo "$NGROK_URL" | sed 's|/$||')
+        PRONUNCIATION_SERVICE_URL="${NGROK_URL}:5000"
+        CONTENT_SCORING_SERVICE_URL="${NGROK_URL}:5001"
+        echo -e "${GREEN}Using unified Ngrok URL: $NGROK_URL${NC}"
+    else
+        # Fall back to individual URLs or localhost
+        PRONUNCIATION_SERVICE_URL=${PRONUNCIATION_SERVICE_URL:-"http://localhost:5000"}
+        CONTENT_SCORING_SERVICE_URL=${CONTENT_SCORING_SERVICE_URL:-"http://localhost:5001"}
+        echo -e "${GREEN}Using localhost or individual service URLs${NC}"
+    fi
 else
     # Interactive mode - prompt for URLs
     prompt_for_service_urls
@@ -129,7 +134,13 @@ echo -e "\n${YELLOW}To view logs:${NC}"
 echo "docker-compose logs -f backend"
 
 echo -e "\n${YELLOW}Note:${NC}"
-echo -e "- Nếu sử dụng Ngrok URLs, đảm bảo các tunnel đang chạy"
+echo -e "- Nếu sử dụng Ngrok URLs, đảm bảo unified ngrok tunnel đang chạy"
+echo -e "- Start unified ngrok: ./start-ngrok-services.sh"
 echo -e "- Kiểm tra health check của các services trước khi test"
 echo -e "- Pronunciation: ${PRONUNCIATION_SERVICE_URL}/health"
 echo -e "- Content Scoring: ${CONTENT_SCORING_SERVICE_URL}/health"
+echo ""
+echo -e "${YELLOW}Unified Ngrok Info:${NC}"
+echo -e "- Web Interface: http://localhost:4040"
+echo -e "- Monitor: cd ngrok-service && ./monitor.sh"
+echo -e "- Get URLs: cd ngrok-service && ./get-tunnel-urls.sh"
