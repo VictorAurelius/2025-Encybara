@@ -39,13 +39,21 @@ prompt_for_service_urls() {
         # Remove trailing slash if present
         ngrok_base_url=$(echo "$ngrok_base_url" | sed 's|/$||')
         
-        # Use same base URL with different ports
-        PRONUNCIATION_SERVICE_URL="${ngrok_base_url}:5000"
-        CONTENT_SCORING_SERVICE_URL="${ngrok_base_url}:5001"
-        
-        echo -e "   ${GREEN}Unified Ngrok configuration:${NC}"
-        echo -e "   ${GREEN}  - Pronunciation: $PRONUNCIATION_SERVICE_URL${NC}"
-        echo -e "   ${GREEN}  - Content Scoring: $CONTENT_SCORING_SERVICE_URL${NC}"
+        # Check if it's a Ngrok URL (contains ngrok in domain)
+        if [[ "$ngrok_base_url" == *"ngrok"* ]]; then
+            # For Ngrok, use the same URL for both services (they have different internal routing)
+            PRONUNCIATION_SERVICE_URL="${ngrok_base_url}"
+            CONTENT_SCORING_SERVICE_URL="${ngrok_base_url}"
+            echo -e "   ${GREEN}Ngrok configuration (unified tunnel):${NC}"
+            echo -e "   ${GREEN}  - Both services use: $ngrok_base_url${NC}"
+        else
+            # For custom domains/IPs, use different ports
+            PRONUNCIATION_SERVICE_URL="${ngrok_base_url}:5000"
+            CONTENT_SCORING_SERVICE_URL="${ngrok_base_url}:5001"
+            echo -e "   ${GREEN}Custom domain configuration:${NC}"
+            echo -e "   ${GREEN}  - Pronunciation: $PRONUNCIATION_SERVICE_URL${NC}"
+            echo -e "   ${GREEN}  - Content Scoring: $CONTENT_SCORING_SERVICE_URL${NC}"
+        fi
     fi
     
     echo ""
@@ -60,9 +68,12 @@ if [[ "$1" == "--auto" || -n "$CI" || -n "$GITHUB_ACTIONS" ]]; then
     if [[ -n "$NGROK_URL" ]]; then
         # Remove trailing slash if present
         NGROK_URL=$(echo "$NGROK_URL" | sed 's|/$||')
-        PRONUNCIATION_SERVICE_URL="${NGROK_URL}:5000"
-        CONTENT_SCORING_SERVICE_URL="${NGROK_URL}:5001"
+        
+        # For Ngrok, both services use the same URL (unified tunnel)
+        PRONUNCIATION_SERVICE_URL="${NGROK_URL}"
+        CONTENT_SCORING_SERVICE_URL="${NGROK_URL}"
         echo -e "${GREEN}Using unified Ngrok URL: $NGROK_URL${NC}"
+        echo -e "${GREEN}  - Both services use the same tunnel${NC}"
     else
         # Use environment variables only, no defaults
         PRONUNCIATION_SERVICE_URL=${PRONUNCIATION_SERVICE_URL:-""}
