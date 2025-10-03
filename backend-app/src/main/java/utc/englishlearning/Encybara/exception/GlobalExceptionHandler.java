@@ -141,4 +141,25 @@ public class GlobalExceptionHandler {
         response.setMessage("Failed to process learning result: " + ex.getMessage());
         return ResponseEntity.badRequest().body(response);
     }
+
+    @ExceptionHandler(PronunciationAssessmentException.class)
+    public ResponseEntity<RestResponse<String>> handlePronunciationAssessmentException(
+            PronunciationAssessmentException ex) {
+        RestResponse<String> response = new RestResponse<>();
+        response.setStatusCode(ex.getStatusCode());
+        response.setError("Pronunciation assessment failed");
+        response.setMessage(ex.getMessage());
+        response.setData(null);
+        return ResponseEntity.status(ex.getStatusCode()).body(response);
+    }
+
+    @ExceptionHandler(ContentScoringException.class)
+    public ResponseEntity<RestResponse<String>> handleContentScoringException(ContentScoringException ex) {
+        RestResponse<String> response = new RestResponse<>();
+        response.setStatusCode(ex.getStatusCode());
+        response.setError("Content scoring failed");
+        response.setMessage(ex.getMessage());
+        response.setData(null);
+        return ResponseEntity.status(ex.getStatusCode()).body(response);
+    }
 }
