@@ -1,26 +1,8 @@
-# Ngrok Configuration for Content Scoring Service
-# Documentation: https://ngrok.com/docs/ngrok-agent/config
-version: "2"
-
-# ----------------------------------------------------------------
-# Authtoken
-# ----------------------------------------------------------------
-# Replace this with your authtoken from https://dashboard.ngrok.com/get-started/your-authtoken
-# Example: authtoken: 29a2b...
+version: 2
 authtoken: 33RzjpvLWHRqcfUdoHqdM42am8J_413xRQLhDiAY5LZ51TyDB
-
-# ----------------------------------------------------------------
-# Tunnels Definition
-# ----------------------------------------------------------------
-# This section defines the tunnels that the Ngrok agent will start.
 tunnels:
-  # Name of the tunnel, can be anything descriptive
-  content-scoring-api:
-    # Protocol to use (http, tcp, tls)
-    proto: http
-    # The address to forward traffic to.
-    # Use host.docker.internal to connect to services on the host machine
-    # This works when content-scoring-service is running on host port 5001
+  content-scoring:
     addr: host.docker.internal:5001
-    # Optional: If you have a paid Ngrok plan, you can use a static domain.
-    # domain: your-static-domain.ngrok-free.app
+    proto: http
+    inspect: true
+    bind_tls: true
