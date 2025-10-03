@@ -1,4 +1,4 @@
-# Ngrok Configuration for Pronunciation Assessment Service
+# Unified Ngrok Configuration for Both Services
 version: "2"
 authtoken: 33RzjpvLWHRqcfUdoHqdM42am8J_413xRQLhDiAY5LZ51TyDB
 
@@ -15,6 +15,12 @@ tunnels:
     # Optional: custom domain (requires paid plan)
     # hostname: pronunciation.yourdomain.com
     inspect: true
+
+  content-scoring:
+    addr: host.docker.internal:5001
+    proto: http
+    inspect: true
+    bind_tls: true
 
 # Logging configuration
 log_level: info
