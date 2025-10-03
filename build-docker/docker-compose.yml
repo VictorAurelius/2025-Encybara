@@ -39,10 +39,9 @@ services:
       - springdoc.swagger-ui.display-request-duration=true
       # Fix for Docker/Container processor metrics NullPointerException
       - management.metrics.enable.processor=false
-      # Content Scoring Service URL (Ngrok tunnel)
-      - CONTENT_SCORING_SERVICE_URL=https://dural-rozanne-inquisitorial.ngrok-free.dev
-      - content-scoring.service.url=https://dural-rozanne-inquisitorial.ngrok-free.dev
-      # Pronunciation Assessment Service URL (Ngrok tunnel)
+      # Content Scoring Service URL (Environment variable or default)
+      - content-scoring.service.url=${CONTENT_SCORING_SERVICE_URL:-http://localhost:5001}
+      # Pronunciation Assessment Service URL (Environment variable or default)
       - PRONUNCIATION_SERVICE_URL=${PRONUNCIATION_SERVICE_URL:-http://localhost:5000}
     volumes:
       - upload_data:/app/uploads
