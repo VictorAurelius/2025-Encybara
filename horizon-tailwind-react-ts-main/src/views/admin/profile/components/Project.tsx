@@ -106,7 +106,6 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
     try {
       
       await profileService.toggleCourseStatus(course.id, course.courseStatus);
-      
       message.success(`Course status updated successfully`);
       fetchCourses(); // Reload courses
     } catch (error) {
@@ -117,15 +116,12 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
   const handleAddLesson = async (courseId: number) => {
     setCourseId(courseId);
     setShowModal(true);
-    // Fetch lessons cho courseId được chọn thay vì hardcode 1
     await fetchLessonsForCourse(courseId);
   };
 
   const fetchLessonsForCourse = async (courseId: number) => {
     try {
       setLoadingLessons(true);
-      console.log(`📚 Fetching lessons for course ${courseId}...`);
-      
       const lessons = await profileService.getLessonsByCourseId(courseId);
       setLessons(lessons);
       setErrorLessons(null);
@@ -152,11 +148,8 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
   };
 
   const handleDelete = async (row: RowObj) => {
-    try {
-      console.log(`🗑️ Deleting course ${row.id}`);
-      
-      await profileService.deleteCourse(row.id);
-      
+    try {      
+      await profileService.deleteCourse(row.id);    
       message.success("Course deleted successfully");
       fetchCourses(); // Reload courses
     } catch (error) {

@@ -61,12 +61,10 @@ class QuestionService {
     
     const cached = globalCache.get<QuestionsResponse>(cacheKey);
     if (cached) {
-      console.log('❓ Using cached questions data');
       return cached;
     }
 
     try {
-      console.log('🌐 Fetching questions from API');
       const queryParams = new URLSearchParams({
         page: pagination.page.toString(),
         size: pagination.size.toString(),
@@ -101,12 +99,10 @@ class QuestionService {
     
     const cached = globalCache.get<any[]>(cacheKey);
     if (cached) {
-      console.log('📚 Using cached lessons list');
       return cached;
     }
 
     try {
-      console.log('🌐 Fetching all lessons from API');
       const response = await this.apiService.get<ServerResponse<{ content: any[] }>>(
         '/api/v1/lessons'
       );
@@ -128,12 +124,10 @@ class QuestionService {
     
     const cached = globalCache.get<{ [key: number]: Array<{ id: number, name: string }> }>(cacheKey);
     if (cached) {
-      console.log('🗺️ Using cached question-lesson map');
       return cached;
     }
 
     try {
-      console.log('🌐 Building question-lesson map from API');
       const lessons = await this.getAllLessons();
       
       const questionLessonMap: { [key: number]: Array<{ id: number, name: string }> } = {};
@@ -164,7 +158,6 @@ class QuestionService {
 
   async createQuestion(questionData: IQuestion): Promise<IQuestion> {
     try {
-      console.log('🆕 Creating new question');
       const response = await this.apiService.post<ServerResponse<IQuestion>>(
         '/api/v1/questions',
         questionData
@@ -182,7 +175,6 @@ class QuestionService {
 
   async updateQuestion(questionId: number, questionData: IQuestion): Promise<IQuestion> {
     try {
-      console.log(`🔄 Updating question ${questionId}`);
       const response = await this.apiService.put<ServerResponse<IQuestion>>(
         `/api/v1/questions/${questionId}`,
         questionData
@@ -200,7 +192,6 @@ class QuestionService {
 
   async deleteQuestion(questionId: number): Promise<void> {
     try {
-      console.log(`🗑️ Deleting question ${questionId}`);
       await this.apiService.delete(`/api/v1/questions/${questionId}`);
 
       // Invalidate related caches
@@ -215,7 +206,6 @@ class QuestionService {
 
   async deleteMultipleQuestions(questionIds: number[]): Promise<void> {
     try {
-      console.log(`🗑️ Deleting multiple questions: ${questionIds}`);
       await this.apiService.delete('/api/v1/questions/batch', { ids: questionIds });
 
       // Invalidate related caches
@@ -230,11 +220,9 @@ class QuestionService {
 
   async uploadMaterial(file: File): Promise<{ url: string }> {
     try {
-      console.log('📁 Uploading material file');
       const formData = new FormData();
       formData.append('file', file);
 
-      // Note: This might need adjustment based on your actual upload API
       const response = await this.apiService.post<ServerResponse<{ url: string }>>(
         '/api/v1/upload/material',
         formData,
@@ -255,24 +243,20 @@ class QuestionService {
   // Cache management methods
   invalidateQuestionsCache(): void {
     globalCache.invalidatePattern('questions_.*');
-    console.log('🗑️ Invalidated questions cache');
   }
 
   invalidateQuestionLessonMap(): void {
     globalCache.delete('question_lesson_map');
-    console.log('🗑️ Invalidated question-lesson map cache');
   }
 
   invalidateLessonsCache(): void {
     globalCache.delete('all_lessons_list');
-    console.log('🗑️ Invalidated lessons list cache');
   }
 
   clearAllQuestionCache(): void {
     globalCache.invalidatePattern('questions_.*');
     globalCache.delete('question_lesson_map');
     globalCache.delete('all_lessons_list');
-    console.log('🗑️ Cleared all question cache');
   }
 
   getQuestionCacheStats(): { size: number; keys: string[] } {

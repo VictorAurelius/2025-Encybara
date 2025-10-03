@@ -28,7 +28,6 @@ const LecturePage: React.FC = () => {
   const fetchCourses = async () => {
     try {
       setLoading(true);
-      console.log('📋 Fetching courses with materials...');
       const coursesData = await lectureService.getCoursesWithMaterials(token);
       setCourses(coursesData);
     } catch (error) {
@@ -42,14 +41,12 @@ const LecturePage: React.FC = () => {
   // Fetch all courses for upload modal
   const fetchAllCourses = async () => {
     try {
-      console.log('📋 Fetching all courses for upload...');
       // Use profileService to get courses with larger page size to get all courses
       const response = await profileService.getCourses({}, { page: 1, size: 1000 });
       const allCoursesData = response.content || [];
       
       // Ensure it's always an array
       setAllCourses(Array.isArray(allCoursesData) ? allCoursesData : []);
-      console.log('📋 All courses fetched:', allCoursesData.length);
     } catch (error) {
       console.error('Error fetching all courses:', error);
       message.error('Failed to fetch courses');
@@ -61,9 +58,7 @@ const LecturePage: React.FC = () => {
   // Fetch all materials from all courses
   const fetchMaterials = async () => {
     try {
-      setLoading(true);
-      console.log('📄 Fetching all materials from all courses...');
-      
+      setLoading(true);      
       const allMaterials: LectureMaterial[] = [];
       const coursesWithMaterials: number[] = [];
       
@@ -86,9 +81,7 @@ const LecturePage: React.FC = () => {
       
       setMaterials(allMaterials);
       setCoursesWithoutMaterials(coursesWithoutMats);
-      console.log('📊 Courses without materials:', coursesWithoutMats.length);
     } catch (error) {
-      console.error("Error fetching materials:", error);
       message.error("Failed to fetch lecture materials");
     } finally {
       setLoading(false);
@@ -100,7 +93,6 @@ const LecturePage: React.FC = () => {
     try {
       setMarkdownLoading(true);
       setCurrentFileName(fileName);
-      console.log(`� Reading markdown content from: ${materLink}`);
       const htmlContent = await lectureService.renderMarkdownToHtml(materLink);
       setMarkdownContent(htmlContent);
       setMarkdownVisible(true);
@@ -114,7 +106,6 @@ const LecturePage: React.FC = () => {
 
   const handleUpload = async (file: File, courseId: number) => {
     try {
-      console.log(`📤 Uploading file for course ${courseId}`);
       await lectureService.uploadMaterial(file, courseId);
       message.success("Lecture uploaded successfully");
       fetchMaterials();
@@ -126,7 +117,6 @@ const LecturePage: React.FC = () => {
 
   const handleDelete = async (id: number, courseId: number) => {
     try {
-      console.log(`🗑️ Deleting material ${id} from course ${courseId}`);
       await lectureService.deleteMaterial(id, courseId);
       message.success("Lecture deleted successfully");
       fetchMaterials();
@@ -138,14 +128,11 @@ const LecturePage: React.FC = () => {
 
   // Upload modal handlers
   const openUploadModal = async () => {
-    console.log('🔴 Opening upload modal...');
     setUploadModalVisible(true);
     await fetchAllCourses();
-    console.log('🔴 Upload modal should be visible now');
   };
 
   const closeUploadModal = () => {
-    console.log('🔴 Closing upload modal...');
     setUploadModalVisible(false);
     setSelectedCourseForUpload(undefined);
     setUploadFile(null);
@@ -159,7 +146,6 @@ const LecturePage: React.FC = () => {
 
     try {
       setUploadLoading(true);
-      console.log(`📤 Uploading ${uploadFile.name} to course ${selectedCourseForUpload}`);
       await lectureService.uploadMaterial(uploadFile, selectedCourseForUpload);
       message.success('Material uploaded successfully');
       closeUploadModal();
@@ -182,9 +168,6 @@ const LecturePage: React.FC = () => {
     }
   }, [courses]);
 
-      console.log('Available courses:', courses);
-  console.log('🔴 Upload modal visible:', uploadModalVisible);
-  
   return (
     <div className="mt-3 grid h-full">
       <div className="w-full rounded-[20px] bg-white p-4">

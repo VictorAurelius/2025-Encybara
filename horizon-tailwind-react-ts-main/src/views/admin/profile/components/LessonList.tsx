@@ -30,9 +30,7 @@ const LessonList: React.FC<LessonListProps> = ({ lessons, courseId, fetchLessons
         // Fetch lessons in the course and set them as selected
         const fetchCourseLessons = async () => {
             try {
-                console.log(`📋 Fetching course ${courseId} lesson details...`);
                 const courseDetails = await lessonService.getCourseDetails(courseId);
-                console.log("courseLessonIds:", courseDetails);
                 setSelectedLessons(courseDetails.lessonIds || []);
             } catch (error) {
                 console.error("Error fetching course lessons:", error);
@@ -47,12 +45,10 @@ const LessonList: React.FC<LessonListProps> = ({ lessons, courseId, fetchLessons
 
         try {
             if (isSelected) {
-                console.log(`⟖ Removing lesson ${lessonId} from course ${courseId}`);
                 await lessonService.removeLessonFromCourse(courseId, lessonId);
                 setSelectedLessons(prevSelected => prevSelected.filter(id => id !== lessonId));
                 message.success("Lesson removed successfully");
             } else {
-                console.log(`➕ Adding lesson ${lessonId} to course ${courseId}`);
                 await lessonService.addLessonsToCourse(courseId, [lessonId]);
                 setSelectedLessons(prevSelected => [...prevSelected, lessonId]);
                 notification.success({
@@ -76,7 +72,6 @@ const LessonList: React.FC<LessonListProps> = ({ lessons, courseId, fetchLessons
     };
     const handleDeleteLesson = async (lessonId: number) => {
         try {
-            console.log(`🗑️ Deleting lesson ${lessonId}`);
             await lessonService.deleteLesson(lessonId);
             message.success("Lesson deleted successfully");
             fetchLessons();

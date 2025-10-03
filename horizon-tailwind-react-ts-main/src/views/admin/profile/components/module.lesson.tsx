@@ -37,9 +37,7 @@ const ModuleLesson = (props: IProps) => {
             if (!listLesson?.skillType) return;
             
             try {
-                console.log(`❓ Fetching questions for skill ${listLesson.skillType}...`);
                 const questionsData = await lessonService.getQuestionsBySkillType(listLesson.skillType);
-                
                 const formattedQuestions = questionsData.map((q: any) => ({
                     label: q.quesContent,
                     value: q.id,
@@ -69,13 +67,11 @@ const ModuleLesson = (props: IProps) => {
 
         try {
             if (addedIds.length > 0) {
-                console.log(`➕ Adding questions ${addedIds} to lesson ${listLesson.id}`);
                 await lessonService.addQuestionsToLesson(listLesson.id, addedIds);
                 message.success("Questions added successfully");
             }
 
             if (removedIds.length > 0) {
-                console.log(`⟖ Removing questions ${removedIds} from lesson ${listLesson.id}`);
                 for (const questionId of removedIds) {
                     await lessonService.removeQuestionFromLesson(listLesson.id, questionId);
                 }
@@ -94,11 +90,9 @@ const ModuleLesson = (props: IProps) => {
         
         try {
             if (listLesson?.id) {
-                console.log(`🔄 Updating lesson ${listLesson.id}`);
                 await lessonService.updateLesson(listLesson.id, lesson);
                 message.success("Lesson updated successfully");
             } else {
-                console.log('🆕 Creating new lesson');
                 await lessonService.createLesson(lesson);
                 message.success("Lesson created successfully");
             }

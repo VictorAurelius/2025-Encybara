@@ -17,7 +17,6 @@ const ProfileOverview = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('🔄 Loading initial courses data...');
         const coursesData = await profileService.getCourses();
         setTableData(coursesData.content);
       } catch (error) {
