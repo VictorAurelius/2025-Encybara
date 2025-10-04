@@ -58,16 +58,23 @@ public class PronunciationAssessmentService {
             // Prepare multipart request
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
             body.add("audio", audioFile.getResource());
+
+            // pronunciation-assessment-service requires 'transcript' field, not 'text'
             if (text != null && !text.trim().isEmpty()) {
-                body.add("text", text);
+                body.add("transcript", text);
+            } else {
+                // transcript is required by pronunciation-assessment-service
+                throw new PronunciationAssessmentException(
+                        "Transcript text là bắt buộc để đánh giá phát âm. Vui lòng cung cấp text tham chiếu.",
+                        HttpStatus.BAD_REQUEST.value());
             }
 
             // Prepare headers
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-            // Make API call to pronunciation-assessment-service
-            String apiUrl = pronunciationServiceUrl + "/pronunciation/assess";
+            // Make API call to pronunciation-assessment-service - correct endpoint
+            String apiUrl = pronunciationServiceUrl + "/api/pronunciation-assessment";
             log.debug("Calling pronunciation-assessment-service at: {}", apiUrl);
 
             ResponseEntity<Map> response = restTemplate.postForEntity(

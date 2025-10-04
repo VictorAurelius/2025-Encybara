@@ -28,17 +28,29 @@ public class PronunciationAssessmentController {
     @PostMapping("/assess")
     public ResponseEntity<RestResponse<Map<String, Object>>> assessPronunciation(
             @RequestParam("file") MultipartFile file,
-            @RequestParam(value = "text", required = false) String text) {
+            @RequestParam("text") String text) {
 
         try {
-            log.info("Received pronunciation assessment request for file: {}", file.getOriginalFilename());
+            log.info("Received pronunciation assessment request for file: {} with text: {}",
+                    file.getOriginalFilename(),
+                    text != null ? text.substring(0, Math.min(text.length(), 50)) + "..." : "null");
 
             // Validate file
             if (file == null || file.isEmpty()) {
                 RestResponse<Map<String, Object>> response = new RestResponse<>();
                 response.setStatusCode(HttpStatus.BAD_REQUEST.value());
-                response.setError("Invalid file");
-                response.setMessage("File không được để trống");
+                response.setError("Missing 'audio' file in request");
+                response.setMessage("Audio file không được để trống");
+                response.setData(null);
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            // Validate text/transcript - now required
+            if (text == null || text.trim().isEmpty()) {
+                RestResponse<Map<String, Object>> response = new RestResponse<>();
+                response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                response.setError("Missing 'text' field in request");
+                response.setMessage("Text transcript là bắt buộc để đánh giá phát âm");
                 response.setData(null);
                 return ResponseEntity.badRequest().body(response);
             }

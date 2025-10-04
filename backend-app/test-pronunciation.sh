@@ -82,24 +82,27 @@ check_file() {
     fi
 }
 
-# Function to make API calls with file upload
+# Function to make API calls with file upload and transcript
 test_file_upload() {
     local endpoint="$1"
     local file_path="$2"
-    local description="$3"
-    local expected_status="$4"
+    local transcript="$3"
+    local description="$4"
+    local expected_status="$5"
     
     echo -e "${YELLOW}Testing: ${description}${NC}"
     echo -e "URL: ${BACKEND_URL}${endpoint}"
     echo -e "File: ${file_path}"
+    echo -e "Transcript: ${transcript}"
     
     # Check if file exists
     check_file "$file_path"
     
-    # Make the request with authentication
+    # Make the request with authentication and transcript
     response=$(curl -s -w "\n%{http_code}" -X POST \
         -H "Authorization: Bearer ${ACCESS_TOKEN}" \
         -F "file=@${file_path}" \
+        -F "text=${transcript}" \
         "${BACKEND_URL}${endpoint}")
     
     # Split response and status code
@@ -194,45 +197,71 @@ cp test-audio/test-speech-3.txt test-audio/test-speech-3.wav
 echo -e "${GREEN}✓ Test files prepared${NC}"
 echo "----------------------------------------"
 
-# Test 3: Pronunciation Assessment - Valid WAV File
-test_file_upload "${PRONUNCIATION_API}/assess" "test-audio/test-speech.wav" "Pronunciation Assessment - WAV File" "400"
+# Test 3: Pronunciation Assessment - Valid WAV File with Transcript
+test_file_upload "${PRONUNCIATION_API}/assess" "test-audio/test-speech.wav" "Hello world this is a pronunciation test" "Pronunciation Assessment - WAV File with Transcript" "200"
 
-# Test 4: Pronunciation Assessment - Valid MP3 File  
-test_file_upload "${PRONUNCIATION_API}/assess" "test-audio/test-speech-2.mp3" "Pronunciation Assessment - MP3 File" "400"
+# Test 4: Pronunciation Assessment - Valid MP3 File with Transcript
+test_file_upload "${PRONUNCIATION_API}/assess" "test-audio/test-speech-2.mp3" "The quick brown fox jumps over the lazy dog" "Pronunciation Assessment - MP3 File with Transcript" "200"
 
-# Test 5: Pronunciation Assessment - Another WAV File
-test_file_upload "${PRONUNCIATION_API}/assess" "test-audio/test-speech-3.wav" "Pronunciation Assessment - Long Text WAV" "400"
+# Test 5: Pronunciation Assessment - Another WAV File with Long Transcript
+test_file_upload "${PRONUNCIATION_API}/assess" "test-audio/test-speech-3.wav" "Artificial intelligence is transforming technology and changing how we work" "Pronunciation Assessment - Long Text WAV with Transcript" "200"
 
-# Test 6: Pronunciation Assessment - Missing File
-echo -e "${YELLOW}Testing: Missing File Upload${NC}"
+# Test 6: Pronunciation Assessment - Missing Transcript (should fail)
+echo -e "${YELLOW}Testing: Missing Transcript${NC}"
 response=$(curl -s -w "\n%{http_code}" -X POST \
     -H "Authorization: Bearer ${ACCESS_TOKEN}" \
-    "${BACKEND_URL}${PRONUNCIATION_API}/assess" 2>/dev/null)
+    -F "file=@test-audio/test-speech.wav" \
+    "${BACKEND_URL}${PRONUNCIATION_API}/assess")
 status_code=$(echo "$response" | tail -n1)
-if [[ "$status_code" == "500" ]]; then
-    echo -e "${GREEN}✓ Missing File Upload - HTTP ${status_code} (Expected error)${NC}"
+response_body=$(echo "$response" | head -n -1)
+if [[ "$status_code" == "400" ]]; then
+    echo -e "${GREEN}✓ Missing Transcript - HTTP ${status_code} (Expected error)${NC}"
+    if [[ "$response_body" == *"Missing 'text' field"* ]]; then
+        echo -e "${GREEN}  ✓ Correct error message about missing transcript${NC}"
+    fi
 else
-    echo -e "${RED}✗ Missing File Upload - HTTP ${status_code}${NC}"
-    echo "Expected: HTTP 500"
+    echo -e "${RED}✗ Missing Transcript - HTTP ${status_code}${NC}"
+    echo "Expected: HTTP 400"
+    echo "Response: $response_body"
 fi
 echo "----------------------------------------"
 
-# Test 7: Invalid HTTP Method
-test_endpoint "GET" "${PRONUNCIATION_API}/assess" "" "Pronunciation Assessment - GET Method (should fail)" "500"
+# Test 7: Pronunciation Assessment - Missing File
+echo -e "${YELLOW}Testing: Missing File Upload${NC}"
+response=$(curl -s -w "\n%{http_code}" -X POST \
+    -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+    -F "text=Hello world" \
+    "${BACKEND_URL}${PRONUNCIATION_API}/assess" 2>/dev/null)
+status_code=$(echo "$response" | tail -n1)
+response_body=$(echo "$response" | head -n -1)
+if [[ "$status_code" == "400" ]]; then
+    echo -e "${GREEN}✓ Missing File Upload - HTTP ${status_code} (Expected error)${NC}"
+    if [[ "$response_body" == *"Missing 'audio' file"* ]]; then
+        echo -e "${GREEN}  ✓ Correct error message about missing audio file${NC}"
+    fi
+else
+    echo -e "${RED}✗ Missing File Upload - HTTP ${status_code}${NC}"
+    echo "Expected: HTTP 400"
+    echo "Response: $response_body"
+fi
+echo "----------------------------------------"
 
-# Test 8: Wrong Content Type
+# Test 8: Invalid HTTP Method
+test_endpoint "GET" "${PRONUNCIATION_API}/assess" "" "Pronunciation Assessment - GET Method (should fail)" "405"
+
+# Test 9: Wrong Content Type
 echo -e "${YELLOW}Testing: Wrong Content Type${NC}"
 response=$(curl -s -w "\n%{http_code}" -X POST \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer ${ACCESS_TOKEN}" \
-    -d '{"file": "not a file"}' \
+    -d '{"file": "not a file", "text": "hello world"}' \
     "${BACKEND_URL}${PRONUNCIATION_API}/assess")
 status_code=$(echo "$response" | tail -n1)
-if [[ "$status_code" == "500" ]]; then
+if [[ "$status_code" == "400" ]]; then
     echo -e "${GREEN}✓ Wrong Content Type - HTTP ${status_code} (Expected error)${NC}"
 else
     echo -e "${RED}✗ Wrong Content Type - HTTP ${status_code}${NC}"
-    echo "Expected: HTTP 500"
+    echo "Expected: HTTP 400"
 fi
 echo "----------------------------------------"
 
@@ -245,7 +274,7 @@ echo -e "${BLUE}============================================${NC}"
 echo -e "${YELLOW}Testing: File Upload Performance${NC}"
 
 start_time=$(date +%s.%N)
-test_file_upload "${PRONUNCIATION_API}/assess" "test-audio/test-speech.wav" "Performance Test" "200" > /dev/null
+test_file_upload "${PRONUNCIATION_API}/assess" "test-audio/test-speech.wav" "Hello world this is a performance test" "Performance Test" "200" > /dev/null
 end_time=$(date +%s.%N)
 
 # Calculate duration without bc (which might not be available)
@@ -275,6 +304,7 @@ if [[ -f "test-audio/test-speech.wav" ]]; then
     pronunciation_response=$(curl -s -X POST \
         -H "Authorization: Bearer ${ACCESS_TOKEN}" \
         -F "file=@test-audio/test-speech.wav" \
+        -F "text=Hello world this is an integration test" \
         "${BACKEND_URL}${PRONUNCIATION_API}/assess")
     if [[ "$pronunciation_response" == *"statusCode"* ]]; then
         pronunciation_test="success"
@@ -297,7 +327,7 @@ echo -e "${YELLOW}Test completed. Check above for any failures.${NC}"
 echo -e "${YELLOW}For debugging:${NC}"
 echo -e "Backend logs: docker-compose logs -f backend"
 echo -e "Backend health: curl ${BACKEND_URL}/actuator/health"
-echo -e "Manual test: curl -X POST -H 'Authorization: Bearer YOUR_TOKEN' -F 'file=@test-audio/test-speech.wav' ${BACKEND_URL}${PRONUNCIATION_API}/assess"
+echo -e "Manual test: curl -X POST -H 'Authorization: Bearer YOUR_TOKEN' -F 'file=@test-audio/test-speech.wav' -F 'text=Hello world' ${BACKEND_URL}${PRONUNCIATION_API}/assess"
 echo ""
 echo -e "${YELLOW}To get a new token manually:${NC}"
 echo -e "curl -X POST -H 'Content-Type: application/json' -d '{\"username\":\"${DEFAULT_EMAIL}\",\"password\":\"${DEFAULT_PASSWORD}\"}' ${BACKEND_URL}${AUTH_API}/login"
