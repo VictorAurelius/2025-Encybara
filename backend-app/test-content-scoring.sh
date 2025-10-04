@@ -135,7 +135,7 @@ scoring_data='{
   "prompt": "Evaluate this answer about artificial intelligence"
 }'
 
-test_endpoint "POST" "${CONTENT_SCORING_API}/evaluate" "$scoring_data" "Content Scoring - Valid Request" "500"
+test_endpoint "POST" "${CONTENT_SCORING_API}/evaluate" "$scoring_data" "Content Scoring - Valid Request" "200"
 
 # Test 5: Content Scoring - Empty Answer
 scoring_data_empty='{
@@ -144,7 +144,7 @@ scoring_data_empty='{
   "prompt": "Evaluate this answer"
 }'
 
-test_endpoint "POST" "${CONTENT_SCORING_API}/evaluate" "$scoring_data_empty" "Content Scoring - Empty Answer (should fail)" "500"
+test_endpoint "POST" "${CONTENT_SCORING_API}/evaluate" "$scoring_data_empty" "Content Scoring - Empty Answer (should fail)" "400"
 
 # Test 6: Content Scoring - Missing Question
 scoring_data_no_question='{
@@ -152,7 +152,7 @@ scoring_data_no_question='{
   "prompt": "Evaluate this answer"
 }'
 
-test_endpoint "POST" "${CONTENT_SCORING_API}/evaluate" "$scoring_data_no_question" "Content Scoring - Missing Question (should fail)" "500"
+test_endpoint "POST" "${CONTENT_SCORING_API}/evaluate" "$scoring_data_no_question" "Content Scoring - Missing Question (should fail)" "400"
 
 # Test 7: Content Scoring - Long Answer
 scoring_data_long='{
@@ -161,16 +161,16 @@ scoring_data_long='{
   "prompt": "Evaluate this comprehensive answer about neural networks"
 }'
 
-test_endpoint "POST" "${CONTENT_SCORING_API}/evaluate" "$scoring_data_long" "Content Scoring - Long Answer" "500"
+test_endpoint "POST" "${CONTENT_SCORING_API}/evaluate" "$scoring_data_long" "Content Scoring - Long Answer" "200"
 
-# Test 8: Content Scoring - Vietnamese Question (UTF-8 encoding issue expected)
+# Test 8: Content Scoring - English Question
 scoring_data_vietnamese='{
   "question": "What is AI in simple terms?",
   "userAnswer": "AI helps computers make smart decisions",
   "prompt": "Evaluate this simple AI explanation"
 }'
 
-test_endpoint "POST" "${CONTENT_SCORING_API}/evaluate" "$scoring_data_vietnamese" "Content Scoring - English Question" "500"
+test_endpoint "POST" "${CONTENT_SCORING_API}/evaluate" "$scoring_data_vietnamese" "Content Scoring - English Question" "200"
 
 # Test 9: Suggestions Endpoint (should be disabled)
 suggestion_data='{
