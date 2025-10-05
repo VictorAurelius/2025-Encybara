@@ -7,12 +7,16 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import utc.englishlearning.Encybara.domain.Question;
 import utc.englishlearning.Encybara.domain.Question_Choice;
+import utc.englishlearning.Encybara.domain.SpeakingSampleAnswer;
 import utc.englishlearning.Encybara.domain.request.question.ReqCreateQuestionDTO;
 import utc.englishlearning.Encybara.domain.request.question.ReqUpdateQuestionDTO;
 import utc.englishlearning.Encybara.domain.response.question.ResQuestionDTO;
+import utc.englishlearning.Encybara.domain.response.speaking.ResSpeakingSampleAnswerDTO;
+import utc.englishlearning.Encybara.exception.InvalidOperationException;
 import utc.englishlearning.Encybara.exception.ResourceNotFoundException;
 import utc.englishlearning.Encybara.repository.QuestionRepository;
 import utc.englishlearning.Encybara.repository.QuestionChoiceRepository;
+import utc.englishlearning.Encybara.repository.SpeakingSampleAnswerRepository;
 import utc.englishlearning.Encybara.specification.QuestionSpecification;
 import utc.englishlearning.Encybara.util.constant.QuestionTypeEnum;
 import utc.englishlearning.Encybara.util.constant.SkillTypeEnum;
@@ -27,6 +31,9 @@ public class QuestionService {
 
     @Autowired
     private QuestionChoiceRepository questionChoiceRepository;
+
+    @Autowired
+    private SpeakingSampleAnswerRepository speakingSampleAnswerRepository;
 
     public ResQuestionDTO createQuestion(ReqCreateQuestionDTO questionDTO) {
         Question question = new Question();
@@ -219,6 +226,66 @@ public class QuestionService {
         dto.setSkillType(question.getSkillType());
         dto.setPoint(question.getPoint());
         dto.setQuestionChoices(question.getQuestionChoices());
+        return dto;
+    }
+
+    // Speaking Sample Answer related methods
+    public List<ResSpeakingSampleAnswerDTO> getSampleAnswersForQuestion(Long questionId) {
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
+
+        if (question.getQuesType() != QuestionTypeEnum.SPEAKING) {
+            throw new InvalidOperationException("Only speaking questions can have sample answers");
+        }
+
+        List<SpeakingSampleAnswer> sampleAnswers = speakingSampleAnswerRepository.findByQuestionId(questionId);
+        return sampleAnswers.stream()
+                .map(this::convertSampleAnswerToDTO)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    public boolean validateSpeakingQuestionHasSampleAnswers(Long questionId) {
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
+
+        if (question.getQuesType() != QuestionTypeEnum.SPEAKING) {
+            return true; // Non-speaking questions don't need sample answers
+        }
+
+        return speakingSampleAnswerRepository.existsByQuestionId(questionId);
+    }
+
+    public void validateSpeakingQuestionRequirements(Long questionId) {
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
+
+        if (question.getQuesType() == QuestionTypeEnum.SPEAKING) {
+            // Check if speaking question has question choices (should not have)
+            long choiceCount = questionChoiceRepository.countByQuestionId(questionId);
+            if (choiceCount > 0) {
+                throw new InvalidOperationException("Speaking questions cannot have question choices");
+            }
+
+            // Check if speaking question has sample answers (should have at least one)
+            boolean hasSampleAnswers = speakingSampleAnswerRepository.existsByQuestionId(questionId);
+            if (!hasSampleAnswers) {
+                throw new InvalidOperationException("Speaking questions must have at least one sample answer");
+            }
+        }
+    }
+
+    private ResSpeakingSampleAnswerDTO convertSampleAnswerToDTO(SpeakingSampleAnswer sampleAnswer) {
+        ResSpeakingSampleAnswerDTO dto = new ResSpeakingSampleAnswerDTO();
+        dto.setId(sampleAnswer.getId());
+        dto.setAnswerContent(sampleAnswer.getAnswerContent());
+        dto.setDescription(sampleAnswer.getDescription());
+        dto.setDifficultyLevel(sampleAnswer.getDifficultyLevel());
+        dto.setEstimatedScore(sampleAnswer.getEstimatedScore());
+        dto.setQuestionId(sampleAnswer.getQuestion().getId());
+        // Note: Audit fields will be added when SpeakingSampleAnswer entity includes
+        // them
+        // dto.setCreatedAt(sampleAnswer.getCreatedAt());
+        // dto.setUpdatedAt(sampleAnswer.getUpdatedAt());
         return dto;
     }
 }

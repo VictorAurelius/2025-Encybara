@@ -70,4 +70,8 @@ public class Question {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Question_Choice> questionChoices;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<SpeakingSampleAnswer> speakingSampleAnswers;
 }

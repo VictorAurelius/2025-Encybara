@@ -8,10 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import utc.englishlearning.Encybara.domain.request.question.ReqCreateQuestionDTO;
 import utc.englishlearning.Encybara.domain.request.question.ReqUpdateQuestionDTO;
 import utc.englishlearning.Encybara.domain.response.question.ResQuestionDTO;
+import utc.englishlearning.Encybara.domain.response.speaking.ResSpeakingSampleAnswerDTO;
 import utc.englishlearning.Encybara.service.QuestionService;
 import utc.englishlearning.Encybara.domain.response.RestResponse;
 import utc.englishlearning.Encybara.util.constant.QuestionTypeEnum;
 import utc.englishlearning.Encybara.util.constant.SkillTypeEnum;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/questions")
@@ -73,6 +76,45 @@ public class QuestionController {
         response.setStatusCode(200);
         response.setMessage("Questions retrieved successfully");
         response.setData(questions);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/sample-answers")
+    public ResponseEntity<RestResponse<List<ResSpeakingSampleAnswerDTO>>> getSampleAnswersForQuestion(
+            @PathVariable("id") Long id) {
+        List<ResSpeakingSampleAnswerDTO> sampleAnswers = questionService.getSampleAnswersForQuestion(id);
+        RestResponse<List<ResSpeakingSampleAnswerDTO>> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Sample answers retrieved successfully");
+        response.setData(sampleAnswers);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/validate-speaking-requirements")
+    public ResponseEntity<RestResponse<String>> validateSpeakingQuestionRequirements(@PathVariable("id") Long id) {
+        try {
+            questionService.validateSpeakingQuestionRequirements(id);
+            RestResponse<String> response = new RestResponse<>();
+            response.setStatusCode(200);
+            response.setMessage("Speaking question requirements validation passed");
+            response.setData("Valid");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            RestResponse<String> response = new RestResponse<>();
+            response.setStatusCode(400);
+            response.setMessage("Validation failed: " + e.getMessage());
+            response.setData("Invalid");
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping("/{id}/has-sample-answers")
+    public ResponseEntity<RestResponse<Boolean>> checkIfSpeakingQuestionHasSampleAnswers(@PathVariable("id") Long id) {
+        boolean hasSampleAnswers = questionService.validateSpeakingQuestionHasSampleAnswers(id);
+        RestResponse<Boolean> response = new RestResponse<>();
+        response.setStatusCode(200);
+        response.setMessage("Sample answers check completed");
+        response.setData(hasSampleAnswers);
         return ResponseEntity.ok(response);
     }
 }
