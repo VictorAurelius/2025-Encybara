@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import utc.englishlearning.Encybara.data.loader.TestingMaterialLoader;
 import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.repository.*;
+import utc.englishlearning.Encybara.util.constant.QuestionTypeEnum;
 import utc.englishlearning.Encybara.service.FileStorageService;
 import utc.englishlearning.Encybara.service.LearningMaterialService;
 import utc.englishlearning.Encybara.util.ResourceMultipartFile;
@@ -32,6 +33,7 @@ public class CourseDataSeeder {
     private final ObjectMapper objectMapper;
     private final LearningMaterialService learningMaterialService;
     private final LearningMaterialRepository learningMaterialRepository;
+    private final SpeakingSampleAnswerRepository speakingSampleAnswerRepository;
 
     public CourseDataSeeder(
             CourseRepository courseRepository,
@@ -44,7 +46,8 @@ public class CourseDataSeeder {
             ObjectMapper objectMapper,
             FileStorageService fileStorageService,
             LearningMaterialService learningMaterialService,
-            LearningMaterialRepository learningMaterialRepository) {
+            LearningMaterialRepository learningMaterialRepository,
+            SpeakingSampleAnswerRepository speakingSampleAnswerRepository) {
         this.courseRepository = courseRepository;
         this.lessonRepository = lessonRepository;
         this.questionRepository = questionRepository;
@@ -55,6 +58,7 @@ public class CourseDataSeeder {
         this.objectMapper = objectMapper;
         this.learningMaterialService = learningMaterialService;
         this.learningMaterialRepository = learningMaterialRepository;
+        this.speakingSampleAnswerRepository = speakingSampleAnswerRepository;
     }
 
     @SuppressWarnings("unchecked")
@@ -176,6 +180,19 @@ public class CourseDataSeeder {
                 choice.setQuestion(question);
             }
             question = questionRepository.save(question);
+
+            // Save speaking sample answers for speaking questions
+            if (question.getQuesType() == QuestionTypeEnum.SPEAKING &&
+                    question.getSpeakingSampleAnswers() != null &&
+                    !question.getSpeakingSampleAnswers().isEmpty()) {
+
+                for (SpeakingSampleAnswer sampleAnswer : question.getSpeakingSampleAnswers()) {
+                    sampleAnswer.setQuestion(question);
+                    speakingSampleAnswerRepository.save(sampleAnswer);
+                }
+                System.out.println(">>> SAVED " + question.getSpeakingSampleAnswers().size() +
+                        " sample answers for speaking question: " + question.getQuesContent());
+            }
 
             // Create lesson-question relationship
             Lesson_Question lessonQuestion = new Lesson_Question();

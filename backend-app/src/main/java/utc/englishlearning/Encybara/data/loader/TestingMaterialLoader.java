@@ -112,6 +112,7 @@ public class TestingMaterialLoader {
         question.setAnswers(new ArrayList<>());
         question.setLessonQuestions(new ArrayList<>());
         question.setQuestionChoices(new ArrayList<>());
+        question.setSpeakingSampleAnswers(new ArrayList<>());
 
         // Create choices for question
         List<Map<String, Object>> choicesData = (List<Map<String, Object>>) data.get("choices");
@@ -125,6 +126,31 @@ public class TestingMaterialLoader {
                 choices.add(choice);
             }
             question.setQuestionChoices(choices);
+        }
+
+        // Create sample answers for speaking questions
+        List<Map<String, Object>> sampleAnswersData = (List<Map<String, Object>>) data.get("sampleAnswers");
+        if (sampleAnswersData != null && question.getQuesType() == QuestionTypeEnum.SPEAKING) {
+            List<SpeakingSampleAnswer> sampleAnswers = new ArrayList<>();
+            for (Map<String, Object> sampleData : sampleAnswersData) {
+                SpeakingSampleAnswer sampleAnswer = new SpeakingSampleAnswer();
+                sampleAnswer.setDifficultyLevel((Integer) sampleData.get("difficultyLevel"));
+                sampleAnswer.setAnswerContent((String) sampleData.get("answerContent"));
+                sampleAnswer.setDescription((String) sampleData.get("description"));
+
+                // Handle estimatedScore - could be Integer or Double
+                Object scoreObj = sampleData.get("estimatedScore");
+                if (scoreObj instanceof Integer) {
+                    sampleAnswer.setEstimatedScore(((Integer) scoreObj).doubleValue());
+                } else if (scoreObj instanceof Double) {
+                    sampleAnswer.setEstimatedScore((Double) scoreObj);
+                }
+
+                sampleAnswer.setQuestion(question);
+                sampleAnswer.setCreateAt(java.time.Instant.now());
+                sampleAnswers.add(sampleAnswer);
+            }
+            question.setSpeakingSampleAnswers(sampleAnswers);
         }
 
         return question;

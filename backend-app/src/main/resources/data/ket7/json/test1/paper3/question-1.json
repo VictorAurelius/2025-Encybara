@@ -5,7 +5,39 @@
         "quesType": "SPEAKING",
         "point": 10,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 1,
+                "answerContent": "Social media is very powerful. People see many posts and videos. This changes what they think. For example, Facebook and Instagram show different opinions.",
+                "description": "Basic response with simple vocabulary and short sentences.",
+                "estimatedScore": 20.0
+            },
+            {
+                "difficultyLevel": 2,
+                "answerContent": "I think social media has a big influence on people's opinions. When people see the same ideas repeated many times, they start to believe them. For example, during elections, people share political posts that can change others' voting decisions.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 40.0
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "Social media significantly influences public opinion through algorithm-driven content exposure and echo chambers. When platforms repeatedly show similar viewpoints, users may develop biased perspectives. For instance, during the pandemic, misinformation on platforms like Facebook affected vaccination decisions, demonstrating the powerful impact of social media on health-related opinions.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 60.0
+            },
+            {
+                "difficultyLevel": 4,
+                "answerContent": "Social media exerts profound influence on public discourse through sophisticated algorithms that create ideological echo chambers and confirmation bias. The viral nature of content amplifies certain narratives while suppressing others. Notable examples include the spread of political misinformation during elections and the rapid dissemination of conspiracy theories, which demonstrate how platform design fundamentally shapes collective thinking.",
+                "description": "Advanced answer with complex grammar and sophisticated expressions.",
+                "estimatedScore": 80.0
+            },
+            {
+                "difficultyLevel": 5,
+                "answerContent": "Social media platforms have fundamentally transformed the landscape of opinion formation through algorithmic curation that creates sophisticated filter bubbles and reinforcement mechanisms. The intersection of data analytics, behavioral psychology, and viral content distribution creates unprecedented influence over public sentiment. Contemporary examples include the amplification of polarizing political content, the spread of health misinformation during global crises, and the manipulation of consumer behavior through targeted advertising, all of which demonstrate the complex interplay between technological architecture and human psychology in shaping contemporary discourse.",
+                "description": "Expert response with native-like fluency and excellent organization.",
+                "estimatedScore": 95.0
+            }
+        ]
     },
     {
         "quesContent": "Do you believe individuals should take more responsibility for environmental protection? Why or why not?",
@@ -13,7 +45,39 @@
         "quesType": "SPEAKING",
         "point": 10,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 1,
+                "answerContent": "Yes, people should help protect environment. We can recycle trash and use less plastic. Everyone should do small things to help Earth.",
+                "description": "Basic response with simple vocabulary and short sentences.",
+                "estimatedScore": 20.0
+            },
+            {
+                "difficultyLevel": 2,
+                "answerContent": "I believe individuals should take more responsibility for environmental protection. While governments and companies have important roles, each person can make a difference through daily choices like reducing waste, using public transportation, and buying eco-friendly products.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 40.0
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "I strongly believe individuals should assume greater environmental responsibility because collective action starts with personal commitment. While systemic change requires governmental and corporate leadership, individual choices in consumption, transportation, and waste management create meaningful impact. When millions of people adopt sustainable practices, it drives market demand for environmentally friendly alternatives.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 60.0
+            },
+            {
+                "difficultyLevel": 4,
+                "answerContent": "Individual environmental responsibility is crucial because it creates the cultural and economic foundations necessary for systemic change. Personal accountability in consumption patterns, energy usage, and lifestyle choices generates market pressures that influence corporate behavior and political priorities. However, this must be balanced with recognition that structural inequalities limit some individuals' capacity for environmental action.",
+                "description": "Advanced answer with complex grammar and sophisticated expressions.",
+                "estimatedScore": 80.0
+            },
+            {
+                "difficultyLevel": 5,
+                "answerContent": "Individual environmental responsibility represents a critical component of comprehensive climate action, though it must be contextualized within broader systemic frameworks. While personal choices regarding consumption, energy use, and transportation contribute meaningfully to aggregate environmental impact, effective climate response requires sophisticated coordination between individual agency, corporate accountability, and governmental policy. The challenge lies in empowering individual action while addressing structural barriers that limit environmental choices for marginalized communities, ultimately creating equitable pathways toward collective environmental stewardship.",
+                "description": "Expert response with native-like fluency and excellent organization.",
+                "estimatedScore": 95.0
+            }
+        ]
     },
     {
         "quesContent": "What is your definition of personal success? How do you think people achieve it?",
@@ -21,7 +85,39 @@
         "quesType": "SPEAKING",
         "point": 10,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 1,
+                "answerContent": "Personal success means to be happy and have good job. People achieve it by working hard and studying. Family and health are also important for success.",
+                "description": "Basic response with simple vocabulary and short sentences.",
+                "estimatedScore": 20.0
+            },
+            {
+                "difficultyLevel": 2,
+                "answerContent": "I think personal success means achieving your goals and feeling satisfied with your life. People can achieve it through hard work, continuous learning, and maintaining good relationships with family and friends. Financial stability is important, but happiness and health matter more.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 40.0
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "Personal success, in my view, encompasses achieving meaningful goals while maintaining balance in multiple life areas. It involves professional accomplishment, strong relationships, physical and mental well-being, and contributing positively to society. People achieve this through setting clear objectives, developing resilience, continuous self-improvement, and aligning their actions with their core values.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 60.0
+            },
+            {
+                "difficultyLevel": 4,
+                "answerContent": "Personal success represents the harmonious integration of professional achievement, meaningful relationships, personal fulfillment, and social contribution. True success transcends material acquisition to encompass psychological well-being, intellectual growth, and positive impact on others. Achievement requires strategic goal-setting, emotional intelligence, adaptability to change, and the cultivation of both technical skills and human connections.",
+                "description": "Advanced answer with complex grammar and sophisticated expressions.",
+                "estimatedScore": 80.0
+            },
+            {
+                "difficultyLevel": 5,
+                "answerContent": "Personal success embodies a multidimensional concept that synthesizes professional excellence, relational fulfillment, psychological well-being, and meaningful societal contribution. Authentic success emerges from the alignment of individual capabilities with purposeful action, creating sustainable patterns of growth that benefit both personal development and collective progress. Achievement requires sophisticated self-awareness, strategic planning, emotional resilience, and the capacity to navigate complex social and professional environments while maintaining integrity and contributing to the broader human experience.",
+                "description": "Expert response with native-like fluency and excellent organization.",
+                "estimatedScore": 95.0
+            }
+        ]
     },
     {
         "quesContent": "Do you think technology makes life better or worse? Explain your viewpoint.",
@@ -29,7 +125,39 @@
         "quesType": "SPEAKING",
         "point": 10,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 1,
+                "answerContent": "I think technology makes life better. It helps us communicate with friends and family. We can learn many things online. But sometimes people use phones too much.",
+                "description": "Basic response with simple vocabulary and short sentences.",
+                "estimatedScore": 20.0
+            },
+            {
+                "difficultyLevel": 2,
+                "answerContent": "I believe technology generally makes life better, but it has both advantages and disadvantages. It helps us access information quickly, communicate with people around the world, and solve many problems. However, it can also create addiction and reduce face-to-face social interaction.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 40.0
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "Technology significantly improves life quality while creating new challenges that require careful management. The benefits include enhanced communication, access to education, medical advances, and increased efficiency in daily tasks. However, concerns about privacy, digital addiction, job displacement, and social isolation suggest that technological progress requires thoughtful implementation and regulation.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 60.0
+            },
+            {
+                "difficultyLevel": 4,
+                "answerContent": "Technology represents a transformative force that generally enhances human capabilities while introducing complex ethical and social considerations. Digital innovations have revolutionized healthcare, education, communication, and productivity, creating unprecedented opportunities for human flourishing. However, issues such as algorithmic bias, surveillance concerns, environmental impact, and social inequality require sophisticated approaches to ensure technology serves collective well-being.",
+                "description": "Advanced answer with complex grammar and sophisticated expressions.",
+                "estimatedScore": 80.0
+            },
+            {
+                "difficultyLevel": 5,
+                "answerContent": "Technology fundamentally enhances human potential while simultaneously creating multifaceted challenges that demand nuanced solutions. The digital revolution has democratized access to information, revolutionized medical treatment, enabled global connectivity, and created innovative solutions to complex problems. However, the integration of artificial intelligence, biotechnology, and digital surveillance raises profound questions about privacy, autonomy, economic inequality, and the future of human agency. The ultimate impact depends on our collective ability to develop ethical frameworks, regulatory structures, and social systems that harness technological power for equitable human advancement.",
+                "description": "Expert response with native-like fluency and excellent organization.",
+                "estimatedScore": 95.0
+            }
+        ]
     },
     {
         "quesContent": "If you could change one thing about the world, what would it be and why?",
@@ -37,6 +165,38 @@
         "quesType": "SPEAKING",
         "point": 10,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 1,
+                "answerContent": "I want to stop poverty in the world. Many people don't have enough food and money. If everyone has basic needs, the world will be better place.",
+                "description": "Basic response with simple vocabulary and short sentences.",
+                "estimatedScore": 20.0
+            },
+            {
+                "difficultyLevel": 2,
+                "answerContent": "If I could change one thing about the world, I would eliminate poverty. Too many people lack access to basic necessities like food, clean water, and healthcare. Solving poverty would reduce many other problems like crime, disease, and social inequality.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 40.0
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "I would prioritize eliminating global inequality, particularly in access to education and economic opportunities. Education empowers individuals to break cycles of poverty, promotes critical thinking, and drives innovation. When people worldwide have equal access to quality education, it creates a foundation for addressing other major challenges like climate change, healthcare, and social justice.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 60.0
+            },
+            {
+                "difficultyLevel": 4,
+                "answerContent": "I would address the fundamental issue of resource distribution inequality, which underlies many global challenges including poverty, conflict, and environmental degradation. Establishing equitable access to education, healthcare, clean energy, and economic opportunities would create positive cascading effects, empowering communities to develop sustainable solutions and fostering global cooperation rather than competition for scarce resources.",
+                "description": "Advanced answer with complex grammar and sophisticated expressions.",
+                "estimatedScore": 80.0
+            },
+            {
+                "difficultyLevel": 5,
+                "answerContent": "I would fundamentally transform global resource allocation systems to ensure equitable distribution of opportunities, knowledge, and essential resources across all populations. This systemic change would address the root causes of numerous interconnected challenges including poverty, educational disparity, healthcare inequality, and environmental degradation. By creating sustainable frameworks for resource sharing and opportunity access, we could establish conditions for collaborative problem-solving on a global scale, empowering diverse communities to contribute their unique perspectives and innovations toward collective human advancement and planetary stewardship.",
+                "description": "Expert response with native-like fluency and excellent organization.",
+                "estimatedScore": 95.0
+            }
+        ]
     }
 ]

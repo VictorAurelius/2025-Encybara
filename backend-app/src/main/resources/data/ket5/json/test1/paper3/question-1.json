@@ -5,7 +5,39 @@
         "quesType": "SPEAKING",
         "point": 10,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 1,
+                "answerContent": "I like reading books. Books are interesting. I learn many things from books. I read every day.",
+                "description": "Basic response with simple vocabulary and short sentences.",
+                "estimatedScore": 20.0
+            },
+            {
+                "difficultyLevel": 2,
+                "answerContent": "One hobby I really enjoy is photography. I like it because it allows me to capture beautiful moments and express my creativity. It also helps me explore new places and meet interesting people.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 40.0
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "Photography is a hobby I'm passionate about because it combines artistic expression with technical skill. I enjoy exploring different perspectives, documenting cultural events, and creating visual narratives. It's taught me to observe details more carefully and appreciate beauty in everyday moments.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 60.0
+            },
+            {
+                "difficultyLevel": 4,
+                "answerContent": "Literature analysis represents my most engaging hobby, as it facilitates deep intellectual exploration while enhancing critical thinking capabilities. Through examining various authors' techniques and cultural contexts, I develop sophisticated interpretative skills that enhance both academic performance and personal worldview expansion.",
+                "description": "Advanced answer with complex grammar and sophisticated expressions.",
+                "estimatedScore": 80.0
+            },
+            {
+                "difficultyLevel": 5,
+                "answerContent": "My primary recreational passion involves interdisciplinary literary and photographic pursuits that seamlessly integrate intellectual analysis with creative expression. This dual engagement enables comprehensive cultural documentation, sophisticated artistic development, and profound personal growth through the exploration of narrative techniques, visual storytelling, and cross-cultural communication methodologies.",
+                "description": "Expert response with native-like fluency and excellent organization.",
+                "estimatedScore": 95.0
+            }
+        ]
     },
     {
         "quesContent": "Describe a memorable trip or event in your life. What made it special?",
@@ -13,7 +45,39 @@
         "quesType": "SPEAKING",
         "point": 10,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 1,
+                "answerContent": "Last year I went to Da Nang with my family. We stayed there three days. We went to beach and ate good food. It was very fun.",
+                "description": "Basic response with simple vocabulary and short sentences.",
+                "estimatedScore": 20.0
+            },
+            {
+                "difficultyLevel": 2,
+                "answerContent": "One of my most memorable trips was visiting Da Nang with my family last summer. What made it special was spending quality time together, trying local seafood, and enjoying beautiful beaches. We also visited historical sites and took many photos.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 40.0
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "A particularly memorable experience was my family trip to Da Nang last summer. What made it special was the combination of natural beauty, cultural exploration, and family bonding. We explored ancient temples, enjoyed pristine beaches, and discovered local cuisine, creating lasting memories together.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 60.0
+            },
+            {
+                "difficultyLevel": 4,
+                "answerContent": "One of my most treasured experiences was an educational and cultural expedition to Da Nang with my family. The trip was extraordinary because it perfectly balanced recreational activities with cultural immersion, allowing us to appreciate Vietnam's rich heritage while strengthening family relationships through shared discoveries and adventures.",
+                "description": "Advanced answer with complex grammar and sophisticated expressions.",
+                "estimatedScore": 80.0
+            },
+            {
+                "difficultyLevel": 5,
+                "answerContent": "A profoundly memorable experience was our meticulously planned family expedition to Da Nang, which represented a perfect synthesis of cultural enrichment, natural appreciation, and familial bonding. What rendered this journey exceptional was our comprehensive exploration of historical landmarks, engagement with local communities, and the creation of lasting memories that deepened our appreciation for Vietnam's cultural heritage and natural beauty.",
+                "description": "Expert response with native-like fluency and excellent organization.",
+                "estimatedScore": 95.0
+            }
+        ]
     },
     {
         "quesContent": "Talk about a goal you want to achieve in the future. How will you accomplish it?",
@@ -21,7 +85,39 @@
         "quesType": "SPEAKING",
         "point": 10,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 1,
+                "answerContent": "I want to become teacher. I will study hard and get good grades. I will practice teaching with friends.",
+                "description": "Basic response with simple vocabulary and short sentences.",
+                "estimatedScore": 20.0
+            },
+            {
+                "difficultyLevel": 2,
+                "answerContent": "My goal is to become an English teacher. To accomplish this, I plan to complete my degree in English literature, gain teaching experience through internships, and continue developing my communication skills. I also want to learn new teaching methods.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 40.0
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "My primary goal is to become a qualified English teacher who can inspire students to appreciate literature and language. I plan to accomplish this by completing my degree with honors, gaining practical experience through teaching assistant positions, pursuing additional certifications, and continuously improving my pedagogical skills.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 60.0
+            },
+            {
+                "difficultyLevel": 4,
+                "answerContent": "My ambitious career objective is to establish myself as an innovative English educator who bridges traditional literary analysis with contemporary teaching methodologies. I intend to achieve this through rigorous academic preparation, extensive practical experience, professional development courses, and active participation in educational research initiatives.",
+                "description": "Advanced answer with complex grammar and sophisticated expressions.",
+                "estimatedScore": 80.0
+            },
+            {
+                "difficultyLevel": 5,
+                "answerContent": "My overarching professional aspiration is to become a transformative English educator who revolutionizes traditional pedagogical approaches through innovative literary instruction and intercultural communication methodologies. I plan to accomplish this through comprehensive academic excellence, extensive international teaching experience, advanced research in educational linguistics, and the development of cutting-edge curriculum that integrates global perspectives with local contexts.",
+                "description": "Expert response with native-like fluency and excellent organization.",
+                "estimatedScore": 95.0
+            }
+        ]
     },
     {
         "quesContent": "Do you prefer working alone or in a team? Why?",
@@ -29,7 +125,39 @@
         "quesType": "SPEAKING",
         "point": 10,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 1,
+                "answerContent": "I like working in team. Team work is good. We can help each other. It is more fun than alone.",
+                "description": "Basic response with simple vocabulary and short sentences.",
+                "estimatedScore": 20.0
+            },
+            {
+                "difficultyLevel": 2,
+                "answerContent": "I prefer working in a team because I can learn from other people's ideas and experiences. Teamwork allows us to share knowledge, support each other, and achieve better results together than working alone.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 40.0
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "I generally prefer collaborative teamwork because it provides diverse perspectives and creative solutions that I might not discover independently. Working with others allows for knowledge sharing, mutual support, and the development of interpersonal skills that are valuable for both personal and professional growth.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 60.0
+            },
+            {
+                "difficultyLevel": 4,
+                "answerContent": "I favor collaborative team environments because they foster intellectual synergy and comprehensive problem-solving approaches. Team dynamics enable the integration of diverse skill sets, promote innovative thinking through constructive dialogue, and facilitate personal development through exposure to alternative methodologies and perspectives.",
+                "description": "Advanced answer with complex grammar and sophisticated expressions.",
+                "estimatedScore": 80.0
+            },
+            {
+                "difficultyLevel": 5,
+                "answerContent": "I predominantly favor collaborative team environments because they exemplify the power of collective intelligence and interdisciplinary cooperation. Effective teamwork facilitates the synthesis of diverse expertise, promotes innovative problem-solving through constructive discourse, and cultivates essential leadership and communication skills while generating outcomes that significantly exceed individual capabilities through synergistic collaboration.",
+                "description": "Expert response with native-like fluency and excellent organization.",
+                "estimatedScore": 95.0
+            }
+        ]
     },
     {
         "quesContent": "If you could travel anywhere in the world, where would you go and why?",
@@ -37,6 +165,38 @@
         "quesType": "SPEAKING",
         "point": 10,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 1,
+                "answerContent": "I want to go to Japan. Japan is beautiful country. I like Japanese food and culture. I want to see Tokyo.",
+                "description": "Basic response with simple vocabulary and short sentences.",
+                "estimatedScore": 20.0
+            },
+            {
+                "difficultyLevel": 2,
+                "answerContent": "If I could travel anywhere, I would choose Japan. I'm fascinated by Japanese culture, especially their literature and traditional arts. I would love to visit Tokyo and Kyoto to experience both modern and traditional aspects of the country.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 40.0
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "I would choose to visit Japan because it offers a unique blend of ancient traditions and cutting-edge modernity. I'm particularly interested in exploring their literary culture, visiting historic temples, experiencing traditional tea ceremonies, and understanding how they've preserved their cultural heritage while embracing technological advancement.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 60.0
+            },
+            {
+                "difficultyLevel": 4,
+                "answerContent": "I would select Japan as my destination because it represents a fascinating cultural paradigm where traditional values seamlessly integrate with technological innovation. I'm particularly drawn to exploring their sophisticated literary traditions, architectural marvels, and educational systems, while experiencing firsthand their approach to balancing preservation and progress.",
+                "description": "Advanced answer with complex grammar and sophisticated expressions.",
+                "estimatedScore": 80.0
+            },
+            {
+                "difficultyLevel": 5,
+                "answerContent": "I would choose Japan as my ideal destination because it embodies a remarkable synthesis of cultural preservation and technological advancement that offers profound insights into successful societal evolution. My journey would encompass comprehensive exploration of their literary heritage, architectural aesthetics, educational philosophies, and social dynamics, providing invaluable perspectives on how traditional wisdom can inform contemporary innovation.",
+                "description": "Expert response with native-like fluency and excellent organization.",
+                "estimatedScore": 95.0
+            }
+        ]
     }
 ]
