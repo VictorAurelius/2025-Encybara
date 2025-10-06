@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Build All Services Script
-# Builds both content-scoring-service and backend-app with one command
+# Builds content-scoring-service, pronunciation-assessment-service, and backend-app with one command
 
 set -e  # Exit on any error
 
@@ -81,6 +81,11 @@ done
 print_status "======================================"
 print_status "Building All Services"
 print_status "======================================"
+print_status "Services to build:"
+print_status "  1. Content Scoring Service"
+print_status "  2. Pronunciation Assessment Service"
+print_status "  3. Backend Application"
+print_status "======================================"
 
 # Check if Docker is running
 if ! docker info > /dev/null 2>&1; then
@@ -116,6 +121,32 @@ fi
 
 cd ..
 
+# Build pronunciation-assessment-service
+print_status "Building pronunciation-assessment-service..."
+cd pronunciation-assessment-service
+
+if [ -f "./build.sh" ]; then
+    BUILD_ARGS_PRON=""
+    if [ "$CLEAN" = true ]; then
+        BUILD_ARGS_PRON="$BUILD_ARGS_PRON --clean"
+    fi
+    if [ "$NO_CACHE" = true ]; then
+        BUILD_ARGS_PRON="$BUILD_ARGS_PRON --no-cache"
+    fi
+
+    print_status "Building pronunciation-assessment-service with build script..."
+    ./build.sh $BUILD_ARGS_PRON
+else
+    print_warning "pronunciation-assessment-service build script not found, using docker-compose..."
+    if [ "$NO_CACHE" = true ]; then
+        docker-compose build --no-cache
+    else
+        docker-compose build
+    fi
+fi
+
+cd ..
+
 # Build backend-app
 print_status "Building backend-app..."
 cd backend-app
@@ -133,8 +164,9 @@ cd ..
 print_success "======================================"
 print_success "All services built successfully!"
 print_success "======================================"
-print_status "Service URLs:"
+print_status "Service URLs (when running):"
 print_status "• Content Scoring Service: http://localhost:5001"
+print_status "• Pronunciation Assessment Service: http://localhost:5000"
 print_status "• Backend API: http://localhost:8080"
 print_status "• API Documentation: http://localhost:8080/swagger-ui.html"
 
@@ -143,14 +175,27 @@ if [ "$TUNNEL" = true ]; then
 fi
 
 print_status ""
+print_status "To start all services:"
+print_status "• docker-compose -f docker-compose.all.yml up -d"
+print_status ""
+print_status "Or start individually:"
+print_status "• Content Scoring: docker-compose -f content-scoring-service/docker-compose.yml up -d"
+print_status "• Pronunciation: docker-compose -f pronunciation-assessment-service/docker-compose.yml up -d"
+print_status "• Backend + DB: docker-compose -f build-docker/docker-compose.yml up -d"
+
+print_status ""
 print_status "To test services:"
 print_status "• Content Scoring: cd content-scoring-service && ./test-ngrok-public.sh"
+print_status "• Pronunciation: cd pronunciation-assessment-service && ./test-optimized.sh"
 print_status "• Backend Integration: cd backend-app && ./test-content-scoring.sh"
-print_status "• Pronunciation: cd backend-app && ./test-pronunciation.sh"
 
 print_status ""
 print_status "To view logs:"
 print_status "• Content Scoring: docker-compose -f content-scoring-service/docker-compose.yml logs -f"
+print_status "• Pronunciation: docker-compose -f pronunciation-assessment-service/docker-compose.yml logs -f"
 print_status "• Backend: docker-compose -f build-docker/docker-compose.yml logs -f backend"
 
+print_success "======================================"
+print_success "Note: Services are configured to use localhost URLs by default"
+print_success "Check application.properties for service URL configuration"
 print_success "======================================"
