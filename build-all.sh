@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Build All Services Script
-# Builds content-scoring-service, pronunciation-assessment-service, and backend-app with one command
+# Builds content-scoring-service, pronunciation-assessment-service, and backend-service with one command
 
 set -e  # Exit on any error
 
@@ -84,7 +84,7 @@ print_status "======================================"
 print_status "Services to build:"
 print_status "  1. Content Scoring Service"
 print_status "  2. Pronunciation Assessment Service"
-print_status "  3. Backend Application"
+print_status "  3. Backend Service"
 print_status "======================================"
 
 # Check if Docker is running
@@ -147,15 +147,15 @@ fi
 
 cd ..
 
-# Build backend-app
-print_status "Building backend-app..."
-cd backend-app
+# Build backend-service
+print_status "Building backend-service..."
+cd backend-service
 
 if [ -f "./build.sh" ]; then
-    print_status "Building backend-app with build script..."
+    print_status "Building backend-service with build script..."
     ./build.sh
 else
-    print_error "backend-app build script not found!"
+    print_error "backend-service build script not found!"
     exit 1
 fi
 
@@ -181,19 +181,19 @@ print_status ""
 print_status "Or start individually:"
 print_status "• Content Scoring: docker-compose -f content-scoring-service/docker-compose.yml up -d"
 print_status "• Pronunciation: docker-compose -f pronunciation-assessment-service/docker-compose.yml up -d"
-print_status "• Backend + DB: docker-compose -f build-docker/docker-compose.yml up -d"
+print_status "• Backend + DB: docker-compose -f deployment/docker-compose/docker-compose.yml up -d"
 
 print_status ""
 print_status "To test services:"
 print_status "• Content Scoring: cd content-scoring-service && ./test-ngrok-public.sh"
 print_status "• Pronunciation: cd pronunciation-assessment-service && ./test-optimized.sh"
-print_status "• Backend Integration: cd backend-app && ./test-content-scoring.sh"
+print_status "• Backend Integration: cd backend-service && ./test-content-scoring.sh"
 
 print_status ""
 print_status "To view logs:"
 print_status "• Content Scoring: docker-compose -f content-scoring-service/docker-compose.yml logs -f"
 print_status "• Pronunciation: docker-compose -f pronunciation-assessment-service/docker-compose.yml logs -f"
-print_status "• Backend: docker-compose -f build-docker/docker-compose.yml logs -f backend"
+print_status "• Backend: docker-compose -f deployment/docker-compose/docker-compose.yml logs -f backend"
 
 print_success "======================================"
 print_success "Note: Services are configured to use localhost URLs by default"
