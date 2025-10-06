@@ -127,6 +127,17 @@ cd backend-app && ./test-content-scoring.sh
 3. Chỉ dùng **public URLs/env vars** khi thực sự cần thiết
 4. Docker network tự động override URLs khi dùng `docker-compose.all.yml`
 
+### 🪟 Windows Users
+
+**IMPORTANT:** Pronunciation service **MUST use Docker** on Windows!
+
+```powershell
+cd pronunciation-assessment-service
+docker-compose up -d
+```
+
+See `pronunciation-assessment-service/ERROR_WINDOWS.md` for details.
+
 ## 🆘 Troubleshooting
 
 ### Services không start được

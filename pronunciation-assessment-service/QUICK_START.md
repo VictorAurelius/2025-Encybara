@@ -1,5 +1,11 @@
 # Quick Start - Pronunciation Assessment Service (Optimized)
 
+## ⚠️ IMPORTANT - Platform Support
+
+- ✅ **Linux/Mac**: Supported (Docker or Conda)
+- ✅ **Windows**: **MUST use Docker** (see WINDOWS_SETUP.md)
+- ❌ **Windows Native**: NOT supported (MFA limitation)
+
 ## 🚀 Cải tiến chính
 
 ✅ **Tốc độ nhanh hơn 60-70%**: Từ >30s xuống còn ~8-12s cho file audio 10 giây
@@ -22,15 +28,30 @@ pronunciation-assessment-service/
 
 ## ⚡ Chạy nhanh
 
-### Local Development
+### Docker (RECOMMENDED for all platforms)
 ```bash
+# Build and start
+docker-compose up -d
+
+# Check health
+curl http://localhost:5000/health
+
+# View logs
+docker-compose logs -f
+```
+
+### Local Development (Linux/Mac only)
+```bash
+# Requires MFA installation (see README.md)
 python run.py
 ```
 
-### Docker
-```bash
-docker build -t pronunciation-assessment:optimized .
-docker run -p 5000:5000 pronunciation-assessment:optimized
+### Windows Users
+```powershell
+# MUST use Docker
+docker-compose up -d
+
+# See WINDOWS_SETUP.md for details
 ```
 
 ### Test

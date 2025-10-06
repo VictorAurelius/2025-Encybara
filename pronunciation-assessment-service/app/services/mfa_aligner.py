@@ -1,6 +1,7 @@
 """Montreal Forced Aligner integration with optimizations."""
 
 import os
+import sys
 import tempfile
 import subprocess
 import logging
@@ -18,6 +19,45 @@ class MontrealForcedAligner:
         self.acoustic_model = acoustic_model
         self.dictionary = dictionary
         self.temp_dir = tempfile.mkdtemp()
+        self._check_mfa_installation()
+
+    def _check_mfa_installation(self):
+        """Check if MFA is installed and accessible."""
+        try:
+            # Try to run mfa version command
+            result = subprocess.run(
+                ['mfa', 'version'],
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            if result.returncode == 0:
+                logger.info(f"MFA found: {result.stdout.strip()}")
+                return True
+            else:
+                logger.warning("MFA command found but returned error")
+                return False
+        except FileNotFoundError:
+            error_msg = (
+                "Montreal Forced Aligner (MFA) is not installed or not in PATH.\n"
+                "This service requires MFA to be installed.\n\n"
+                "Installation instructions:\n"
+                "1. Docker (Recommended): Use the provided Dockerfile\n"
+                "   cd pronunciation-assessment-service && docker-compose up\n\n"
+                "2. Conda (Linux/Mac):\n"
+                "   conda create -n aligner -c conda-forge montreal-forced-aligner\n"
+                "   conda activate aligner\n"
+                "   mfa model download acoustic english_us_arpa\n"
+                "   mfa model download dictionary english_us_arpa\n\n"
+                "3. Windows: MFA is not officially supported on Windows.\n"
+                "   Please use Docker or WSL2.\n\n"
+                "For more info: https://montreal-forced-aligner.readthedocs.io/"
+            )
+            logger.error(error_msg)
+            raise RuntimeError(error_msg)
+        except Exception as e:
+            logger.error(f"Error checking MFA installation: {str(e)}")
+            return False
 
     def align_audio_text(self, audio_path: str, transcript: str) -> Optional[str]:
         """
@@ -44,8 +84,8 @@ class MontrealForcedAligner:
             corpus_audio_path = os.path.join(corpus_dir, audio_filename)
             transcript_path = os.path.join(corpus_dir, f"{base_name}.txt")
 
-            # Copy audio file
-            subprocess.run(['cp', audio_path, corpus_audio_path], check=True)
+            # Copy audio file (cross-platform)
+            shutil.copy2(audio_path, corpus_audio_path)
 
             # Write transcript file
             with open(transcript_path, 'w') as f:
@@ -69,15 +109,23 @@ class MontrealForcedAligner:
             ]
 
             logger.info(f"Running MFA command: {' '.join(mfa_command)}")
-            result = subprocess.run(
-                mfa_command,
-                capture_output=True,
-                text=True,
-                timeout=60  # Reduce timeout to 60 seconds (was 300)
-            )
 
-            if result.returncode != 0:
-                logger.error(f"MFA alignment failed: {result.stderr}")
+            try:
+                result = subprocess.run(
+                    mfa_command,
+                    capture_output=True,
+                    text=True,
+                    timeout=60  # Reduce timeout to 60 seconds (was 300)
+                )
+
+                if result.returncode != 0:
+                    logger.error(f"MFA alignment failed with return code {result.returncode}")
+                    logger.error(f"STDERR: {result.stderr}")
+                    logger.error(f"STDOUT: {result.stdout}")
+                    return None
+            except FileNotFoundError:
+                logger.error("MFA command not found. Please ensure MFA is installed and in PATH.")
+                logger.error("For installation instructions, see service documentation.")
                 return None
 
             # Find generated TextGrid file

@@ -23,7 +23,22 @@ app.config['MAX_CONTENT_LENGTH'] = 6 * 1024 * 1024  # 6MB max file size
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'pronunciation-assessment-secret-key')
 
 # Initialize assessment pipeline
-pipeline = PronunciationAssessmentPipeline(docker_mode=True)
+try:
+    pipeline = PronunciationAssessmentPipeline(docker_mode=True)
+except RuntimeError as e:
+    logger.error("="*80)
+    logger.error("CRITICAL ERROR: Failed to initialize Pronunciation Assessment Pipeline")
+    logger.error("="*80)
+    logger.error(str(e))
+    logger.error("="*80)
+    logger.error("This service requires Montreal Forced Aligner (MFA) to be installed.")
+    logger.error("")
+    logger.error("SOLUTION:")
+    logger.error("  - Windows: Use Docker (see WINDOWS_SETUP.md)")
+    logger.error("  - Linux/Mac: Install via conda (see README.md)")
+    logger.error("  - Docker: Run 'docker-compose up' (recommended)")
+    logger.error("="*80)
+    raise
 
 
 @app.errorhandler(RequestEntityTooLarge)
@@ -146,9 +161,15 @@ def assess_pronunciation():
 
         if assessment_results is None:
             logger.error("Assessment pipeline failed")
-            return ResponseFormatter.error_response(
-                "Pronunciation assessment failed. Please check audio quality and transcript", 500
+            error_message = (
+                "Pronunciation assessment failed. "
+                "This may be due to: "
+                "(1) Poor audio quality, "
+                "(2) Mismatched transcript, "
+                "(3) MFA alignment issues. "
+                "Please check logs for details."
             )
+            return ResponseFormatter.error_response(error_message, 500)
 
         # Format response
         response_data = ResponseFormatter.format_assessment_result(
