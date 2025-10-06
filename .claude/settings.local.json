@@ -3,7 +3,8 @@
     "allow": [
       "Bash(chmod:*)",
       "Bash(tree:*)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "Bash(docker-compose:*)"
     ],
     "deny": [],
     "ask": []

@@ -91,7 +91,7 @@ class MontrealForcedAligner:
             with open(transcript_path, 'w') as f:
                 f.write(transcript)
 
-            # Run MFA alignment with performance optimizations
+            # Run MFA alignment with aggressive performance optimizations
             mfa_command = [
                 'mfa', 'align',
                 corpus_dir,
@@ -99,23 +99,26 @@ class MontrealForcedAligner:
                 self.acoustic_model,
                 output_dir,
                 '--clean',
-                # Performance optimizations
+                # Aggressive performance optimizations for speed
                 '--single_speaker',  # Single speaker mode for faster processing
                 '--no_debug',  # Disable debug output
-                '--beam', '10',  # Reduce beam width for faster search (default is 13)
-                '--retry_beam', '40',  # Reduce retry beam (default is 100)
-                '--num_jobs', '1',  # Use 1 job for small files (avoid overhead)
+                '--beam', '5',  # Very narrow beam for maximum speed (was 10, default 13)
+                '--retry_beam', '20',  # Minimal retry beam (was 40, default 100)
+                '--max_duration', '30',  # Skip long audio segments
+                '--num_jobs', '1',  # Single job to avoid overhead
                 '--use_mp',  # Use multiprocessing where possible
+                '--no_final_clean',  # Skip final cleanup for speed
+                '--acoustic_scale', '0.1',  # Lower acoustic weight for faster convergence
             ]
 
-            logger.info(f"Running MFA command: {' '.join(mfa_command)}")
+            logger.info(f"Running MFA command (optimized for <15s): {' '.join(mfa_command)}")
 
             try:
                 result = subprocess.run(
                     mfa_command,
                     capture_output=True,
                     text=True,
-                    timeout=60  # Reduce timeout to 60 seconds (was 300)
+                    timeout=30  # Very tight timeout: 30 seconds for max speed
                 )
 
                 if result.returncode != 0:
@@ -138,7 +141,7 @@ class MontrealForcedAligner:
                 return None
 
         except subprocess.TimeoutExpired:
-            logger.error("MFA alignment timed out after 60 seconds")
+            logger.error("MFA alignment timed out after 30 seconds")
             return None
         except Exception as e:
             logger.error(f"MFA alignment error: {str(e)}")

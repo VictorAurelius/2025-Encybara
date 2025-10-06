@@ -12,7 +12,7 @@ class AudioValidator:
 
     ALLOWED_EXTENSIONS = {'wav', 'mp3', 'flac', 'm4a'}
     MAX_FILE_SIZE = 6 * 1024 * 1024  # 6MB
-    TARGET_SAMPLE_RATE = 16000
+    TARGET_SAMPLE_RATE = 8000  # Reduced from 16000 for faster MFA processing
 
     @staticmethod
     def allowed_file(filename: str) -> bool:
