@@ -130,7 +130,7 @@ public class ContentScoringController {
         java.util.Map<String, Object> info = new java.util.HashMap<>();
         info.put("service_type", "content-scoring-service");
         info.put("service_url", contentScoringService.getServiceUrl());
-        info.put("timeout", "10 seconds");
+        info.put("timeout", "Configured in application.properties");
         info.put("available_endpoints", new String[] { "/evaluate" });
         info.put("disabled_endpoints", new String[] { "/suggest (temporarily)" });
         info.put("version", "2.0");

@@ -29,11 +29,19 @@ public class PronunciationAssessmentService {
     @Value("${pronunciation-assessment.service.url:}")
     private String pronunciationServiceUrl;
 
-    public PronunciationAssessmentService(RestTemplateBuilder restTemplateBuilder) {
-        // Configure RestTemplate with 10 second timeout
+    @Value("${pronunciation-assessment.service.timeout.connect:30}")
+    private int connectTimeout;
+
+    @Value("${pronunciation-assessment.service.timeout.read:30}")
+    private int readTimeout;
+
+    public PronunciationAssessmentService(RestTemplateBuilder restTemplateBuilder,
+                                         @Value("${pronunciation-assessment.service.timeout.connect:30}") int connectTimeout,
+                                         @Value("${pronunciation-assessment.service.timeout.read:30}") int readTimeout) {
+        // Configure RestTemplate with timeout from application.properties
         this.restTemplate = restTemplateBuilder
-                .setConnectTimeout(Duration.ofSeconds(10))
-                .setReadTimeout(Duration.ofSeconds(10))
+                .setConnectTimeout(Duration.ofSeconds(connectTimeout))
+                .setReadTimeout(Duration.ofSeconds(readTimeout))
                 .build();
     }
 
@@ -103,7 +111,7 @@ public class PronunciationAssessmentService {
         } catch (ResourceAccessException e) {
             log.error("Timeout or connection error to pronunciation-assessment-service: {}", e.getMessage());
             throw new PronunciationAssessmentException(
-                    "Không thể kết nối tới pronunciation-assessment-service. Vui lòng kiểm tra service có đang chạy không (timeout 10s).",
+                    String.format("Không thể kết nối tới pronunciation-assessment-service. Vui lòng kiểm tra service có đang chạy không (timeout %ds).", readTimeout),
                     HttpStatus.SERVICE_UNAVAILABLE.value());
         } catch (HttpClientErrorException e) {
             log.error("Pronunciation-assessment-service HTTP error: {} - {}",

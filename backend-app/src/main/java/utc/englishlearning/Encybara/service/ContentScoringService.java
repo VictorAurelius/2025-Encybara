@@ -29,11 +29,19 @@ public class ContentScoringService {
     @Value("${content-scoring.service.url:http://localhost:5001}")
     private String contentScoringServiceUrl;
 
-    public ContentScoringService(RestTemplateBuilder restTemplateBuilder) {
-        // Configure RestTemplate with 10 second timeout
+    @Value("${content-scoring.service.timeout.connect:10}")
+    private int connectTimeout;
+
+    @Value("${content-scoring.service.timeout.read:10}")
+    private int readTimeout;
+
+    public ContentScoringService(RestTemplateBuilder restTemplateBuilder,
+                                @Value("${content-scoring.service.timeout.connect:10}") int connectTimeout,
+                                @Value("${content-scoring.service.timeout.read:10}") int readTimeout) {
+        // Configure RestTemplate with timeout from application.properties
         this.restTemplate = restTemplateBuilder
-                .setConnectTimeout(Duration.ofSeconds(10))
-                .setReadTimeout(Duration.ofSeconds(10))
+                .setConnectTimeout(Duration.ofSeconds(connectTimeout))
+                .setReadTimeout(Duration.ofSeconds(readTimeout))
                 .build();
     }
 
@@ -94,7 +102,7 @@ public class ContentScoringService {
         } catch (ResourceAccessException e) {
             log.error("Timeout or connection error to content-scoring-service: {}", e.getMessage());
             throw new ContentScoringException(
-                    "Không thể kết nối tới content-scoring-service. Vui lòng kiểm tra service có đang chạy không (timeout 10s).",
+                    String.format("Không thể kết nối tới content-scoring-service. Vui lòng kiểm tra service có đang chạy không (timeout %ds).", readTimeout),
                     HttpStatus.SERVICE_UNAVAILABLE.value());
         } catch (HttpClientErrorException e) {
             log.error("Content-scoring-service HTTP error: {} - {}",
