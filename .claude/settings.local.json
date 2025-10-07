@@ -14,7 +14,8 @@
       "Bash(docker run:*)",
       "Bash(docker system prune:*)",
       "Bash(docker build:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(docker rmi:*)"
     ],
     "deny": [],
     "ask": []

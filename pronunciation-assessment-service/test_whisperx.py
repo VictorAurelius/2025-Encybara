@@ -13,19 +13,19 @@ from pathlib import Path
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def test_faster_whisper_pipeline():
-    """Test Faster-Whisper pipeline directly."""
+def test_simple_aligner_pipeline():
+    """Test SimpleAligner pipeline directly."""
     try:
         # Add app to path
         app_path = Path(__file__).parent / "app"
         sys.path.insert(0, str(app_path))
         
-        from services.faster_whisper_aligner import FasterWhisperAligner
+        from services.simple_aligner import SimpleAligner
         from services.gop_scorer import GOPScorer
         
-        logger.info("Testing Faster-Whisper aligner...")
-        aligner = FasterWhisperAligner()
-        logger.info("✓ Faster-Whisper aligner initialized successfully")
+        logger.info("Testing SimpleAligner...")
+        aligner = SimpleAligner()
+        logger.info("✓ SimpleAligner initialized successfully")
         
         logger.info("Testing GOP scorer...")
         gop_scorer = GOPScorer()
@@ -56,11 +56,11 @@ def test_faster_whisper_pipeline():
             quality = gop_scorer.determine_quality_label(gop_score)
             logger.info(f"✓ Phoneme '{phoneme_info['phoneme']}': GOP={gop_score:.2f}, Quality={quality}")
         
-        logger.info("✅ Faster-Whisper pipeline test completed successfully!")
+        logger.info("✅ SimpleAligner pipeline test completed successfully!")
         return True
         
     except Exception as e:
-        logger.error(f"❌ Faster-Whisper pipeline test failed: {str(e)}")
+        logger.error(f"❌ SimpleAligner pipeline test failed: {str(e)}")
         return False
 
 def test_service_endpoint(base_url: str = "http://localhost:5000"):
@@ -164,14 +164,14 @@ def test_full_assessment(base_url: str = "http://localhost:5000"):
 
 def main():
     """Run all tests."""
-    logger.info("🧪 Starting Faster-Whisper Pronunciation Assessment Service Tests")
+    logger.info("🧪 Starting SimpleAligner Pronunciation Assessment Service Tests")
     logger.info("=" * 60)
     
     results = []
     
     # Test 1: Pipeline components
-    logger.info("1. Testing Faster-Whisper pipeline components...")
-    results.append(test_faster_whisper_pipeline())
+    logger.info("1. Testing SimpleAligner pipeline components...")
+    results.append(test_simple_aligner_pipeline())
     
     # Test 2: Service endpoints
     logger.info("\n2. Testing service endpoints...")
@@ -195,7 +195,7 @@ def main():
     logger.info(f"\nOverall: {passed}/{total} tests passed")
     
     if passed == total:
-        logger.info("🎉 All tests passed! Faster-Whisper service is ready.")
+        logger.info("🎉 All tests passed! SimpleAligner service is ready.")
         return 0
     else:
         logger.warning("⚠️  Some tests failed. Check the logs above.")

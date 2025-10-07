@@ -13,17 +13,6 @@ WORKDIR /app
 
 RUN pip install --no-cache-dir --upgrade pip
 
-RUN pip install --no-cache-dir \
-    flask==3.0.0 \
-    numpy==1.24.3 \
-    werkzeug==3.0.1 \
-    gunicorn==21.2.0 \
-    psutil==5.9.6
-
-RUN pip install --no-cache-dir \
-    torch==2.1.0+cpu \
-    --index-url https://download.pytorch.org/whl/cpu
-
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
