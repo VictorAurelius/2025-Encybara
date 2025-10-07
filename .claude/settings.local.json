@@ -8,7 +8,8 @@
       "Bash(python:*)",
       "Bash(./build.sh:*)",
       "Bash(bash:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(sed:*)"
     ],
     "deny": [],
     "ask": []

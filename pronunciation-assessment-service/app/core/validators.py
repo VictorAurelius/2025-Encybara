@@ -1,8 +1,7 @@
 """Audio and text validation utilities."""
 
 import logging
-import librosa
-import soundfile as sf
+import shutil
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +30,7 @@ class AudioValidator:
     @staticmethod
     def preprocess_audio(input_path: str, output_path: str) -> bool:
         """
-        Preprocess audio file to 16kHz mono WAV format.
+        Simple audio preprocessing - just copy file for OpenAI Whisper.
 
         Args:
             input_path: Path to input audio file
@@ -41,24 +40,10 @@ class AudioValidator:
             True if processing successful, False otherwise
         """
         try:
-            # Load audio file
-            audio, sample_rate = librosa.load(input_path, sr=None, mono=True)
-
-            # Resample to target sample rate if needed
-            if sample_rate != AudioValidator.TARGET_SAMPLE_RATE:
-                audio = librosa.resample(
-                    audio,
-                    orig_sr=sample_rate,
-                    target_sr=AudioValidator.TARGET_SAMPLE_RATE
-                )
-
-            # Normalize audio
-            audio = librosa.util.normalize(audio)
-
-            # Save as WAV
-            sf.write(output_path, audio, AudioValidator.TARGET_SAMPLE_RATE)
-
-            logger.info(f"Audio preprocessed successfully: {output_path}")
+            # OpenAI Whisper can handle various formats directly
+            # Just copy the file
+            shutil.copy2(input_path, output_path)
+            logger.info(f"Audio file copied successfully: {output_path}")
             return True
 
         except Exception as e:

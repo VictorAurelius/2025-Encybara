@@ -3,7 +3,6 @@
 import os
 import logging
 import whisper
-import librosa
 from typing import Optional, Dict, List
 
 logger = logging.getLogger(__name__)
