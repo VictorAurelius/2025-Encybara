@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import utc.englishlearning.Encybara.domain.*;
-import utc.englishlearning.Encybara.domain.dto.response.GameSessionStatusResponse;
+import utc.englishlearning.Encybara.domain.response.GameSessionStatusResponse;
 import utc.englishlearning.Encybara.domain.response.RestResponse;
 import utc.englishlearning.Encybara.service.GameService;
 import utc.englishlearning.Encybara.service.UserService;
