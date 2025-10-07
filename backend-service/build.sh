@@ -117,16 +117,16 @@ fi
 echo -e "\n${YELLOW}Building application...${NC}"
 
 # Navigate to directory containing docker-compose.yml
-cd ../build-docker
+cd ../deployment
 
 # Export environment variables
 export PRONUNCIATION_SERVICE_URL
 export CONTENT_SCORING_SERVICE_URL
 
 # Build and start the services
-docker-compose down
-docker-compose build --no-cache backend
-docker-compose up -d
+docker-compose -f docker-compose.yml down
+docker-compose -f docker-compose.yml build --no-cache backend
+docker-compose -f docker-compose.yml up -d
 
 # Wait for backend to be healthy
 echo -e "\n${YELLOW}Waiting for backend service to be healthy...${NC}"
@@ -134,7 +134,7 @@ attempt=1
 max_attempts=30
 
 while [ $attempt -le $max_attempts ]; do
-    status=$(docker-compose ps backend | grep healthy || echo "")
+    status=$(docker-compose -f docker-compose.yml ps backend | grep healthy || echo "")
     if [[ $status == *"healthy"* ]]; then
         echo -e "${GREEN}Backend service is healthy!${NC}"
         break
@@ -146,7 +146,7 @@ done
 
 if [ $attempt -gt $max_attempts ]; then
     echo -e "\n${RED}Error: Backend service failed to become healthy${NC}"
-    docker-compose logs backend
+    docker-compose -f docker-compose.yml logs backend
     exit 1
 fi
 
@@ -174,7 +174,7 @@ fi
 
 # Print how to access logs
 echo -e "\n${YELLOW}To view logs:${NC}"
-echo "docker-compose logs -f backend"
+echo "docker-compose -f docker-compose.yml logs -f backend"
 
 echo -e "\n${YELLOW}Note:${NC}"
 if [[ -n "$PRONUNCIATION_SERVICE_URL" || -n "$CONTENT_SCORING_SERVICE_URL" ]]; then

@@ -18,7 +18,13 @@
       "Bash(docker rmi:*)",
       "Bash(./build-fast.sh:*)",
       "Bash(dos2unix:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(docker images:*)",
+      "Bash(if [ -d \"deployment/cms/build/react-build\" ])",
+      "Bash([ -f \"deployment/cms/build/react-build/index.html\" ])",
+      "Bash(then)",
+      "Bash(else)",
+      "Bash(fi)"
     ],
     "deny": [],
     "ask": []

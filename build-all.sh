@@ -98,40 +98,48 @@ fi
 print_status "Building CMS Service (React Frontend)..."
 cd cms-service
 
-# Check if node_modules exists and package.json has changed
-if [ "$CLEAN" = true ] || [ ! -d "node_modules" ]; then
-    print_status "Installing CMS dependencies..."
+# Check if CMS already built and skip if not clean build
+if [ "$CLEAN" != true ] && [ -d "../deployment/cms/build/react-build" ] && [ -f "../deployment/cms/build/react-build/index.html" ] && [ -d "../deployment/cms/build/react-build/static" ]; then
+    print_status "CMS already built (found complete React build), skipping..."
+    cd ..
+else
+    print_status "Building CMS from source..."
+    
+    # Check if node_modules exists and package.json has changed
+    if [ "$CLEAN" = true ] || [ ! -d "node_modules" ]; then
+        print_status "Installing CMS dependencies..."
+        if command -v npm > /dev/null; then
+            npm install --legacy-peer-deps
+        elif command -v yarn > /dev/null; then
+            yarn install
+        else
+            print_error "Neither npm nor yarn found. Please install Node.js first."
+            exit 1
+        fi
+    fi
+
+    # Build React app
+    print_status "Building React application..."
     if command -v npm > /dev/null; then
-        npm install
+        npm run build
     elif command -v yarn > /dev/null; then
-        yarn install
+        yarn build
+    fi
+
+    # Copy build artifacts to deployment folder
+    if [ -d "build" ]; then
+        print_status "Copying React build to deployment folder..."
+        mkdir -p ../deployment/cms/build
+        rm -rf ../deployment/cms/build/react-build
+        cp -r build ../deployment/cms/build/react-build
+        print_success "CMS build artifacts copied to deployment folder"
     else
-        print_error "Neither npm nor yarn found. Please install Node.js first."
+        print_error "React build failed - no build directory found"
         exit 1
     fi
-fi
 
-# Build React app
-print_status "Building React application..."
-if command -v npm > /dev/null; then
-    npm run build
-elif command -v yarn > /dev/null; then
-    yarn build
+    cd ..
 fi
-
-# Copy build artifacts to deployment folder
-if [ -d "build" ]; then
-    print_status "Copying React build to deployment folder..."
-    mkdir -p ../deployment/cms/build
-    rm -rf ../deployment/cms/build/react-build
-    cp -r build ../deployment/cms/build/react-build
-    print_success "CMS build artifacts copied to deployment folder"
-else
-    print_error "React build failed - no build directory found"
-    exit 1
-fi
-
-cd ..
 
 # Build content-scoring-service
 print_status "Building content-scoring-service..."
@@ -150,19 +158,23 @@ if [ "$TUNNEL" = true ]; then
     BUILD_ARGS="$BUILD_ARGS --tunnel"
 fi
 
-# Build content-scoring-service with standard build.sh
-print_status "Building content-scoring-service with standard build script..."
-
-if [ -f "./build.sh" ]; then
-    print_status "Using standard build.sh for content-scoring-service..."
-    ./build.sh $BUILD_ARGS
-    print_success "Content-scoring-service built successfully with standard configuration!"
-elif [ -f "./quick-fix.sh" ]; then
-    print_status "Using quick fix for content-scoring-service..."
-    ./quick-fix.sh
+# Check if content-scoring-service already built
+if [ "$CLEAN" != true ] && docker images | grep -q "^content-scoring-service.*latest"; then
+    print_status "Content-scoring-service image already exists, skipping build..."
 else
-    print_error "No build.sh script found in content-scoring-service directory!"
-    exit 1
+    print_status "Building content-scoring-service with standard build script..."
+    
+    if [ -f "./build.sh" ]; then
+        print_status "Using standard build.sh for content-scoring-service..."
+        ./build.sh $BUILD_ARGS
+        print_success "Content-scoring-service built successfully with standard configuration!"
+    elif [ -f "./quick-fix.sh" ]; then
+        print_status "Using quick fix for content-scoring-service..."
+        ./quick-fix.sh
+    else
+        print_error "No build.sh script found in content-scoring-service directory!"
+        exit 1
+    fi
 fi
 
 cd ..
@@ -171,23 +183,28 @@ cd ..
 print_status "Building pronunciation-assessment-service..."
 cd pronunciation-assessment-service
 
-if [ -f "./build.sh" ]; then
-    BUILD_ARGS_PRON=""
-    if [ "$CLEAN" = true ]; then
-        BUILD_ARGS_PRON="$BUILD_ARGS_PRON --clean"
-    fi
-    if [ "$NO_CACHE" = true ]; then
-        BUILD_ARGS_PRON="$BUILD_ARGS_PRON --no-cache"
-    fi
-
-    print_status "Building pronunciation-assessment-service with build script..."
-    ./build.sh $BUILD_ARGS_PRON
+# Check if pronunciation-assessment-service already built
+if [ "$CLEAN" != true ] && docker images | grep -q "^pronunciation-assessment-service.*latest"; then
+    print_status "Pronunciation-assessment-service image already exists, skipping build..."
 else
-    print_warning "pronunciation-assessment-service build script not found, using docker-compose..."
-    if [ "$NO_CACHE" = true ]; then
-        docker-compose build --no-cache
+    if [ -f "./build.sh" ]; then
+        BUILD_ARGS_PRON=""
+        if [ "$CLEAN" = true ]; then
+            BUILD_ARGS_PRON="$BUILD_ARGS_PRON --clean"
+        fi
+        if [ "$NO_CACHE" = true ]; then
+            BUILD_ARGS_PRON="$BUILD_ARGS_PRON --no-cache"
+        fi
+
+        print_status "Building pronunciation-assessment-service with build script..."
+        ./build.sh $BUILD_ARGS_PRON
     else
-        docker-compose build
+        print_warning "pronunciation-assessment-service build script not found, using docker-compose..."
+        if [ "$NO_CACHE" = true ]; then
+            docker-compose build --no-cache
+        else
+            docker-compose build
+        fi
     fi
 fi
 
@@ -197,18 +214,59 @@ cd ..
 print_status "Building backend-service..."
 cd backend-service
 
-if [ -f "./build.sh" ]; then
-    print_status "Building backend-service with build script..."
-    ./build.sh
+# Check if backend service already built - look for proper image name
+if [ "$CLEAN" != true ] && (docker images | grep -q "^encybara-backend.*latest" || docker images | grep -q "^deployment.*backend.*latest"); then
+    print_status "Backend service image already exists, skipping build..."
 else
-    print_error "backend-service build script not found!"
-    exit 1
+    print_status "Building backend-service (needs environment config)..."
+    if [ -f "./build.sh" ]; then
+        print_status "Building backend-service with build script..."
+        ./build.sh
+    else
+        print_error "backend-service build script not found!"
+        exit 1
+    fi
 fi
 
 cd ..
 
 print_success "======================================"
-print_success "All Encybara services built successfully!"
+print_success "Build process completed!"
+print_success "======================================"
+print_status "Build Summary:"
+# Check each service individually
+CMS_STATUS="Unknown"
+if [ -d "deployment/cms/build/react-build" ] && [ -f "deployment/cms/build/react-build/index.html" ]; then
+    CMS_STATUS="✅ Built"
+else
+    CMS_STATUS="❌ Missing"
+fi
+
+CONTENT_STATUS="Unknown"  
+if docker images | grep -q "^content-scoring-service.*latest"; then
+    CONTENT_STATUS="✅ Available"
+else
+    CONTENT_STATUS="❌ Missing"
+fi
+
+PRONUNCIATION_STATUS="Unknown"
+if docker images | grep -q "^pronunciation-assessment-service.*latest"; then
+    PRONUNCIATION_STATUS="✅ Available"  
+else
+    PRONUNCIATION_STATUS="❌ Missing"
+fi
+
+BACKEND_STATUS="Unknown"
+if docker images | grep -q "^encybara-backend.*latest\|^deployment.*backend.*latest"; then
+    BACKEND_STATUS="✅ Available"
+else
+    BACKEND_STATUS="❌ Missing"  
+fi
+
+print_status "• CMS Service: $CMS_STATUS"
+print_status "• Content Scoring: $CONTENT_STATUS"
+print_status "• Pronunciation: $PRONUNCIATION_STATUS"  
+print_status "• Backend Service: $BACKEND_STATUS"
 print_success "======================================"
 print_status "Service URLs (when running):"
 print_status "• CMS Frontend: http://localhost:3000"
