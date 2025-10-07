@@ -50,12 +50,19 @@ class WhisperXAligner:
                 compute_type=self.compute_type
             )
             
-            # Load alignment model for English
+            # Load alignment model for English (optional, graceful fallback)
             logger.info("Loading alignment model...")
-            self.align_model, self.metadata = whisperx.load_align_model(
-                language_code="en", 
-                device=self.device
-            )
+            try:
+                self.align_model, self.metadata = whisperx.load_align_model(
+                    language_code="en", 
+                    device=self.device
+                )
+                logger.info("Alignment model loaded successfully")
+            except Exception as align_error:
+                logger.warning(f"Alignment model failed to load: {align_error}")
+                logger.info("Will use transcription-only mode")
+                self.align_model = None
+                self.metadata = None
             
             logger.info("WhisperX models loaded successfully")
             
@@ -83,16 +90,25 @@ class WhisperXAligner:
             logger.info("Transcribing with WhisperX...")
             result = self.model.transcribe(audio, batch_size=16)
             
-            # Align with provided transcript
-            logger.info("Performing forced alignment...")
-            aligned_result = whisperx.align(
-                result["segments"], 
-                self.align_model, 
-                self.metadata, 
-                audio, 
-                self.device, 
-                return_char_alignments=False
-            )
+            # Align with provided transcript (if alignment model available)
+            if self.align_model is not None and self.metadata is not None:
+                logger.info("Performing forced alignment...")
+                try:
+                    aligned_result = whisperx.align(
+                        result["segments"], 
+                        self.align_model, 
+                        self.metadata, 
+                        audio, 
+                        self.device, 
+                        return_char_alignments=False
+                    )
+                except Exception as align_error:
+                    logger.warning(f"Alignment failed: {align_error}")
+                    logger.info("Using transcription result without alignment")
+                    aligned_result = result
+            else:
+                logger.info("Using transcription result without alignment")
+                aligned_result = result
             
             # Convert to our format
             alignment_data = self._convert_alignment_format(aligned_result, transcript)

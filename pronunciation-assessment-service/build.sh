@@ -1,18 +1,20 @@
 #!/bin/bash
 
-# Pronunciation Assessment Service - Build Script
-# Script để build tất cả container với một câu lệnh
+# WhisperX Pronunciation Assessment Service - Simple Build Script
+set -e
 
-set -e  # Exit on any error
+echo "=================================================="
+echo "WhisperX Pronunciation Assessment Service - Build"
+echo "CPU-Only Version (No CUDA Downloads)"
+echo "=================================================="
 
-# Colors for output
-RED='\033[0;31m'
+# Colors
 GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m'
 
-# Function to print colored output
 print_status() {
     echo -e "${BLUE}[BUILD]${NC} $1"
 }
@@ -29,420 +31,71 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Function to show usage
-show_usage() {
-    echo "Pronunciation Assessment Service (WhisperX) - Build Script"
-    echo ""
-    echo "Usage: $0 [OPTIONS]"
-    echo ""
-    echo "Options:"
-    echo "  --clean          Xóa tất cả images và containers cũ trước khi build"
-    echo "  --no-cache       Build không sử dụng cache"
-    echo "  --monitoring     Build kèm theo monitoring stack (Prometheus + Grafana)"
-    echo "  --caching        Build kèm theo Redis caching"
-    echo "  --proxy          Build kèm theo NGINX reverse proxy"
-    echo "  --tunnel         Build kèm theo Ngrok tunnel (cho EC2-to-local connectivity)"
-    echo "  --simple         Sử dụng Dockerfile đơn giản cho network không ổn định"
-    echo "  --optimized      Sử dụng Dockerfile tối ưu (nhỏ gọn, build nhanh)"
-    echo "  --gpu            Enable GPU support for WhisperX acceleration"
-    echo "  --all            Build tất cả services (monitoring + caching + proxy)"
-    echo "  --help           Hiển thị help này"
-    echo ""
-    echo "Examples:"
-    echo "  $0                          # Build WhisperX service cơ bản"
-    echo "  $0 --clean --no-cache       # Clean build từ đầu"
-    echo "  $0 --gpu                    # Build với GPU acceleration"
-    echo "  $0 --monitoring             # Build với monitoring"
-    echo "  $0 --tunnel                 # Build với Ngrok tunnel"
-    echo "  $0 --simple                 # Build với Dockerfile đơn giản"
-    echo "  $0 --optimized              # Build tối ưu (nhanh, nhẹ)"
-    echo "  $0 --all                    # Build tất cả services"
-}
-
-# Parse command line arguments
-CLEAN=false
-NO_CACHE=false
-MONITORING=false
-CACHING=false
-PROXY=false
-TUNNEL=false
-SIMPLE=false
-OPTIMIZED=false
-GPU=false
-PROFILES=""
-
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        --clean)
-            CLEAN=true
-            shift
-            ;;
-        --no-cache)
-            NO_CACHE=true
-            shift
-            ;;
-        --monitoring)
-            MONITORING=true
-            shift
-            ;;
-        --caching)
-            CACHING=true
-            shift
-            ;;
-        --proxy)
-            PROXY=true
-            shift
-            ;;
-        --tunnel)
-            TUNNEL=true
-            shift
-            ;;
-        --all)
-            MONITORING=true
-            CACHING=true
-            PROXY=true
-            shift
-            ;;
-        --simple)
-            SIMPLE=true
-            shift
-            ;;
-        --optimized)
-            OPTIMIZED=true
-            shift
-            ;;
-        --gpu)
-            GPU=true
-            shift
-            ;;
-        --help)
-            show_usage
-            exit 0
-            ;;
-        *)
-            print_error "Unknown option: $1"
-            show_usage
-            exit 1
-            ;;
-    esac
-done
-
-# Build profiles based on options
-if [ "$MONITORING" = true ]; then
-    PROFILES="$PROFILES,monitoring"
-fi
-
-if [ "$CACHING" = true ]; then
-    PROFILES="$PROFILES,caching"
-fi
-
-if [ "$PROXY" = true ]; then
-    PROFILES="$PROFILES,proxy"
-fi
-
-if [ "$TUNNEL" = true ]; then
-    PROFILES="$PROFILES,tunnel"
-fi
-
-# Remove leading comma
-PROFILES=${PROFILES#,}
-
-print_status "=========================================="
-print_status "Pronunciation Assessment Service (WhisperX) - Build Script"
-print_status "=========================================="
-
 # Check if Docker is running
 if ! docker info > /dev/null 2>&1; then
     print_error "Docker is not running. Please start Docker first."
     exit 1
 fi
 
-# Check if docker-compose is available
-if ! command -v docker-compose > /dev/null 2>&1 && ! docker compose version > /dev/null 2>&1; then
-    print_error "Docker Compose is not installed or not available."
-    exit 1
-fi
+# Clean up old containers and images
+print_status "Cleaning up old containers and images..."
+docker compose down --volumes --remove-orphans 2>/dev/null || true
+docker images | grep "pronunciation-assessment-service" | awk '{print $3}' | xargs -r docker rmi -f 2>/dev/null || true
 
-# Use docker compose if available, otherwise use docker-compose
-COMPOSE_CMD="docker-compose"
-if docker compose version > /dev/null 2>&1; then
-    COMPOSE_CMD="docker compose"
-fi
+# Build the image
+print_status "Building CPU-only WhisperX service (this will take 3-5 minutes)..."
+print_status "Note: Skipping pyannote.audio to avoid 888MB CUDA downloads"
 
-print_status "Using compose command: $COMPOSE_CMD"
-
-# Clean up if requested
-if [ "$CLEAN" = true ]; then
-    print_status "Cleaning up old containers and images..."
-    
-    # Stop and remove ONLY this project's containers
-    $COMPOSE_CMD down --volumes --remove-orphans || true
-    
-    # Remove ONLY this project's images (more specific)
-    docker images | grep "^pronunciation-assessment-service " | awk '{print $3}' | xargs -r docker rmi -f || true
-    
-    # WARNING: Do NOT run system prune as it affects other projects
-    print_warning "⚠️  Skipping system prune to avoid affecting other Docker projects"
-    print_status "Only removed pronunciation-assessment-service images and containers"
-    
-    print_success "Safe cleanup completed"
-fi
-
-# Create necessary directories
-print_status "Creating necessary directories..."
-mkdir -p logs
-mkdir -p temp
-mkdir -p nginx
-mkdir -p monitoring
-
-# Create nginx config if it doesn't exist
-if [ "$PROXY" = true ] && [ ! -f "nginx/nginx.conf" ]; then
-    print_status "Creating NGINX configuration..."
-    cat > nginx/nginx.conf << 'EOF'
-events {
-    worker_connections 1024;
-}
-
-http {
-    upstream pronunciation_assessment {
-        server pronunciation-assessment-service:5000;
-    }
-
-    server {
-        listen 80;
-        server_name localhost;
-
-        # Increase client max body size for audio file uploads
-        client_max_body_size 10M;
-
-        location / {
-            proxy_pass http://pronunciation_assessment;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            
-            # Increase timeouts for audio processing
-            proxy_connect_timeout 60s;
-            proxy_send_timeout 60s;
-            proxy_read_timeout 60s;
-        }
-
-        location /health {
-            proxy_pass http://pronunciation_assessment/health;
-            access_log off;
-        }
-
-        # API endpoints for pronunciation assessment
-        location /api/ {
-            proxy_pass http://pronunciation_assessment/api/;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            
-            # Extended timeouts for processing
-            proxy_connect_timeout 120s;
-            proxy_send_timeout 120s;
-            proxy_read_timeout 120s;
-        }
-    }
-}
-EOF
-fi
-
-# Build the Docker image
-print_status "Building Docker image..."
-
-BUILD_ARGS=""
-if [ "$NO_CACHE" = true ]; then
-    BUILD_ARGS="--no-cache"
-fi
-
-# Handle Docker variants
-if [ "$SIMPLE" = true ]; then
-    print_status "Using simple Dockerfile for unreliable networks..."
-    cp Dockerfile Dockerfile.backup 2>/dev/null || true
-    cp Dockerfile.simple Dockerfile
-    BUILD_ARGS="$BUILD_ARGS --no-cache"
-elif [ "$OPTIMIZED" = true ]; then
-    print_status "Using optimized Dockerfile for faster builds..."
-    cp Dockerfile Dockerfile.backup 2>/dev/null || true
-    cp Dockerfile.optimized Dockerfile
-    BUILD_ARGS="$BUILD_ARGS --no-cache"
-elif [ "$GPU" = true ]; then
-    print_status "Using GPU-optimized Dockerfile..."
-    cp Dockerfile Dockerfile.backup 2>/dev/null || true
-    cp Dockerfile.gpu Dockerfile
-    BUILD_ARGS="$BUILD_ARGS --no-cache"
-else
-    # Use CPU-only Dockerfile by default to avoid CUDA downloads
-    print_status "Using CPU-only Dockerfile (avoids CUDA downloads)..."
-    cp Dockerfile Dockerfile.backup 2>/dev/null || true
-    cp Dockerfile.cpu-only Dockerfile
-fi
-
-# Set Docker build timeout environment variables
-export DOCKER_BUILDKIT=1
-export BUILDKIT_PROGRESS=plain
-
-# Build the main service with extended timeout
-if [ "$GPU" = true ]; then
-    print_status "Building WhisperX with GPU support (this may take 10-15 minutes)..."
-    BUILD_ARGS="$BUILD_ARGS --build-arg WHISPERX_DEVICE=cuda"
-elif [ "$OPTIMIZED" = true ]; then
-    print_status "Building optimized WhisperX (this may take 3-5 minutes)..."
-    BUILD_ARGS="$BUILD_ARGS --build-arg WHISPERX_DEVICE=cpu"
-else
-    print_status "Building CPU-only WhisperX (no CUDA, this may take 3-5 minutes)..."
-    BUILD_ARGS="$BUILD_ARGS --build-arg WHISPERX_DEVICE=cpu"
-fi
-
-timeout 3600 docker build $BUILD_ARGS --build-arg BUILDKIT_INLINE_CACHE=1 -t pronunciation-assessment-service . || {
-    print_error "Docker build failed or timed out after 60 minutes"
+timeout 3600 docker build --no-cache -t pronunciation-assessment-service . || {
+    print_error "Docker build failed!"
     exit 1
 }
 
-# Restore original Dockerfile if using variants
-if [ "$SIMPLE" = true ] || [ "$OPTIMIZED" = true ] || [ "$GPU" = true ] || [ -f "Dockerfile.backup" ]; then
-    if [ -f "Dockerfile.backup" ]; then
-        print_status "Restoring original Dockerfile..."
-        mv Dockerfile.backup Dockerfile
-    fi
-fi
+print_success "Docker image built successfully!"
 
-print_success "Docker image built successfully"
+# Start the service
+print_status "Starting WhisperX service..."
+docker compose up -d
 
-# Start services with docker-compose
-print_status "Starting services with Docker Compose..."
+print_status "Waiting for service to be ready..."
+sleep 15
 
-# Handle profiles properly for different docker-compose versions
-COMPOSE_ARGS=""
-if [ -n "$PROFILES" ]; then
-    # Replace commas with spaces for profiles
-    PROFILES_FORMATTED=$(echo "$PROFILES" | tr ',' ' ')
-    for profile in $PROFILES_FORMATTED; do
-        COMPOSE_ARGS="$COMPOSE_ARGS --profile $profile"
-    done
-fi
-
-print_status "Starting containers with profiles: ${PROFILES:-none}"
-
-# Try with profiles first, fallback to basic compose if profiles not supported
-if [ -n "$COMPOSE_ARGS" ]; then
-    print_status "Attempting to start with profiles..."
-    if ! $COMPOSE_CMD up -d $COMPOSE_ARGS 2>/dev/null; then
-        print_warning "Profiles not supported in this docker-compose version"
-        print_status "Starting services manually..."
-        
-        # Start basic WhisperX service first
-        $COMPOSE_CMD up -d pronunciation-assessment-service
-        
-        # Start additional services manually based on flags
-        if [ "$MONITORING" = true ]; then
-            print_status "Starting monitoring services..."
-            $COMPOSE_CMD up -d prometheus grafana || true
-        fi
-        
-        if [ "$CACHING" = true ]; then
-            print_status "Starting Redis cache..."
-            $COMPOSE_CMD up -d redis || true
-        fi
-        
-        if [ "$PROXY" = true ]; then
-            print_status "Starting NGINX proxy..."
-            $COMPOSE_CMD up -d nginx || true
-        fi
-        
-        if [ "$TUNNEL" = true ]; then
-            print_status "Starting Ngrok tunnel..."
-            $COMPOSE_CMD up -d ngrok || true
-        fi
-    fi
-else
-    $COMPOSE_CMD up -d
-fi
-
-print_success "All services started successfully"
-
-# Wait for health check
-print_status "Waiting for service health check..."
-sleep 10
-
-# Check if the main service is healthy
+# Check health
 for i in {1..30}; do
     if curl -s http://localhost:5000/health > /dev/null 2>&1; then
-        print_success "Service is healthy and ready!"
+        print_success "✓ WhisperX service is healthy and ready!"
         break
     else
-        print_status "Waiting for service to be ready... ($i/30)"
-        sleep 2
+        print_status "Waiting for service... ($i/30)"
+        sleep 3
     fi
     
     if [ $i -eq 30 ]; then
-        print_warning "Service health check timeout. Please check logs manually."
+        print_warning "Service might still be starting. Check logs manually."
     fi
 done
 
 # Show service status
 print_status "Service Status:"
-$COMPOSE_CMD ps
+docker compose ps
 
-# Show useful URLs
-print_status "=========================================="
-print_success "WhisperX Build completed successfully!"
-print_status "=========================================="
-print_status "Available endpoints:"
-print_status "• Main Service (WhisperX): http://localhost:5000"
-print_status "• Health Check: http://localhost:5000/health"
-print_status "• Service Info: http://localhost:5000/api/info"
-print_status "• Pronunciation Assessment (2-8s response): http://localhost:5000/api/pronunciation-assessment"
-
-if [ "$MONITORING" = true ]; then
-    print_status "• Prometheus: http://localhost:9091"
-    print_status "• Grafana: http://localhost:3101 (admin/admin123)"
-fi
-
-if [ "$CACHING" = true ]; then
-    print_status "• Redis: localhost:6380"
-fi
-
-if [ "$PROXY" = true ]; then
-    print_status "• NGINX Proxy: http://localhost:81"
-fi
-
-if [ "$TUNNEL" = true ]; then
-    print_status "• Ngrok Web Interface: http://localhost:4041"
-    print_warning "⚠️  Lưu ý: Cần cấu hình authtoken trong ngrok/ngrok.yml trước khi sử dụng tunnel!"
-    print_status "   Xem public URL tại: http://localhost:4041"
-fi
-
-if [ "$GPU" = true ]; then
-    print_success "✅ GPU acceleration enabled for WhisperX"
-    print_status "   Expect faster processing times with CUDA"
-fi
-
-if [ "$OPTIMIZED" = true ]; then
-    print_success "✅ Optimized build completed - faster startup and smaller size"
-    print_status "   Models will be downloaded on first use"
-elif [ "$SIMPLE" = true ]; then
-    print_warning "⚠️  Sử dụng simple Dockerfile - không có audio processing dependencies"
-    print_status "   Chỉ thích hợp cho development/testing với text endpoints"
-fi
-
-print_status ""
-print_status "🆕 WhisperX CPU-Only Features:"
-print_status "  • 10x faster than MFA (2-8s vs 30s)"
-print_status "  • No CUDA downloads (faster build)"
-print_status "  • Runs on any machine (CPU-only)"
-print_status "  • Smaller image size"
-print_status "  • Better memory efficiency"
-
-print_status "=========================================="
-if [ "$TUNNEL" = true ]; then
-    print_status "To view tunnel logs: $COMPOSE_CMD logs -f ngrok"
-fi
-print_status "To test WhisperX: python3 test_whisperx.py"
-print_status "To view logs: $COMPOSE_CMD logs -f pronunciation-assessment-service"
-print_status "To stop services: $COMPOSE_CMD down"
-print_status "=========================================="
+# Show useful information
+echo ""
+print_success "🎉 WhisperX Pronunciation Assessment Service is ready!"
+echo ""
+echo "Available endpoints:"
+echo "• Health: http://localhost:5000/health"
+echo "• Info: http://localhost:5000/api/info"
+echo "• Assessment: http://localhost:5000/api/pronunciation-assessment"
+echo ""
+echo "Features:"
+echo "• ✅ CPU-Only (no CUDA downloads)"
+echo "• ✅ Fast build (3-5 minutes)"
+echo "• ✅ 10x faster than MFA (2-8s vs 30s)"
+echo "• ✅ Works on any machine"
+echo ""
+echo "Test commands:"
+echo "python3 test_whisperx.py"
+echo ""
+echo "View logs:"
+echo "docker logs pronunciation-assessment-service-whisperx"
