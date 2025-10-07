@@ -69,9 +69,10 @@ if [ "$USE_CACHE" = false ]; then
     BUILD_ARGS="--no-cache"
 fi
 
-# Use optimized Dockerfile and requirements
+# Backup original requirements and use optimized version
+cp requirements.txt requirements.txt.backup
 cp Dockerfile.optimized Dockerfile.temp
-cp requirements.optimized.txt requirements.temp.txt
+cp requirements.optimized.txt requirements.txt
 
 # Build the image
 print_status "Building Docker image (estimated time: 5-10 minutes)..."
@@ -91,8 +92,9 @@ docker build $BUILD_ARGS \
     fi
 done
 
-# Cleanup temp files
-rm -f Dockerfile.temp requirements.temp.txt
+# Cleanup temp files and restore original requirements
+rm -f Dockerfile.temp
+mv requirements.txt.backup requirements.txt 2>/dev/null || true
 
 # Tag as latest
 docker tag content-scoring-service:fast content-scoring-service:latest
@@ -121,4 +123,9 @@ print_status "• ✅ Optimized installation order (saves ~15% time)"
 print_status "• ✅ Single-stage build (saves ~10% time)"
 print_status "• ✅ Reduced health check start period (faster startup)"
 
-print_success "Total estimated time reduction: ~4000s → ~300s (87% faster!)"
+print_success "Total estimated time reduction: ~4000s → ~300s (92.5% faster!)"
+print_status "This version includes:"
+print_status "• ✅ Full sentence-transformers AI models"
+print_status "• ✅ Advanced content scoring algorithms"
+print_status "• ✅ Detailed improvement suggestions"
+print_status "• ✅ Better accuracy than ultra-light version"

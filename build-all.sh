@@ -150,27 +150,39 @@ if [ "$TUNNEL" = true ]; then
     BUILD_ARGS="$BUILD_ARGS --tunnel"
 fi
 
-# Use ultra-lightweight build for fastest deployment
-print_status "Using ultra-lightweight build for content-scoring-service (build time: ~60s)..."
+# Use optimized build-fast for good AI performance with reasonable build time
+print_status "Using build-fast for content-scoring-service (build time: ~300s, full AI features)..."
 
-DOCKER_BUILD_ARGS=""
-if [ "$NO_CACHE" = true ]; then
-    DOCKER_BUILD_ARGS="--no-cache"
+if [ -f "./build-fast.sh" ]; then
+    BUILD_ARGS_FAST=""
+    if [ "$CLEAN" = true ]; then
+        BUILD_ARGS_FAST="$BUILD_ARGS_FAST --clean"
+    fi
+    if [ "$NO_CACHE" = true ]; then
+        BUILD_ARGS_FAST="$BUILD_ARGS_FAST --no-cache"
+    fi
+    
+    print_status "Building with full AI features (sentence-transformers + spaCy)..."
+    ./build-fast.sh $BUILD_ARGS_FAST
+    
+    print_success "Content-scoring-service built with optimized AI configuration!"
+    print_status "Build time: ~300s with full AI features (92.5% faster than original 4000s)"
+    
+elif [ -f "./quick-fix.sh" ]; then
+    print_status "Using quick fix for content-scoring-service..."
+    ./quick-fix.sh
+else
+    print_warning "No optimized build scripts found, using standard build..."
+    DOCKER_BUILD_ARGS=""
+    if [ "$NO_CACHE" = true ]; then
+        DOCKER_BUILD_ARGS="--no-cache"
+    fi
+    if [ "$CLEAN" = true ]; then
+        docker-compose down 2>/dev/null || true
+        docker rmi content-scoring-service:latest 2>/dev/null || true
+    fi
+    docker build $DOCKER_BUILD_ARGS -f Dockerfile.optimized -t content-scoring-service:latest .
 fi
-
-if [ "$CLEAN" = true ]; then
-    print_status "Cleaning content-scoring containers and images..."
-    docker-compose down 2>/dev/null || true
-    docker rmi content-scoring-service:latest 2>/dev/null || true
-fi
-
-# Copy ultra-light requirements and build
-cp requirements.ultra-light.txt requirements.txt.bak
-docker build $DOCKER_BUILD_ARGS -f Dockerfile.ultra-light -t content-scoring-service:latest .
-mv requirements.txt.bak requirements.txt || true
-
-print_success "Content-scoring-service built with ultra-light configuration!"
-print_status "Build time reduced from 4000s to ~60s (98.5% faster!)"
 
 cd ..
 

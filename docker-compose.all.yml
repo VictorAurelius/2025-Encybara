@@ -28,7 +28,7 @@ services:
       - encybara-network
 
   # ==========================================
-  # Content Scoring Service (Optimized)
+  # Content Scoring Service (Full AI Features)
   # ==========================================
   content-scoring-service:
     build:
@@ -42,19 +42,20 @@ services:
       - PYTHONPATH=/app
       - LOG_LEVEL=INFO
       - PORT=5001
-      # Use /tmp for cache to avoid permission issues
-      - HF_HOME=/tmp/.cache/huggingface
-      - TRANSFORMERS_CACHE=/tmp/.cache/huggingface/transformers
-      - SENTENCE_TRANSFORMERS_HOME=/tmp/.cache/huggingface/sentence_transformers
+      # HuggingFace cache configuration
+      - HF_HOME=/home/appuser/.cache/huggingface
+      - TRANSFORMERS_CACHE=/home/appuser/.cache/huggingface/transformers
+      - SENTENCE_TRANSFORMERS_HOME=/home/appuser/.cache/huggingface/sentence_transformers
+      - HUGGINGFACE_HUB_CACHE=/home/appuser/.cache/huggingface/hub
     volumes:
       - ./content-scoring-service/logs:/app/logs
-      - content-scoring-cache:/tmp/.cache/huggingface
+      - content-scoring-cache:/home/appuser/.cache/huggingface
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 60s
     networks:
       - encybara-network
 

@@ -20,7 +20,7 @@
 Encybara is a modern English learning platform built with microservices architecture, featuring:
 
 - ✅ **Interactive Learning System** - Courses, lessons, and assessments
-- ✅ **AI-Powered Content Scoring** - Ultra-fast essay evaluation (75s build time)
+- ✅ **AI-Powered Content Scoring** - Full AI evaluation with optimized build (300s)
 - ✅ **Pronunciation Assessment** - SimpleAligner speech analysis (60s build time)
 - ✅ **Flashcard System** - Spaced repetition learning
 - ✅ **Progress Tracking** - Detailed learning analytics
@@ -61,7 +61,7 @@ Encybara is a modern English learning platform built with microservices architec
 | **Backend** | Spring Boot 3.x, Java 17 | ~180s |
 | **Frontend** | React 18, TypeScript, TailwindCSS | ~120s |
 | **Database** | MySQL 5.7 | ~10s |
-| **Content Scoring** | Python 3.10, FastAPI (Ultra-Light) | **~75s** |
+| **Content Scoring** | Python 3.10, FastAPI + AI Models | **~300s** |
 | **Pronunciation** | Python 3.10, Flask (SimpleAligner) | **~60s** |
 | **Proxy** | Nginx 1.23 | ~15s |
 
@@ -82,13 +82,13 @@ Encybara is a modern English learning platform built with microservices architec
 - **Path:** `cms-service/`
 - **Build Time:** ~120s
 
-### 3. Content Scoring Service (Ultra-Optimized) ⚡
+### 3. Content Scoring Service (AI-Optimized) ⚡
 - **Port:** 5001
-- **Tech:** Python/FastAPI (Ultra-Light)
-- **Purpose:** Lightweight text similarity scoring
+- **Tech:** Python/FastAPI + Sentence Transformers
+- **Purpose:** Full AI-powered content scoring with optimized build
 - **Path:** `content-scoring-service/`
-- **Build Time:** **~75s** (was 4000s - **98.1% faster!**)
-- **Features:** Simple text similarity, no heavy ML models
+- **Build Time:** **~300s** (was 4000s - **92.5% faster!**)
+- **Features:** Full transformer models, detailed scoring, improvement suggestions
 - [Documentation](content-scoring-service/README.md)
 
 ### 4. Pronunciation Assessment Service (Optimized) ⚡
@@ -167,7 +167,7 @@ docker-compose -f docker-compose.all.yml down
 
 | Service | Before | After | Improvement |
 |---------|--------|-------|-------------|
-| **Content Scoring** | 4000s (1h 7m) | 75s | **98.1% faster** ⚡ |
+| **Content Scoring** | 4000s (1h 7m) | **300s** | **92.5% faster** ⚡ |
 | **Pronunciation** | Complex deps | 60s | **Simplified deps** ⚡ |
 | **Total System** | ~1.5 hours | ~7 minutes | **92% faster** 🚀 |
 
@@ -193,11 +193,14 @@ docker-compose -f docker-compose.all.yml down
 #### Quick Commands
 
 ```bash
-# Ultra-fast build (recommended for development)
+# Recommended: Optimized AI build (5 minutes, full features)
+cd content-scoring-service && ./build-fast.sh --clean
+
+# Development only: Ultra-fast build (75s, limited AI)
 cd content-scoring-service && docker build -f Dockerfile.ultra-light -t content-scoring-service .
 
-# Full AI build (for production AI features)  
-cd content-scoring-service && ./build-fast.sh --clean
+# Production: Full build (1+ hour, all features)
+cd content-scoring-service && ./build.sh
 ```
 
 ### Accessing Services
@@ -208,7 +211,7 @@ cd content-scoring-service && ./build-fast.sh --clean
 | **CMS Admin** | http://localhost:3000 | React admin panel | ~120s |
 | **API** | http://localhost:8080 | Spring Boot API | ~180s |
 | **Swagger** | http://localhost:8080/swagger-ui.html | API docs | - |
-| **Content Scoring** | http://localhost:5001 | Ultra-fast AI scoring | **~75s** |
+| **Content Scoring** | http://localhost:5001 | Full AI scoring (optimized) | **~300s** |
 | **Pronunciation** | http://localhost:5000 | SimpleAligner speech | **~60s** |
 
 ## 📁 Project Structure
@@ -448,7 +451,7 @@ npm test
 
 | Service | Original Build | Optimized Build | Improvement | Method |
 |---------|---------------|----------------|-------------|---------|
-| **Content Scoring** | 4000s (1h 7m) | **75s** | **98.1% faster** | Ultra-light deps |
+| **Content Scoring** | 4000s (1h 7m) | **300s** | **92.5% faster** | Optimized AI build |
 | **Pronunciation** | Complex deps | **60s** | **Simplified** | SimpleAligner |
 | **CMS** | Manual build | **120s** | **Automated** | npm build |
 | **Backend** | ~180s | **~180s** | **Stable** | Gradle cache |
@@ -467,17 +470,17 @@ npm test
 
 ### Content Scoring Service Optimizations
 
-1. **Ultra-Light Version** (`Dockerfile.ultra-light`):
-   - ✅ No heavy transformer models
-   - ✅ Simple text similarity scoring  
-   - ✅ FastAPI + scikit-learn only
-   - ✅ Build time: **75s** (was 4000s)
+1. **Optimized AI Version** (`Dockerfile.optimized`) - **Default**:
+   - ✅ Full sentence-transformers models for accurate scoring
+   - ✅ Optimized dependency installation order
+   - ✅ Locked package versions to avoid conflicts
+   - ✅ Build time: **300s** (was 4000s - 92.5% faster!)
 
-2. **Fast Version** (`Dockerfile.optimized`):
-   - ✅ Optimized dependency installation
-   - ✅ Locked package versions
-   - ✅ Multi-stage build
-   - ✅ Build time: **300s** (was 4000s)
+2. **Ultra-Light Version** (`Dockerfile.ultra-light`) - Development Only:
+   - ⚡ No heavy transformer models
+   - ⚡ Simple text similarity scoring  
+   - ⚡ FastAPI + scikit-learn only
+   - ⚡ Build time: **75s** but limited AI capabilities
 
 3. **Quick Fix** (`quick-fix.sh`):
    - ✅ Uses existing images
