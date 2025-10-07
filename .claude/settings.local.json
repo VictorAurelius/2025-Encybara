@@ -5,7 +5,9 @@
       "Bash(tree:*)",
       "Bash(awk:*)",
       "Bash(docker-compose:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(./build.sh:*)",
+      "Bash(bash:*)"
     ],
     "deny": [],
     "ask": []

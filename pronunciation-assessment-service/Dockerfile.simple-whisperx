@@ -1,5 +1,6 @@
-# Multi-stage Dockerfile for WhisperX-based Pronunciation Assessment Service
-FROM python:3.10-slim AS base
+# Simple Dockerfile for WhisperX-based Pronunciation Assessment Service
+# This version downloads models at runtime for faster build times
+FROM python:3.10-slim
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
@@ -26,13 +27,10 @@ RUN echo "[INSTALL] Installing system dependencies..." && \
     rm -rf /var/lib/apt/lists/* && \
     echo "[INSTALL] ✓ System dependencies installed"
 
-# Stage 2: Python environment setup
-FROM base AS python-env
-
 # Set working directory
 WORKDIR /app
 
-# Install PyTorch (CPU version for broader compatibility, can be overridden for GPU)
+# Install PyTorch (CPU version for broader compatibility)
 RUN echo "[INSTALL] Installing PyTorch..." && \
     pip install --no-cache-dir \
         torch==2.1.0+cpu \
@@ -47,9 +45,6 @@ COPY requirements.txt ./
 RUN echo "[INSTALL] Installing Python packages..." && \
     pip install --no-cache-dir -r requirements.txt && \
     echo "[INSTALL] ✓ Python packages installed"
-
-# Stage 3: Final application image
-FROM python-env AS final
 
 # Create directories
 RUN mkdir -p /app/models /app/temp /app/logs && \
@@ -74,5 +69,5 @@ EXPOSE 5000
 HEALTHCHECK --interval=30s --timeout=30s --start-period=10s --retries=3 \
     CMD curl -f http://localhost:5000/health || exit 1
 
-# Run application - WhisperX models will be downloaded on first use
+# Run application - models will be downloaded on first use
 CMD ["python", "run.py"]
