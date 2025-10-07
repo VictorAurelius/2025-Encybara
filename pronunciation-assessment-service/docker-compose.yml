@@ -16,11 +16,7 @@ services:
       - WHISPERX_COMPUTE_TYPE=float32
       # Fix for ctranslate2 executable stack issue
       - CT2_FORCE_CPU_ISA=""
-    # Security settings to allow executable stack for ctranslate2
-    security_opt:
-      - seccomp:unconfined
-      - apparmor:unconfined
-    privileged: true
+    # Using OpenAI Whisper - no special security settings needed
     volumes:
       # Mount logs for persistence (optional)
       - ./logs:/app/logs

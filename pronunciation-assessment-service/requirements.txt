@@ -9,6 +9,5 @@ psutil==5.9.6
 # PyTorch will be installed separately in Dockerfile
 # torch>=1.10.0  
 # torchaudio>=0.10.0
-git+https://github.com/m-bain/whisperx.git
+openai-whisper
 transformers>=4.21.0
-faster-whisper>=0.9.0
