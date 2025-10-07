@@ -6,8 +6,9 @@ soundfile==0.12.1
 werkzeug==3.0.1
 gunicorn==21.2.0
 psutil==5.9.6
-torch>=1.10.0
-torchaudio>=0.10.0
+# PyTorch will be installed separately in Dockerfile
+# torch>=1.10.0  
+# torchaudio>=0.10.0
 git+https://github.com/m-bain/whisperx.git
 transformers>=4.21.0
 faster-whisper>=0.9.0

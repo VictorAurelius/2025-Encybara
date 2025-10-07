@@ -43,6 +43,7 @@ show_usage() {
     echo "  --proxy          Build kèm theo NGINX reverse proxy"
     echo "  --tunnel         Build kèm theo Ngrok tunnel (cho EC2-to-local connectivity)"
     echo "  --simple         Sử dụng Dockerfile đơn giản cho network không ổn định"
+    echo "  --optimized      Sử dụng Dockerfile tối ưu (nhỏ gọn, build nhanh)"
     echo "  --gpu            Enable GPU support for WhisperX acceleration"
     echo "  --all            Build tất cả services (monitoring + caching + proxy)"
     echo "  --help           Hiển thị help này"
@@ -54,6 +55,7 @@ show_usage() {
     echo "  $0 --monitoring             # Build với monitoring"
     echo "  $0 --tunnel                 # Build với Ngrok tunnel"
     echo "  $0 --simple                 # Build với Dockerfile đơn giản"
+    echo "  $0 --optimized              # Build tối ưu (nhanh, nhẹ)"
     echo "  $0 --all                    # Build tất cả services"
 }
 
@@ -65,6 +67,7 @@ CACHING=false
 PROXY=false
 TUNNEL=false
 SIMPLE=false
+OPTIMIZED=false
 GPU=false
 PROFILES=""
 
@@ -102,6 +105,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --simple)
             SIMPLE=true
+            shift
+            ;;
+        --optimized)
+            OPTIMIZED=true
             shift
             ;;
         --gpu)
@@ -258,11 +265,21 @@ if [ "$SIMPLE" = true ]; then
     cp Dockerfile Dockerfile.backup 2>/dev/null || true
     cp Dockerfile.simple Dockerfile
     BUILD_ARGS="$BUILD_ARGS --no-cache"
+elif [ "$OPTIMIZED" = true ]; then
+    print_status "Using optimized Dockerfile for faster builds..."
+    cp Dockerfile Dockerfile.backup 2>/dev/null || true
+    cp Dockerfile.optimized Dockerfile
+    BUILD_ARGS="$BUILD_ARGS --no-cache"
 elif [ "$GPU" = true ]; then
     print_status "Using GPU-optimized Dockerfile..."
     cp Dockerfile Dockerfile.backup 2>/dev/null || true
     cp Dockerfile.gpu Dockerfile
     BUILD_ARGS="$BUILD_ARGS --no-cache"
+else
+    # Use CPU-only Dockerfile by default to avoid CUDA downloads
+    print_status "Using CPU-only Dockerfile (avoids CUDA downloads)..."
+    cp Dockerfile Dockerfile.backup 2>/dev/null || true
+    cp Dockerfile.cpu-only Dockerfile
 fi
 
 # Set Docker build timeout environment variables
@@ -271,20 +288,23 @@ export BUILDKIT_PROGRESS=plain
 
 # Build the main service with extended timeout
 if [ "$GPU" = true ]; then
-    print_status "Building WhisperX with GPU support (this may take 5-10 minutes)..."
+    print_status "Building WhisperX with GPU support (this may take 10-15 minutes)..."
     BUILD_ARGS="$BUILD_ARGS --build-arg WHISPERX_DEVICE=cuda"
+elif [ "$OPTIMIZED" = true ]; then
+    print_status "Building optimized WhisperX (this may take 3-5 minutes)..."
+    BUILD_ARGS="$BUILD_ARGS --build-arg WHISPERX_DEVICE=cpu"
 else
-    print_status "Building WhisperX with CPU support (this may take 5-10 minutes)..."
+    print_status "Building CPU-only WhisperX (no CUDA, this may take 3-5 minutes)..."
     BUILD_ARGS="$BUILD_ARGS --build-arg WHISPERX_DEVICE=cpu"
 fi
 
-timeout 1800 docker build $BUILD_ARGS --build-arg BUILDKIT_INLINE_CACHE=1 -t pronunciation-assessment-service . || {
-    print_error "Docker build failed or timed out after 30 minutes"
+timeout 3600 docker build $BUILD_ARGS --build-arg BUILDKIT_INLINE_CACHE=1 -t pronunciation-assessment-service . || {
+    print_error "Docker build failed or timed out after 60 minutes"
     exit 1
 }
 
 # Restore original Dockerfile if using variants
-if [ "$SIMPLE" = true ] || [ "$GPU" = true ]; then
+if [ "$SIMPLE" = true ] || [ "$OPTIMIZED" = true ] || [ "$GPU" = true ] || [ -f "Dockerfile.backup" ]; then
     if [ -f "Dockerfile.backup" ]; then
         print_status "Restoring original Dockerfile..."
         mv Dockerfile.backup Dockerfile
@@ -402,16 +422,20 @@ if [ "$GPU" = true ]; then
     print_status "   Expect faster processing times with CUDA"
 fi
 
-if [ "$SIMPLE" = true ]; then
+if [ "$OPTIMIZED" = true ]; then
+    print_success "✅ Optimized build completed - faster startup and smaller size"
+    print_status "   Models will be downloaded on first use"
+elif [ "$SIMPLE" = true ]; then
     print_warning "⚠️  Sử dụng simple Dockerfile - không có audio processing dependencies"
     print_status "   Chỉ thích hợp cho development/testing với text endpoints"
 fi
 
 print_status ""
-print_status "🆕 WhisperX Features:"
+print_status "🆕 WhisperX CPU-Only Features:"
 print_status "  • 10x faster than MFA (2-8s vs 30s)"
-print_status "  • GPU acceleration support"
-print_status "  • Simpler deployment"
+print_status "  • No CUDA downloads (faster build)"
+print_status "  • Runs on any machine (CPU-only)"
+print_status "  • Smaller image size"
 print_status "  • Better memory efficiency"
 
 print_status "=========================================="

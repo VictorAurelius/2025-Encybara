@@ -1,4 +1,4 @@
-# Optimized Dockerfile for WhisperX (CPU-only, fast build)
+# Final optimized Dockerfile for WhisperX (CPU-only, fast build)
 FROM python:3.10-slim
 
 # Set environment variables
@@ -22,13 +22,19 @@ RUN echo "[INSTALL] Installing system dependencies..." && \
 # Set working directory
 WORKDIR /app
 
-# Copy minimal requirements
-COPY requirements-minimal.txt ./
-
-# Install base packages from minimal requirements
+# Install pip dependencies in specific order to avoid conflicts
 RUN echo "[INSTALL] Installing base packages..." && \
     pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements-minimal.txt && \
+    pip install --no-cache-dir \
+        flask==3.0.0 \
+        librosa==0.10.1 \
+        numpy==1.24.3 \
+        scipy==1.11.4 \
+        soundfile==0.12.1 \
+        werkzeug==3.0.1 \
+        gunicorn==21.2.0 \
+        psutil==5.9.6 \
+        && \
     echo "[INSTALL] ✓ Base packages installed"
 
 # Force CPU-only PyTorch installation to avoid CUDA downloads
@@ -64,7 +70,7 @@ COPY . /app/
 RUN chmod +x /app/run.py && \
     find /app -name "*.py" -exec chmod +r {} \;
 
-# Create non-root user for security
+# Create non-root user
 RUN useradd -m -u 1000 appuser && \
     chown -R appuser:appuser /app
 USER appuser

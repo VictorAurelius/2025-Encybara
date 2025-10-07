@@ -1,0 +1,13 @@
+# Minimal requirements for WhisperX - PyTorch installed separately in Dockerfile
+flask==3.0.0
+librosa==0.10.1
+numpy==1.24.3
+scipy==1.11.4
+soundfile==0.12.1
+werkzeug==3.0.1
+gunicorn==21.2.0
+psutil==5.9.6
+
+# Note: torch and torchaudio are installed separately in Dockerfile to force CPU version
+# transformers and faster-whisper are installed separately to control versions
+# WhisperX is installed last to use existing PyTorch installation
