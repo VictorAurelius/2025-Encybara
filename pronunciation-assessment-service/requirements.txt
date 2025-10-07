@@ -1,11 +1,13 @@
 flask==3.0.0
 librosa==0.10.1
-praatio==6.0.0
 numpy==1.24.3
 scipy==1.11.4
 soundfile==0.12.1
-textgrid==1.5
 werkzeug==3.0.1
 gunicorn==21.2.0
-pympi-ling==1.70.2
 psutil==5.9.6
+torch>=1.10.0
+torchaudio>=0.10.0
+git+https://github.com/m-bain/whisperx.git
+transformers>=4.21.0
+faster-whisper>=0.9.0

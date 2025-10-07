@@ -1,16 +1,16 @@
-"""GOP (Goodness of Pronunciation) scorer implementation."""
+"""GOP (Goodness of Pronunciation) scorer implementation with WhisperX support."""
 
 import logging
 import numpy as np
 import librosa
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 from praatio import textgrid
 
 logger = logging.getLogger(__name__)
 
 
 class GOPScorer:
-    """Goodness of Pronunciation (GOP) algorithm implementation."""
+    """Goodness of Pronunciation (GOP) algorithm implementation with WhisperX support."""
 
     def __init__(self):
         self.phoneme_quality_thresholds = {
@@ -52,7 +52,7 @@ class GOPScorer:
 
     def parse_textgrid(self, textgrid_path: str) -> List[Dict]:
         """
-        Parse TextGrid file to extract phoneme alignments.
+        Parse TextGrid file to extract phoneme alignments (legacy MFA support).
 
         Args:
             textgrid_path: Path to TextGrid file
@@ -90,6 +90,38 @@ class GOPScorer:
 
         except Exception as e:
             logger.error(f"TextGrid parsing failed: {str(e)}")
+            return []
+
+    def parse_whisperx_alignment(self, alignment_data: Dict) -> List[Dict]:
+        """
+        Parse WhisperX alignment data to extract phoneme alignments.
+
+        Args:
+            alignment_data: WhisperX alignment results
+
+        Returns:
+            List of phoneme alignment data
+        """
+        try:
+            phoneme_data = []
+            phonemes = alignment_data.get('phonemes', [])
+            
+            for phoneme_info in phonemes:
+                if phoneme_info.get('phoneme') and phoneme_info.get('phoneme').strip():
+                    duration = phoneme_info['end_time'] - phoneme_info['start_time']
+                    phoneme_data.append({
+                        'phoneme': phoneme_info['phoneme'].strip(),
+                        'start_time': float(phoneme_info['start_time']),
+                        'end_time': float(phoneme_info['end_time']),
+                        'duration': float(duration),
+                        'confidence': phoneme_info.get('confidence', 1.0)
+                    })
+
+            logger.info(f"Parsed {len(phoneme_data)} phonemes from WhisperX alignment")
+            return phoneme_data
+
+        except Exception as e:
+            logger.error(f"WhisperX alignment parsing failed: {str(e)}")
             return []
 
     def calculate_phoneme_gop_score(self, phoneme_data: Dict,

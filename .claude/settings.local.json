@@ -4,7 +4,8 @@
       "Bash(chmod:*)",
       "Bash(tree:*)",
       "Bash(awk:*)",
-      "Bash(docker-compose:*)"
+      "Bash(docker-compose:*)",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []

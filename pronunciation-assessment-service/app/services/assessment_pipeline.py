@@ -1,9 +1,9 @@
-"""Complete pronunciation assessment pipeline."""
+"""Complete pronunciation assessment pipeline with WhisperX."""
 
 import logging
 from typing import Dict, Optional
 
-from .mfa_aligner import MontrealForcedAligner
+from .whisperx_aligner import WhisperXAligner
 from .gop_scorer import GOPScorer
 from ..core import AudioValidator, FileManager, MemoryManager
 
@@ -11,11 +11,11 @@ logger = logging.getLogger(__name__)
 
 
 class PronunciationAssessmentPipeline:
-    """Complete pronunciation assessment pipeline with optimizations."""
+    """Complete pronunciation assessment pipeline with WhisperX optimization."""
 
     def __init__(self, docker_mode: bool = True):
         self.docker_mode = docker_mode
-        self.mfa = MontrealForcedAligner()
+        self.whisperx = WhisperXAligner()
         self.gop_scorer = GOPScorer()
 
     def assess_pronunciation(self, audio_path: str, transcript: str) -> Optional[Dict]:
@@ -45,22 +45,24 @@ class PronunciationAssessmentPipeline:
                 logger.error("Audio preprocessing failed")
                 return None
 
-            # Perform forced alignment with optimized MFA
-            textgrid_path = self.mfa.align_audio_text(processed_audio_path, transcript)
-            if not textgrid_path:
-                logger.error("Forced alignment failed")
+            # Perform forced alignment with WhisperX
+            alignment_result = self.whisperx.align_audio_text(processed_audio_path, transcript)
+            if not alignment_result:
+                logger.error("WhisperX alignment failed")
                 return None
-
-            temp_files.append(textgrid_path)
 
             # Extract audio features
             audio_features = self.gop_scorer.extract_audio_features(processed_audio_path)
 
-            # Parse alignment results
-            phoneme_data = self.gop_scorer.parse_textgrid(textgrid_path)
+            # Parse alignment results from WhisperX
+            phoneme_data = self.gop_scorer.parse_whisperx_alignment(alignment_result)
             if not phoneme_data:
-                logger.error("No phoneme data extracted")
+                logger.error("No phoneme data extracted from WhisperX")
                 return None
+
+            # Log alignment quality
+            alignment_quality = alignment_result.get('alignment_quality', 0.0)
+            logger.info(f"Alignment quality: {alignment_quality:.2f}")
 
             # Calculate phoneme-level GOP scores
             phoneme_scores = []
@@ -106,10 +108,10 @@ class PronunciationAssessmentPipeline:
         finally:
             # Cleanup
             FileManager.cleanup_files(*temp_files)
-            self.mfa.cleanup()
+            self.whisperx.cleanup()
             MemoryManager.force_garbage_collection()
 
     def __del__(self):
         """Cleanup on deletion."""
-        if hasattr(self, 'mfa'):
-            self.mfa.cleanup()
+        if hasattr(self, 'whisperx'):
+            self.whisperx.cleanup()
