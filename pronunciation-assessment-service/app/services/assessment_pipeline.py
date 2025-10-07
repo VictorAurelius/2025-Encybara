@@ -3,7 +3,7 @@
 import logging
 from typing import Dict, Optional
 
-from .faster_whisper_aligner import FasterWhisperAligner
+from .openai_whisper_aligner import OpenAIWhisperAligner
 from .gop_scorer import GOPScorer
 from ..core import AudioValidator, FileManager, MemoryManager
 
@@ -11,14 +11,14 @@ logger = logging.getLogger(__name__)
 
 
 class PronunciationAssessmentPipeline:
-    """Complete pronunciation assessment pipeline with Faster-Whisper."""
+    """Complete pronunciation assessment pipeline with OpenAI Whisper."""
 
     def __init__(self, docker_mode: bool = True):
         self.docker_mode = docker_mode
-        self.aligner = FasterWhisperAligner()
-        self.aligner_type = "Faster-Whisper"
+        self.aligner = OpenAIWhisperAligner()
+        self.aligner_type = "OpenAI-Whisper"
         self.gop_scorer = GOPScorer()
-        logger.info("Pronunciation assessment pipeline initialized with Faster-Whisper")
+        logger.info("Pronunciation assessment pipeline initialized with OpenAI Whisper")
 
     def assess_pronunciation(self, audio_path: str, transcript: str) -> Optional[Dict]:
         """

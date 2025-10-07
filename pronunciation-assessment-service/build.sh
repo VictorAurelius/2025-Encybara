@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Building Faster-Whisper Pronunciation Assessment Service..."
+echo "Building OpenAI Whisper Pronunciation Assessment Service..."
 docker compose down --volumes --remove-orphans 2>/dev/null || true
 docker rmi pronunciation-assessment-service 2>/dev/null || true
 docker build --no-cache -t pronunciation-assessment-service .

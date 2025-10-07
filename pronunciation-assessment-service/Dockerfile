@@ -23,7 +23,7 @@ RUN pip install --no-cache-dir \
     praatio==6.0.0
 
 RUN pip install --no-cache-dir \
-    "faster-whisper>=0.9.0,<1.0.0"
+    openai-whisper
 
 COPY . /app/
 RUN chmod +x /app/run.py

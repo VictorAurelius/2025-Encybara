@@ -31,10 +31,10 @@ except RuntimeError as e:
     logger.error("="*80)
     logger.error(str(e))
     logger.error("="*80)
-    logger.error("This service requires Faster-Whisper to be installed.")
+    logger.error("This service requires OpenAI Whisper to be installed.")
     logger.error("")
     logger.error("SOLUTION:")
-    logger.error("  - Install Faster-Whisper: pip install faster-whisper")
+    logger.error("  - Install OpenAI Whisper: pip install openai-whisper")
     logger.error("  - Docker: Run 'docker-compose up' (recommended)")
     logger.error("  - Ensure dependencies are correctly installed")
     logger.error("="*80)
@@ -207,7 +207,7 @@ def service_info():
     return jsonify({
         "service": "Pronunciation Assessment Microservice",
         "version": "1.0.0-optimized",
-        "description": "RESTful API for pronunciation assessment using Faster-Whisper and GOP algorithm",
+        "description": "RESTful API for pronunciation assessment using OpenAI Whisper and GOP algorithm",
         "endpoints": {
             "health": "/health",
             "assessment": "/api/pronunciation-assessment",
