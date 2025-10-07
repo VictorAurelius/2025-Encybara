@@ -23,11 +23,6 @@ RUN pip install --no-cache-dir \
     praatio==6.0.0
 
 RUN pip install --no-cache-dir \
-    torch==2.1.0+cpu \
-    torchaudio==2.1.0+cpu \
-    --index-url https://download.pytorch.org/whl/cpu
-
-RUN pip install --no-cache-dir \
     "faster-whisper>=0.9.0,<1.0.0"
 
 COPY . /app/
@@ -38,6 +33,7 @@ USER appuser
 
 EXPOSE 5000
 
-ENV WHISPERX_DEVICE=cpu
+HEALTHCHECK --interval=30s --timeout=30s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:5000/health || exit 1
 
 CMD ["python", "run.py"]

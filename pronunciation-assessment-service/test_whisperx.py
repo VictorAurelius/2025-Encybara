@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test script for WhisperX pronunciation assessment service."""
+"""Test script for Faster-Whisper pronunciation assessment service."""
 
 import os
 import sys
@@ -13,19 +13,19 @@ from pathlib import Path
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def test_whisperx_pipeline():
-    """Test WhisperX pipeline directly."""
+def test_faster_whisper_pipeline():
+    """Test Faster-Whisper pipeline directly."""
     try:
         # Add app to path
         app_path = Path(__file__).parent / "app"
         sys.path.insert(0, str(app_path))
         
-        from services.whisperx_aligner import WhisperXAligner
+        from services.faster_whisper_aligner import FasterWhisperAligner
         from services.gop_scorer import GOPScorer
         
-        logger.info("Testing WhisperX aligner...")
-        aligner = WhisperXAligner()
-        logger.info("✓ WhisperX aligner initialized successfully")
+        logger.info("Testing Faster-Whisper aligner...")
+        aligner = FasterWhisperAligner()
+        logger.info("✓ Faster-Whisper aligner initialized successfully")
         
         logger.info("Testing GOP scorer...")
         gop_scorer = GOPScorer()
@@ -56,11 +56,11 @@ def test_whisperx_pipeline():
             quality = gop_scorer.determine_quality_label(gop_score)
             logger.info(f"✓ Phoneme '{phoneme_info['phoneme']}': GOP={gop_score:.2f}, Quality={quality}")
         
-        logger.info("✅ WhisperX pipeline test completed successfully!")
+        logger.info("✅ Faster-Whisper pipeline test completed successfully!")
         return True
         
     except Exception as e:
-        logger.error(f"❌ WhisperX pipeline test failed: {str(e)}")
+        logger.error(f"❌ Faster-Whisper pipeline test failed: {str(e)}")
         return False
 
 def test_service_endpoint(base_url: str = "http://localhost:5000"):
@@ -164,14 +164,14 @@ def test_full_assessment(base_url: str = "http://localhost:5000"):
 
 def main():
     """Run all tests."""
-    logger.info("🧪 Starting WhisperX Pronunciation Assessment Service Tests")
+    logger.info("🧪 Starting Faster-Whisper Pronunciation Assessment Service Tests")
     logger.info("=" * 60)
     
     results = []
     
     # Test 1: Pipeline components
-    logger.info("1. Testing WhisperX pipeline components...")
-    results.append(test_whisperx_pipeline())
+    logger.info("1. Testing Faster-Whisper pipeline components...")
+    results.append(test_faster_whisper_pipeline())
     
     # Test 2: Service endpoints
     logger.info("\n2. Testing service endpoints...")
@@ -195,7 +195,7 @@ def main():
     logger.info(f"\nOverall: {passed}/{total} tests passed")
     
     if passed == total:
-        logger.info("🎉 All tests passed! WhisperX service is ready.")
+        logger.info("🎉 All tests passed! Faster-Whisper service is ready.")
         return 0
     else:
         logger.warning("⚠️  Some tests failed. Check the logs above.")
