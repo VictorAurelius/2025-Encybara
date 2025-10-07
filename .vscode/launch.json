@@ -2,18 +2,21 @@
     "configurations": [
         {
             "type": "java",
-            "name": "EncybaraApplication",
+            "name": "Launch Backend Service",
             "request": "launch",
+            "cwd": "${workspaceFolder}/backend-service",
             "mainClass": "utc.englishlearning.Encybara.EncybaraApplication",
-            "projectName": "backend-app"
+            "projectName": "Encybara",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         },
         {
             "type": "java",
-            "name": "Spring Boot-EncybaraApplication<Encybara-backend-app>",
+            "name": "Spring Boot-EncybaraApplication<Encybara-backend-service>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "mainClass": "utc.englishlearning.Encybara.EncybaraApplication",
-            "projectName": "Encybara-backend-app",
+            "projectName": "Encybara-backend-service",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }
