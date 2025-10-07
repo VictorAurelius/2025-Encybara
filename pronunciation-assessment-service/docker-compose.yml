@@ -19,6 +19,8 @@ services:
     # Security settings to allow executable stack for ctranslate2
     security_opt:
       - seccomp:unconfined
+      - apparmor:unconfined
+    privileged: true
     volumes:
       # Mount logs for persistence (optional)
       - ./logs:/app/logs

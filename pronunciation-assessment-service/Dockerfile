@@ -2,11 +2,11 @@ FROM python:3.10-slim
 
 ENV PYTHONUNBUFFERED=1
 ENV CUDA_VISIBLE_DEVICES=""
+ENV DOCKER_DEFAULT_PLATFORM=linux/amd64
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     git \
-    execstack \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -38,8 +38,6 @@ COPY . /app/
 RUN chmod +x /app/run.py
 
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
-
-RUN find /usr/local/lib/python3.10/site-packages -name "*.so*" -exec execstack -c {} \; 2>/dev/null || true
 
 USER appuser
 
