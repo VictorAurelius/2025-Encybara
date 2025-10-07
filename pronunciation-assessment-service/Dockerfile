@@ -40,7 +40,8 @@ RUN pip install --no-cache-dir \
 # Install audio processing
 RUN pip install --no-cache-dir \
     librosa==0.10.1 \
-    soundfile==0.12.1
+    soundfile==0.12.1 \
+    praatio==6.0.0
 
 # Install transformers and faster-whisper with version constraints to avoid torch upgrade
 RUN pip install --no-cache-dir \

@@ -4,7 +4,15 @@ import logging
 import numpy as np
 import librosa
 from typing import Dict, List, Tuple, Optional
-from praatio import textgrid
+
+# Optional import for legacy MFA support
+try:
+    from praatio import textgrid
+    HAS_PRAATIO = True
+except ImportError:
+    HAS_PRAATIO = False
+    logger = logging.getLogger(__name__)
+    logger.warning("praatio not available - TextGrid parsing disabled (WhisperX mode only)")
 
 logger = logging.getLogger(__name__)
 
@@ -60,6 +68,10 @@ class GOPScorer:
         Returns:
             List of phoneme alignment data
         """
+        if not HAS_PRAATIO:
+            logger.error("praatio not available - cannot parse TextGrid files")
+            return []
+            
         try:
             tg = textgrid.openTextgrid(textgrid_path, includeEmptyIntervals=False)
 
