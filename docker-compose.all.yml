@@ -28,12 +28,12 @@ services:
       - encybara-network
 
   # ==========================================
-  # Content Scoring Service
+  # Content Scoring Service (Optimized)
   # ==========================================
   content-scoring-service:
     build:
       context: ./content-scoring-service
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.optimized
     container_name: content-scoring-service
     restart: unless-stopped
     ports:
@@ -42,14 +42,19 @@ services:
       - PYTHONPATH=/app
       - LOG_LEVEL=INFO
       - PORT=5001
+      # Use /tmp for cache to avoid permission issues
+      - HF_HOME=/tmp/.cache/huggingface
+      - TRANSFORMERS_CACHE=/tmp/.cache/huggingface/transformers
+      - SENTENCE_TRANSFORMERS_HOME=/tmp/.cache/huggingface/sentence_transformers
     volumes:
       - ./content-scoring-service/logs:/app/logs
+      - content-scoring-cache:/tmp/.cache/huggingface
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 60s
+      start_period: 30s
     networks:
       - encybara-network
 
@@ -94,7 +99,7 @@ services:
   # ==========================================
   backend:
     build:
-      context: ./backend-app
+      context: ./backend-service
       dockerfile: Dockerfile
     container_name: encybara-backend
     restart: always
@@ -135,11 +140,26 @@ services:
       - encybara-network
 
   # ==========================================
-  # Nginx Reverse Proxy (Optional)
+  # ==========================================
+  # CMS Service (React Frontend)
+  # ==========================================
+  cms-service:
+    build:
+      context: ./deployment/cms
+      dockerfile: Dockerfile
+    container_name: encybara-cms
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    networks:
+      - encybara-network
+
+  # ==========================================
+  # Nginx Gateway (Optional)
   # ==========================================
   nginx:
     build:
-      context: ./build-docker
+      context: ./deployment
       dockerfile: Dockerfile.nginx
     container_name: encybara-nginx
     restart: always
@@ -147,10 +167,11 @@ services:
       - "80:80"
     depends_on:
       - backend
+      - cms-service
     networks:
       - encybara-network
     profiles:
-      - proxy
+      - gateway
 
 # ==========================================
 # Volumes
@@ -159,6 +180,8 @@ volumes:
   mysql_data:
     driver: local
   upload_data:
+    driver: local
+  content-scoring-cache:
     driver: local
 
 # ==========================================

@@ -15,7 +15,9 @@
       "Bash(docker system prune:*)",
       "Bash(docker build:*)",
       "Bash(cat:*)",
-      "Bash(docker rmi:*)"
+      "Bash(docker rmi:*)",
+      "Bash(./build-fast.sh:*)",
+      "Bash(dos2unix:*)"
     ],
     "deny": [],
     "ask": []

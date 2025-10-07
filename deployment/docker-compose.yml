@@ -19,7 +19,7 @@ services:
 
   backend:
     build:
-      context: ../backend-app
+      context: ../backend-service
       dockerfile: Dockerfile
     restart: always
     ports:
@@ -52,17 +52,34 @@ services:
         condition: service_healthy
     networks:
       - app-network
+  # CMS Service with Nginx
+  cms-service:
+    build:
+      context: ./cms
+      dockerfile: Dockerfile
+    container_name: encybara-cms
+    restart: always
+    ports:
+      - "3000:80"
+    networks:
+      - app-network
+      
+  # Nginx Gateway (optional)
   nginx:
     build:
       context: .
       dockerfile: Dockerfile.nginx
+    container_name: encybara-nginx
     restart: always
     ports:
       - "80:80"
     depends_on:
       - backend
+      - cms-service
     networks:
       - app-network
+    profiles:
+      - gateway
 networks:
   app-network:
     driver: bridge
