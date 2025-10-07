@@ -42,12 +42,13 @@ class SimpleAligner:
             return None
 
     def _create_mock_alignment(self, words: List[str], transcript: str) -> Dict:
-        """Create mock alignment data."""
+        """Create mock alignment data with character mapping."""
         phoneme_data = []
         word_data = []
         current_time = 0.0
+        character_position = 0
         
-        for word in words:
+        for word_index, word in enumerate(words):
             # Mock word timing (0.5 seconds per word)
             word_duration = 0.5
             word_data.append({
@@ -61,19 +62,29 @@ class SimpleAligner:
             phonemes = self._word_to_phonemes(word)
             phoneme_duration = word_duration / max(len(phonemes), 1)
             
+            # Create character mapping for this word
+            char_mapping = self._create_character_mapping(word, phonemes)
+            
             for i, phoneme in enumerate(phonemes):
                 start_time = current_time + (i * phoneme_duration)
                 end_time = start_time + phoneme_duration
+                
+                # Get corresponding character(s) for this phoneme
+                character = char_mapping.get(i, "")
                 
                 phoneme_data.append({
                     "phoneme": phoneme,
                     "start_time": start_time,
                     "end_time": end_time,
                     "duration": phoneme_duration,
-                    "confidence": 0.85
+                    "confidence": 0.85,
+                    "character": character,
+                    "word_index": word_index,
+                    "phoneme_index": i
                 })
             
             current_time += word_duration
+            character_position += len(word) + 1  # +1 for space
         
         return {
             "phonemes": phoneme_data,
@@ -137,6 +148,59 @@ class SimpleAligner:
                 phonemes.append(letter_phoneme_map.get(char, char))
         
         return phonemes if phonemes else [word_lower]
+
+    def _create_character_mapping(self, word: str, phonemes: List[str]) -> Dict[int, str]:
+        """Create mapping from phoneme index to character(s)."""
+        mapping = {}
+        word_lower = word.lower()
+        
+        # Simple mapping for common words
+        phoneme_char_map = {
+            "hello": {0: "h", 1: "e", 2: "ll", 3: "o"},
+            "world": {0: "w", 1: "o", 2: "r", 3: "l", 4: "d"},
+            "the": {0: "th", 1: "e"},
+            "and": {0: "a", 1: "n", 2: "d"},
+            "you": {0: "y", 1: "ou"},
+            "that": {0: "th", 1: "a", 2: "t"},
+            "it": {0: "i", 1: "t"},
+            "to": {0: "t", 1: "o"},
+            "of": {0: "o", 1: "f"},
+            "in": {0: "i", 1: "n"},
+            "for": {0: "f", 1: "o", 2: "r"},
+            "is": {0: "i", 1: "s"},
+            "on": {0: "o", 1: "n"},
+            "as": {0: "a", 1: "s"},
+            "be": {0: "b", 1: "e"},
+            "or": {0: "o", 1: "r"},
+            "an": {0: "a", 1: "n"},
+            "are": {0: "a", 1: "r", 2: "e"},
+            "by": {0: "b", 1: "y"},
+            "this": {0: "th", 1: "i", 2: "s"},
+            "have": {0: "h", 1: "a", 2: "v", 3: "e"},
+            "from": {0: "f", 1: "r", 2: "o", 3: "m"},
+            "they": {0: "th", 1: "e", 2: "y"},
+            "we": {0: "w", 1: "e"},
+            "say": {0: "s", 1: "a", 2: "y"},
+            "her": {0: "h", 1: "e", 2: "r"},
+            "she": {0: "sh", 1: "e"},
+            "will": {0: "w", 1: "i", 2: "ll"},
+            "my": {0: "m", 1: "y"},
+            "one": {0: "o", 1: "n", 2: "e"},
+            "all": {0: "a", 1: "ll"}
+        }
+        
+        if word_lower in phoneme_char_map:
+            return phoneme_char_map[word_lower]
+        
+        # Fallback: simple character-to-phoneme mapping
+        chars = list(word_lower)
+        for i, phoneme in enumerate(phonemes):
+            if i < len(chars):
+                mapping[i] = chars[i]
+            else:
+                mapping[i] = ""
+        
+        return mapping
 
     def cleanup(self):
         """Clean up resources."""

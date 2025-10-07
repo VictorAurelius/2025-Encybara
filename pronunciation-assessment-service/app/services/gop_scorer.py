@@ -123,7 +123,10 @@ class GOPScorer:
                         'start_time': float(phoneme_info['start_time']),
                         'end_time': float(phoneme_info['end_time']),
                         'duration': float(duration),
-                        'confidence': phoneme_info.get('confidence', 1.0)
+                        'confidence': phoneme_info.get('confidence', 1.0),
+                        'character': phoneme_info.get('character', ''),
+                        'word_index': phoneme_info.get('word_index', 0),
+                        'phoneme_index': phoneme_info.get('phoneme_index', 0)
                     })
 
             logger.info(f"Parsed {len(phoneme_data)} phonemes from alignment data")

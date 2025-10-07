@@ -81,7 +81,10 @@ class PronunciationAssessmentPipeline:
                     'gop_score': round(gop_score, 2),
                     'quality': quality,
                     'start_time': round(phoneme_info['start_time'], 3),
-                    'end_time': round(phoneme_info['end_time'], 3)
+                    'end_time': round(phoneme_info['end_time'], 3),
+                    'character': phoneme_info.get('character', ''),
+                    'word_index': phoneme_info.get('word_index', 0),
+                    'phoneme_index': phoneme_info.get('phoneme_index', 0)
                 })
 
             # Calculate overall scores
