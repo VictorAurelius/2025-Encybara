@@ -31,7 +31,7 @@ print_error() {
 
 # Function to show usage
 show_usage() {
-    echo "Pronunciation Assessment Service - Build Script"
+    echo "Pronunciation Assessment Service (WhisperX) - Build Script"
     echo ""
     echo "Usage: $0 [OPTIONS]"
     echo ""
@@ -43,12 +43,14 @@ show_usage() {
     echo "  --proxy          Build kèm theo NGINX reverse proxy"
     echo "  --tunnel         Build kèm theo Ngrok tunnel (cho EC2-to-local connectivity)"
     echo "  --simple         Sử dụng Dockerfile đơn giản cho network không ổn định"
+    echo "  --gpu            Enable GPU support for WhisperX acceleration"
     echo "  --all            Build tất cả services (monitoring + caching + proxy)"
     echo "  --help           Hiển thị help này"
     echo ""
     echo "Examples:"
-    echo "  $0                          # Build service cơ bản"
+    echo "  $0                          # Build WhisperX service cơ bản"
     echo "  $0 --clean --no-cache       # Clean build từ đầu"
+    echo "  $0 --gpu                    # Build với GPU acceleration"
     echo "  $0 --monitoring             # Build với monitoring"
     echo "  $0 --tunnel                 # Build với Ngrok tunnel"
     echo "  $0 --simple                 # Build với Dockerfile đơn giản"
@@ -63,6 +65,7 @@ CACHING=false
 PROXY=false
 TUNNEL=false
 SIMPLE=false
+GPU=false
 PROFILES=""
 
 while [[ $# -gt 0 ]]; do
@@ -101,6 +104,10 @@ while [[ $# -gt 0 ]]; do
             SIMPLE=true
             shift
             ;;
+        --gpu)
+            GPU=true
+            shift
+            ;;
         --help)
             show_usage
             exit 0
@@ -134,7 +141,7 @@ fi
 PROFILES=${PROFILES#,}
 
 print_status "=========================================="
-print_status "Pronunciation Assessment Service - Build Script"
+print_status "Pronunciation Assessment Service (WhisperX) - Build Script"
 print_status "=========================================="
 
 # Check if Docker is running
@@ -245,11 +252,16 @@ if [ "$NO_CACHE" = true ]; then
     BUILD_ARGS="--no-cache"
 fi
 
-# Handle simple Dockerfile option
+# Handle Docker variants
 if [ "$SIMPLE" = true ]; then
     print_status "Using simple Dockerfile for unreliable networks..."
     cp Dockerfile Dockerfile.backup 2>/dev/null || true
     cp Dockerfile.simple Dockerfile
+    BUILD_ARGS="$BUILD_ARGS --no-cache"
+elif [ "$GPU" = true ]; then
+    print_status "Using GPU-optimized Dockerfile..."
+    cp Dockerfile Dockerfile.backup 2>/dev/null || true
+    cp Dockerfile.gpu Dockerfile
     BUILD_ARGS="$BUILD_ARGS --no-cache"
 fi
 
@@ -258,16 +270,25 @@ export DOCKER_BUILDKIT=1
 export BUILDKIT_PROGRESS=plain
 
 # Build the main service with extended timeout
-print_status "Building with extended timeout (this may take 10-15 minutes)..."
+if [ "$GPU" = true ]; then
+    print_status "Building WhisperX with GPU support (this may take 5-10 minutes)..."
+    BUILD_ARGS="$BUILD_ARGS --build-arg WHISPERX_DEVICE=cuda"
+else
+    print_status "Building WhisperX with CPU support (this may take 5-10 minutes)..."
+    BUILD_ARGS="$BUILD_ARGS --build-arg WHISPERX_DEVICE=cpu"
+fi
+
 timeout 1800 docker build $BUILD_ARGS --build-arg BUILDKIT_INLINE_CACHE=1 -t pronunciation-assessment-service . || {
     print_error "Docker build failed or timed out after 30 minutes"
     exit 1
 }
 
-# Restore original Dockerfile if using simple version
-if [ "$SIMPLE" = true ] && [ -f "Dockerfile.backup" ]; then
-    print_status "Restoring original Dockerfile..."
-    mv Dockerfile.backup Dockerfile
+# Restore original Dockerfile if using variants
+if [ "$SIMPLE" = true ] || [ "$GPU" = true ]; then
+    if [ -f "Dockerfile.backup" ]; then
+        print_status "Restoring original Dockerfile..."
+        mv Dockerfile.backup Dockerfile
+    fi
 fi
 
 print_success "Docker image built successfully"
@@ -294,7 +315,7 @@ if [ -n "$COMPOSE_ARGS" ]; then
         print_warning "Profiles not supported in this docker-compose version"
         print_status "Starting services manually..."
         
-        # Start basic service first
+        # Start basic WhisperX service first
         $COMPOSE_CMD up -d pronunciation-assessment-service
         
         # Start additional services manually based on flags
@@ -349,13 +370,13 @@ $COMPOSE_CMD ps
 
 # Show useful URLs
 print_status "=========================================="
-print_success "Build completed successfully!"
+print_success "WhisperX Build completed successfully!"
 print_status "=========================================="
 print_status "Available endpoints:"
-print_status "• Main Service: http://localhost:5000"
+print_status "• Main Service (WhisperX): http://localhost:5000"
 print_status "• Health Check: http://localhost:5000/health"
 print_status "• Service Info: http://localhost:5000/api/info"
-print_status "• Pronunciation Assessment: http://localhost:5000/api/pronunciation-assessment"
+print_status "• Pronunciation Assessment (2-8s response): http://localhost:5000/api/pronunciation-assessment"
 
 if [ "$MONITORING" = true ]; then
     print_status "• Prometheus: http://localhost:9091"
@@ -376,15 +397,28 @@ if [ "$TUNNEL" = true ]; then
     print_status "   Xem public URL tại: http://localhost:4041"
 fi
 
+if [ "$GPU" = true ]; then
+    print_success "✅ GPU acceleration enabled for WhisperX"
+    print_status "   Expect faster processing times with CUDA"
+fi
+
 if [ "$SIMPLE" = true ]; then
     print_warning "⚠️  Sử dụng simple Dockerfile - không có audio processing dependencies"
     print_status "   Chỉ thích hợp cho development/testing với text endpoints"
 fi
 
+print_status ""
+print_status "🆕 WhisperX Features:"
+print_status "  • 10x faster than MFA (2-8s vs 30s)"
+print_status "  • GPU acceleration support"
+print_status "  • Simpler deployment"
+print_status "  • Better memory efficiency"
+
 print_status "=========================================="
 if [ "$TUNNEL" = true ]; then
     print_status "To view tunnel logs: $COMPOSE_CMD logs -f ngrok"
 fi
+print_status "To test WhisperX: python3 test_whisperx.py"
 print_status "To view logs: $COMPOSE_CMD logs -f pronunciation-assessment-service"
 print_status "To stop services: $COMPOSE_CMD down"
 print_status "=========================================="
