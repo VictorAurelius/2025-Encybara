@@ -1,0 +1,172 @@
+# Docker Compose for All Encybara Services
+# This file combines all services into a single network for local development
+# Service URLs are configured in application.properties with localhost defaults
+
+version: '3.8'
+
+services:
+  # ==========================================
+  # Database Service
+  # ==========================================
+  db-mysql:
+    image: mysql:5.7.40
+    container_name: encybara-mysql
+    restart: always
+    environment:
+      - MYSQL_DATABASE=encybara
+      - MYSQL_ROOT_PASSWORD=123456
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p123456"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - encybara-network
+
+  # ==========================================
+  # Content Scoring Service
+  # ==========================================
+  content-scoring-service:
+    build:
+      context: ./content-scoring-service
+      dockerfile: Dockerfile
+    container_name: content-scoring-service
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      - PYTHONPATH=/app
+      - LOG_LEVEL=INFO
+      - PORT=5001
+    volumes:
+      - ./content-scoring-service/logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - encybara-network
+
+  # ==========================================
+  # Pronunciation Assessment Service
+  # ==========================================
+  pronunciation-assessment-service:
+    build:
+      context: ./pronunciation-assessment-service
+      dockerfile: Dockerfile
+    container_name: pronunciation-assessment-service
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - PYTHONPATH=/app
+      - LOG_LEVEL=INFO
+      - PORT=5000
+      - FLASK_ENV=production
+    volumes:
+      - ./pronunciation-assessment-service/logs:/app/logs
+      - ./pronunciation-assessment-service/temp:/app/temp
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 180s
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+        reservations:
+          memory: 2G
+          cpus: '1.0'
+    networks:
+      - encybara-network
+
+  # ==========================================
+  # Backend Application
+  # ==========================================
+  backend:
+    build:
+      context: ./backend-app
+      dockerfile: Dockerfile
+    container_name: encybara-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql:3306/encybara?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8mb4
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=123456
+      - englishlearning.upload-file.base-uri=/app/uploads/
+      - file.upload-dir=/app/uploads/
+      - springdoc.api-docs.enabled=true
+      - springdoc.swagger-ui.enabled=true
+      - springdoc.swagger-ui.path=/swagger-ui.html
+      - springdoc.api-docs.path=/v3/api-docs
+      - springdoc.swagger-ui.operationsSorter=method
+      - springdoc.swagger-ui.display-request-duration=true
+      - management.metrics.enable.processor=false
+      # Service URLs - use container names in Docker network
+      - CONTENT_SCORING_SERVICE_URL=http://content-scoring-service:5001
+      - PRONUNCIATION_SERVICE_URL=http://pronunciation-assessment-service:5000
+    volumes:
+      - upload_data:/app/uploads
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      db-mysql:
+        condition: service_healthy
+      content-scoring-service:
+        condition: service_healthy
+      pronunciation-assessment-service:
+        condition: service_healthy
+    networks:
+      - encybara-network
+
+  # ==========================================
+  # Nginx Reverse Proxy (Optional)
+  # ==========================================
+  nginx:
+    build:
+      context: ./build-docker
+      dockerfile: Dockerfile.nginx
+    container_name: encybara-nginx
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - encybara-network
+    profiles:
+      - proxy
+
+# ==========================================
+# Volumes
+# ==========================================
+volumes:
+  mysql_data:
+    driver: local
+  upload_data:
+    driver: local
+
+# ==========================================
+# Networks
+# ==========================================
+networks:
+  encybara-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16

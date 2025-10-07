@@ -123,7 +123,7 @@ FROM model-download AS final
 COPY . /app/
 
 # Set proper permissions
-RUN chmod +x /app/app.py && \
+RUN chmod +x /app/run.py && \
     find /app -name "*.py" -exec chmod +r {} \;
 
 # Expose port
@@ -133,5 +133,5 @@ EXPOSE 5000
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:5000/health || exit 1
 
-# Run application
-CMD ["bash", "-c", "source activate aligner && echo '[START] Starting Pronunciation Assessment Service...' && python app.py"]
+# Run application with new structure
+CMD ["bash", "-c", "source activate aligner && echo '[START] Starting Pronunciation Assessment Service (Optimized)...' && python run.py"]

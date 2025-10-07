@@ -1,0 +1,317 @@
+[
+    {
+        "quesContent": "(IT) How do you use IT? Think about work, study and fun.",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 1,
+                "answerContent": "I use computer for study. I search information. I type homework. For fun, I watch videos and play games.",
+                "description": "Basic response with simple vocabulary and short sentences.",
+                "estimatedScore": 20.0
+            },
+            {
+                "difficultyLevel": 2,
+                "answerContent": "I use technology for work, study, and entertainment. I research information online, write assignments, communicate with classmates, and watch educational videos. For fun, I play games and use social media.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 40.0
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "Technology plays a crucial role in my academic and personal life. For studies, I use computers for research, writing papers, and accessing online resources. At work, I use various software for productivity and communication. For entertainment, I stream music and videos, play games, and stay connected with friends through social platforms.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 60.0
+            },
+            {
+                "difficultyLevel": 4,
+                "answerContent": "My technology usage encompasses comprehensive academic, professional, and recreational applications. I utilize sophisticated software for research methodology, data analysis, and academic writing. In professional contexts, I leverage digital platforms for project management and collaborative work. For leisure, I engage with multimedia content, gaming platforms, and social networks while maintaining digital wellness practices.",
+                "description": "Advanced answer with complex grammar and sophisticated expressions.",
+                "estimatedScore": 80.0
+            },
+            {
+                "difficultyLevel": 5,
+                "answerContent": "I engage with technology as an integral tool for academic excellence, professional productivity, and enriching recreational experiences. My usage spans advanced research databases, sophisticated analytical software, multimedia creation platforms, and collaborative academic networks. Technology enables me to participate in international educational communities while pursuing innovative approaches to learning, creative expression, and maintaining meaningful digital relationships across global networks.",
+                "description": "Expert response with native-like fluency and excellent organization.",
+                "estimatedScore": 95.0
+            }
+        ]
+    },
+    {
+        "quesContent": "(IT) What devices do you use?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 1,
+                "answerContent": "I have laptop and smartphone. I use them every day. Sometimes I use tablet for reading.",
+                "description": "Basic response with simple vocabulary and short sentences.",
+                "estimatedScore": 20.0
+            },
+            {
+                "difficultyLevel": 2,
+                "answerContent": "I use a laptop for my studies, a smartphone for communication and social media, and occasionally a tablet for reading e-books and watching videos. I also have headphones for music.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 40.0
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "My primary devices include a laptop for academic work and research, a smartphone for communication and photography, and a tablet for reading digital materials. I also use wireless headphones for audio content and a smartwatch for fitness tracking and notifications.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 60.0
+            },
+            {
+                "difficultyLevel": 4,
+                "answerContent": "I utilize a comprehensive array of technological devices including a high-performance laptop for intensive academic work, an advanced smartphone with professional camera capabilities, a tablet for multimedia consumption, and specialized peripherals like wireless audio equipment and external storage devices for enhanced productivity.",
+                "description": "Advanced answer with complex grammar and sophisticated expressions.",
+                "estimatedScore": 80.0
+            },
+            {
+                "difficultyLevel": 5,
+                "answerContent": "My technological ecosystem comprises sophisticated devices optimized for academic and creative pursuits: a powerful laptop equipped with professional software, a cutting-edge smartphone featuring advanced photographic and computational capabilities, a versatile tablet for multimedia research and digital annotation, and an integrated network of accessories including wireless audio systems, external displays, and cloud-connected storage solutions.",
+                "description": "Expert response with native-like fluency and excellent organization.",
+                "estimatedScore": 95.0
+            }
+        ]
+    },
+    {
+        "quesContent": "(IT) What software do you use?",
+        "skillType": "SPEAKING",
+        "quesType": "SPEAKING",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 1,
+                "answerContent": "I use Microsoft Word for writing. Google for search. Facebook for friends. Sometimes Photoshop for pictures.",
+                "description": "Basic response with simple vocabulary and short sentences.",
+                "estimatedScore": 20.0
+            },
+            {
+                "difficultyLevel": 2,
+                "answerContent": "I commonly use Microsoft Office for assignments, Google Chrome for internet browsing, social media apps like Facebook and Instagram, and photo editing software for my photography hobby.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 40.0
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "My regular software includes Microsoft Office Suite for academic writing, Adobe Creative Suite for photo editing and design work, various web browsers for research, language learning applications like Duolingo, and communication platforms like Zoom for online classes and meetings.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 60.0
+            },
+            {
+                "difficultyLevel": 4,
+                "answerContent": "I utilize professional-grade software including advanced word processors for academic writing, sophisticated image editing applications for creative projects, specialized research databases for scholarly work, productivity suites for time management, and collaborative platforms for academic group work and professional networking.",
+                "description": "Advanced answer with complex grammar and sophisticated expressions.",
+                "estimatedScore": 80.0
+            },
+            {
+                "difficultyLevel": 5,
+                "answerContent": "My software repertoire encompasses industry-standard applications for academic and creative excellence: comprehensive office suites for scholarly writing and data analysis, professional photography and design software for artistic projects, advanced research and citation management tools for academic integrity, and sophisticated collaborative platforms that facilitate international academic networking and cross-cultural knowledge exchange.",
+                "description": "Expert response with native-like fluency and excellent organization.",
+                "estimatedScore": 95.0
+            }
+        ]
+    },
+    {
+        "quesContent": "What is Maria's job?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "software developer",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What is Ahmed's job?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "helpdesk supervisor",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What is Freddy's job?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "project manager",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What is Hana's job?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "support technician",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What is Tim's job?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "database administrator",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "What is Sophie's job?",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "systems analyst",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: supervise _______",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "a team",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: have _______",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "a problem",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: be responsible _______ IT projects",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "for",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: look _______ computers",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "after",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: install _______",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "software",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: diagnose _______",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "the problem",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: design _______",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "databases",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: maintain _______",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "databases",
+                "isCorrect": true
+            }
+        ]
+    },
+    {
+        "quesContent": "Complete the collocation: write _______ for software",
+        "skillType": "LISTENING",
+        "quesType": "TEXT",
+        "point": 10,
+        "createBy": "admin",
+        "choices": [
+            {
+                "content": "specifications",
+                "isCorrect": true
+            }
+        ]
+    }
+]
