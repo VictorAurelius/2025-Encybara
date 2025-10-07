@@ -39,9 +39,13 @@ services:
       - springdoc.swagger-ui.display-request-duration=true
       # Fix for Docker/Container processor metrics NullPointerException
       - management.metrics.enable.processor=false
-      # Service URLs are configured in application.properties with fixed defaults
+      # Use host.docker.internal to reach services on host machine
+      - CONTENT_SCORING_SERVICE_URL=http://host.docker.internal:5001
+      - PRONUNCIATION_SERVICE_URL=http://host.docker.internal:5000
     volumes:
       - upload_data:/app/uploads
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
       interval: 30s

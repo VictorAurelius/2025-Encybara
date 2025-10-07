@@ -114,7 +114,7 @@ services:
       - springdoc.swagger-ui.operationsSorter=method
       - springdoc.swagger-ui.display-request-duration=true
       - management.metrics.enable.processor=false
-      # Service URLs - use container names in Docker network
+      # Service URLs - use container names in Docker network  
       - CONTENT_SCORING_SERVICE_URL=http://content-scoring-service:5001
       - PRONUNCIATION_SERVICE_URL=http://pronunciation-assessment-service:5000
     volumes:

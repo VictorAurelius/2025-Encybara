@@ -24,7 +24,9 @@
       "Bash([ -f \"deployment/cms/build/react-build/index.html\" ])",
       "Bash(then)",
       "Bash(else)",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(docker:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
