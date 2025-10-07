@@ -104,12 +104,12 @@ class GOPScorer:
             logger.error(f"TextGrid parsing failed: {str(e)}")
             return []
 
-    def parse_whisperx_alignment(self, alignment_data: Dict) -> List[Dict]:
+    def parse_alignment_data(self, alignment_data: Dict) -> List[Dict]:
         """
-        Parse WhisperX alignment data to extract phoneme alignments.
+        Parse alignment data to extract phoneme alignments.
 
         Args:
-            alignment_data: WhisperX alignment results
+            alignment_data: Alignment results from Faster-Whisper
 
         Returns:
             List of phoneme alignment data
@@ -129,11 +129,11 @@ class GOPScorer:
                         'confidence': phoneme_info.get('confidence', 1.0)
                     })
 
-            logger.info(f"Parsed {len(phoneme_data)} phonemes from WhisperX alignment")
+            logger.info(f"Parsed {len(phoneme_data)} phonemes from alignment data")
             return phoneme_data
 
         except Exception as e:
-            logger.error(f"WhisperX alignment parsing failed: {str(e)}")
+            logger.error(f"Alignment data parsing failed: {str(e)}")
             return []
 
     def calculate_phoneme_gop_score(self, phoneme_data: Dict,

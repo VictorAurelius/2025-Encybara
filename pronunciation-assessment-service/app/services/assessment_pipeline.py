@@ -1,4 +1,4 @@
-"""Complete pronunciation assessment pipeline with WhisperX."""
+"""Complete pronunciation assessment pipeline with Faster-Whisper."""
 
 import logging
 from typing import Dict, Optional
@@ -58,7 +58,7 @@ class PronunciationAssessmentPipeline:
             audio_features = self.gop_scorer.extract_audio_features(processed_audio_path)
 
             # Parse alignment results
-            phoneme_data = self.gop_scorer.parse_whisperx_alignment(alignment_result)
+            phoneme_data = self.gop_scorer.parse_alignment_data(alignment_result)
             if not phoneme_data:
                 logger.error(f"No phoneme data extracted from {self.aligner_type}")
                 return None

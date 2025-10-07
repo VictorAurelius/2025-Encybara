@@ -46,7 +46,7 @@ def test_faster_whisper_pipeline():
             'alignment_quality': 0.85
         }
         
-        phoneme_data = gop_scorer.parse_whisperx_alignment(dummy_alignment)
+        phoneme_data = gop_scorer.parse_alignment_data(dummy_alignment)
         logger.info(f"✓ Parsed {len(phoneme_data)} phonemes from test data")
         
         # Test GOP scoring
