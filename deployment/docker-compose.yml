@@ -19,7 +19,7 @@ services:
 
   backend:
     build:
-      context: ../backend-app
+      context: ../backend-service
       dockerfile: Dockerfile
     restart: always
     ports:
@@ -39,9 +39,13 @@ services:
       - springdoc.swagger-ui.display-request-duration=true
       # Fix for Docker/Container processor metrics NullPointerException
       - management.metrics.enable.processor=false
-      # Service URLs are configured in application.properties with fixed defaults
+      # Use host.docker.internal to reach services on host machine
+      - CONTENT_SCORING_SERVICE_URL=http://host.docker.internal:5001
+      - PRONUNCIATION_SERVICE_URL=http://host.docker.internal:5000
     volumes:
       - upload_data:/app/uploads
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
       interval: 30s
@@ -52,17 +56,34 @@ services:
         condition: service_healthy
     networks:
       - app-network
+  # CMS Service with Nginx
+  cms-service:
+    build:
+      context: ./cms
+      dockerfile: Dockerfile
+    container_name: encybara-cms
+    restart: always
+    ports:
+      - "3000:80"
+    networks:
+      - app-network
+      
+  # Nginx Gateway (optional)
   nginx:
     build:
       context: .
       dockerfile: Dockerfile.nginx
+    container_name: encybara-nginx
     restart: always
     ports:
       - "80:80"
     depends_on:
       - backend
+      - cms-service
     networks:
       - app-network
+    profiles:
+      - gateway
 networks:
   app-network:
     driver: bridge

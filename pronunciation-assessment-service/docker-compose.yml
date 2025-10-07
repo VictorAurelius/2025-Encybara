@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: pronunciation-assessment-service
+    container_name: pronunciation-assessment-service-whisperx
     ports:
       - "5000:5000"
     environment:
@@ -11,28 +11,36 @@ services:
       - LOG_LEVEL=INFO
       - PORT=5000
       - FLASK_ENV=production
+      # WhisperX specific environment variables
+      - WHISPERX_DEVICE=cpu
+      - WHISPERX_COMPUTE_TYPE=float32
+      # Fix for ctranslate2 executable stack issue
+      - CT2_FORCE_CPU_ISA=""
+    # Using OpenAI Whisper - no special security settings needed
     volumes:
       # Mount logs for persistence (optional)
       - ./logs:/app/logs
       # Mount temp directory for audio processing
       - ./temp:/app/temp
+      # Mount models directory for WhisperX cache
+      - whisperx-models:/app/models
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
       interval: 30s
       timeout: 30s
       retries: 5
-      start_period: 180s
+      start_period: 60s  # Reduced from 180s due to faster WhisperX startup
     restart: unless-stopped
     networks:
       - pronunciation-network
     deploy:
       resources:
         limits:
-          memory: 4G
+          memory: 4G  # WhisperX can be more memory efficient than MFA
           cpus: '2.0'
         reservations:
-          memory: 2G
-          cpus: '1.0'
+          memory: 1G  # Reduced reservation
+          cpus: '0.5'
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pronunciation.rule=Host(`pronunciation.localhost`)"
@@ -134,6 +142,8 @@ volumes:
   grafana-storage:
     driver: local
   redis-data:
+    driver: local
+  whisperx-models:
     driver: local
 
 networks:

@@ -1,9 +1,9 @@
-"""Complete pronunciation assessment pipeline."""
+"""Complete pronunciation assessment pipeline with SimpleAligner."""
 
 import logging
 from typing import Dict, Optional
 
-from .mfa_aligner import MontrealForcedAligner
+from .simple_aligner import SimpleAligner
 from .gop_scorer import GOPScorer
 from ..core import AudioValidator, FileManager, MemoryManager
 
@@ -11,12 +11,14 @@ logger = logging.getLogger(__name__)
 
 
 class PronunciationAssessmentPipeline:
-    """Complete pronunciation assessment pipeline with optimizations."""
+    """Complete pronunciation assessment pipeline with SimpleAligner."""
 
     def __init__(self, docker_mode: bool = True):
         self.docker_mode = docker_mode
-        self.mfa = MontrealForcedAligner()
+        self.aligner = SimpleAligner()
+        self.aligner_type = "SimpleAligner"
         self.gop_scorer = GOPScorer()
+        logger.info("Pronunciation assessment pipeline initialized with SimpleAligner")
 
     def assess_pronunciation(self, audio_path: str, transcript: str) -> Optional[Dict]:
         """
@@ -45,22 +47,25 @@ class PronunciationAssessmentPipeline:
                 logger.error("Audio preprocessing failed")
                 return None
 
-            # Perform forced alignment with optimized MFA
-            textgrid_path = self.mfa.align_audio_text(processed_audio_path, transcript)
-            if not textgrid_path:
-                logger.error("Forced alignment failed")
+            # Perform forced alignment with available aligner
+            logger.info(f"Using {self.aligner_type} for alignment...")
+            alignment_result = self.aligner.align_audio_text(processed_audio_path, transcript)
+            if not alignment_result:
+                logger.error(f"{self.aligner_type} alignment failed")
                 return None
-
-            temp_files.append(textgrid_path)
 
             # Extract audio features
             audio_features = self.gop_scorer.extract_audio_features(processed_audio_path)
 
             # Parse alignment results
-            phoneme_data = self.gop_scorer.parse_textgrid(textgrid_path)
+            phoneme_data = self.gop_scorer.parse_alignment_data(alignment_result)
             if not phoneme_data:
-                logger.error("No phoneme data extracted")
+                logger.error(f"No phoneme data extracted from {self.aligner_type}")
                 return None
+
+            # Log alignment quality
+            alignment_quality = alignment_result.get('alignment_quality', 0.0)
+            logger.info(f"Alignment quality ({self.aligner_type}): {alignment_quality:.2f}")
 
             # Calculate phoneme-level GOP scores
             phoneme_scores = []
@@ -76,7 +81,10 @@ class PronunciationAssessmentPipeline:
                     'gop_score': round(gop_score, 2),
                     'quality': quality,
                     'start_time': round(phoneme_info['start_time'], 3),
-                    'end_time': round(phoneme_info['end_time'], 3)
+                    'end_time': round(phoneme_info['end_time'], 3),
+                    'character': phoneme_info.get('character', ''),
+                    'word_index': phoneme_info.get('word_index', 0),
+                    'phoneme_index': phoneme_info.get('phoneme_index', 0)
                 })
 
             # Calculate overall scores
@@ -106,10 +114,11 @@ class PronunciationAssessmentPipeline:
         finally:
             # Cleanup
             FileManager.cleanup_files(*temp_files)
-            self.mfa.cleanup()
+            if self.aligner:
+                self.aligner.cleanup()
             MemoryManager.force_garbage_collection()
 
     def __del__(self):
         """Cleanup on deletion."""
-        if hasattr(self, 'mfa'):
-            self.mfa.cleanup()
+        if hasattr(self, 'aligner') and self.aligner:
+            self.aligner.cleanup()

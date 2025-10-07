@@ -1,11 +1,11 @@
 """Pronunciation assessment services."""
 
-from .mfa_aligner import MontrealForcedAligner
+from .simple_aligner import SimpleAligner
 from .gop_scorer import GOPScorer
 from .assessment_pipeline import PronunciationAssessmentPipeline
 
 __all__ = [
-    'MontrealForcedAligner',
-    'GOPScorer',
+    'SimpleAligner',
+    'GOPScorer', 
     'PronunciationAssessmentPipeline'
 ]

@@ -94,7 +94,7 @@ services:
   # ==========================================
   backend:
     build:
-      context: ./backend-app
+      context: ./backend-service
       dockerfile: Dockerfile
     container_name: encybara-backend
     restart: always
@@ -114,7 +114,7 @@ services:
       - springdoc.swagger-ui.operationsSorter=method
       - springdoc.swagger-ui.display-request-duration=true
       - management.metrics.enable.processor=false
-      # Service URLs - use container names in Docker network
+      # Service URLs - use container names in Docker network  
       - CONTENT_SCORING_SERVICE_URL=http://content-scoring-service:5001
       - PRONUNCIATION_SERVICE_URL=http://pronunciation-assessment-service:5000
     volumes:
@@ -135,11 +135,26 @@ services:
       - encybara-network
 
   # ==========================================
-  # Nginx Reverse Proxy (Optional)
+  # ==========================================
+  # CMS Service (React Frontend)
+  # ==========================================
+  cms-service:
+    build:
+      context: ./deployment/cms
+      dockerfile: Dockerfile
+    container_name: encybara-cms
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    networks:
+      - encybara-network
+
+  # ==========================================
+  # Nginx Gateway (Optional)
   # ==========================================
   nginx:
     build:
-      context: ./build-docker
+      context: ./deployment
       dockerfile: Dockerfile.nginx
     container_name: encybara-nginx
     restart: always
@@ -147,10 +162,11 @@ services:
       - "80:80"
     depends_on:
       - backend
+      - cms-service
     networks:
       - encybara-network
     profiles:
-      - proxy
+      - gateway
 
 # ==========================================
 # Volumes
