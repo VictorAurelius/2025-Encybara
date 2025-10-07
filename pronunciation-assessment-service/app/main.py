@@ -31,12 +31,12 @@ except RuntimeError as e:
     logger.error("="*80)
     logger.error(str(e))
     logger.error("="*80)
-    logger.error("This service requires WhisperX to be installed.")
+    logger.error("This service requires Faster-Whisper to be installed.")
     logger.error("")
     logger.error("SOLUTION:")
-    logger.error("  - Install WhisperX: pip install git+https://github.com/m-bain/whisperx.git")
+    logger.error("  - Install Faster-Whisper: pip install faster-whisper")
     logger.error("  - Docker: Run 'docker-compose up' (recommended)")
-    logger.error("  - Ensure PyTorch is installed with CUDA support for GPU acceleration")
+    logger.error("  - Ensure dependencies are correctly installed")
     logger.error("="*80)
     raise
 
@@ -166,7 +166,7 @@ def assess_pronunciation():
                 "This may be due to: "
                 "(1) Poor audio quality, "
                 "(2) Mismatched transcript, "
-                "(3) WhisperX alignment issues. "
+                "(3) Faster-Whisper alignment issues. "
                 "Please check logs for details."
             )
             return ResponseFormatter.error_response(error_message, 500)
@@ -207,7 +207,7 @@ def service_info():
     return jsonify({
         "service": "Pronunciation Assessment Microservice",
         "version": "1.0.0-optimized",
-        "description": "RESTful API for pronunciation assessment using WhisperX and GOP algorithm",
+        "description": "RESTful API for pronunciation assessment using Faster-Whisper and GOP algorithm",
         "endpoints": {
             "health": "/health",
             "assessment": "/api/pronunciation-assessment",
@@ -216,18 +216,18 @@ def service_info():
         "supported_audio_formats": list(AudioValidator.ALLOWED_EXTENSIONS),
         "max_file_size_mb": AudioValidator.MAX_FILE_SIZE // (1024 * 1024),
         "features": [
-            "WhisperX integration for fast forced alignment",
+            "Faster-Whisper integration for reliable alignment",
             "GOP (Goodness of Pronunciation) scoring with confidence metrics",
             "Phoneme-level assessment with word-level alignment",
-            "Memory optimization with GPU/CPU acceleration",
+            "CPU-only optimization for universal compatibility",
             "Security validation",
-            "Speed optimizations (2-8 second response time)"
+            "Speed optimizations (5-10 second response time)"
         ],
         "optimizations": [
-            "WhisperX replaces MFA for 10x faster processing",
-            "GPU acceleration when available",
-            "Reduced processing time (2-8s vs 30s)",
-            "Improved memory management with automatic cleanup"
+            "Faster-Whisper replaces MFA for 5x faster processing",
+            "CPU-only for universal compatibility",
+            "Reduced processing time (5-10s vs 30s)",
+            "Simplified dependencies and deployment"
         ]
     })
 
@@ -250,7 +250,7 @@ if __name__ == '__main__':
     logger.info(f"Memory limit: 3GB")
     logger.info(f"Max file size: {AudioValidator.MAX_FILE_SIZE // (1024*1024)}MB")
     logger.info(f"Supported formats: {', '.join(AudioValidator.ALLOWED_EXTENSIONS)}")
-    logger.info("Optimizations: WhisperX fast alignment, GPU acceleration, reduced processing time")
+    logger.info("Optimizations: Faster-Whisper alignment, CPU-only, simplified deployment")
 
     # Run the application
     app.run(

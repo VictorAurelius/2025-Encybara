@@ -13,7 +13,12 @@ services:
       - FLASK_ENV=production
       # WhisperX specific environment variables
       - WHISPERX_DEVICE=cpu
-      - WHISPERX_COMPUTE_TYPE=float16
+      - WHISPERX_COMPUTE_TYPE=float32
+      # Fix for ctranslate2 executable stack issue
+      - CT2_FORCE_CPU_ISA=""
+    # Security settings to allow executable stack for ctranslate2
+    security_opt:
+      - seccomp:unconfined
     volumes:
       # Mount logs for persistence (optional)
       - ./logs:/app/logs
