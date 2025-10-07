@@ -27,9 +27,6 @@ public class AnswerService {
         private QuestionRepository questionRepository;
 
         @Autowired
-        private AnswerTextRepository answerTextRepository;
-
-        @Autowired
         private QuestionChoiceRepository questionChoiceRepository;
 
         @Autowired
@@ -71,27 +68,16 @@ public class AnswerService {
                 answer.setPoint_achieved(reqDto.getPointAchieved() != null ? reqDto.getPointAchieved() : 0);
                 answer.setImprovement(reqDto.getImprovement());
                 answer.setSessionId(newSessionId);
+                answer.setAnsContent(reqDto.getAnswerContent());
                 answer = answerRepository.save(answer);
 
-                // Create and save answer text with proper bidirectional relationship
-                Answer_Text answerText = new Answer_Text();
-                answerText.setAnsContent(reqDto.getAnswerContent());
-                answerText.setAnswer(answer);
-                answerText = answerTextRepository.save(answerText);
-
-                // Update answer with the text reference
-                answer.setAnswerText(answerText);
-                answer = answerRepository.save(answer);
-
-                return convertToDTO(answer, answer.getAnswerText());
+                return convertToDTO(answer);
         }
 
         public ResAnswerDTO getAnswerById(Long id) {
                 Answer answer = answerRepository.findById(id)
                                 .orElseThrow(() -> new ResourceNotFoundException("Answer not found"));
-                Answer_Text answerText = answerTextRepository.findByAnswer(answer)
-                                .orElseThrow(() -> new ResourceNotFoundException("Answer text not found"));
-                return convertToDTO(answer, answerText);
+                return convertToDTO(answer);
         }
 
         public Page<Answer> getAnswersByQuestionId(Long questionId, Pageable pageable) {
@@ -121,10 +107,7 @@ public class AnswerService {
                                 .orElseThrow(() -> new ResourceNotFoundException("Answer not found"));
 
                 Question question = answer.getQuestion();
-                Answer_Text answerText = answerTextRepository.findByAnswer(answer)
-                                .orElseThrow(() -> new ResourceNotFoundException("Answer text not found for grading"));
-
-                String userAnswer = answerText.getAnsContent().trim();
+                String userAnswer = answer.getAnsContent().trim();
                 List<Question_Choice> choices = questionChoiceRepository.findByQuestionId(question.getId());
 
                 if (question.getQuesType() == QuestionTypeEnum.MULTIPLE) {
@@ -175,7 +158,7 @@ public class AnswerService {
                 }
 
                 answer = answerRepository.save(answer);
-                return convertToDTO(answer, answerText);
+                return convertToDTO(answer);
         }
 
         public ResAnswerDTO getLatestAnswerByUserAndQuestion(Long questionId, Long userId) {
@@ -189,21 +172,16 @@ public class AnswerService {
 
                 return userAnswers.stream()
                                 .max((a1, a2) -> Long.compare(a1.getSessionId(), a2.getSessionId()))
-                                .map(answer -> {
-                                        Answer_Text answerText = answerTextRepository.findByAnswer(answer)
-                                                        .orElseThrow(() -> new ResourceNotFoundException(
-                                                                        "Answer text not found"));
-                                        return convertToDTO(answer, answerText);
-                                })
+                                .map(answer -> convertToDTO(answer))
                                 .orElseThrow(() -> new ResourceNotFoundException(
                                                 "No answers found for this user and question"));
         }
 
-        private ResAnswerDTO convertToDTO(Answer answer, Answer_Text answerText) {
+        private ResAnswerDTO convertToDTO(Answer answer) {
                 ResAnswerDTO dto = new ResAnswerDTO();
                 dto.setId(answer.getId());
                 dto.setQuestionId(answer.getQuestion().getId());
-                dto.setAnswerContent(answerText.getAnsContent());
+                dto.setAnswerContent(answer.getAnsContent());
                 dto.setPointAchieved(answer.getPoint_achieved());
                 dto.setSessionId(answer.getSessionId());
                 dto.setImprovement(answer.getImprovement());
