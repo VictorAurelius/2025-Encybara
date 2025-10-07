@@ -150,38 +150,19 @@ if [ "$TUNNEL" = true ]; then
     BUILD_ARGS="$BUILD_ARGS --tunnel"
 fi
 
-# Use optimized build-fast for good AI performance with reasonable build time
-print_status "Using build-fast for content-scoring-service (build time: ~300s, full AI features)..."
+# Build content-scoring-service with standard build.sh
+print_status "Building content-scoring-service with standard build script..."
 
-if [ -f "./build-fast.sh" ]; then
-    BUILD_ARGS_FAST=""
-    if [ "$CLEAN" = true ]; then
-        BUILD_ARGS_FAST="$BUILD_ARGS_FAST --clean"
-    fi
-    if [ "$NO_CACHE" = true ]; then
-        BUILD_ARGS_FAST="$BUILD_ARGS_FAST --no-cache"
-    fi
-    
-    print_status "Building with full AI features (sentence-transformers + spaCy)..."
-    ./build-fast.sh $BUILD_ARGS_FAST
-    
-    print_success "Content-scoring-service built with optimized AI configuration!"
-    print_status "Build time: ~300s with full AI features (92.5% faster than original 4000s)"
-    
+if [ -f "./build.sh" ]; then
+    print_status "Using standard build.sh for content-scoring-service..."
+    ./build.sh $BUILD_ARGS
+    print_success "Content-scoring-service built successfully with standard configuration!"
 elif [ -f "./quick-fix.sh" ]; then
     print_status "Using quick fix for content-scoring-service..."
     ./quick-fix.sh
 else
-    print_warning "No optimized build scripts found, using standard build..."
-    DOCKER_BUILD_ARGS=""
-    if [ "$NO_CACHE" = true ]; then
-        DOCKER_BUILD_ARGS="--no-cache"
-    fi
-    if [ "$CLEAN" = true ]; then
-        docker-compose down 2>/dev/null || true
-        docker rmi content-scoring-service:latest 2>/dev/null || true
-    fi
-    docker build $DOCKER_BUILD_ARGS -f Dockerfile.optimized -t content-scoring-service:latest .
+    print_error "No build.sh script found in content-scoring-service directory!"
+    exit 1
 fi
 
 cd ..
@@ -246,7 +227,7 @@ print_status "To start all services:"
 print_status "• docker-compose -f docker-compose.all.yml up -d"
 print_status ""
 print_status "Or start individually:"
-print_status "• Content Scoring: docker-compose -f content-scoring-service/docker-compose-quick-fix.yml up -d"
+print_status "• Content Scoring: docker-compose -f content-scoring-service/docker-compose.yml up -d"
 print_status "• Pronunciation: docker-compose -f pronunciation-assessment-service/docker-compose.yml up -d"
 print_status "• Backend + DB: docker-compose -f deployment/docker-compose.yml up -d"
 print_status "• CMS + Nginx: docker-compose -f deployment/docker-compose.yml up -d nginx"

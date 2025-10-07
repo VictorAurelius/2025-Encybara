@@ -28,12 +28,12 @@ services:
       - encybara-network
 
   # ==========================================
-  # Content Scoring Service (Full AI Features)
+  # Content Scoring Service
   # ==========================================
   content-scoring-service:
     build:
       context: ./content-scoring-service
-      dockerfile: Dockerfile.optimized
+      dockerfile: Dockerfile
     container_name: content-scoring-service
     restart: unless-stopped
     ports:
@@ -42,14 +42,8 @@ services:
       - PYTHONPATH=/app
       - LOG_LEVEL=INFO
       - PORT=5001
-      # HuggingFace cache configuration
-      - HF_HOME=/home/appuser/.cache/huggingface
-      - TRANSFORMERS_CACHE=/home/appuser/.cache/huggingface/transformers
-      - SENTENCE_TRANSFORMERS_HOME=/home/appuser/.cache/huggingface/sentence_transformers
-      - HUGGINGFACE_HUB_CACHE=/home/appuser/.cache/huggingface/hub
     volumes:
       - ./content-scoring-service/logs:/app/logs
-      - content-scoring-cache:/home/appuser/.cache/huggingface
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
       interval: 30s
@@ -181,8 +175,6 @@ volumes:
   mysql_data:
     driver: local
   upload_data:
-    driver: local
-  content-scoring-cache:
     driver: local
 
 # ==========================================

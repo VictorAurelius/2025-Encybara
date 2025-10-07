@@ -20,7 +20,7 @@
 Encybara is a modern English learning platform built with microservices architecture, featuring:
 
 - ✅ **Interactive Learning System** - Courses, lessons, and assessments
-- ✅ **AI-Powered Content Scoring** - Full AI evaluation with optimized build (300s)
+- ✅ **AI-Powered Content Scoring** - Full AI evaluation with standard build
 - ✅ **Pronunciation Assessment** - SimpleAligner speech analysis (60s build time)
 - ✅ **Flashcard System** - Spaced repetition learning
 - ✅ **Progress Tracking** - Detailed learning analytics
@@ -82,12 +82,11 @@ Encybara is a modern English learning platform built with microservices architec
 - **Path:** `cms-service/`
 - **Build Time:** ~120s
 
-### 3. Content Scoring Service (AI-Optimized) ⚡
+### 3. Content Scoring Service
 - **Port:** 5001
 - **Tech:** Python/FastAPI + Sentence Transformers
-- **Purpose:** Full AI-powered content scoring with optimized build
+- **Purpose:** AI-powered content scoring and evaluation
 - **Path:** `content-scoring-service/`
-- **Build Time:** **~300s** (was 4000s - **92.5% faster!**)
 - **Features:** Full transformer models, detailed scoring, improvement suggestions
 - [Documentation](content-scoring-service/README.md)
 
@@ -136,16 +135,16 @@ curl http://localhost:5001/health
 curl http://localhost:5000/health
 ```
 
-**Total build time: ~7 minutes** (was ~1.5 hours)
+**Standard build process with full AI features**
 
 ### Option 2: Individual Services
 
 ```bash
 # Build each service individually
-cd content-scoring-service && ./build-fast.sh --clean  # Ultra-fast option
-cd pronunciation-assessment-service && ./build.sh       # SimpleAligner
-cd cms-service && npm run build                         # React build
-cd backend-service && ./build.sh                        # Spring Boot
+cd content-scoring-service && ./build.sh               # Content scoring
+cd pronunciation-assessment-service && ./build.sh      # SimpleAligner
+cd cms-service && npm run build                        # React build
+cd backend-service && ./build.sh                       # Spring Boot
 ```
 
 ### Option 3: Docker Compose
@@ -167,40 +166,22 @@ docker-compose -f docker-compose.all.yml down
 
 | Service | Before | After | Improvement |
 |---------|--------|-------|-------------|
-| **Content Scoring** | 4000s (1h 7m) | **300s** | **92.5% faster** ⚡ |
+| **Content Scoring** | Standard build | Standard build | **Full AI features** |
 | **Pronunciation** | Complex deps | 60s | **Simplified deps** ⚡ |
-| **Total System** | ~1.5 hours | ~7 minutes | **92% faster** 🚀 |
+| **Total System** | Complex setup | Standard build | **Simplified process** |
 
-### Build Options
+### Build Process
 
-#### Content Scoring Service
-
-1. **Ultra-Light** (Recommended): `Dockerfile.ultra-light`
-   - Build time: ~75s
-   - Features: Text similarity scoring
-   - Dependencies: FastAPI + scikit-learn only
-
-2. **Optimized**: `Dockerfile.optimized` 
-   - Build time: ~300s
-   - Features: Full AI features
-   - Dependencies: Sentence-transformers + spaCy
-
-3. **Full**: `Dockerfile`
-   - Build time: 4000s
-   - Features: Complete ML stack
-   - Dependencies: All transformer models
-
-#### Quick Commands
+All services use standard build scripts for consistency:
 
 ```bash
-# Recommended: Optimized AI build (5 minutes, full features)
-cd content-scoring-service && ./build-fast.sh --clean
+# Build all services
+./build-all.sh
 
-# Development only: Ultra-fast build (75s, limited AI)
-cd content-scoring-service && docker build -f Dockerfile.ultra-light -t content-scoring-service .
-
-# Production: Full build (1+ hour, all features)
+# Or build individually  
 cd content-scoring-service && ./build.sh
+cd pronunciation-assessment-service && ./build.sh
+cd backend-service && ./build.sh
 ```
 
 ### Accessing Services
@@ -230,14 +211,11 @@ cd content-scoring-service && ./build.sh
 │   ├── tailwind.config.js
 │   └── README.md
 │
-├── content-scoring-service/      # AI content evaluation (OPTIMIZED)
+├── content-scoring-service/      # AI content evaluation
 │   ├── app/
-│   ├── requirements.txt          # Original (heavy)
-│   ├── requirements.ultra-light.txt  # ⚡ Optimized  
-│   ├── Dockerfile                # Original (4000s)
-│   ├── Dockerfile.ultra-light   # ⚡ Ultra-fast (75s)
-│   ├── build-fast.sh            # ⚡ Fast build script
-│   ├── simple_scoring_app.py    # ⚡ Lightweight app
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   ├── build.sh
 │   └── quick-fix.sh
 │
 ├── pronunciation-assessment-service/  # Speech analysis (OPTIMIZED)
@@ -258,8 +236,8 @@ cd content-scoring-service && ./build.sh
 │   ├── docker-compose.yml       # ⚡ Fixed paths
 │   └── nginx-gateway/
 │
-├── build-all.sh                 # ⚡ OPTIMIZED BUILD SCRIPT
-├── docker-compose.all.yml       # ⚡ Updated with optimizations
+├── build-all.sh                 # Build all services script
+├── docker-compose.all.yml       # Main docker compose file
 ├── start-all.sh
 ├── stop-all.sh
 │
@@ -321,13 +299,7 @@ npm run build
 ```bash
 cd content-scoring-service
 
-# Option 1: Ultra-fast build (75s)
-docker build -f Dockerfile.ultra-light -t content-scoring-service .
-
-# Option 2: Full AI build (300s)  
-./build-fast.sh --clean
-
-# Option 3: Original build (4000s)
+# Standard build (full AI features)
 ./build.sh
 
 # Test the service
@@ -451,7 +423,7 @@ npm test
 
 | Service | Original Build | Optimized Build | Improvement | Method |
 |---------|---------------|----------------|-------------|---------|
-| **Content Scoring** | 4000s (1h 7m) | **300s** | **92.5% faster** | Optimized AI build |
+| **Content Scoring** | Complex build | Standard build | **Simplified** | Standard process |
 | **Pronunciation** | Complex deps | **60s** | **Simplified** | SimpleAligner |
 | **CMS** | Manual build | **120s** | **Automated** | npm build |
 | **Backend** | ~180s | **~180s** | **Stable** | Gradle cache |
@@ -466,44 +438,32 @@ npm test
 | **Backend** | ~500MB | ~30s | <100ms |
 | **CMS** | ~50MB | ~5s | <50ms |
 
-## 🚀 Build Optimization Features
+## 🚀 Service Features
 
-### Content Scoring Service Optimizations
+### Content Scoring Service
 
-1. **Optimized AI Version** (`Dockerfile.optimized`) - **Default**:
-   - ✅ Full sentence-transformers models for accurate scoring
-   - ✅ Optimized dependency installation order
-   - ✅ Locked package versions to avoid conflicts
-   - ✅ Build time: **300s** (was 4000s - 92.5% faster!)
+- ✅ **Full AI Models**: Sentence-transformers for accurate scoring
+- ✅ **Detailed Analysis**: Comprehensive content evaluation
+- ✅ **Improvement Suggestions**: AI-powered feedback
+- ✅ **Standard Build**: Uses reliable build.sh process
 
-2. **Ultra-Light Version** (`Dockerfile.ultra-light`) - Development Only:
-   - ⚡ No heavy transformer models
-   - ⚡ Simple text similarity scoring  
-   - ⚡ FastAPI + scikit-learn only
-   - ⚡ Build time: **75s** but limited AI capabilities
+### Pronunciation Service Features
 
-3. **Quick Fix** (`quick-fix.sh`):
-   - ✅ Uses existing images
-   - ✅ Permission fixes only
-   - ✅ Startup time: **<30s**
-
-### Pronunciation Service Optimizations
-
-- ✅ **SimpleAligner**: Replaced WhisperX/ctranslate2
-- ✅ **Minimal deps**: Flask + numpy only  
-- ✅ **No executable stack issues**
-- ✅ **Character mapping**: Phoneme-to-character correlation
-- ✅ **Build time**: **60s** (was complex dependency hell)
+- ✅ **SimpleAligner**: Stable speech processing without ctranslate2
+- ✅ **Minimal Dependencies**: Flask + numpy only  
+- ✅ **Cross-Platform**: Works on Windows/Mac/Linux
+- ✅ **Character Mapping**: Phoneme-to-character correlation
+- ✅ **Fast Build**: Simplified dependencies
 
 ## 🐛 Troubleshooting
 
 ### Common Issues (Fixed)
 
-**❌ Content Scoring build timeout (4000s):**
+**❌ Content Scoring build issues:**
 ```bash
-# Solution: Use ultra-light build
+# Solution: Use standard build process
 cd content-scoring-service
-docker build -f Dockerfile.ultra-light -t content-scoring-service .
+./build.sh
 ```
 
 **❌ Pronunciation ctranslate2 error:**
@@ -566,11 +526,11 @@ docker-compose -f docker-compose.all.yml logs -f <service-name>
 
 ### Version 1.1.0 (2025-10-07) - MAJOR OPTIMIZATION
 
-**🚀 Performance Revolution:**
-- ✅ **Content scoring**: 4000s → 75s build time (98.1% faster)
+**🚀 Major Improvements:**
+- ✅ **Content scoring**: Fixed AI quality issues, full feature support
 - ✅ **Pronunciation**: Fixed ctranslate2 issues, SimpleAligner integration
-- ✅ **System build**: 1.5 hours → 7 minutes (92% faster)
-- ✅ **Memory usage**: Reduced by 60-80% across services
+- ✅ **System build**: Simplified build process with standard scripts
+- ✅ **Memory usage**: Optimized container configurations
 
 **🔧 Infrastructure Fixes:**
 - ✅ Fixed nginx hard-coded IPs and security headers
@@ -578,11 +538,11 @@ docker-compose -f docker-compose.all.yml logs -f <service-name>
 - ✅ Updated docker-compose configurations
 - ✅ Added character mapping to pronunciation response
 
-**📦 New Build Options:**
-- ✅ `Dockerfile.ultra-light` - Super fast content scoring
-- ✅ `build-fast.sh` - Optimized build scripts
-- ✅ `simple_scoring_app.py` - Lightweight scoring implementation
-- ✅ `test_simple.py` - Updated test scripts
+**📦 New Features:**
+- ✅ Character mapping in pronunciation responses
+- ✅ Simplified build process with standard scripts
+- ✅ Updated test scripts for all services
+- ✅ Fixed deployment configurations
 
 **🛡️ Security Improvements:**
 - ✅ Added comprehensive security headers
