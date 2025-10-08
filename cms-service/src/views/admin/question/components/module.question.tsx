@@ -135,16 +135,6 @@ const ModalQuestion = (props: IProps) => {
                         />
                     </Col>
                     <Col lg={12} md={12} sm={24} xs={24}>
-                        <ProFormText
-                            label="Keyword"
-                            name="keyword"
-                            rules={[
-                                { required: true, message: 'Please do not leave blank' },
-                            ]}
-                            placeholder="Enter keyword"
-                        />
-                    </Col>
-                    <Col lg={12} md={12} sm={24} xs={24}>
                         <ProFormSelect
                             label="Question Type"
                             name="quesType"
@@ -152,7 +142,9 @@ const ModalQuestion = (props: IProps) => {
                                 MULTIPLE: 'MULTIPLE',
                                 CHOICE: 'CHOICE',
                                 TEXT: 'TEXT',
-                                LISTENING: 'LISTENING'
+                                LISTENING: 'LISTENING',
+                                WRITING: 'WRITING',
+                                SPEAKING: 'SPEAKING'
                             }}
                             rules={[
                                 { required: true, message: 'Please do not leave blank' },

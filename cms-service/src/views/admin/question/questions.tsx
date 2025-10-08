@@ -1,11 +1,12 @@
 import DataTable from "../permission/components/data.table";
-import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined, UploadOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined, UploadOutlined, InfoCircleOutlined, EyeOutlined } from "@ant-design/icons";
 import { ActionType, ProColumns } from '@ant-design/pro-components';
 import { Button, Popconfirm, Space, Dropdown, Input, Tooltip } from "antd";
 import { useState, useRef, useEffect } from 'react';
 import ModalQuestion from "./components/module.question";
 import { IQuestion } from "./components/module.question";
 import ModalUpload from "./components/module.upload";
+import ModalSampleAnswer from "./components/modal.sample-answer";
 import { App } from 'antd';
 import Access from "../access";
 import questionService from "../../../service/question.service";
@@ -17,6 +18,7 @@ const QuestionPage = () => {
     const { getCacheStats } = useCache();
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [openModalUpload, setOpenModalUpload] = useState<boolean>(false);
+    const [openModalSampleAnswer, setOpenModalSampleAnswer] = useState<boolean>(false);
     const [dataInit, setDataInit] = useState<IQuestion | null>(null);
     const [dataSource, setDataSource] = useState<IQuestion[]>([]); // Khởi tạo state cho dataSource
     const [loading, setLoading] = useState<boolean>(true); // Khởi tạo state cho loading
@@ -34,10 +36,11 @@ const QuestionPage = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const [lessonList, setLessonList] = useState<Array<{ id: number; name: string }>>([]);
     const [quesID, setQuesID] = useState<number>(0);
+    
     const reloadTable = async () => {
         setLoading(true);
         try {
-            
+
             // Fetch questions with filters and pagination
             const questionsData = await questionService.getQuestions(
                 {
@@ -48,10 +51,10 @@ const QuestionPage = () => {
                 },
                 { page: currentPage, size: pageSize }
             );
-            
+
             // Fetch question-lesson mapping
             const questionLessonMap = await questionService.getQuestionLessonMap();
-            
+
             setLessonMap(questionLessonMap);
             setDataSource(questionsData.content);
             setTotal(questionsData.totalPages * pageSize);
@@ -137,7 +140,7 @@ const QuestionPage = () => {
             message.error('Failed to delete selected questions');
         }
     };
-           
+
 
     const handleQuestionLesson = async (lessonId: number, action: 'add' | 'remove', questionId?: number) => {
         try {
@@ -208,6 +211,8 @@ const QuestionPage = () => {
                 { text: 'MULTIPLE', value: 'MULTIPLE' },
                 { text: 'TEXT', value: 'TEXT' },
                 { text: 'CHOICE', value: 'CHOICE' },
+                { text: 'WRITING', value: 'WRITING' },
+                { text: 'SPEAKING', value: 'SPEAKING' },
             ],
             filterMode: 'menu',
             filtered: true,
@@ -254,65 +259,6 @@ const QuestionPage = () => {
             sorter: false,
         },
         {
-            title: 'Keyword',
-            dataIndex: 'keyword',
-            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-                <div style={{ padding: 8 }}>
-                    <Input
-                        placeholder="Search keyword"
-                        value={selectedKeys[0]}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            setSelectedKeys(value ? [value] : []);
-                        }}
-                        onPressEnter={(e) => {
-                            confirm();
-                            setSelectedFilters({
-                                quesType: selectedFilters.quesType,
-                                skillType: selectedFilters.skillType,
-                                keyword: e.currentTarget.value
-                            });
-                        }}
-                        style={{ width: 188, marginBottom: 8, display: 'block' }}
-                    />
-                    <Space>
-                        <Button
-                            type="primary"
-                            onClick={() => {
-                                confirm();
-                                setSelectedFilters({
-                                    quesType: selectedFilters.quesType,
-                                    skillType: selectedFilters.skillType,
-                                    keyword: selectedKeys[0]
-                                });
-                            }}
-                            size="small"
-                            style={{ width: 90 }}
-                        >
-                            Search
-                        </Button>
-                        <Button
-                            onClick={() => {
-                                clearFilters?.();
-                                setSelectedFilters({
-                                    quesType: selectedFilters.quesType,
-                                    skillType: selectedFilters.skillType,
-                                    keyword: undefined
-                                });
-                            }}
-                            size="small"
-                            style={{ width: 90 }}
-                        >
-                            Reset
-                        </Button>
-                    </Space>
-                </div>
-            ),
-            filterIcon: filtered => (
-                <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
-            ),
-        },
-        {
             title: 'Lessons',
             dataIndex: 'id',
             width: 150,
@@ -354,7 +300,7 @@ const QuestionPage = () => {
         {
             title: 'Actions',
             hideInSearch: true,
-            width: 50,
+            width: 80,
             render: (_value, entity, _index, _action) => (
                 <Space>
                     <EditOutlined
@@ -396,6 +342,21 @@ const QuestionPage = () => {
                             await fetchUploadData(entity.id); // Lấy dữ liệu trước khi mở modal
 
                         }} />
+                    <Tooltip title={entity.quesType === 'SPEAKING' ? 'View Sample Answers' : 'Only available for SPEAKING questions'}>
+                        <EyeOutlined
+                            style={{
+                                fontSize: 20,
+                                color: entity.quesType === 'SPEAKING' ? '#1890ff' : '#d9d9d9',
+                                cursor: entity.quesType === 'SPEAKING' ? 'pointer' : 'not-allowed',
+                            }}
+                            onClick={() => {
+                                if (entity.quesType === 'SPEAKING') {
+                                    setQuesID(entity.id);
+                                    setDataInit(entity);
+                                    setOpenModalSampleAnswer(true);
+                                }
+                            }} />
+                    </Tooltip>
                 </Space>
             ),
         },
@@ -465,6 +426,13 @@ const QuestionPage = () => {
                 reloadTable={reloadTable}
                 uploadData={uploadData}
                 quesID={quesID}
+            />
+
+            <ModalSampleAnswer
+                openModal={openModalSampleAnswer}
+                setOpenModal={setOpenModalSampleAnswer}
+                questionId={quesID}
+                questionData={dataInit}
             />
         </div>
     )
