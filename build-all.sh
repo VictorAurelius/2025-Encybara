@@ -230,8 +230,46 @@ fi
 
 cd ..
 
+print_status "Starting all services..."
+
+# Start content-scoring-service
+print_status "Starting content-scoring-service..."
+cd content-scoring-service
+if docker-compose ps | grep -q "Up"; then
+    print_status "Content-scoring-service already running, restarting..."
+    docker-compose restart
+else
+    print_status "Starting content-scoring-service..."
+    docker-compose up -d
+fi
+cd ..
+
+# Start pronunciation-assessment-service
+print_status "Starting pronunciation-assessment-service..."
+cd pronunciation-assessment-service
+if docker-compose ps | grep -q "Up"; then
+    print_status "Pronunciation-assessment-service already running, restarting..."
+    docker-compose restart
+else
+    print_status "Starting pronunciation-assessment-service..."
+    docker-compose up -d
+fi
+cd ..
+
+# Start backend and CMS services
+print_status "Starting backend and CMS services..."
+cd deployment
+if docker-compose ps | grep -q "Up"; then
+    print_status "Backend services already running, restarting..."
+    docker-compose restart
+else
+    print_status "Starting backend and CMS services..."
+    docker-compose up -d
+fi
+cd ..
+
 print_success "======================================"
-print_success "Build process completed!"
+print_success "Build and startup process completed!"
 print_success "======================================"
 print_status "Build Summary:"
 # Check each service individually
@@ -269,7 +307,7 @@ print_status "• Pronunciation: $PRONUNCIATION_STATUS"
 print_status "• Backend Service: $BACKEND_STATUS"
 print_success "======================================"
 print_status "Service URLs (when running):"
-print_status "• CMS Frontend: http://localhost:3000"
+print_status "• CMS Frontend: http://localhost:80 (primary) and http://localhost:3000 (backup)"
 print_status "• Content Scoring Service: http://localhost:5001"
 print_status "• Pronunciation Assessment Service: http://localhost:5000"
 print_status "• Backend API: http://localhost:8080"

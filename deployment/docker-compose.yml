@@ -64,6 +64,7 @@ services:
     container_name: encybara-cms
     restart: always
     ports:
+      - "80:80"
       - "3000:80"
     networks:
       - app-network
