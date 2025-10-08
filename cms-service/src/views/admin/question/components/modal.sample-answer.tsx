@@ -107,6 +107,7 @@ const ModalSampleAnswer: React.FC<ModalSampleAnswerProps> = ({
             } else if (editingAnswer) {
                 const updateData: ReqUpdateSpeakingSampleAnswerDTO = {
                     id: editingAnswer.id,
+                    questionId,
                     answerContent: values.answerContent,
                     description: values.description,
                     difficultyLevel: values.difficultyLevel,
