@@ -27,7 +27,8 @@
       "Bash(fi)",
       "Bash(docker:*)",
       "Bash(curl:*)",
-      "Bash(./gradlew:*)"
+      "Bash(./gradlew:*)",
+      "Bash(java:*)"
     ],
     "deny": [],
     "ask": []

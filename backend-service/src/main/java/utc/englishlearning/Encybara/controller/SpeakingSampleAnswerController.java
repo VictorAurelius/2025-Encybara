@@ -90,7 +90,7 @@ public class SpeakingSampleAnswerController {
     @GetMapping("/question/{questionId}")
     @ApiMessage("Get sample answers by question ID")
     public ResponseEntity<RestResponse<List<ResSpeakingSampleAnswerDTO>>> getSampleAnswersByQuestionId(
-            @PathVariable Long questionId) {
+            @PathVariable("questionId") Long questionId) {
 
         List<ResSpeakingSampleAnswerDTO> sampleAnswers = speakingSampleAnswerService
                 .getSampleAnswersByQuestionId(questionId);
