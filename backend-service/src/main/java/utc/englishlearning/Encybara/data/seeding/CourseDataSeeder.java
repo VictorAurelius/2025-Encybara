@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -173,13 +174,7 @@ public class CourseDataSeeder {
                 continue;
             }
 
-            // Save question and its choices
-            for (Question_Choice choice : question.getQuestionChoices()) {
-                choice.setQuestion(question);
-            }
-            question = questionRepository.save(question);
-
-            // Save speaking sample answers for speaking questions
+            // Process speaking sample answers BEFORE saving question
             if (question.getQuesType() == QuestionTypeEnum.SPEAKING &&
                     question.getSpeakingSampleAnswers() != null &&
                     !question.getSpeakingSampleAnswers().isEmpty()) {
@@ -190,19 +185,47 @@ public class CourseDataSeeder {
                     // Import audio file if audioPath is specified
                     if (sampleAnswer.getAudioLink() != null && !sampleAnswer.getAudioLink().isEmpty()) {
                         String audioPath = sampleAnswer.getAudioLink(); // This contains the source path from JSON
+                        System.out.println(">>> DEBUG: Processing audio for difficulty " + sampleAnswer.getDifficultyLevel() + 
+                                         ", audioPath: " + audioPath);
                         String uploadedAudioLink = importSpeakingSampleAudio(audioPath, courseGroup, unitNumber, paperNumber);
                         if (uploadedAudioLink != null) {
                             sampleAnswer.setAudioLink(uploadedAudioLink);
+                            System.out.println(">>> DEBUG: Set audioLink for difficulty " + sampleAnswer.getDifficultyLevel() + 
+                                             " to: " + uploadedAudioLink);
                         } else {
                             // Clear invalid audio path
                             sampleAnswer.setAudioLink(null);
+                            System.out.println(">>> DEBUG: Cleared audioLink for difficulty " + sampleAnswer.getDifficultyLevel());
                         }
+                    } else {
+                        System.out.println(">>> DEBUG: No audioLink for difficulty " + sampleAnswer.getDifficultyLevel());
                     }
-                    
-                    speakingSampleAnswerRepository.save(sampleAnswer);
                 }
-                System.out.println(">>> SAVED " + question.getSpeakingSampleAnswers().size() +
+                System.out.println(">>> PROCESSED " + question.getSpeakingSampleAnswers().size() +
                         " sample answers for speaking question: " + question.getQuesContent());
+            }
+
+            // Save question and its choices first
+            for (Question_Choice choice : question.getQuestionChoices()) {
+                choice.setQuestion(question);
+            }
+            // Temporarily clear sample answers to avoid cascade save
+            List<SpeakingSampleAnswer> tempSampleAnswers = question.getSpeakingSampleAnswers();
+            question.setSpeakingSampleAnswers(new ArrayList<>());
+            question = questionRepository.save(question);
+            
+            // Manually save each sample answer with the correct audioLink
+            if (question.getQuesType() == QuestionTypeEnum.SPEAKING &&
+                    tempSampleAnswers != null && !tempSampleAnswers.isEmpty()) {
+                for (SpeakingSampleAnswer sampleAnswer : tempSampleAnswers) {
+                    sampleAnswer.setQuestion(question); // Set the saved question
+                    SpeakingSampleAnswer savedAnswer = speakingSampleAnswerRepository.save(sampleAnswer);
+                    System.out.println(">>> DEBUG MANUALLY SAVED: ID=" + savedAnswer.getId() + 
+                                     ", Difficulty=" + savedAnswer.getDifficultyLevel() + 
+                                     ", AudioLink=" + savedAnswer.getAudioLink());
+                }
+                // Restore the sample answers to the question
+                question.setSpeakingSampleAnswers(tempSampleAnswers);
             }
 
             // Create lesson-question relationship

@@ -26,7 +26,8 @@
       "Bash(else)",
       "Bash(fi)",
       "Bash(docker:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(./gradlew:*)"
     ],
     "deny": [],
     "ask": []
