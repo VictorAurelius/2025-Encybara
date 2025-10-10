@@ -16,6 +16,7 @@ public class ResSpeakingSampleAnswerDTO {
     private Double estimatedScore;
     private Long questionId;
     private String questionContent; // Optional - include question content for reference
+    private String audioLink; // Link to audio file
 
     // Audit fields
     private String createBy;

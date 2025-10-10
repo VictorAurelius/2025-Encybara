@@ -30,6 +30,9 @@ public class SpeakingSampleAnswer {
     @Column(name = "estimated_score")
     private Double estimatedScore; // Expected score for this answer (0-100)
 
+    @Column(name = "audio_link")
+    private String audioLink; // Link to audio file for this sample answer
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     @JsonBackReference

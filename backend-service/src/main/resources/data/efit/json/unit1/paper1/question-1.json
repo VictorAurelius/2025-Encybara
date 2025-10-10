@@ -17,7 +17,8 @@
                 "difficultyLevel": 2,
                 "answerContent": "I use technology for work, study, and entertainment. I research information online, write assignments, communicate with classmates, and watch educational videos. For fun, I play games and use social media.",
                 "description": "Elementary answer with basic grammar and common expressions.",
-                "estimatedScore": 40.0
+                "estimatedScore": 40.0,
+                "audioLink": "ssa-1.mp3"
             },
             {
                 "difficultyLevel": 3,
