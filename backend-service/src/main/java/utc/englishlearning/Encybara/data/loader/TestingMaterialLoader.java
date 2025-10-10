@@ -146,6 +146,12 @@ public class TestingMaterialLoader {
                     sampleAnswer.setEstimatedScore((Double) scoreObj);
                 }
 
+                // Load audioLink if present in JSON
+                String audioLink = (String) sampleData.get("audioLink");
+                if (audioLink != null && !audioLink.trim().isEmpty()) {
+                    sampleAnswer.setAudioLink(audioLink.trim());
+                }
+
                 sampleAnswer.setQuestion(question);
                 sampleAnswer.setCreateAt(java.time.Instant.now());
                 sampleAnswers.add(sampleAnswer);
