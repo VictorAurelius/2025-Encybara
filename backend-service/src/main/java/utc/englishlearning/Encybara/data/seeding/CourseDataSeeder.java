@@ -187,7 +187,6 @@ public class CourseDataSeeder {
             
             // Save question first to get the ID
             question = questionRepository.save(question);
-            System.out.println(">>> SAVED QUESTION: ID=" + question.getId() + ", Content=" + question.getQuesContent());
 
             // Process and save sample answers separately for speaking questions
             if (question.getQuesType() == QuestionTypeEnum.SPEAKING &&
@@ -202,56 +201,23 @@ public class CourseDataSeeder {
                     // Process audio file if audioPath is specified
                     if (sampleAnswer.getAudioLink() != null && !sampleAnswer.getAudioLink().isEmpty()) {
                         String audioPath = sampleAnswer.getAudioLink(); // This contains the source path from JSON
-                        System.out.println(">>> DEBUG: Processing audio for difficulty " + sampleAnswer.getDifficultyLevel() + 
-                                         ", audioPath: " + audioPath);
-                        
                         String uploadedAudioLink = importSpeakingSampleAudio(audioPath, courseGroup, unitNumber, paperNumber);
                         if (uploadedAudioLink != null) {
                             sampleAnswer.setAudioLink(uploadedAudioLink);
-                            System.out.println(">>> DEBUG: Set audioLink for difficulty " + sampleAnswer.getDifficultyLevel() + 
-                                             " to: " + uploadedAudioLink);
                         } else {
                             // Clear invalid audio path
                             sampleAnswer.setAudioLink(null);
-                            System.out.println(">>> DEBUG: Cleared audioLink for difficulty " + sampleAnswer.getDifficultyLevel());
                         }
-                    } else {
-                        System.out.println(">>> DEBUG: No audioLink for difficulty " + sampleAnswer.getDifficultyLevel());
                     }
                     
                     // Save each sample answer individually
                     SpeakingSampleAnswer savedAnswer = speakingSampleAnswerRepository.save(sampleAnswer);
                     processedSampleAnswers.add(savedAnswer);
-                    
-                    System.out.println(">>> SAVED SAMPLE ANSWER: ID=" + savedAnswer.getId() + 
-                                     ", Difficulty=" + savedAnswer.getDifficultyLevel() + 
-                                     ", AudioLink=" + savedAnswer.getAudioLink());
-                    
-                    // IMMEDIATE DATABASE VERIFICATION
-                    SpeakingSampleAnswer verificationAnswer = speakingSampleAnswerRepository.findById(savedAnswer.getId()).orElse(null);
-                    if (verificationAnswer != null) {
-                        System.out.println(">>> DATABASE VERIFICATION: ID=" + verificationAnswer.getId() + 
-                                         ", AudioLink=" + verificationAnswer.getAudioLink());
-                        if (!java.util.Objects.equals(savedAnswer.getAudioLink(), verificationAnswer.getAudioLink())) {
-                            System.out.println(">>> ERROR: AudioLink MISMATCH! Expected: " + savedAnswer.getAudioLink() + 
-                                             ", Found in DB: " + verificationAnswer.getAudioLink());
-                        }
-                    } else {
-                        System.out.println(">>> ERROR: Cannot find saved record in database!");
-                    }
                 }
                 
-                // Restore the sample answers to the question for completeness
-                System.out.println(">>> DEBUG: About to restore " + processedSampleAnswers.size() + " sample answers to question");
-                for (SpeakingSampleAnswer answer : processedSampleAnswers) {
-                    System.out.println(">>> DEBUG: Restoring answer ID=" + answer.getId() + 
-                                     ", Difficulty=" + answer.getDifficultyLevel() + 
-                                     ", AudioLink=" + answer.getAudioLink());
-                }
-                
-                // TEMPORARILY COMMENTED OUT TO TEST
-                // question.setSpeakingSampleAnswers(processedSampleAnswers);
-                System.out.println(">>> DEBUG: SKIPPED restoring sample answers to question to test audioLink persistence");
+                // Note: We don't need to restore the sample answers to the question
+                // because the relationship is already established via sampleAnswer.setQuestion(question)
+                // Restoring the collection would trigger JPA cascade operations that clear audioLink
                 
                 System.out.println(">>> COMPLETED " + processedSampleAnswers.size() +
                         " sample answers for speaking question: " + question.getQuesContent());
@@ -344,11 +310,8 @@ public class CourseDataSeeder {
             String fullAudioPath = String.format("data/%s/file/%s/%s/%s", 
                 courseGroup.toLowerCase(), unitNumber, paperNumber, audioPath);
             
-            System.out.println(">>> IMPORT AUDIO DEBUG: Attempting to load: " + fullAudioPath);
-            
             // Load the audio file from resources
             try (InputStream is = new ClassPathResource(fullAudioPath).getInputStream()) {
-                System.out.println(">>> IMPORT AUDIO DEBUG: Successfully opened InputStream for: " + fullAudioPath);
                 // Create temp file with original name
                 String fileName = Path.of(audioPath).getFileName().toString();
                 Path tempFile = Files.createTempFile("temp_audio_", fileName);
@@ -377,10 +340,7 @@ public class CourseDataSeeder {
                 // Store file in the speaking-sample-answers directory
                 String uploadPath = String.format("speaking-sample-answers/%s/%s/%s",
                         courseGroup.toLowerCase(), unitNumber, paperNumber);
-                System.out.println(">>> IMPORT AUDIO DEBUG: Storing with uploadPath: " + uploadPath);
-                
                 String audioLink = learningMaterialService.store(multipartFile, uploadPath);
-                System.out.println(">>> IMPORT AUDIO DEBUG: LearningMaterialService returned: " + audioLink);
 
                 // Cleanup temp file
                 Files.deleteIfExists(tempFile);

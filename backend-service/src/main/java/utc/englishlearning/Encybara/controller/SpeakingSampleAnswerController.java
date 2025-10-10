@@ -74,7 +74,7 @@ public class SpeakingSampleAnswerController {
     @GetMapping("/{id}")
     @ApiMessage("Get speaking sample answer by ID")
     public ResponseEntity<RestResponse<ResSpeakingSampleAnswerDTO>> getSpeakingSampleAnswerById(
-            @PathVariable Long id) {
+            @PathVariable("id") Long id) {
 
         ResSpeakingSampleAnswerDTO sampleAnswer = speakingSampleAnswerService.getSpeakingSampleAnswerById(id);
         RestResponse<ResSpeakingSampleAnswerDTO> response = new RestResponse<>();
@@ -107,8 +107,8 @@ public class SpeakingSampleAnswerController {
     @GetMapping("/question/{questionId}/difficulty/{difficultyLevel}")
     @ApiMessage("Get sample answers by question ID and difficulty")
     public ResponseEntity<RestResponse<List<ResSpeakingSampleAnswerDTO>>> getSampleAnswersByQuestionIdAndDifficulty(
-            @PathVariable Long questionId,
-            @PathVariable Integer difficultyLevel) {
+            @PathVariable("questionId") Long questionId,
+            @PathVariable("difficultyLevel") Integer difficultyLevel) {
 
         List<ResSpeakingSampleAnswerDTO> sampleAnswers = speakingSampleAnswerService
                 .getSampleAnswersByQuestionIdAndDifficulty(questionId, difficultyLevel);
@@ -124,7 +124,7 @@ public class SpeakingSampleAnswerController {
      */
     @DeleteMapping("/{id}")
     @ApiMessage("Delete speaking sample answer")
-    public ResponseEntity<RestResponse<Void>> deleteSpeakingSampleAnswer(@PathVariable Long id) {
+    public ResponseEntity<RestResponse<Void>> deleteSpeakingSampleAnswer(@PathVariable("id") Long id) {
 
         speakingSampleAnswerService.deleteSpeakingSampleAnswer(id);
         RestResponse<Void> response = new RestResponse<>();
@@ -138,7 +138,8 @@ public class SpeakingSampleAnswerController {
      */
     @GetMapping("/question/{questionId}/exists")
     @ApiMessage("Check if question has sample answers")
-    public ResponseEntity<RestResponse<Boolean>> checkQuestionHasSampleAnswers(@PathVariable Long questionId) {
+    public ResponseEntity<RestResponse<Boolean>> checkQuestionHasSampleAnswers(
+            @PathVariable("questionId") Long questionId) {
 
         boolean hasSampleAnswers = speakingSampleAnswerService.questionHasSampleAnswers(questionId);
         RestResponse<Boolean> response = new RestResponse<>();
@@ -153,7 +154,8 @@ public class SpeakingSampleAnswerController {
      */
     @GetMapping("/question/{questionId}/count")
     @ApiMessage("Get count of sample answers for question")
-    public ResponseEntity<RestResponse<Long>> countSampleAnswersByQuestionId(@PathVariable Long questionId) {
+    public ResponseEntity<RestResponse<Long>> countSampleAnswersByQuestionId(
+            @PathVariable("questionId") Long questionId) {
 
         Long count = speakingSampleAnswerService.countSampleAnswersByQuestionId(questionId);
         RestResponse<Long> response = new RestResponse<>();
@@ -169,7 +171,7 @@ public class SpeakingSampleAnswerController {
     @PostMapping("/{id}/upload-audio")
     @ApiMessage("Upload audio file for speaking sample answer")
     public ResponseEntity<RestResponse<String>> uploadAudioForSampleAnswer(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @RequestParam("file") MultipartFile file) {
 
         // Validate speaking sample answer exists
@@ -225,7 +227,7 @@ public class SpeakingSampleAnswerController {
      */
     @GetMapping("/{id}/audio-link")
     @ApiMessage("Get audio link for speaking sample answer")
-    public ResponseEntity<RestResponse<String>> getAudioLinkBySampleAnswerId(@PathVariable Long id) {
+    public ResponseEntity<RestResponse<String>> getAudioLinkBySampleAnswerId(@PathVariable("id") Long id) {
         SpeakingSampleAnswer sampleAnswer = speakingSampleAnswerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Speaking sample answer not found with id: " + id));
 
@@ -242,7 +244,7 @@ public class SpeakingSampleAnswerController {
     @PutMapping("/{id}/audio-link")
     @ApiMessage("Update audio link for speaking sample answer")
     public ResponseEntity<RestResponse<String>> updateAudioLink(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @RequestParam("audioLink") String audioLink) {
 
         SpeakingSampleAnswer sampleAnswer = speakingSampleAnswerRepository.findById(id)
@@ -263,7 +265,7 @@ public class SpeakingSampleAnswerController {
      */
     @DeleteMapping("/{id}/audio")
     @ApiMessage("Delete audio for speaking sample answer")
-    public ResponseEntity<RestResponse<Void>> deleteAudioForSampleAnswer(@PathVariable Long id) {
+    public ResponseEntity<RestResponse<Void>> deleteAudioForSampleAnswer(@PathVariable("id") Long id) {
         SpeakingSampleAnswer sampleAnswer = speakingSampleAnswerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Speaking sample answer not found with id: " + id));
 
@@ -294,7 +296,7 @@ public class SpeakingSampleAnswerController {
     @GetMapping("/question/{questionId}/with-audio")
     @ApiMessage("Get sample answers with audio links by question ID")
     public ResponseEntity<RestResponse<List<ResSpeakingSampleAnswerDTO>>> getSampleAnswersWithAudioByQuestionId(
-            @PathVariable Long questionId) {
+            @PathVariable("questionId") Long questionId) {
 
         List<ResSpeakingSampleAnswerDTO> sampleAnswers = speakingSampleAnswerService
                 .getSampleAnswersByQuestionId(questionId);

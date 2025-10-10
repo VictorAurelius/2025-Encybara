@@ -58,18 +58,5 @@ public class SpeakingSampleAnswer {
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
         this.updateAt = Instant.now();
-        
-        // DEBUG: Log what's being updated
-        System.out.println(">>> @PreUpdate TRIGGERED: SpeakingSampleAnswer ID=" + this.id + 
-                         ", Difficulty=" + this.difficultyLevel + 
-                         ", AudioLink=" + this.audioLink);
-        
-        // Print stack trace to see who called the update
-        Thread.currentThread().getStackTrace();
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        System.out.println(">>> UPDATE CALL STACK:");
-        for (int i = 0; i < Math.min(stackTrace.length, 10); i++) {
-            System.out.println("    " + stackTrace[i].toString());
-        }
     }
 }
