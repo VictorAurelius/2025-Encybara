@@ -47,6 +47,7 @@ public class SpeakingSampleAnswerService {
         sampleAnswer.setDescription(requestDTO.getDescription());
         sampleAnswer.setDifficultyLevel(requestDTO.getDifficultyLevel());
         sampleAnswer.setEstimatedScore(requestDTO.getEstimatedScore());
+        sampleAnswer.setAudioLink(requestDTO.getAudioLink());
         sampleAnswer.setQuestion(question);
 
         SpeakingSampleAnswer savedAnswer = speakingSampleAnswerRepository.save(sampleAnswer);
@@ -66,6 +67,7 @@ public class SpeakingSampleAnswerService {
         existingAnswer.setDescription(requestDTO.getDescription());
         existingAnswer.setDifficultyLevel(requestDTO.getDifficultyLevel());
         existingAnswer.setEstimatedScore(requestDTO.getEstimatedScore());
+        existingAnswer.setAudioLink(requestDTO.getAudioLink());
 
         SpeakingSampleAnswer savedAnswer = speakingSampleAnswerRepository.save(existingAnswer);
         return convertToResponseDTO(savedAnswer);
@@ -152,6 +154,7 @@ public class SpeakingSampleAnswerService {
         responseDTO.setDescription(sampleAnswer.getDescription());
         responseDTO.setDifficultyLevel(sampleAnswer.getDifficultyLevel());
         responseDTO.setEstimatedScore(sampleAnswer.getEstimatedScore());
+        responseDTO.setAudioLink(sampleAnswer.getAudioLink());
         responseDTO.setQuestionId(sampleAnswer.getQuestion().getId());
         responseDTO.setQuestionContent(sampleAnswer.getQuestion().getQuesContent());
         responseDTO.setCreateBy(sampleAnswer.getCreateBy());

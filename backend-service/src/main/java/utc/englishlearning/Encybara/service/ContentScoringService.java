@@ -76,6 +76,7 @@ public class ContentScoringService {
             String apiUrl = contentScoringServiceUrl + "/api/content-scoring";
             log.debug("Calling content-scoring-service at: {}", apiUrl);
 
+            @SuppressWarnings("rawtypes")
             ResponseEntity<Map> response = restTemplate.postForEntity(
                     apiUrl,
                     new org.springframework.http.HttpEntity<>(requestBody, headers),

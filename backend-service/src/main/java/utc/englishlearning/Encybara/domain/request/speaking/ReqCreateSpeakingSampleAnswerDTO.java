@@ -32,4 +32,7 @@ public class ReqCreateSpeakingSampleAnswerDTO {
     @DecimalMin(value = "0.0", message = "Estimated score must be between 0 and 100")
     @DecimalMax(value = "100.0", message = "Estimated score must be between 0 and 100")
     private Double estimatedScore;
+
+    @Size(max = 500, message = "Audio link must not exceed 500 characters")
+    private String audioLink; // Optional link to audio file
 }

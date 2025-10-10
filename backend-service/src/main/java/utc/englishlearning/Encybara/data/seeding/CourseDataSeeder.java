@@ -1,13 +1,13 @@
 package utc.englishlearning.Encybara.data.seeding;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.multipart.MultipartFile;
 import utc.englishlearning.Encybara.data.loader.TestingMaterialLoader;
 import utc.englishlearning.Encybara.domain.*;
 import utc.englishlearning.Encybara.repository.*;
 import utc.englishlearning.Encybara.util.constant.QuestionTypeEnum;
-import utc.englishlearning.Encybara.service.FileStorageService;
 import utc.englishlearning.Encybara.service.LearningMaterialService;
 import utc.englishlearning.Encybara.util.ResourceMultipartFile;
 
@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,7 +45,6 @@ public class CourseDataSeeder {
             LessonQuestionRepository lessonQuestionRepository,
             TestingMaterialLoader materialLoader,
             ObjectMapper objectMapper,
-            FileStorageService fileStorageService,
             LearningMaterialService learningMaterialService,
             LearningMaterialRepository learningMaterialRepository,
             SpeakingSampleAnswerRepository speakingSampleAnswerRepository) {
@@ -62,6 +62,7 @@ public class CourseDataSeeder {
     }
 
     @SuppressWarnings("unchecked")
+    @Transactional
     public void seedCourseData(String courseGroup, String unitNumber, String paperNumber) {
         try {
             // Set the data path for this specific course/test/paper
@@ -125,7 +126,7 @@ public class CourseDataSeeder {
                         // Process questions from lesson's questionContents
                         List<String> questionContents = lesson.getQuestionContents();
                         if (questionContents != null && !questionContents.isEmpty()) {
-                            processQuestions(questionContents, questionsByContent, savedLesson);
+                            processQuestions(questionContents, questionsByContent, savedLesson, courseGroup, unitNumber, paperNumber);
                         }
 
                         // Process materials for this lesson
@@ -167,7 +168,7 @@ public class CourseDataSeeder {
     }
 
     private void processQuestions(List<String> questionContents, Map<String, Question> questionsByContent,
-            Lesson lesson) {
+            Lesson lesson, String courseGroup, String unitNumber, String paperNumber) {
         for (String quesContent : questionContents) {
             Question question = questionsByContent.get(quesContent);
             if (question == null) {
@@ -175,22 +176,50 @@ public class CourseDataSeeder {
                 continue;
             }
 
-            // Save question and its choices
+            // Save question without sample answers first (to get question ID)
             for (Question_Choice choice : question.getQuestionChoices()) {
                 choice.setQuestion(question);
             }
+            
+            // Store sample answers temporarily and clear from question
+            List<SpeakingSampleAnswer> originalSampleAnswers = question.getSpeakingSampleAnswers();
+            question.setSpeakingSampleAnswers(new ArrayList<>());
+            
+            // Save question first to get the ID
             question = questionRepository.save(question);
 
-            // Save speaking sample answers for speaking questions
+            // Process and save sample answers separately for speaking questions
             if (question.getQuesType() == QuestionTypeEnum.SPEAKING &&
-                    question.getSpeakingSampleAnswers() != null &&
-                    !question.getSpeakingSampleAnswers().isEmpty()) {
+                    originalSampleAnswers != null && !originalSampleAnswers.isEmpty()) {
 
-                for (SpeakingSampleAnswer sampleAnswer : question.getSpeakingSampleAnswers()) {
+                List<SpeakingSampleAnswer> processedSampleAnswers = new ArrayList<>();
+                
+                for (SpeakingSampleAnswer sampleAnswer : originalSampleAnswers) {
+                    // Set the saved question reference
                     sampleAnswer.setQuestion(question);
-                    speakingSampleAnswerRepository.save(sampleAnswer);
+                    
+                    // Process audio file if audioPath is specified
+                    if (sampleAnswer.getAudioLink() != null && !sampleAnswer.getAudioLink().isEmpty()) {
+                        String audioPath = sampleAnswer.getAudioLink(); // This contains the source path from JSON
+                        String uploadedAudioLink = importSpeakingSampleAudio(audioPath, courseGroup, unitNumber, paperNumber);
+                        if (uploadedAudioLink != null) {
+                            sampleAnswer.setAudioLink(uploadedAudioLink);
+                        } else {
+                            // Clear invalid audio path
+                            sampleAnswer.setAudioLink(null);
+                        }
+                    }
+                    
+                    // Save each sample answer individually
+                    SpeakingSampleAnswer savedAnswer = speakingSampleAnswerRepository.save(sampleAnswer);
+                    processedSampleAnswers.add(savedAnswer);
                 }
-                System.out.println(">>> SAVED " + question.getSpeakingSampleAnswers().size() +
+                
+                // Note: We don't need to restore the sample answers to the question
+                // because the relationship is already established via sampleAnswer.setQuestion(question)
+                // Restoring the collection would trigger JPA cascade operations that clear audioLink
+                
+                System.out.println(">>> COMPLETED " + processedSampleAnswers.size() +
                         " sample answers for speaking question: " + question.getQuesContent());
             }
 
@@ -269,6 +298,64 @@ public class CourseDataSeeder {
         } catch (IOException e) {
             System.err.println("Error seeding learning material: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Import audio file for speaking sample answer
+     */
+    private String importSpeakingSampleAudio(String audioPath, String courseGroup, String unitNumber, String paperNumber) {
+        try {
+            // Construct full path to audio file in resources
+            String fullAudioPath = String.format("data/%s/file/%s/%s/%s", 
+                courseGroup.toLowerCase(), unitNumber, paperNumber, audioPath);
+            
+            // Load the audio file from resources
+            try (InputStream is = new ClassPathResource(fullAudioPath).getInputStream()) {
+                // Create temp file with original name
+                String fileName = Path.of(audioPath).getFileName().toString();
+                Path tempFile = Files.createTempFile("temp_audio_", fileName);
+                Files.copy(is, tempFile, StandardCopyOption.REPLACE_EXISTING);
+
+                // Determine content type based on file extension
+                String contentType = "audio/mpeg"; // default
+                String fileExtension = fileName.toLowerCase();
+                if (fileExtension.endsWith(".wav")) {
+                    contentType = "audio/wav";
+                } else if (fileExtension.endsWith(".mp3")) {
+                    contentType = "audio/mpeg";
+                } else if (fileExtension.endsWith(".m4a")) {
+                    contentType = "audio/mp4";
+                } else if (fileExtension.endsWith(".ogg")) {
+                    contentType = "audio/ogg";
+                }
+
+                // Create MultipartFile from the temp file
+                MultipartFile multipartFile = new ResourceMultipartFile(
+                        audioPath, // name
+                        fileName,  // originalFilename
+                        contentType,
+                        Files.readAllBytes(tempFile));
+
+                // Store file in the speaking-sample-answers directory
+                String uploadPath = String.format("speaking-sample-answers/%s/%s/%s",
+                        courseGroup.toLowerCase(), unitNumber, paperNumber);
+                String audioLink = learningMaterialService.store(multipartFile, uploadPath);
+
+                // Cleanup temp file
+                Files.deleteIfExists(tempFile);
+
+                System.out.println(">>> IMPORTED AUDIO: " + audioLink + " from " + fullAudioPath);
+                return audioLink;
+
+            } catch (IOException e) {
+                System.err.println(">>> ERROR: Could not import audio file: " + fullAudioPath + " - " + e.getMessage());
+                return null;
+            }
+
+        } catch (Exception e) {
+            System.err.println(">>> ERROR: Failed to import speaking sample audio: " + e.getMessage());
+            return null;
         }
     }
 }
