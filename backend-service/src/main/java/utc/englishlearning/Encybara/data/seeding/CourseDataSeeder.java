@@ -242,7 +242,16 @@ public class CourseDataSeeder {
                 }
                 
                 // Restore the sample answers to the question for completeness
-                question.setSpeakingSampleAnswers(processedSampleAnswers);
+                System.out.println(">>> DEBUG: About to restore " + processedSampleAnswers.size() + " sample answers to question");
+                for (SpeakingSampleAnswer answer : processedSampleAnswers) {
+                    System.out.println(">>> DEBUG: Restoring answer ID=" + answer.getId() + 
+                                     ", Difficulty=" + answer.getDifficultyLevel() + 
+                                     ", AudioLink=" + answer.getAudioLink());
+                }
+                
+                // TEMPORARILY COMMENTED OUT TO TEST
+                // question.setSpeakingSampleAnswers(processedSampleAnswers);
+                System.out.println(">>> DEBUG: SKIPPED restoring sample answers to question to test audioLink persistence");
                 
                 System.out.println(">>> COMPLETED " + processedSampleAnswers.size() +
                         " sample answers for speaking question: " + question.getQuesContent());
