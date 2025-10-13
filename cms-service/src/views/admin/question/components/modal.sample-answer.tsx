@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Table, Button, Space, Popconfirm, message, Form, Input, Select, InputNumber, Drawer, Tag, Typography } from 'antd';
-import { DeleteOutlined, EditOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
+import { Modal, Table, Button, Space, Popconfirm, message, Form, Input, Select, InputNumber, Drawer, Tag, Typography, Upload, Tooltip } from 'antd';
+import { DeleteOutlined, EditOutlined, PlusOutlined, EyeOutlined, UploadOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { speakingSampleAnswerService, ResSpeakingSampleAnswerDTO, ReqCreateSpeakingSampleAnswerDTO, ReqUpdateSpeakingSampleAnswerDTO } from '../../../../service/sample.service';
 import { IQuestion } from './module.question';
 
@@ -52,6 +52,18 @@ const ModalSampleAnswer: React.FC<ModalSampleAnswerProps> = ({
         }
     }, [openModal, questionId]);
 
+    const handleUploadAudio = async (record: ResSpeakingSampleAnswerDTO, file: File) => {
+        try {
+            const res = await speakingSampleAnswerService.uploadAudio(record.id, file);
+            message.success('Audio file uploaded successfully');
+            // Optional: hiển thị link trả về từ API
+            // res.data là link file (như ảnh bạn gửi)
+            await fetchSampleAnswers();
+        } catch (e) {
+            console.error(e);
+            message.error('Upload audio failed');
+        }
+    };
     // Handle create sample answer
     const handleCreate = () => {
         setIsCreating(true);
@@ -68,7 +80,8 @@ const ModalSampleAnswer: React.FC<ModalSampleAnswerProps> = ({
             answerContent: record.answerContent,
             description: record.description,
             difficultyLevel: record.difficultyLevel,
-            estimatedScore: record.estimatedScore
+            estimatedScore: record.estimatedScore,
+            audioLink: record.audioLink || ''
         });
         setDrawerVisible(true);
     };
@@ -99,6 +112,10 @@ const ModalSampleAnswer: React.FC<ModalSampleAnswerProps> = ({
                     estimatedScore: values.estimatedScore || 0
                 };
                 const response = await speakingSampleAnswerService.createSpeakingSampleAnswer(createData);
+                // Nếu người dùng nhập audioLink -> gọi API riêng
+                if (values.audioLink && response.data?.id) {
+                    await speakingSampleAnswerService.updateAudioLink(response.data.id, values.audioLink);
+                }
                 if (response.statusCode === 200) {
                     message.success('Sample answer created successfully');
                     setDrawerVisible(false);
@@ -114,6 +131,7 @@ const ModalSampleAnswer: React.FC<ModalSampleAnswerProps> = ({
                     estimatedScore: values.estimatedScore
                 };
                 const response = await speakingSampleAnswerService.updateSpeakingSampleAnswer(updateData);
+                // Bỏ logic update audio khi update sample (theo yêu cầu)
                 if (response.statusCode === 200) {
                     message.success('Sample answer updated successfully');
                     setDrawerVisible(false);
@@ -182,30 +200,46 @@ const ModalSampleAnswer: React.FC<ModalSampleAnswerProps> = ({
             ),
         },
         {
+            title: 'Audio',
+            dataIndex: 'audioLink',
+            key: 'audioLink',
+            width: 280,
+            render: (link: string, record: ResSpeakingSampleAnswerDTO) => {
+                const src = speakingSampleAnswerService.getPlayableAudioUrl(link);
+                return src ? (
+                    <audio controls src={src} style={{ width: 260 }} />
+                ) : (
+                    <Typography.Text type="secondary">No audio</Typography.Text>
+                );
+            },
+        },
+        {
             title: 'Actions',
             key: 'actions',
-            width: 120,
+            width: 170,
             render: (_: any, record: ResSpeakingSampleAnswerDTO) => (
                 <Space>
-                    <Button
-                        type="text"
-                        icon={<EditOutlined />}
-                        onClick={() => handleEdit(record)}
-                        size="small"
-                    />
+                    <Button type="text" icon={<EditOutlined />} onClick={() => handleEdit(record)} size="small" />
                     <Popconfirm
                         title="Are you sure you want to delete this sample answer?"
                         onConfirm={() => handleDelete(record.id)}
                         okText="Yes"
                         cancelText="No"
                     >
-                        <Button
-                            type="text"
-                            danger
-                            icon={<DeleteOutlined />}
-                            size="small"
-                        />
+                        <Button type="text" danger icon={<DeleteOutlined />} size="small" />
                     </Popconfirm>
+
+                    {/* Nút Upload audio */}
+                    <Upload
+                        accept="audio/*"
+                        showUploadList={false}
+                        beforeUpload={(file) => {
+                            handleUploadAudio(record, file as File);
+                            return false; // chặn upload mặc định
+                        }}
+                    >
+                        <Button type="text" icon={<UploadOutlined />} size="small" />
+                    </Upload>
                 </Space>
             ),
         },
@@ -264,6 +298,38 @@ const ModalSampleAnswer: React.FC<ModalSampleAnswerProps> = ({
                         estimatedScore: 0
                     }}
                 >
+                    {/* Audio preview & delete when editing */}
+                    {!isCreating && editingAnswer?.audioLink ? (
+                        <Form.Item label="Current Audio">
+                            <Space align="center">
+                                <audio
+                                    controls
+                                    src={speakingSampleAnswerService.getPlayableAudioUrl(editingAnswer.audioLink)}
+                                    style={{ width: 360 }}
+                                />
+                                <Popconfirm
+                                    title="Remove audio from this sample?"
+                                    okText="Yes"
+                                    cancelText="No"
+                                    onConfirm={async () => {
+                                        try {
+                                            await speakingSampleAnswerService.deleteAudio(editingAnswer.id);
+                                            message.success('Audio removed');
+                                            // update local form/display state + reload list
+                                            setEditingAnswer({ ...editingAnswer, audioLink: undefined });
+                                            await fetchSampleAnswers();
+                                        } catch (e) {
+                                            message.error('Failed to remove audio');
+                                        }
+                                    }}
+                                >
+                                    <Tooltip title="Remove audio">
+                                        <Button type="default" icon={<CloseCircleOutlined />} danger />
+                                    </Tooltip>
+                                </Popconfirm>
+                            </Space>
+                        </Form.Item>
+                    ) : null}
                     <Form.Item
                         name="answerContent"
                         label="Answer Content"
@@ -272,6 +338,7 @@ const ModalSampleAnswer: React.FC<ModalSampleAnswerProps> = ({
                         <TextArea
                             rows={4}
                             placeholder="Enter the sample answer content..."
+                            disabled={!isCreating}
                         />
                     </Form.Item>
 
@@ -314,6 +381,12 @@ const ModalSampleAnswer: React.FC<ModalSampleAnswerProps> = ({
                             placeholder="Enter estimated score (0-100)"
                         />
                     </Form.Item>
+                    {/* Bỏ field chỉnh audioLink khi update; vẫn cho nhập khi tạo mới nếu cần */}
+                    {isCreating ? (
+                        <Form.Item name="audioLink" label="Audio Link">
+                            <Input placeholder="Paste audio URL here (optional)" />
+                        </Form.Item>
+                    ) : null}
                 </Form>
             </Drawer>
         </>
