@@ -34,7 +34,7 @@ class LectureService {
 
   async getAllCourses(token: string): Promise<Course[]> {
     const cacheKey = 'all_courses';
-    
+
     const cached = globalCache.get<Course[]>(cacheKey);
     if (cached) {
       return cached;
@@ -46,11 +46,11 @@ class LectureService {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const courses = response.data || [];
-      
-      
+
+
       // Cache for 10 minutes
       globalCache.set(cacheKey, courses, 10 * 60 * 1000);
-      
+
       return courses;
     } catch (error) {
       console.error('Error fetching all courses:', error);
@@ -58,9 +58,9 @@ class LectureService {
     }
   }
 
-  async getCoursesWithMaterials(token:string): Promise<Course[]> {
+  async getCoursesWithMaterials(token: string): Promise<Course[]> {
     const cacheKey = 'courses_with_materials';
-    
+
     // Check cache first
     const cached = globalCache.get<Course[]>(cacheKey);
     if (cached) {
@@ -72,9 +72,9 @@ class LectureService {
         '/api/v1/material/courses-with-materials',
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       const courses = response.data || [];
-      
+
       // Cache for 10 minutes
       globalCache.set(cacheKey, courses, 10 * 60 * 1000);
       return courses;
@@ -84,9 +84,9 @@ class LectureService {
     }
   }
 
-  async getMaterialsByCourseId(courseId: number,token: string): Promise<LectureMaterial[]> {
+  async getMaterialsByCourseId(courseId: number, token: string): Promise<LectureMaterial[]> {
     const cacheKey = `course_materials_${courseId}`;
-    
+
     // Check cache first
     const cached = globalCache.get<LectureMaterial[]>(cacheKey);
     if (cached) {
@@ -102,9 +102,9 @@ class LectureService {
       );
 
       const materials = response.data || [];
-      
+
       // Cache for 5 minutes (materials might change frequently)
-      globalCache.set(cacheKey, materials, 5 * 60 * 1000);      
+      globalCache.set(cacheKey, materials, 5 * 60 * 1000);
       return materials;
     } catch (error) {
       console.error(`Error fetching materials for course ${courseId}:`, error);
@@ -114,7 +114,7 @@ class LectureService {
 
   async readMarkdownContent(materLink: string): Promise<string> {
     const cacheKey = `markdown_${btoa(materLink)}`;
-    
+
     // Check cache first
     const cached = globalCache.get<string>(cacheKey);
     if (cached) {
@@ -123,18 +123,18 @@ class LectureService {
 
     try {
       const processedLink = materLink
-        .replace('http://0.0.0.0:8080', API_BASE_URL)
+        .replace('0.0.0.0:8080', `${window.location.origin}:8080`)
         .replace(/ /g, '%20');
-      
+
       const response = await fetch(processedLink);
-      
+
       if (!response.ok) {
         throw new Error(`Failed to fetch markdown: ${response.statusText}`);
       }
-      
+
       const rawContent = await response.text();
       globalCache.set(cacheKey, rawContent, 15 * 60 * 1000);
-      
+
       return rawContent;
     } catch (error) {
       console.error('Error reading markdown content:', error);
@@ -144,7 +144,7 @@ class LectureService {
 
   async renderMarkdownToHtml(materLink: string): Promise<string> {
     const cacheKey = `markdown_html_${btoa(materLink)}`;
-    
+
     const cached = globalCache.get<string>(cacheKey);
     if (cached) {
       return cached;
@@ -152,18 +152,18 @@ class LectureService {
 
     try {
       const rawContent = await this.readMarkdownContent(materLink);
-      
+
       marked.setOptions({
         breaks: true,
         gfm: true
       });
-      
+
       // Render markdown to HTML
       const htmlContent = await marked(rawContent);
-      
+
       // Cache rendered HTML for 20 minutes
       globalCache.set(cacheKey, htmlContent, 20 * 60 * 1000);
-      
+
       return htmlContent;
     } catch (error) {
       console.error('Error rendering markdown to HTML:', error);
@@ -188,7 +188,7 @@ class LectureService {
           }
         }
       );
-      
+
       this.invalidateMaterialsCache(courseId);
       return response.data;
     } catch (error) {
@@ -201,7 +201,7 @@ class LectureService {
     try {
       await this.apiService.delete(`/api/v1/material/${id}`);
       this.invalidateMaterialsCache(courseId);
-      
+
     } catch (error) {
       console.error('Error deleting material:', error);
       throw error;
@@ -215,7 +215,7 @@ class LectureService {
     } else {
       globalCache.invalidatePattern('course_materials_.*');
     }
-    
+
     // Also invalidate courses list
     globalCache.delete('courses_with_materials');
   }
@@ -229,13 +229,13 @@ class LectureService {
 
   getLectureCacheStats(): { size: number; keys: string[] } {
     const stats = globalCache.getStats();
-    const lectureKeys = stats.keys.filter((key: string) => 
-      key.startsWith('course_materials_') || 
+    const lectureKeys = stats.keys.filter((key: string) =>
+      key.startsWith('course_materials_') ||
       key.startsWith('markdown_') ||
       key.startsWith('markdown_html_') ||
       key === 'courses_with_materials'
     );
-    
+
     return {
       size: lectureKeys.length,
       keys: lectureKeys

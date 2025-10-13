@@ -302,21 +302,14 @@ class SpeakingSampleAnswerService {
   // Chuẩn hóa link audio để phát được trong <audio>
   getPlayableAudioUrl(rawLink?: string): string | undefined {
     if (!rawLink) return undefined;
+
     let url = rawLink.trim();
 
-    // Thay thế host nội bộ khi backend trả về 0.0.0.0
-    if (API_BASE_URL) {
-      url = url.replace('http://0.0.0.0:8080', API_BASE_URL);
-    }
+    const processedLink = url
+      .replace('0.0.0.0:8080', `${window.location.origin}:8080`)
+      .replace(/ /g, '%20');
 
-    // Nếu là đường dẫn tuyệt đối từ backend (/uploadfile/...)
-    if (API_BASE_URL && url.startsWith('/')) {
-      url = `${API_BASE_URL}${url}`;
-    }
-
-    // Encode khoảng trắng
-    url = url.replace(/ /g, '%20');
-    return url;
+    return processedLink;
   }
   /**
    * Helper: Lấy text của difficulty level
