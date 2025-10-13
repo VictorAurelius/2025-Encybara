@@ -1,4 +1,5 @@
 import ApiService from './api.service';
+import { API_BASE_URL } from './api.config';
 import { globalCache } from './cache.service';
 
 // Types/Interfaces
@@ -10,6 +11,7 @@ export interface ResSpeakingSampleAnswerDTO {
   estimatedScore: number;
   questionId: number;
   questionContent?: string;
+  audioLink?: string;
   createBy: string;
   createAt: string;
   updateBy: string;
@@ -55,7 +57,7 @@ class SpeakingSampleAnswerService {
       globalCache.delete(this.generateCacheKey('sample_answers_by_question', { questionId }));
       globalCache.delete(this.generateCacheKey('question_has_samples', { questionId }));
       globalCache.delete(this.generateCacheKey('sample_answers_count', { questionId }));
-      
+
       // Invalidate difficulty-specific caches for this question
       for (let level = 1; level <= 5; level++) {
         globalCache.delete(
@@ -75,10 +77,10 @@ class SpeakingSampleAnswerService {
       this.baseURL,
       data
     );
-    
+
     // Invalidate cache after creating
     this.invalidateCache(data.questionId);
-    
+
     return response;
   }
 
@@ -92,13 +94,13 @@ class SpeakingSampleAnswerService {
       this.baseURL,
       data
     );
-    
+
     // Invalidate specific cache and related caches
     globalCache.delete(this.generateCacheKey('sample_answer_by_id', { id: data.id }));
     if (data.questionId) {
       this.invalidateCache(data.questionId);
     }
-    
+
     return response;
   }
 
@@ -109,7 +111,7 @@ class SpeakingSampleAnswerService {
     id: number
   ): Promise<RestResponse<ResSpeakingSampleAnswerDTO>> {
     const cacheKey = this.generateCacheKey('sample_answer_by_id', { id });
-    
+
     const cached = globalCache.get<RestResponse<ResSpeakingSampleAnswerDTO>>(cacheKey);
     if (cached) {
       return cached;
@@ -118,10 +120,10 @@ class SpeakingSampleAnswerService {
     const response = await this.apiService.get<RestResponse<ResSpeakingSampleAnswerDTO>>(
       `${this.baseURL}/${id}`
     );
-    
+
     // Cache for 15 minutes
     globalCache.set(cacheKey, response, 15 * 60 * 1000);
-    
+
     return response;
   }
 
@@ -132,7 +134,7 @@ class SpeakingSampleAnswerService {
     questionId: number
   ): Promise<RestResponse<ResSpeakingSampleAnswerDTO[]>> {
     const cacheKey = this.generateCacheKey('sample_answers_by_question', { questionId });
-    
+
     const cached = globalCache.get<RestResponse<ResSpeakingSampleAnswerDTO[]>>(cacheKey);
     if (cached) {
       return cached;
@@ -141,10 +143,10 @@ class SpeakingSampleAnswerService {
     const response = await this.apiService.get<RestResponse<ResSpeakingSampleAnswerDTO[]>>(
       `${this.baseURL}/question/${questionId}`
     );
-    
+
     // Cache for 10 minutes
     globalCache.set(cacheKey, response, 10 * 60 * 1000);
-    
+
     return response;
   }
 
@@ -155,11 +157,11 @@ class SpeakingSampleAnswerService {
     questionId: number,
     difficultyLevel: number
   ): Promise<RestResponse<ResSpeakingSampleAnswerDTO[]>> {
-    const cacheKey = this.generateCacheKey('sample_answers_by_difficulty', { 
-      questionId, 
-      difficultyLevel 
+    const cacheKey = this.generateCacheKey('sample_answers_by_difficulty', {
+      questionId,
+      difficultyLevel
     });
-    
+
     const cached = globalCache.get<RestResponse<ResSpeakingSampleAnswerDTO[]>>(cacheKey);
     if (cached) {
       return cached;
@@ -168,10 +170,10 @@ class SpeakingSampleAnswerService {
     const response = await this.apiService.get<RestResponse<ResSpeakingSampleAnswerDTO[]>>(
       `${this.baseURL}/question/${questionId}/difficulty/${difficultyLevel}`
     );
-    
+
     // Cache for 10 minutes
     globalCache.set(cacheKey, response, 10 * 60 * 1000);
-    
+
     return response;
   }
 
@@ -191,13 +193,13 @@ class SpeakingSampleAnswerService {
     const response = await this.apiService.delete<RestResponse<void>>(
       `${this.baseURL}/${id}`
     );
-    
+
     // Invalidate caches
     globalCache.delete(this.generateCacheKey('sample_answer_by_id', { id }));
     if (questionId) {
       this.invalidateCache(questionId);
     }
-    
+
     return response;
   }
 
@@ -206,7 +208,7 @@ class SpeakingSampleAnswerService {
    */
   async checkQuestionHasSampleAnswers(questionId: number): Promise<RestResponse<boolean>> {
     const cacheKey = this.generateCacheKey('question_has_samples', { questionId });
-    
+
     const cached = globalCache.get<RestResponse<boolean>>(cacheKey);
     if (cached) {
       return cached;
@@ -215,10 +217,10 @@ class SpeakingSampleAnswerService {
     const response = await this.apiService.get<RestResponse<boolean>>(
       `${this.baseURL}/question/${questionId}/exists`
     );
-    
+
     // Cache for 10 minutes
     globalCache.set(cacheKey, response, 10 * 60 * 1000);
-    
+
     return response;
   }
 
@@ -227,7 +229,7 @@ class SpeakingSampleAnswerService {
    */
   async countSampleAnswersByQuestionId(questionId: number): Promise<RestResponse<number>> {
     const cacheKey = this.generateCacheKey('sample_answers_count', { questionId });
-    
+
     const cached = globalCache.get<RestResponse<number>>(cacheKey);
     if (cached) {
       return cached;
@@ -236,13 +238,86 @@ class SpeakingSampleAnswerService {
     const response = await this.apiService.get<RestResponse<number>>(
       `${this.baseURL}/question/${questionId}/count`
     );
-    
+
     // Cache for 10 minutes
     globalCache.set(cacheKey, response, 10 * 60 * 1000);
-    
+
     return response;
   }
 
+  async uploadAudio(
+    sampleId: number,
+    file: File
+  ): Promise<RestResponse<string>> {
+    const form = new FormData();
+    form.append('file', file);
+
+    const response = await this.apiService.post<RestResponse<string>>(
+      `${this.baseURL}/${sampleId}/upload-audio`,
+      form,
+      { headers: { 'Content-Type': 'multipart/form-data' } }
+    );
+
+    // Invalidate cache của sample này và các cache theo question
+    globalCache.delete(this.generateCacheKey('sample_answer_by_id', { id: sampleId }));
+    try {
+      const sample = await this.getSpeakingSampleAnswerById(sampleId);
+      this.invalidateCache(sample.data.questionId);
+    } catch (_) { }
+    return response;
+  }
+
+
+  async updateAudioLink(
+    id: number,
+    audioLink: string
+  ): Promise<RestResponse<ResSpeakingSampleAnswerDTO>> {
+    const response = await this.apiService.put<RestResponse<ResSpeakingSampleAnswerDTO>>(
+      `${this.baseURL}/${id}/audio-link`,
+      { id, audioLink }
+    );
+
+    // Invalidate caches liên quan
+    globalCache.delete(this.generateCacheKey('sample_answer_by_id', { id }));
+    try {
+      const sample = await this.getSpeakingSampleAnswerById(id);
+      this.invalidateCache(sample.data.questionId);
+    } catch (_) { }
+    return response;
+  }
+
+  // Xóa audio của sample
+  async deleteAudio(id: number): Promise<RestResponse<void>> {
+    const response = await this.apiService.delete<RestResponse<void>>(
+      `${this.baseURL}/${id}/audio`
+    );
+    globalCache.delete(this.generateCacheKey('sample_answer_by_id', { id }));
+    try {
+      const sample = await this.getSpeakingSampleAnswerById(id);
+      this.invalidateCache(sample.data.questionId);
+    } catch (_) { }
+    return response;
+  }
+
+  // Chuẩn hóa link audio để phát được trong <audio>
+  getPlayableAudioUrl(rawLink?: string): string | undefined {
+    if (!rawLink) return undefined;
+    let url = rawLink.trim();
+
+    // Thay thế host nội bộ khi backend trả về 0.0.0.0
+    if (API_BASE_URL) {
+      url = url.replace('http://0.0.0.0:8080', API_BASE_URL);
+    }
+
+    // Nếu là đường dẫn tuyệt đối từ backend (/uploadfile/...)
+    if (API_BASE_URL && url.startsWith('/')) {
+      url = `${API_BASE_URL}${url}`;
+    }
+
+    // Encode khoảng trắng
+    url = url.replace(/ /g, '%20');
+    return url;
+  }
   /**
    * Helper: Lấy text của difficulty level
    */
