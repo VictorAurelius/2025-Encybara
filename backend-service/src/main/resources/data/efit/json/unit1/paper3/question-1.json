@@ -3,25 +3,70 @@
     "quesContent": "Do you have any of the rules in your workplace or college?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "Yes, we have rules focused on security and professionalism. The main ones are strict data confidentiality—we cannot share client information—and rules regarding punctuality and the professional dress code.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper3-1.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "Yes, my college has important rules. The most significant are those concerning academic integrity, especially regarding plagiarism on assignments. We also have rules for conduct in places like the library to ensure a good study environment.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper3-2.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Do you think they are good rules or bad rules? Why?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "I think they are good rules. Rules like strict data security are essential because they protect the company and clients, which builds trust. Also, academic rules on plagiarism are good because they promote fairness and original work.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper3-3.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "Generally, I think they are necessary, but some can be bad. Rules for security are absolutely good. However, very strict rules, like an overly formal dress code, can be bad because they might limit creativity or just feel unnecessary for the actual job.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper3-4.mp3"
+      }
+    ]
   },
   {
     "quesContent": "If you could change one rule at your workplace or college, what would it be and why?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "I would change the rule about strict start times at work. I would make it flexible hours. This is better because it helps people avoid rush-hour traffic and feel more comfortable as long as they complete their tasks.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper3-5.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "I would change the college rule regarding exam resits. I would allow students to retake the exam sooner after a failure, instead of making them wait a full semester. This helps them retain their knowledge better and stay on track to graduate on time.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper3-6.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Person in charge of IT",

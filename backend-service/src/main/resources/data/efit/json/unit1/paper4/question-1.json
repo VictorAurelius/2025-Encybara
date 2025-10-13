@@ -3,17 +3,47 @@
     "quesContent": "What happens in a work meeting?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "In a work meeting, people talk about work. They review past progress, discuss any current problems, and agree on new tasks for the future. The goal is to share ideas and make decisions.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper4-1.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "A work meeting involves reviewing progress and aligning strategies. The core activities are discussing project challenges, brainstorming solutions, and clearly defining key decisions and action items for the next phase of work.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper4-2.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Talk about a meeting you've been to. What happened?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "I attended a meeting about our new website design. We reviewed the manager's plans and then discussed a problem with the loading speed. We finished by agreeing on the tasks and a deadline for the first phase.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper4-3.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "I was in a recent project kickoff meeting for a new software feature. We started with the project lead outlining the timeline and technical architecture. The main activity was aligning expectations between the teams and defining clear action items to ensure an on-schedule start.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper4-4.mp3"
+      }
+    ]
   },
   {
     "quesContent": "What suggestion did Fred make?",

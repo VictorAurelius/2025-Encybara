@@ -3,25 +3,70 @@
     "quesContent": "What do you use computers for? List as many uses as you can.",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "I use computers for three main things. For study, I research and write assignments. For work, I manage data in spreadsheets and attend online meetings. For fun, I stream videos and play games.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit2-paper3-1.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "I use computers for professional productivity (data analysis, project management, communication), academic research (accessing e-libraries, running simulations), and personal use (streaming media, photo/video editing, and online gaming).",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit2-paper3-2.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Which multimedia hardware items do you use for different tasks?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "I use headphones or earbuds for music and online calls, and the laptop's built-in microphone for talking. I use the webcam to show my face, and I often connect to a large TV screen to watch movies.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit2-paper3-3.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "For professional audio input, I use a dedicated USB microphone and noise-canceling headphones for monitoring. For visuals, I rely on an external HD webcam for clear video quality and a large QHD monitor for precise photo and video editing.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit2-paper3-4.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Who might use each multimedia device, and what would they use them for?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "A student uses a headset with a mic for online classes. A photographer uses a large monitor to edit photos clearly. A gamer uses strong speakers for exciting game sounds.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit2-paper3-5.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "A Podcaster uses an external microphone to capture broadcast-quality audio. A Graphic Designer relies on a color-calibrated monitor for precise color editing. A Remote Manager uses HD webcams and noise-canceling headphones for clear virtual meetings.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit2-paper3-6.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Choose an answer for space 1",

@@ -3,32 +3,92 @@
         "quesContent": "How do you open a program?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "The easiest way is to double-click the program's icon on the desktop. If it's not there, I go to the Start Menu or the search bar, type the name of the program, and click on the result to open it.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ss-unit2-paper2-1.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "I primarily use two efficient methods: either single-clicking the icon pinned to the Taskbar or Dock, or using the OS's search function (like the Start Menu) to quickly locate and launch the program by typing its name.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ss-unit2-paper2-2.mp3"
+            }
+        ]
     },
     {
         "quesContent": "What steps are needed to save a file?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "First, click 'File' and 'Save As'. Second, type a clear name for your file. Third, choose the folder where you want to keep the file and click 'Save'.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ss-unit2-paper2-3.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "The process is: initiate the 'Save As' dialogue (often via F12); define the descriptive file name and desired file format; and finally, specify the exact storage location before clicking 'Save'.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ss-unit2-paper2-4.mp3"
+            }
+        ]
     },
     {
         "quesContent": "How can you change a program's settings?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "To change a program's settings, you usually go to the 'File' or 'Edit' menu and select 'Options' or 'Preferences'. You can also look for a small gear icon inside the program; clicking it will open the settings menu.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ss-unit2-paper2-5.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "The standard method is navigating the top menu, selecting the application name, and choosing 'Preferences' or 'Options'. Alternatively, look for a gear icon or three-dot/line menu within the application to access the configuration dialogue and modify parameters like interface and connectivity.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ss-unit2-paper2-6.mp3"
+            }
+        ]
     },
     {
         "quesContent": "What is the process for deleting a file?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "First, select the file and press the 'Delete' key. The file then moves to the Recycle Bin. This acts as a safety net, allowing you to restore the file later if needed. To permanently delete it, you need to empty the Recycle Bin.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ss-unit2-paper2-7.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "The process is: select the file, execute the delete command (via the 'Delete' key or context menu), and the file is transferred to the Recycle Bin/Trash. The final step for permanent deletion and disk space recovery is to manually empty the Recycle Bin.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ss-unit2-paper2-8.mp3"
+            }
+        ]
     }
 ]

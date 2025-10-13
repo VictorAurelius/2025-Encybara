@@ -3,33 +3,93 @@
     "quesContent": "What questions should an interviewer ask during a job interview?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "An interviewer should ask about the person's experience, like asking them to describe a difficult problem they solved. They must also ask about job skills and, most importantly, why they want to work for this specific company.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper5-1.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "Interviewers should focus on three areas. They must ask behavioral questions about resilience, competency questions to verify technical skills, and motivational questions to assess the candidate's cultural fit and long-term commitment to the company mission.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper5-2.mp3"
+      }
+    ]
   },
   {
     "quesContent": "How can a candidate effectively respond to common interview questions?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "A candidate must be clear and honest. They should use the STAR method to tell a short story about their work, focusing on the good results achieved. They must also show excitement about the job and always ask questions back to the interviewer.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper5-3.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "Candidates should use the STAR Method for all behavioral questions, ensuring answers are concise narratives highlighting measurable outcomes. They must always tie their experience back to the job requirements and maintain high professional enthusiasm to demonstrate genuine engagement and cultural fit.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper5-4.mp3"
+      }
+    ]
   },
   {
     "quesContent": "What are some strategies for making a good impression in an interview?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "To make a good impression, you must dress well and arrive on time. Show you are prepared by researching the company and explaining clearly why you want the job. Always maintain eye contact and be polite and confident.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper5-5.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "Effective strategies involve thorough research on the company to ask insightful questions. For communication, use strong body language and eye contact to project confidence. Finally, always structure answers using the STAR Method to highlight measurable achievements and professional enthusiasm.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper5-6.mp3"
+      }
+    ]
   },
   {
     "quesContent": "What are common mistakes candidates make during interviews, and how can they be avoided?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "The main mistake is not preparing and knowing nothing about the company. Avoid this by reading their website beforehand. Another mistake is being too negative by complaining about a past job; avoid this by focusing only on positive achievements and lessons learned.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper5-7.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "The most frequent mistake is the failure to structure answers (rambling); avoid this by using the STAR Method to highlight measurable achievements. The other critical mistake is lack of engagement (not asking questions); avoid this by preparing strategic, insightful questions about the company's future or the role's challenges.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper5-8.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Write a job advertisement for an IT job you would like or your current IT job. Use the pattern you identified in the previous exercise.",

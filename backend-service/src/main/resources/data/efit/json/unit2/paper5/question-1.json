@@ -3,40 +3,115 @@
     "quesContent": "What issue are you experiencing with your device?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "The main problem is that my tablet's battery drains very quickly; I have to charge it three times a day. Also, the screen sometimes freezes when opening apps, and I have to restart the device often.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit2-paper5-1.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "I'm experiencing severe battery degradation, forcing multiple daily recharges. The device also shows intermittent performance lag and an unresponsive screen when loading complex applications, suggesting a potential issue with resource allocation or the internal memory.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit2-paper5-2.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Can you describe the problem in detail?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "The problem is severe battery drain; the device goes from 100% to 20% in about two hours. Also, the speed is terrible: the screen freezes for five to ten seconds when I switch apps, and sometimes the whole screen goes black before an app opens.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit2-paper5-3.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "The issue is two-fold: severe battery degradation (losing 40% charge hourly) and system instability. The device experiences recurrent performance lags when transitioning between apps, becoming unresponsive for up to ten seconds, sometimes escalating to an unprompted reboot cycle, suggesting a memory or OS resource issue.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit2-paper5-4.mp3"
+      }
+    ]
   },
   {
     "quesContent": "When did the issue first occur?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "The problem first started about two weeks ago, right after a big software update. It was only a small battery issue then, but it got much worse last week, and now the screen freezes often.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit2-paper5-5.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "The initial symptoms were observed two weeks ago following an OS software update, presenting as marginal battery degradation. However, the performance lag and unresponsive screen have only become significant problems within the last few days.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit2-paper5-6.mp3"
+      }
+    ]
   },
   {
     "quesContent": "What troubleshooting steps have you already tried?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "I've restarted the device many times, but the problem always returns. I also closed all background apps to try and save battery, and I deleted large files to free up storage space, but none of these steps helped the speed.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit2-paper5-7.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "I performed multiple force reboots and installed all available system and app updates, which offered no lasting fix. I also checked the battery usage statistics to rule out specific apps causing excessive power drain, but the performance lag and degradation persist.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit2-paper5-8.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Are there any error messages appearing on the screen?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "Yes, I see error messages. When the screen freezes, a pop-up says 'Application X is not responding.' I also get a strange low battery warning and the device often shuts off when the battery still shows 30%.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit2-paper5-9.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "Yes, I'm getting critical error indicators. The screen frequently displays 'Application Not Responding' pop-ups during lag. More concerningly, the battery indicator is miscalibrated: the device will suddenly shut down without warning while the status bar still reports a charge level of 20% to 30%.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit2-paper5-10.mp3"
+      }
+    ]
   }
 ]

@@ -76,39 +76,23 @@
         "quesContent": "Introduce yourself: Tell us your name?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
         "choices": [],
         "sampleAnswers": [
             {
-                "difficultyLevel": 1,
-                "answerContent": "My name is Minh. I am student. Nice to meet you.",
-                "description": "Basic response with simple vocabulary and short sentences.",
-                "estimatedScore": 20.0
-            },
-            {
                 "difficultyLevel": 2,
                 "answerContent": "Hello, my name is Minh Nguyen. I'm 20 years old and I'm a university student. It's a pleasure to meet you.",
                 "description": "Elementary answer with basic grammar and common expressions.",
-                "estimatedScore": 40.0
+                "estimatedScore": 60.0,
+                "audioLink": "ss-placement-1.mp3"
             },
             {
                 "difficultyLevel": 3,
                 "answerContent": "Good morning, my name is Minh Nguyen, and I'm delighted to have this opportunity to introduce myself. I'm currently pursuing my degree in English literature at the local university.",
                 "description": "Intermediate response with varied vocabulary and clear structure.",
-                "estimatedScore": 60.0
-            },
-            {
-                "difficultyLevel": 4,
-                "answerContent": "Good morning, I'm Minh Nguyen, and I'm genuinely excited to be here today. I'm currently an undergraduate student specializing in English literature, with a particular focus on contemporary and postcolonial studies.",
-                "description": "Advanced answer with complex grammar and sophisticated expressions.",
-                "estimatedScore": 80.0
-            },
-            {
-                "difficultyLevel": 5,
-                "answerContent": "Good morning, I'm Minh Nguyen, and it's an absolute pleasure to have this opportunity to introduce myself. I'm currently pursuing an undergraduate degree in English literature at the university, where I'm specializing in contemporary fiction and postcolonial literary analysis, while also engaging in various academic and extracurricular activities.",
-                "description": "Expert response with native-like fluency and excellent organization.",
-                "estimatedScore": 95.0
+                "estimatedScore": 90.0,
+                "audioLink": "ss-placement-2.mp3"
             }
         ]
     },
@@ -116,39 +100,23 @@
         "quesContent": "Introduce yourself: where you are from?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
         "choices": [],
         "sampleAnswers": [
             {
-                "difficultyLevel": 1,
-                "answerContent": "I am from Hanoi. It is capital city of Vietnam. It is big city.",
-                "description": "Basic response with simple vocabulary and short sentences.",
-                "estimatedScore": 20.0
-            },
-            {
                 "difficultyLevel": 2,
                 "answerContent": "I'm from Hanoi, which is the capital city of Vietnam. It's a large city with many historical places and modern buildings.",
                 "description": "Elementary answer with basic grammar and common expressions.",
-                "estimatedScore": 40.0
+                "estimatedScore": 60.0,
+                "audioLink": "ss-placement-3.mp3"
             },
             {
                 "difficultyLevel": 3,
                 "answerContent": "I'm originally from Hanoi, the vibrant capital of Vietnam. It's a fascinating city that beautifully combines ancient traditions with modern development, and has over 1000 years of rich history and cultural heritage.",
                 "description": "Intermediate response with varied vocabulary and clear structure.",
-                "estimatedScore": 60.0
-            },
-            {
-                "difficultyLevel": 4,
-                "answerContent": "I'm from Hanoi, Vietnam's magnificent capital city, which serves as the political, cultural, and educational center of the country. The city is renowned for its millennia-old architecture and its unique ability to preserve traditional Vietnamese culture while embracing contemporary progress.",
-                "description": "Advanced answer with complex grammar and sophisticated expressions.",
-                "estimatedScore": 80.0
-            },
-            {
-                "difficultyLevel": 5,
-                "answerContent": "I hail from Hanoi, Vietnam's illustrious capital, a metropolis steeped in over a thousand years of rich history and cultural significance. This remarkable city represents the perfect synthesis of ancient Asian traditions and contemporary urban development, from the labyrinthine streets of the historic Old Quarter to the dynamic hub of education and international commerce.",
-                "description": "Expert response with native-like fluency and excellent organization.",
-                "estimatedScore": 95.0
+                "estimatedScore": 90.0,
+                "audioLink": "ss-placement-4.mp3"
             }
         ]
     },
@@ -156,39 +124,23 @@
         "quesContent": "Introduce yourself: what do you do?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
         "choices": [],
         "sampleAnswers": [
             {
-                "difficultyLevel": 1,
-                "answerContent": "I am student. I study English at university. I like to read books.",
-                "description": "Basic response with simple vocabulary and short sentences.",
-                "estimatedScore": 20.0
-            },
-            {
                 "difficultyLevel": 2,
                 "answerContent": "I'm a university student studying English literature. I enjoy reading books, writing essays, and participating in class discussions about different authors and their works.",
                 "description": "Elementary answer with basic grammar and common expressions.",
-                "estimatedScore": 40.0
+                "estimatedScore": 60.0,
+                "audioLink": "ss-placement-5.mp3"
             },
             {
                 "difficultyLevel": 3,
                 "answerContent": "I'm currently pursuing a degree in English literature at university. My studies involve analyzing various literary works, conducting research on different authors and literary movements, and developing critical thinking skills through essays and presentations.",
                 "description": "Intermediate response with varied vocabulary and clear structure.",
-                "estimatedScore": 60.0
-            },
-            {
-                "difficultyLevel": 4,
-                "answerContent": "I'm an undergraduate student specializing in English literature, with a particular focus on contemporary fiction and postcolonial studies. My academic work involves conducting in-depth literary analysis, participating in scholarly discussions, and contributing to research projects while maintaining excellent academic performance.",
-                "description": "Advanced answer with complex grammar and sophisticated expressions.",
-                "estimatedScore": 80.0
-            },
-            {
-                "difficultyLevel": 5,
-                "answerContent": "I'm currently pursuing an intensive undergraduate program in English literature, specializing in contemporary fiction and postcolonial literary criticism. My academic endeavors encompass rigorous textual analysis, interdisciplinary research methodologies, active participation in scholarly symposiums, and collaborative work on innovative literary projects that bridge traditional and contemporary analytical approaches.",
-                "description": "Expert response with native-like fluency and excellent organization.",
-                "estimatedScore": 95.0
+                "estimatedScore": 90.0,
+                "audioLink": "ss-placement-6.mp3"
             }
         ]
     }
