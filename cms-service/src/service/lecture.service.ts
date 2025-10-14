@@ -123,19 +123,21 @@ class LectureService {
 
     try {
       const processedLink = materLink
-        .replace('0.0.0.0:8080', `${window.location.origin}:8080`)
+        .replace('0.0.0.0', `18.136.223.96`)
         .replace(/ /g, '%20');
+      console.log("here")
+      const response = await this.apiService.get<string>(
+        processedLink.replace(API_BASE_URL, ''), // Remove base URL vì apiService sẽ thêm lại
+        {
+          headers: {
+            'Accept': 'text/plain, text/markdown, */*'
+          }
+        }
+      );
 
-      const response = await fetch(processedLink);
+      globalCache.set(cacheKey, response, 15 * 60 * 1000);
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch markdown: ${response.statusText}`);
-      }
-
-      const rawContent = await response.text();
-      globalCache.set(cacheKey, rawContent, 15 * 60 * 1000);
-
-      return rawContent;
+      return response;
     } catch (error) {
       console.error('Error reading markdown content:', error);
       throw error;

@@ -58,7 +58,7 @@ class QuestionService {
     pagination: PaginationParams = { page: 1, size: 10 }
   ): Promise<QuestionsResponse> {
     const cacheKey = this.generateCacheKey('questions', { filters, pagination });
-    
+
     const cached = globalCache.get<QuestionsResponse>(cacheKey);
     if (cached) {
       return cached;
@@ -67,13 +67,12 @@ class QuestionService {
     try {
       const queryParams = new URLSearchParams({
         page: pagination.page.toString(),
-        size: pagination.size.toString(),
-        point: (filters.point || 10).toString()
+        size: pagination.size.toString()
       });
 
       // Add filters to query params
       Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '' && key !== 'point') {
+        if (value !== undefined && value !== null && value !== '') {
           queryParams.append(key, value.toString());
         }
       });
@@ -81,12 +80,12 @@ class QuestionService {
       const response = await this.apiService.get<ServerResponse<QuestionsResponse>>(
         `/api/v1/questions?${queryParams}`
       );
-      
+
       const questionsData = response.data;
-      
+
       // Cache for 8 minutes (questions change moderately)
       globalCache.set(cacheKey, questionsData, 8 * 60 * 1000);
-      
+
       return questionsData;
     } catch (error) {
       console.error('Error fetching questions:', error);
@@ -96,7 +95,7 @@ class QuestionService {
 
   async getAllLessons(): Promise<any[]> {
     const cacheKey = 'all_lessons_list';
-    
+
     const cached = globalCache.get<any[]>(cacheKey);
     if (cached) {
       return cached;
@@ -106,12 +105,12 @@ class QuestionService {
       const response = await this.apiService.get<ServerResponse<{ content: any[] }>>(
         '/api/v1/lessons'
       );
-      
+
       const lessons = response.data.content || [];
-      
+
       // Cache for 15 minutes (lessons don't change often)
       globalCache.set(cacheKey, lessons, 15 * 60 * 1000);
-      
+
       return lessons;
     } catch (error) {
       console.error('Error fetching lessons:', error);
@@ -121,7 +120,7 @@ class QuestionService {
 
   async getQuestionLessonMap(): Promise<{ [key: number]: Array<{ id: number, name: string }> }> {
     const cacheKey = 'question_lesson_map';
-    
+
     const cached = globalCache.get<{ [key: number]: Array<{ id: number, name: string }> }>(cacheKey);
     if (cached) {
       return cached;
@@ -129,9 +128,9 @@ class QuestionService {
 
     try {
       const lessons = await this.getAllLessons();
-      
+
       const questionLessonMap: { [key: number]: Array<{ id: number, name: string }> } = {};
-      
+
       lessons.forEach((lesson: any) => {
         if (lesson.questionIds && Array.isArray(lesson.questionIds)) {
           lesson.questionIds.forEach((qId: number) => {
@@ -145,10 +144,10 @@ class QuestionService {
           });
         }
       });
-      
+
       // Cache for 10 minutes (lesson assignments change occasionally)
       globalCache.set(cacheKey, questionLessonMap, 10 * 60 * 1000);
-      
+
       return questionLessonMap;
     } catch (error) {
       console.error('Error building question-lesson map:', error);
@@ -165,7 +164,7 @@ class QuestionService {
 
       // Invalidate questions cache since new question created
       this.invalidateQuestionsCache();
-      
+
       return response.data;
     } catch (error) {
       console.error('Error creating question:', error);
@@ -182,7 +181,7 @@ class QuestionService {
 
       // Invalidate questions cache since question updated
       this.invalidateQuestionsCache();
-      
+
       return response.data;
     } catch (error) {
       console.error(`Error updating question ${questionId}:`, error);
@@ -197,7 +196,7 @@ class QuestionService {
       // Invalidate related caches
       this.invalidateQuestionsCache();
       this.invalidateQuestionLessonMap();
-      
+
     } catch (error) {
       console.error(`Error deleting question ${questionId}:`, error);
       throw error;
@@ -211,7 +210,7 @@ class QuestionService {
       // Invalidate related caches
       this.invalidateQuestionsCache();
       this.invalidateQuestionLessonMap();
-      
+
     } catch (error) {
       console.error('Error deleting multiple questions:', error);
       throw error;
@@ -261,12 +260,12 @@ class QuestionService {
 
   getQuestionCacheStats(): { size: number; keys: string[] } {
     const stats = globalCache.getStats();
-    const questionKeys = stats.keys.filter(key => 
-      key.startsWith('questions_') || 
+    const questionKeys = stats.keys.filter(key =>
+      key.startsWith('questions_') ||
       key === 'question_lesson_map' ||
       key === 'all_lessons_list'
     );
-    
+
     return {
       size: questionKeys.length,
       keys: questionKeys

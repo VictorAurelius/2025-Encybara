@@ -36,7 +36,7 @@ const QuestionPage = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const [lessonList, setLessonList] = useState<Array<{ id: number; name: string }>>([]);
     const [quesID, setQuesID] = useState<number>(0);
-    
+
     const reloadTable = async () => {
         setLoading(true);
         try {
@@ -47,7 +47,6 @@ const QuestionPage = () => {
                     quesType: selectedFilters.quesType,
                     skillType: selectedFilters.skillType,
                     keyword: selectedFilters.keyword,
-                    point: 10
                 },
                 { page: currentPage, size: pageSize }
             );

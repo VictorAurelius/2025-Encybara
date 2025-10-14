@@ -306,7 +306,7 @@ class SpeakingSampleAnswerService {
     let url = rawLink.trim();
 
     const processedLink = url
-      .replace('0.0.0.0:8080', `${window.location.origin}:8080`)
+      .replace('0.0.0.0', `18.136.223.96`)
       .replace(/ /g, '%20');
 
     return processedLink;

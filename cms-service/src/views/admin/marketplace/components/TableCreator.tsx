@@ -40,7 +40,7 @@ const TableTopCreators: React.FC<TableTopCreatorsProps> = ({ tableData, reloadTa
   };
   const handleDelete = async (id: number) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/admins/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/admins/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -96,12 +96,12 @@ const TableTopCreators: React.FC<TableTopCreatorsProps> = ({ tableData, reloadTa
 
                   <button onClick={() => handleEdit(row)} className="text-yellow-500 hover:underline ml-2">Update</button>
 
-
-                  <button
-                    onClick={() => handleDelete(row.id)}
-                    className="text-red-500 hover:underline ml-2"
-                  >Delete</button>
-
+                  {row.role.name !== "SUPER_ADMIN" && (
+                    <button
+                      onClick={() => handleDelete(row.id)}
+                      className="text-red-500 hover:underline ml-2"
+                    >Delete</button>
+                  )}
                 </td>
               </tr>
             ))}
