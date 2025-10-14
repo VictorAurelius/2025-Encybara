@@ -5,7 +5,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "Internal hardware is the essential parts inside the case, like the CPU and RAM, which make the computer run. Peripherals are the parts connected outside, like the mouse, keyboard, or printer, which help you use the computer but are not essential for it to turn on.",
@@ -28,7 +29,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "Internal hardware includes the CPU, RAM, motherboard, and hard drive (SSD). Peripherals include keyboard, mouse, monitor, printer, and speakers.",
@@ -51,7 +53,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "Yes, I can install some components. I am confident with peripherals like a new printer or webcam. For internal parts, I can easily install RAM and a new SSD or hard drive following online steps.",
@@ -165,7 +168,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "The key specifications are the CPU (the 'brain' and speed), RAM (short-term memory for running programs), and Storage (SSD/HDD for keeping files). The Operating System like Windows is also important.",
@@ -188,7 +192,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],  
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "My computer's processor speed is about 2.5GHz. It's fast enough for multitasking, so I can run my study programs and a browser without the computer getting slow.",
@@ -211,7 +216,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "My computer has 8GB of RAM (memory). That's enough for my daily tasks like browsing and schoolwork, but it would be too slow for very complex video games.",
@@ -234,7 +240,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "My computer's screen resolution is 1920 by 1080 pixels, which is Full HD. This standard resolution makes the text and videos clear and is perfectly fine for all my daily work and browsing.",

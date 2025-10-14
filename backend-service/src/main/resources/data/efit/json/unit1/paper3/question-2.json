@@ -5,7 +5,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "I would set two rules: First, you must get permission from the IT team. Second, the software must be needed for your job and downloaded from a safe place to prevent viruses.",
@@ -28,7 +29,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "No, they shouldn't. The biggest risk is security. Personal devices might carry viruses or be used to steal company data. It's much safer to keep the work system separate.",
@@ -51,7 +53,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "No, it's generally not acceptable during work time because it's a distraction. It's only okay during lunch or scheduled breaks, and it shouldn't use up the company's computer resources.",
@@ -74,7 +77,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "The advantage is quick communication and team connection. The disadvantage is it causes distraction, which lowers work output, and it creates security risks for company information.",
@@ -97,7 +101,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "Yes, but only for important calls. They should be allowed for family emergencies, but not for games or social media, because that is a big distraction and slows down the work.",
@@ -120,7 +125,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "It's important to switch off your computer to save electricity and money. Also, it lets the computer rest and cool down, which helps it last longer and keeps it safer from viruses when you're not using it.",
@@ -143,7 +149,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "The main risks are computer viruses or malware that can damage company files. Also, unauthorized downloads use up the internet speed (bandwidth) and you might download files that are against company rules.",
@@ -166,7 +173,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "Music is generally okay with headphones, as it helps people focus. But video should not be allowed because it's a huge distraction and uses too much of the company's internet speed (bandwidth).",
@@ -189,7 +197,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "At school, we aren't allowed to install new programs on the computers. We also must not share our passwords. The main rule is no social media during class time, so we can focus.",
@@ -212,7 +221,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "Yes, I think they are helpful. The rule about not installing new programs keeps the computers safe from viruses. And the rule about passwords keeps all our information private and secure.",
@@ -235,7 +245,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "The most difficult rule for me is not using social media on my phone during short breaks. It’s hard because my phone is always nearby, and it's easy to quickly check messages, even though I know I should focus.",
@@ -258,7 +269,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "I would change the rule that bans all music streaming. I'd change it to allow listening with headphones. This is because soft music helps many people focus better and feel more relaxed without disturbing others.",
@@ -281,7 +293,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "The rules help a lot. For security, rules like not sharing passwords keep our computers safe from viruses. This also boosts productivity because we don't have to waste time fixing broken systems.",

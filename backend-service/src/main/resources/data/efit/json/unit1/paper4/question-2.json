@@ -5,7 +5,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "We should always mute our mics when not speaking to stop noise. Remember to speak clearly and say your name first. Finally, always wait for a pause before jumping in to avoid interrupting.",
@@ -28,7 +29,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "I respond differently based on the idea. If it's a good and easy idea, I say it's great and we should start immediately. If it's difficult, I say it's a strong plan, but we must check the cost first. If I disagree, I thank the person but explain my concerns with the plan.",
@@ -51,7 +53,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "To agree, I'd use simple phrases like, 'I agree with you' or 'That's a good idea.' When I need to disagree, I keep it polite by starting with something like, 'I see your point, but I think...' and then explaining my different opinion clearly.",
@@ -74,7 +77,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "To ensure a constructive conversation, you must listen carefully to the whole idea first. Always criticize the idea, not the person. The main goal is to find a better solution together, not to win the argument.",

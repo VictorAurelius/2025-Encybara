@@ -5,7 +5,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "In a work meeting, people talk about work. They review past progress, discuss any current problems, and agree on new tasks for the future. The goal is to share ideas and make decisions.",
@@ -28,7 +29,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "I attended a meeting about our new website design. We reviewed the manager's plans and then discussed a problem with the loading speed. We finished by agreeing on the tasks and a deadline for the first phase.",

@@ -5,7 +5,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "I'd choose Apple. They are fascinating because of their strong focus on design and the way they've built a powerful, integrated ecosystem with products like the iPhone and Mac. They lead the market in premium branding and show how design can drive customer loyalty.",
@@ -28,7 +29,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "Apple's core activities are designing, manufacturing, and selling consumer electronics like the iPhone, Mac, and Apple Watch. They also develop all the necessary software (iOS/macOS) and provide services like Apple Music and iCloud.",
@@ -51,7 +53,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "Apple is important because it sets the standard for consumer technology and design. They created the modern smartphone market with the iPhone, and their unique ecosystem ensures high customer loyalty and major influence over the entire mobile app economy. They also drive innovation in processors and wearable technology.",

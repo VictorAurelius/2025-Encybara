@@ -5,7 +5,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "The easiest way is to double-click the program's icon on the desktop. If it's not there, I go to the Start Menu or the search bar, type the name of the program, and click on the result to open it.",
@@ -28,7 +29,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "First, click 'File' and 'Save As'. Second, type a clear name for your file. Third, choose the folder where you want to keep the file and click 'Save'.",
@@ -51,7 +53,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "To change a program's settings, you usually go to the 'File' or 'Edit' menu and select 'Options' or 'Preferences'. You can also look for a small gear icon inside the program; clicking it will open the settings menu.",
@@ -74,7 +77,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "First, select the file and press the 'Delete' key. The file then moves to the Recycle Bin. This acts as a safety net, allowing you to restore the file later if needed. To permanently delete it, you need to empty the Recycle Bin.",

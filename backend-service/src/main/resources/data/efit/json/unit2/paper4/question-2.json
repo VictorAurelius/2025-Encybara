@@ -5,7 +5,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "My computer is running very slowly. It freezes when I try to open two programs at once, and sometimes the whole screen turns blue and the computer just restarts itself. The performance is very poor.",
@@ -28,7 +29,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "The issue first occurred about three days ago, last Friday. It started right after I installed a new program. The problem has gotten much worse since then, with the computer now restarting by itself.",
@@ -51,7 +53,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "Yes, I have tried restarting it many times. It runs a little faster for ten minutes after the restart, but the slow performance problem quickly returns, and the programs start freezing.",
@@ -74,7 +77,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "Yes, I see error messages. The main one is the blue screen that appears before the restart, which says, 'Your PC ran into a problem.' I also get frequent pop-ups saying, 'Program X has stopped working.'",
@@ -97,7 +101,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "I have already restarted the computer several times, but the issue returns. I also closed all running programs to free up memory, and I ran a full virus scan, but none of these steps helped the performance.",

@@ -5,7 +5,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "Yes, we have rules focused on security and professionalism. The main ones are strict data confidentiality—we cannot share client information—and rules regarding punctuality and the professional dress code.",
@@ -28,7 +29,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "I think they are good rules. Rules like strict data security are essential because they protect the company and clients, which builds trust. Also, academic rules on plagiarism are good because they promote fairness and original work.",
@@ -51,7 +53,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "I would change the rule about strict start times at work. I would make it flexible hours. This is better because it helps people avoid rush-hour traffic and feel more comfortable as long as they complete their tasks.",

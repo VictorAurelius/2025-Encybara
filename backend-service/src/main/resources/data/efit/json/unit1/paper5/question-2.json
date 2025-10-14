@@ -5,7 +5,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "An interviewer should ask about the person's experience, like asking them to describe a difficult problem they solved. They must also ask about job skills and, most importantly, why they want to work for this specific company.",
@@ -28,7 +29,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "A candidate must be clear and honest. They should use the STAR method to tell a short story about their work, focusing on the good results achieved. They must also show excitement about the job and always ask questions back to the interviewer.",
@@ -51,7 +53,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "To make a good impression, you must dress well and arrive on time. Show you are prepared by researching the company and explaining clearly why you want the job. Always maintain eye contact and be polite and confident.",
@@ -74,7 +77,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "The main mistake is not preparing and knowing nothing about the company. Avoid this by reading their website beforehand. Another mistake is being too negative by complaining about a past job; avoid this by focusing only on positive achievements and lessons learned.",

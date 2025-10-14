@@ -5,7 +5,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "Some other IT jobs include web developer, network administrator, and database administrator.",
@@ -28,7 +29,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "People in IT jobs work with computers and technology. They might fix problems with computers, build websites, or make programs. They help people use technology better.",
@@ -51,7 +53,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "I would like to be a web developer because I enjoy creating websites and applications. I wouldn't want to be a database administrator because I find working with databases to be less interesting.",

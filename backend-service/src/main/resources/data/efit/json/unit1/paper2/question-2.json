@@ -110,7 +110,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "I would prefer to work for Google. I like them because they make useful things like the search engine and the Android phone system. I think it would be a fun place to work and I could learn about new technology.",
@@ -133,7 +134,8 @@
         "quesType": "SPEAKING",
         "point": 100,
         "createBy": "admin",
-        "choices": [
+        "choices": [],
+        "sampleAnswers": [
             {
                 "difficultyLevel": 2,
                 "answerContent": "I prefer Google because they are an innovative leader in technology and have a great work environment. I want to work there to learn new skills and be part of a team that creates globally used products.",

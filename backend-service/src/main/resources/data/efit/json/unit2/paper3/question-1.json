@@ -5,7 +5,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "I use computers for three main things. For study, I research and write assignments. For work, I manage data in spreadsheets and attend online meetings. For fun, I stream videos and play games.",
@@ -28,7 +29,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "I use headphones or earbuds for music and online calls, and the laptop's built-in microphone for talking. I use the webcam to show my face, and I often connect to a large TV screen to watch movies.",
@@ -51,7 +53,8 @@
     "quesType": "SPEAKING",
     "point": 100,
     "createBy": "admin",
-    "choices": [
+    "choices": [],
+    "sampleAnswers": [
       {
         "difficultyLevel": 2,
         "answerContent": "A student uses a headset with a mic for online classes. A photographer uses a large monitor to edit photos clearly. A gamer uses strong speakers for exciting game sounds.",
