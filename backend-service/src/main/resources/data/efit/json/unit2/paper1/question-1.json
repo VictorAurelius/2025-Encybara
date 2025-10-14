@@ -3,25 +3,73 @@
         "quesContent": "What is the difference between peripherals and internal hardware?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "Internal hardware is the essential parts inside the case, like the CPU and RAM, which make the computer run. Peripherals are the parts connected outside, like the mouse, keyboard, or printer, which help you use the computer but are not essential for it to turn on.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ss-unit2-paper1-1.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "Internal hardware is the essential components inside the casing (CPU, RAM) necessary for the system to boot and execute functions. Peripherals are external, optional devices (monitor, mouse) that connect to the system to provide expanded input/output capabilities.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ss-unit2-paper1-2.mp3"
+            }
+        ]
     },
     {
         "quesContent": "Can you name as many peripherals and internal hardware components as possible?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "Internal hardware includes the CPU, RAM, motherboard, and hard drive (SSD). Peripherals include keyboard, mouse, monitor, printer, and speakers.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ss-unit2-paper1-3.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "Internal components are the essentials like the Motherboard, CPU, RAM, GPU, and Storage Drives (SSD/HDD). Peripherals are the external devices, including Input (keyboard, mouse, webcam) and Output (monitor, printer, speakers).",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ss-unit2-paper1-4.mp3"
+            }
+        ]
     },
     {
         "quesContent": "Are you able to install any hardware components? If so, which ones?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "Yes, I can install some components. I am confident with peripherals like a new printer or webcam. For internal parts, I can easily install RAM and a new SSD or hard drive following online steps.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ss-unit2-paper1-5.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "Yes, I have experience with upgrades. I can comfortably install and upgrade storage components like SSDs and RAM modules. I am also capable of replacing a graphics card (GPU). However, I would avoid complex parts like the CPU or motherboard.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ss-unit2-paper1-6.mp3"
+            }
+        ]
     },
     {
         "quesContent": "Which component is labeled as 'A'?",
@@ -118,32 +166,96 @@
         "quesContent": "What are the key specifications of a computer?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "The key specifications are the CPU (the 'brain' and speed), RAM (short-term memory for running programs), and Storage (SSD/HDD for keeping files). The Operating System like Windows is also important.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ss-unit2-paper1-7.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "The most critical specifications are the CPU (processing speed and core count), RAM (GB capacity for multitasking), and the Storage type (SSD for speed vs. HDD for capacity). For visual tasks, the dedicated GPU is also a crucial specification.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ss-unit2-paper1-8.mp3"
+            }
+        ]
     },
     {
         "quesContent": "How fast is the processor in your computer?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [],  
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "My computer's processor speed is about 2.5GHz. It's fast enough for multitasking, so I can run my study programs and a browser without the computer getting slow.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ss-unit2-paper1-9.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "My processor, an Intel Core i5, operates at a base speed of 2.8GHz. Its effectiveness is enhanced by its four cores, which allows for efficient concurrent task handling and boosts up to 4.0 GHz under heavy load.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ss-unit2-paper1-10.mp3"
+            }
+        ]
     },
     {
         "quesContent": "How much memory does your computer have?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "My computer has 8GB of RAM (memory). That's enough for my daily tasks like browsing and schoolwork, but it would be too slow for very complex video games.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ss-unit2-paper1-11.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "My machine has 16GB of DDR4 RAM. This capacity is ideal for multitasking and running intensive applications like virtual machines, preventing any performance bottlenecks during complex work.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ss-unit2-paper1-12.mp3"
+            }
+        ]
     },
     {
         "quesContent": "What is the screen resolution of your computer?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "My computer's screen resolution is 1920 by 1080 pixels, which is Full HD. This standard resolution makes the text and videos clear and is perfectly fine for all my daily work and browsing.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ss-unit2-paper1-13.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "My monitor has a native resolution of 2560 by 1440 pixels (QHD). The high pixel density is essential because it provides greater desktop real estate and superior clarity for managing multiple professional applications simultaneously.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ss-unit2-paper1-14.mp3"
+            }
+        ]
     }
 ]

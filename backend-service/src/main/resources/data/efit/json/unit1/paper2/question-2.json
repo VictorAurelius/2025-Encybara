@@ -108,16 +108,48 @@
         "quesContent": "(IT Organisations) Which IT organisation would you prefer to work for?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "I would prefer to work for Google. I like them because they make useful things like the search engine and the Android phone system. I think it would be a fun place to work and I could learn about new technology.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ss-unit1-paper2-7.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "I would choose to work for Netflix. I'm drawn to their data-driven approach and highly innovative culture. It would be exciting to work for a company that is constantly redefining the entertainment industry through technology.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ss-unit1-paper2-8.mp3"
+            }
+        ]
     },
     {
         "quesContent": "(IT Organisations) Why would you prefer to work for this organisation?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "I prefer Google because they are an innovative leader in technology and have a great work environment. I want to work there to learn new skills and be part of a team that creates globally used products.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ss-unit1-paper2-9.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "I prefer Netflix due to their culture of high autonomy and responsibility. It’s an exciting chance to work with cutting-edge data science on a global scale and contribute to a company that is constantly innovating how people consume media.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ss-unit1-paper2-10.mp3"
+            }
+        ]
     }
 ]

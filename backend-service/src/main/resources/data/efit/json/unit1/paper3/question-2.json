@@ -3,104 +3,312 @@
     "quesContent": "What rules would you set for installing new software?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "I would set two rules: First, you must get permission from the IT team. Second, the software must be needed for your job and downloaded from a safe place to prevent viruses.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper3-7.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "I would require all new software to be pre-approved by the IT department after a thorough security assessment. Crucially, employees should not have admin rights to install software, ensuring that only business-essential and licensed programs are ever added to company systems.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper3-8.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Should employees be allowed to connect personal devices to company computers? Why or why not?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "No, they shouldn't. The biggest risk is security. Personal devices might carry viruses or be used to steal company data. It's much safer to keep the work system separate.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper3-9.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "It should be strongly discouraged or restricted. While personal devices (BYOD) offer convenience, they pose a severe security risk for the company network, as they can introduce malware or lead to unauthorized data leakage. Any connection must be controlled by strict IT policies.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper3-100.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Is playing computer games at work acceptable? Under what conditions?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "No, it's generally not acceptable during work time because it's a distraction. It's only okay during lunch or scheduled breaks, and it shouldn't use up the company's computer resources.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper3-11.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "It is generally unacceptable due to concerns about productivity and security risk. However, it is acceptable only if it's during official break times, and it's done on a personal device to prevent unauthorized software installation and protect the company network.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper3-12.mp3"
+      }
+    ]
   },
   {
     "quesContent": "What are the advantages and disadvantages of using social networking sites such as Facebook at work?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "The advantage is quick communication and team connection. The disadvantage is it causes distraction, which lowers work output, and it creates security risks for company information.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper3-13.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "Advantages include supporting external marketing and facilitating quick, informal team collaboration. The primary disadvantages are a significant reduction in employee productivity and heightened security risks, such as data leakage and network exposure to malware or phishing.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper3-14.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Should employees be allowed to use mobile phones during work hours? Explain your reasoning.",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "Yes, but only for important calls. They should be allowed for family emergencies, but not for games or social media, because that is a big distraction and slows down the work.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper3-15.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "Yes, but strictly limited. Mobile phones should only be allowed for urgent, critical communication or during scheduled breaks. Otherwise, they are a major source of distraction that severely impacts productivity and focus.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper3-16.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Why might it be important to switch off your computer at night?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "It's important to switch off your computer to save electricity and money. Also, it lets the computer rest and cool down, which helps it last longer and keeps it safer from viruses when you're not using it.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper3-17.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "The main reasons are power conservation and hardware longevity. Shutting down reduces wear and tear on components and clears the system memory (RAM), improving the computer's performance the next day. Furthermore, it adds a layer of security by mitigating the risk of remote access while unattended.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper3-18.mp3"
+      }
+    ]
   },
   {
     "quesContent": "What risks are associated with downloading files at work?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "The main risks are computer viruses or malware that can damage company files. Also, unauthorized downloads use up the internet speed (bandwidth) and you might download files that are against company rules.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper3-19.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "The most critical risks are cybersecurity threats, mainly introducing malware or ransomware that compromises the network and leads to data loss. Secondary risks include legal issues from downloading illegal or copyrighted content, and reduced network performance due to excessive bandwidth use.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper3-20.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Should streaming music or video be permitted in a professional environment? Why or why not?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "Music is generally okay with headphones, as it helps people focus. But video should not be allowed because it's a huge distraction and uses too much of the company's internet speed (bandwidth).",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper3-21.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "Music should be permitted because it can boost focus and mood. However, video streaming should be banned. It is an extreme visual distraction that hurts productivity and consumes excessive network bandwidth, which impacts essential business operations.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper3-22.mp3"
+      }
+    ]
   },
   {
     "quesContent": "What technology-related rules exist in your workplace or place of study?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "At school, we aren't allowed to install new programs on the computers. We also must not share our passwords. The main rule is no social media during class time, so we can focus.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper3-23.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "The core technology rules focus on security. The main ones are: no personal USB drives or unauthorized file downloads to prevent malware and data leakage. We must also use a strong, multi-factor password and always lock the screen when leaving the desk.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper3-24.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Do you think these rules are helpful? Why or why not?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "Yes, I think they are helpful. The rule about not installing new programs keeps the computers safe from viruses. And the rule about passwords keeps all our information private and secure.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper3-25.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "Yes, they are highly helpful. Rules regarding screen locks and banning personal USB drives are essential for risk mitigation. They are crucial for preventing unauthorized access and protecting all confidential company data from external threats.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper3-26.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Which rule do you find most difficult to follow? Explain why.",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "The most difficult rule for me is not using social media on my phone during short breaks. It’s hard because my phone is always nearby, and it's easy to quickly check messages, even though I know I should focus.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper3-27.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "I find the rule about immediately locking my screen every time I leave my desk the most difficult. While it's essential for data security, it’s a constant conscious effort and I often forget during quick, brief transitions in a busy workday.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper3-28.mp3"
+      }
+    ]
   },
   {
     "quesContent": "If you could change one technology-related rule, what would it be?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "I would change the rule that bans all music streaming. I'd change it to allow listening with headphones. This is because soft music helps many people focus better and feel more relaxed without disturbing others.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper3-29.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "I would change the rule that completely blocks personal phones from the Wi-Fi network. I'd propose allowing limited access to a separate guest network. This would boost morale and allow necessary personal communication during breaks without compromising the corporate network security.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper3-30.mp3"
+      }
+    ]
   },
   {
     "quesContent": "How do these rules affect productivity and security in your environment?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "The rules help a lot. For security, rules like not sharing passwords keep our computers safe from viruses. This also boosts productivity because we don't have to waste time fixing broken systems.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper3-31.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "These rules have a strong positive impact. For security, measures like mandatory screen locks and blocking personal USBs are vital for data protection and risk mitigation. For productivity, limiting distractions like social media ensures the workforce stays focused on core business tasks.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper3-32.mp3"
+      }
+    ]
   }
 ]

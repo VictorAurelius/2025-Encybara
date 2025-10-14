@@ -19,6 +19,16 @@
             "projectName": "Encybara-backend-service",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-EncybaraApplication<backend-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "utc.englishlearning.Encybara.EncybaraApplication",
+            "projectName": "backend-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

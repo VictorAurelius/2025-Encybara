@@ -3,40 +3,120 @@
     "quesContent": "What is the problem you are experiencing with your computer?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "My computer is running very slowly. It freezes when I try to open two programs at once, and sometimes the whole screen turns blue and the computer just restarts itself. The performance is very poor.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit2-paper4-1.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "I'm experiencing severe system slowdown and performance bottlenecks. The machine suffers from frequent application lag and unprompted system reboots (Blue Screen). This points to potential issues with RAM integrity or a corrupt driver requiring urgent diagnosis.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit2-paper4-2.mp3"
+      }
+    ]
   },
   {
     "quesContent": "When did the issue first occur?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "The issue first occurred about three days ago, last Friday. It started right after I installed a new program. The problem has gotten much worse since then, with the computer now restarting by itself.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit2-paper4-3.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "The problem was first noticeable four to five days ago, immediately following a routine OS update and graphics driver installation. It quickly deteriorated from minor lag to the first 'Blue Screen' system reboot occurring this past Saturday.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit2-paper4-4.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Have you tried restarting your device?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "Yes, I have tried restarting it many times. It runs a little faster for ten minutes after the restart, but the slow performance problem quickly returns, and the programs start freezing.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit2-paper4-5.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "Yes, I performed multiple system reboots. The restart only provides a temporary, marginal improvement. The system lag and unprompted reboots always return shortly after, which confirms that the restart is not addressing the underlying root cause.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit2-paper4-6.mp3"
+      }
+    ]
   },
   {
     "quesContent": "Are there any error messages appearing on the screen?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "Yes, I see error messages. The main one is the blue screen that appears before the restart, which says, 'Your PC ran into a problem.' I also get frequent pop-ups saying, 'Program X has stopped working.'",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit2-paper4-7.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "Yes, I encounter two critical errors. First, the 'Blue Screen of Death' (BSOD), which once displayed the code 'MEMORY_MANAGEMENT'. Second, applications frequently crash, showing an 'unhandled exception' pop-up stating the program has stopped responding.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit2-paper4-8.mp3"
+      }
+    ]
   },
   {
     "quesContent": "What troubleshooting steps have you already attempted?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "I have already restarted the computer several times, but the issue returns. I also closed all running programs to free up memory, and I ran a full virus scan, but none of these steps helped the performance.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit2-paper4-9.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "I performed multiple full system reboots and ran a complete antivirus/malware scan, both of which were ineffective. I also checked for and installed the latest driver updates for the graphics and chipset, but the performance bottlenecks and BSOD errors persist.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit2-paper4-10.mp3"
+      }
+    ]
   }
 ]

@@ -3,25 +3,73 @@
         "quesContent": "(IT Organisations) What technology company would you choose to discuss?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "I'd choose Apple. They are fascinating because of their strong focus on design and the way they've built a powerful, integrated ecosystem with products like the iPhone and Mac. They lead the market in premium branding and show how design can drive customer loyalty.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ss-unit1-paper2-1.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "I think I'd choose Microsoft. Their shift towards cloud computing with Azure has been hugely successful. This transformation, along with their continued dominance in business software and integration of AI, makes them a key company for understanding the modern tech landscape.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ss-unit1-paper2-2.mp3"
+            }
+        ]
     },
     {
         "quesContent": "(IT Organisations) What activities does this company carry out?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "Apple's core activities are designing, manufacturing, and selling consumer electronics like the iPhone, Mac, and Apple Watch. They also develop all the necessary software (iOS/macOS) and provide services like Apple Music and iCloud.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ss-unit1-paper2-3.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "Microsoft primarily focuses on cloud computing with its Azure platform, and developing essential business software like Windows and Microsoft 365. They are also a major player in the gaming market through Xbox and constantly invest in AI research.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ss-unit1-paper2-4.mp3"
+            }
+        ]
     },
     {
         "quesContent": "(IT Organisations) Why is this company important in the technology sector?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "Apple is important because it sets the standard for consumer technology and design. They created the modern smartphone market with the iPhone, and their unique ecosystem ensures high customer loyalty and major influence over the entire mobile app economy. They also drive innovation in processors and wearable technology.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ss-unit1-paper2-5.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "Microsoft is essential because it powers the business world. Their importance stems from their dominance in cloud computing with Azure, which is vital for modern companies, and their foundational role in workplace productivity through Windows and Microsoft 365. They are a leader in enterprise technology and AI integration.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ss-unit1-paper2-6.mp3"
+            }
+        ]
     },
     {
         "quesContent": "A company or companies that sell things (Futachiba)",

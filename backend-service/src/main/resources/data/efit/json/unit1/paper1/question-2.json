@@ -3,25 +3,73 @@
         "quesContent": "(IT Jobs) List any other IT jobs you can think of.",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "Some other IT jobs include web developer, network administrator, and database administrator.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ssd-1.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "Certainly. Beyond the common ones, there are roles like Cybersecurity Analyst, who protect systems from threats; UX/UI Designer, who focus on making applications user-friendly; Cloud Engineer, who manage cloud computing services; and DevOps Engineer, who streamline the process between software development and IT operations.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ssd-2.mp3"
+            }
+        ]
     },
     {
         "quesContent": "(IT Jobs) What do people in these jobs do?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "People in IT jobs work with computers and technology. They might fix problems with computers, build websites, or make programs. They help people use technology better.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "sse-1.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "People in IT jobs typically engage in a variety of tasks depending on their specific roles. For instance, software developers write and test code, while system administrators manage and maintain IT infrastructure. Data analysts focus on interpreting complex data sets to inform business decisions, and IT support specialists assist users with technical issues. Overall, these roles require a blend of technical skills, problem-solving abilities, and effective communication.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "sse-2.mp3"
+            }
+        ]
     },
     {
         "quesContent": "(IT Jobs) Which jobs would/wouldn't you like to do? Why?",
         "skillType": "SPEAKING",
         "quesType": "SPEAKING",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
-        "choices": []
+        "choices": [],
+        "sampleAnswers": [
+            {
+                "difficultyLevel": 2,
+                "answerContent": "I would like to be a web developer because I enjoy creating websites and applications. I wouldn't want to be a database administrator because I find working with databases to be less interesting.",
+                "description": "Elementary answer with basic grammar and common expressions.",
+                "estimatedScore": 60.0,
+                "audioLink": "ssf-1.mp3"
+            },
+            {
+                "difficultyLevel": 3,
+                "answerContent": "I would like to be a software developer because I enjoy coding and creating applications that can solve real-world problems. On the other hand, I wouldn't want to be a network administrator because I find the constant monitoring and troubleshooting of network issues to be stressful and less engaging compared to development work.",
+                "description": "Intermediate response with varied vocabulary and clear structure.",
+                "estimatedScore": 90.0,
+                "audioLink": "ssf-2.mp3"
+            }
+        ]
     },
     {
         "quesContent": "What do you think Robert's job is?",

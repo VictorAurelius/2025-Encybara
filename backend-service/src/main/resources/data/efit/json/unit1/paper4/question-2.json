@@ -3,32 +3,96 @@
     "quesContent": "Can you think of four suggestions similar to those in a teleconference?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "We should always mute our mics when not speaking to stop noise. Remember to speak clearly and say your name first. Finally, always wait for a pause before jumping in to avoid interrupting.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper4-5.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "The four best practices are: always use the mute button to prevent background noise; state your name clearly before contributing for attribution; use the 'raise hand' feature to manage the speaking order; and always confirm receipt of action items to ensure accountability.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper4-6.mp3"
+      }
+    ]
   },
   {
     "quesContent": "How would you respond to different workplace suggestions?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "I respond differently based on the idea. If it's a good and easy idea, I say it's great and we should start immediately. If it's difficult, I say it's a strong plan, but we must check the cost first. If I disagree, I thank the person but explain my concerns with the plan.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper4-7.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "I always tailor my response to the proposal's feasibility. For a strong, practical idea, I affirm its value and immediately discuss next steps for implementation. If it's innovative but complex, I acknowledge its strength but request a cost-benefit analysis. If the idea is unworkable, I offer a diplomatic rejection by stating my reservations regarding its viability and suggesting an alternative.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper4-8.mp3"
+      }
+    ]
   },
   {
     "quesContent": "What are some effective ways to express agreement or disagreement in a discussion?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "To agree, I'd use simple phrases like, 'I agree with you' or 'That's a good idea.' When I need to disagree, I keep it polite by starting with something like, 'I see your point, but I think...' and then explaining my different opinion clearly.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper4-9.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "To express strong agreement, I use affirming language such as, 'I'm completely aligned with your proposal' or 'That is precisely what I was thinking.' For polite disagreement, I first acknowledge their idea by saying, 'I understand your perspective, however,' then I state my reservations or suggest an alternative approach.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper4-10.mp3"
+      }
+    ]
   },
   {
     "quesContent": "How can you ensure a constructive conversation when discussing workplace ideas?",
     "skillType": "SPEAKING",
     "quesType": "SPEAKING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
-    "choices": []
+    "choices": [],
+    "sampleAnswers": [
+      {
+        "difficultyLevel": 2,
+        "answerContent": "To ensure a constructive conversation, you must listen carefully to the whole idea first. Always criticize the idea, not the person. The main goal is to find a better solution together, not to win the argument.",
+        "description": "Elementary answer with basic grammar and common expressions.",
+        "estimatedScore": 60.0,
+        "audioLink": "ss-unit1-paper4-11.mp3"
+      },
+      {
+        "difficultyLevel": 3,
+        "answerContent": "We ensure constructive dialogue by enforcing active listening and making sure all feedback critiques the idea, not the individual. This involves using objective language and always keeping the goal focused on consensus-building and solution-finding for the business outcome.",
+        "description": "Intermediate response with varied vocabulary and clear structure.",
+        "estimatedScore": 90.0,
+        "audioLink": "ss-unit1-paper4-12.mp3"
+      }
+    ]
   }
 ]
