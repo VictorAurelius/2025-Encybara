@@ -115,7 +115,6 @@ class LectureService {
   async readMarkdownContent(materLink: string): Promise<string> {
     const cacheKey = `markdown_${btoa(materLink)}`;
 
-    // Check cache first
     const cached = globalCache.get<string>(cacheKey);
     if (cached) {
       return cached;
@@ -125,19 +124,27 @@ class LectureService {
       const processedLink = materLink
         .replace('0.0.0.0', `18.136.223.96`)
         .replace(/ /g, '%20');
-      console.log("here")
-      const response = await this.apiService.get<string>(
-        processedLink.replace(API_BASE_URL, ''), // Remove base URL vì apiService sẽ thêm lại
-        {
-          headers: {
-            'Accept': 'text/plain, text/markdown, */*'
-          }
-        }
-      );
 
-      globalCache.set(cacheKey, response, 15 * 60 * 1000);
+      console.log("Fetching from:", processedLink);
 
-      return response;
+      // Sử dụng fetch trực tiếp thay vì apiService
+      const response = await fetch(processedLink, {
+        method: 'GET',
+        headers: {
+          'Accept': 'text/plain, text/markdown, */*',
+          'Content-Type': 'text/plain; charset=utf-8'
+        },
+        mode: 'cors' // Quan trọng: enable CORS
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch markdown: ${response.statusText}`);
+      }
+
+      const rawContent = await response.text();
+      globalCache.set(cacheKey, rawContent, 15 * 60 * 1000);
+
+      return rawContent;
     } catch (error) {
       console.error('Error reading markdown content:', error);
       throw error;
