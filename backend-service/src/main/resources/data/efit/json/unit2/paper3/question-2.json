@@ -107,7 +107,7 @@
     "quesContent": "Write an email explaining how to transfer photographs from a digital camera to a computer. Include instructions for the following steps:\n- Connect the card reader to the computer\n- Open the appropriate software\n- Select the card reader in the drop-down menu\n- Choose the destination folder\n- Click the 'OK' button",
     "skillType": "WRITING",
     "quesType": "WRITING",
-    "point": 10,
+    "point": 100,
     "createBy": "admin",
     "choices": []
   }

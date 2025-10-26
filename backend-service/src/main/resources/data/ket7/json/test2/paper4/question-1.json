@@ -3,7 +3,7 @@
         "quesContent": "Write an email to your friend inviting them to your birthday party. Include details about the time, location, and activities planned. Write 25 to 35 words.",
         "skillType": "WRITING",
         "quesType": "TEXT",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
         "choices": []
     },
@@ -11,7 +11,7 @@
         "quesContent": "Write an email to your teacher asking for advice about how to improve your English. Include details about your current challenges and what areas you would like to focus on. Write 25 to 35 words.",
         "skillType": "WRITING",
         "quesType": "TEXT",
-        "point": 10,
+        "point": 100,
         "createBy": "admin",
         "choices": []
     }
