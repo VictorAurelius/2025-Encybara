@@ -14,7 +14,7 @@
 
 ## 🎯 Objective
 
-Tạo **2 file Excel** tài liệu test API hoàn chỉnh dựa trên template, bao gồm:
+Tạo **2 file Markdown** tài liệu test API hoàn chỉnh dựa trên template, bao gồm:
 1. **API Documentation** - Mô tả chi tiết API endpoint
 2. **Test Cases** - Danh sách các test case để thực thi manual/automation
 
@@ -86,7 +86,7 @@ Tạo **2 file Excel** tài liệu test API hoàn chỉnh dựa trên template, 
 **Duration:** ~20 minutes
 
 **Actions:**
-- [ ] Tạo file Excel `/mnt/user-data/outputs/API_Document_[EndpointName].xlsx` theo template
+- [ ] Tạo file Markdown `documents/API_Document_[EndpointName].md` theo template
 
 - [ ] Fill in sections:
 
@@ -156,7 +156,7 @@ Tạo **2 file Excel** tài liệu test API hoàn chỉnh dựa trên template, 
   | 4 | 500 | Internal Server Error |
   | ... | ... | ... |
 
-**Output:** Completed API_Document Excel file
+**Output:** Completed API_Document Markdown file
 
 ---
 
@@ -164,7 +164,7 @@ Tạo **2 file Excel** tài liệu test API hoàn chỉnh dựa trên template, 
 **Duration:** ~30 minutes
 
 **Actions:**
-- [ ] Tạo file Excel `/mnt/user-data/outputs/Testcase_API_[EndpointName].xlsx` theo template
+- [ ] Tạo file Markdown `documents/Testcase_API_[EndpointName].md` theo template
 
 - [ ] Fill in Project Information:
   ```
@@ -233,13 +233,13 @@ Tạo **2 file Excel** tài liệu test API hoàn chỉnh dựa trên template, 
   | **Status** | PENDING (default) |
 
 - [ ] Group test cases by categories:
-  - Sheet 1: "All Test Cases" (tổng hợp)
-  - Sheet 2: "Validate" (validation tests)
-  - Sheet 3: "Logic" (business logic tests)
-  - Sheet 4: "Error code" (error handling tests)
-  - Sheet 5: "Other" (edge cases)
+  - Section 1: "Validate" (validation tests)
+  - Section 2: "Logic" (business logic tests)
+  - Section 3: "Error code" (error handling tests)
+  - Section 4: "Format response" (response format tests)
+  - Section 5: "Other" (edge cases)
 
-**Output:** Completed Testcase_API Excel file with comprehensive test scenarios
+**Output:** Completed Testcase_API Markdown file with comprehensive test scenarios
 
 ---
 
@@ -284,23 +284,23 @@ Before delivering, verify:
 - [ ] Each test case has clear precondition and expected result
 - [ ] Test data in test cases is specific (not generic placeholders)
 - [ ] Database validation columns specify table and expected changes
-- [ ] Excel formatting is clean and readable
-- [ ] Column widths are adjusted for readability
+- [ ] Markdown formatting is clean and readable
+- [ ] Tables are properly formatted
 
 ---
 
 ## 📦 Final Deliverables
 
-**Two Excel files:**
+**Two Markdown files:**
 ```
-/mnt/user-data/outputs/API_Document_[EndpointName].xlsx
-/mnt/user-data/outputs/Testcase_API_[EndpointName].xlsx
+documents/API_Document_[EndpointName].md
+documents/Testcase_API_[EndpointName].md
 ```
 
 These files must be:
 - ✅ Ready for tester to execute without additional clarification
 - ✅ Complete with all validation scenarios
-- ✅ Properly formatted in Excel (tables, headers, colors)
+- ✅ Properly formatted in Markdown (tables, headers, code blocks)
 - ✅ Include realistic test data samples
 - ✅ Have clear pass/fail criteria for each test case
 
@@ -321,22 +321,22 @@ These files must be:
 4. **Consider cascading effects** - if API creates records, test duplicate scenarios
 5. **Minimum 15-20 test cases** - comprehensive coverage expected
 
-### Excel formatting:
-1. **Use XLSX format with the xlsx skill** - read `/mnt/skills/public/xlsx/SKILL.md` first
-2. **Freeze header rows** - for easy scrolling
-3. **Auto-fit column widths** - for readability
-4. **Use borders and colors** - for visual separation
-5. **Bold headers** - for clarity
+### Markdown formatting:
+1. **Use proper Markdown syntax** - headers, tables, code blocks
+2. **Format tables properly** - aligned columns, clear headers
+3. **Use code blocks for JSON** - with json syntax highlighting
+4. **Use headers for sections** - clear hierarchy
+5. **Bold important fields** - for emphasis
 
 ### Example interaction:
 ```
 User: Generate test docs for POST /api/users/register in UserController.java
-Claude: 
+Claude:
 1. [Reads controller file]
 2. [Extracts endpoint details]
-3. [Generates API_Document_UserRegister.xlsx]
-4. [Generates Testcase_API_UserRegister.xlsx]
-5. [Provides download links]
+3. [Generates API_Document_UserRegister.md]
+4. [Generates Testcase_API_UserRegister.md]
+5. [Provides file paths]
 ```
 
 ---
@@ -348,4 +348,4 @@ Documents are successful if:
 - API document can be used by frontend developer to integrate
 - Test coverage is comprehensive (positive, negative, edge cases)
 - All validation rules from code are covered in test cases
-- Excel files are professionally formatted and easy to read
+- Markdown files are professionally formatted and easy to read
