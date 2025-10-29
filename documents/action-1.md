@@ -6,3 +6,9 @@ Tiếp theo, hãy giúp tôi tạo plan task req-2 theo các tiêu chí sau:
 2. đọc lại các file input trước đó để đủ context
 3. dựa trên các context vừa tìm hiểu được, thực hiện sửa lại 2 file output hợp lý
 4. file output phải đầy đủ, hợp lý và có thể dễ dàng paste dữ liệu vào excel
+
+
+tôi muốn là 1 bảng tổng hợp chứ không phải update, hãy tạo req-3:
+1. tạo output tổng hợp trong thư mục output
+2. test case lần lượt như sample
+3. hãy điều tra pronunciation-assessment-service để biết chính xác câu trúc response
