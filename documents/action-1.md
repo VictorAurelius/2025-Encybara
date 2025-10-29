@@ -12,3 +12,7 @@ tôi muốn là 1 bảng tổng hợp chứ không phải update, hãy tạo req
 1. tạo output tổng hợp trong thư mục output
 2. test case lần lượt như sample
 3. hãy điều tra pronunciation-assessment-service để biết chính xác câu trúc response
+
+tiếp tục tạo req-4 để test API gradeAnswer trong AnswerController
+
+sửa lại re1-4 theo cấu trúc folder hiện tại (tôi mới cập nhật)
