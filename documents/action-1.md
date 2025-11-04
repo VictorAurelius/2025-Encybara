@@ -43,3 +43,5 @@ tôi cần tạo plan task req-6 để test api Testcase_API_GradeAnswer:
 4. tạo lại Testcase_API_GradeAnswer cho khóa placement
 
 Tóm lại, tôi cần 1 file scripts để test api grade answer tự động, từ lúc login đến tham gia khóa học placement đến tạo answer và grade answer, lưu ý chỉ grade cho các câu hỏi TEXT và CHOICE
+
+Lưu ý: đây chỉ là plan task cho claude, không thực hiện test luôn
