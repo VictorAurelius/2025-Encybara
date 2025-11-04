@@ -16,3 +16,16 @@ tôi muốn là 1 bảng tổng hợp chứ không phải update, hãy tạo req
 tiếp tục tạo req-4 để test API gradeAnswer trong AnswerController
 
 sửa lại re1-4 theo cấu trúc folder hiện tại (tôi mới cập nhật)
+
+đọc documents/req-1.md, documents/req-2.md, documents/req-3.md, documents/req-4.md để hiểu context, sau đó hãy giúp tôi tạo plan task để thực hiện các nhiệm vụ sai=u:
+1. sửa documents/output/Testcase_API_AssessPronunciation sử dụng data: 
+file=documents/input/audio_sample.mp3
+text= "Most of my peers go crazy about Vietnamese rap music 'cause it's in vogue, you know? I do listen to some Vietnamese rappers once in a while, but I gotta say my affinity with this type of music is not on par with that of my friends."
+
+2. hãy đọc backend-service/test-pronunciation.sh để hiểu cách lấy token để test API
+
+3. thực hiện tạo script để test theo testcase của documents/output/Testcase_API_AssessPronunciation 
+
+Lưu ý: đây chỉ là plan task cho claude, không thực hiện test luôn
+
+hãy đưa plan task này thành file req-5.md
