@@ -42,7 +42,7 @@
 # ============================================
 
 # Configuration
-BACKEND_URL="${BACKEND_URL:-http://localhost:8080}"
+BACKEND_URL="${BACKEND_URL:-http://18.136.223.96:8080}"
 PRONUNCIATION_API="/api/v1/pronunciation"
 AUTH_API="/api/v1/auth"
 

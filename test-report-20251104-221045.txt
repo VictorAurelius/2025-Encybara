@@ -1,0 +1,59 @@
+=========================================
+Pronunciation API Test Execution Report
+=========================================
+
+Generated: Tue, Nov  4, 2025 10:10:45 PM
+Backend URL: http://18.136.223.96:8080
+Audio File: documents/input/audio_sample.mp3
+
+Summary:
+  Total Test Cases: 30
+  Passed: 12
+  Failed: 7
+  Pending/Manual: 11
+  Success Rate: 63.2%
+
+Detailed Results:
+-----------------------------------------
+[PASSED] ID-001: Gọi API với method POST
+[FAILED] ID-002: Gọi API với method GET (Expected 405, got 500)
+[FAILED] ID-003: Gọi API với method PUT (Expected 405, got 500)
+[FAILED] ID-004: Gọi API với method DELETE (Expected 405, got 500)
+[PASSED] ID-005: Valid request với đầy đủ params
+[FAILED] ID-006: Missing audio file (Expected 400, got 500)
+[PASSED] ID-007: Empty audio file
+[FAILED] ID-008: Missing text parameter (Expected 400, got 500)
+[FAILED] ID-009: Empty text parameter (whitespace only) (Expected 400, got 503)
+[PENDING] ID-010: Invalid audio file format (Manual)
+[PENDING] ID-011: Text mismatch với audio content (Manual)
+[PENDING] ID-012: Long text assessment (paragraph-length) (Manual)
+[PASSED] ID-013: Multiple punctuation in text
+[PASSED] ID-014: Special characters and numbers in text
+[PENDING] ID-015: Very short audio test (Manual)
+[PASSED] ID-016: Request without authentication token
+[PASSED] ID-017: Request with expired token
+[PASSED] ID-018: Request with invalid token
+[PENDING] ID-019: Pronunciation service not configured (Manual)
+[PENDING] ID-020: Pronunciation service timeout (Manual)
+[PENDING] ID-021: Pronunciation service returns 404 (Manual)
+[PENDING] ID-022: Pronunciation service returns 500 (Manual)
+[PENDING] ID-023: Service returns invalid response (Manual)
+[PENDING] ID-024: Large file exceeds size limit (Manual)
+[PENDING] ID-025: Concurrent requests handling (Manual)
+[PASSED] ID-026: Success response structure verified
+[FAILED] ID-027: Error response structure validation failed
+[PASSED] ID-028: overall_score field validated
+[PASSED] ID-029: fluency_score field validated
+[PASSED] ID-030: phoneme_scores array structure validated
+-----------------------------------------
+
+Test Categories:
+  Validate:       10 TCs (ID-001 ~ ID-010)
+  Logic:           5 TCs (ID-011 ~ ID-015)
+  Error Code:     10 TCs (ID-016 ~ ID-025)
+  Format Response: 5 TCs (ID-026 ~ ID-030)
+
+Execution Types:
+  AUTOMATION:     20 TCs
+  MANUAL:         10 TCs
+
