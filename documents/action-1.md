@@ -29,3 +29,17 @@ text= "Most of my peers go crazy about Vietnamese rap music 'cause it's in vogue
 Lưu ý: đây chỉ là plan task cho claude, không thực hiện test luôn
 
 hãy đưa plan task này thành file req-5.md
+
+tôi cần tạo plan task req-6 để test api Testcase_API_GradeAnswer:
+1. hãy đọc API_Document_GradeAnswer và Testcase_API_GradeAnswer để hiểu về api chấm điểm câu trả lời dạng CHOICE và text
+
+2. hãy đọc backend-service/src/main/java/.../config/AdminDataInitializer.java cùng với các file tham chiếu để hiều về logic seeding data cho các course khi khởi động hệ thống
+
+3. hãy tạo 1 file scripts cho user@example.com:
++ tạo enrollment vào course placement 
++ tạo answer cho để test
++ thực hiện test case cho api grade answer
+
+4. tạo lại Testcase_API_GradeAnswer cho khóa placement
+
+Tóm lại, tôi cần 1 file scripts để test api grade answer tự động, từ lúc login đến tham gia khóa học placement đến tạo answer và grade answer, lưu ý chỉ grade cho các câu hỏi TEXT và CHOICE
