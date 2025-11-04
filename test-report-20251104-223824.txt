@@ -1,0 +1,59 @@
+=========================================
+Pronunciation API Test Execution Report
+=========================================
+
+Generated: Tue, Nov  4, 2025 10:38:24 PM
+Backend URL: http://18.136.223.96:8080
+Audio File: documents/input/audio_sample.mp3
+
+Summary:
+  Total Test Cases: 30
+  Passed: 13
+  Failed: 6
+  Pending/Manual: 11
+  Success Rate: 68.4%
+
+Detailed Results:
+-----------------------------------------
+[FAILED] ID-001: Gọi API với method POST (Timeout)
+[PASSED] ID-002: Gọi API với method GET
+[PASSED] ID-003: Gọi API với method PUT
+[PASSED] ID-004: Gọi API với method DELETE
+[FAILED] ID-005: Valid request với đầy đủ params (Timeout)
+[PASSED] ID-006: Missing audio file
+[PASSED] ID-007: Empty audio file
+[PASSED] ID-008: Missing text parameter
+[PASSED] ID-009: Empty text parameter (whitespace only)
+[PENDING] ID-010: Invalid audio file format (Manual)
+[PENDING] ID-011: Text mismatch với audio content (Manual)
+[PENDING] ID-012: Long text assessment (paragraph-length) (Manual)
+[FAILED] ID-013: Multiple punctuation in text (Timeout)
+[PASSED] ID-014: Special characters and numbers in text
+[PENDING] ID-015: Very short audio test (Manual)
+[FAILED] ID-016: Request without authentication token (Timeout)
+[FAILED] ID-017: Request with expired token (Timeout)
+[FAILED] ID-018: Request with invalid token (Timeout)
+[PENDING] ID-019: Pronunciation service not configured (Manual)
+[PENDING] ID-020: Pronunciation service timeout (Manual)
+[PENDING] ID-021: Pronunciation service returns 404 (Manual)
+[PENDING] ID-022: Pronunciation service returns 500 (Manual)
+[PENDING] ID-023: Service returns invalid response (Manual)
+[PENDING] ID-024: Large file exceeds size limit (Manual)
+[PENDING] ID-025: Concurrent requests handling (Manual)
+[PASSED] ID-026: Success response structure verified
+[PASSED] ID-027: Error response structure verified
+[PASSED] ID-028: overall_score field validated
+[PASSED] ID-029: fluency_score field validated
+[PASSED] ID-030: phoneme_scores array structure validated
+-----------------------------------------
+
+Test Categories:
+  Validate:       10 TCs (ID-001 ~ ID-010)
+  Logic:           5 TCs (ID-011 ~ ID-015)
+  Error Code:     10 TCs (ID-016 ~ ID-025)
+  Format Response: 5 TCs (ID-026 ~ ID-030)
+
+Execution Types:
+  AUTOMATION:     20 TCs
+  MANUAL:         10 TCs
+
