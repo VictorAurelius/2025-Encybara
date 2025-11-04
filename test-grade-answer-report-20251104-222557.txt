@@ -1,0 +1,30 @@
+=========================================
+Grade Answer API Test Execution Report
+=========================================
+
+Generated: Tue, Nov  4, 2025 10:25:57 PM
+Backend URL: http://18.136.223.96:8080
+Course: English Placement Test
+Course ID: 1
+User: user@example.com
+Enrollment ID: 
+
+Questions Tested:
+  TEXT Questions: 5 questions, 0 test cases
+  CHOICE Questions: 9 questions, 0 test cases
+
+Summary:
+  Total Grading Calls: 0
+  Passed: 0
+  Failed: 0
+
+Detailed Results:
+-----------------------------------------
+-----------------------------------------
+
+Question Details:
+  TEXT Lesson ID: 1
+  TEXT Question IDs: 1 2 3 4 5
+  CHOICE Lesson ID: 2
+  CHOICE Question IDs: 6 7 8 9 10 11 12 13 14
+

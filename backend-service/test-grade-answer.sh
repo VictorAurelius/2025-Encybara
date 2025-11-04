@@ -41,7 +41,7 @@
 # ============================================
 
 # Configuration
-BACKEND_URL="${BACKEND_URL:-http://localhost:8080}"
+BACKEND_URL="${BACKEND_URL:-http://18.136.223.96:8080}"
 API_BASE="/api/v1"
 DEFAULT_EMAIL="${DEFAULT_EMAIL:-user@example.com}"
 DEFAULT_PASSWORD="${DEFAULT_PASSWORD:-Abc@123456}"
@@ -139,6 +139,24 @@ find_placement_course() {
 create_enrollment() {
     echo -e "${YELLOW}>>> Creating enrollment...${NC}"
 
+    # First check if user is already enrolled
+    echo -e "${CYAN}  → Checking existing enrollments...${NC}"
+    enrollment_response=$(curl -s -X GET \
+        -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+        "${BACKEND_URL}${API_BASE}/enrollments")
+    
+    # Try to find existing enrollment for this course
+    ENROLLMENT_ID=$(echo "$enrollment_response" | grep -o '"courseId":'${PLACEMENT_COURSE_ID}'[^}]*"id":[0-9]*' | grep -o '"id":[0-9]*' | cut -d':' -f2 | head -1)
+    
+    if [[ ! -z "$ENROLLMENT_ID" ]]; then
+        echo -e "${GREEN}✓ Found existing enrollment${NC}"
+        echo "  Enrollment ID: ${ENROLLMENT_ID}"
+        echo ""
+        return
+    fi
+
+    # If not enrolled, try to create enrollment
+    echo -e "${CYAN}  → Creating new enrollment...${NC}"
     enrollment_data="{
         \"courseId\": ${PLACEMENT_COURSE_ID}
     }"
@@ -157,7 +175,7 @@ create_enrollment() {
         echo -e "${GREEN}✓ Enrollment created${NC}"
         echo "  Enrollment ID: ${ENROLLMENT_ID}"
     else
-        # Check if already enrolled
+        # Check if already enrolled (different error message)
         if echo "$response_body" | grep -q "already enrolled"; then
             echo -e "${YELLOW}⚠ User already enrolled, fetching existing enrollment...${NC}"
             # Get existing enrollment ID
@@ -175,7 +193,11 @@ create_enrollment() {
         else
             echo -e "${RED}✗ Enrollment creation failed - HTTP ${status_code}${NC}"
             echo "Response: $response_body"
-            exit 1
+            echo -e "${YELLOW}Debug - Request data:${NC}"
+            echo "$enrollment_data"
+            echo ""
+            echo -e "${YELLOW}⚠ Continuing without enrollment - will try to create answers directly${NC}"
+            ENROLLMENT_ID=""
         fi
     fi
     echo ""
@@ -186,23 +208,71 @@ discover_placement_questions() {
     echo -e "${YELLOW}>>> Discovering placement questions...${NC}"
 
     # Get course details with lessons
+    echo -e "${CYAN}  → Getting course details...${NC}"
     course_response=$(curl -s -X GET \
         -H "Authorization: Bearer ${ACCESS_TOKEN}" \
         "${BACKEND_URL}${API_BASE}/courses/${PLACEMENT_COURSE_ID}")
 
-    # Extract lesson IDs for TEXT and CHOICE lessons
-    # Lesson names: "(PLACEMENT) Text - Reading" and "(PLACEMENT) Choice - Reading"
+    # Debug: Show course response structure
+    echo -e "${CYAN}  → Course API response received${NC}"
+    echo -e "${YELLOW}Debug - Full course response:${NC}"
+    echo "$course_response" | head -10
+    echo "..."
+    
+    # Extract lesson IDs from course - try multiple possible JSON structures
+    lesson_ids=""
+    
+    # Try format: "lessonIds": [1,2,3,4,5,6]
+    if echo "$course_response" | grep -q '"lessonIds":\['; then
+        lesson_ids=$(echo "$course_response" | grep -o '"lessonIds":\[[0-9,]*\]' | sed 's/"lessonIds":\[//g' | sed 's/\]//g' | tr ',' ' ')
+        echo -e "${CYAN}  → Found lessonIds array format in course response${NC}"
+    # Try format: "lessonId": number
+    elif echo "$course_response" | grep -q '"lessonId":[0-9]*'; then
+        lesson_ids=$(echo "$course_response" | grep -o '"lessonId":[0-9]*' | cut -d':' -f2)
+        echo -e "${CYAN}  → Found lessonId format in course response${NC}"
+    # Try format: "id": number within lessons array
+    elif echo "$course_response" | grep -q '"lessons"'; then
+        lesson_ids=$(echo "$course_response" | grep -A 20 '"lessons"' | grep -o '"id":[0-9]*' | cut -d':' -f2)
+        echo -e "${CYAN}  → Found lessons array format in course response${NC}"
+    # Try direct lesson objects with id (fallback)
+    elif echo "$course_response" | grep -q '"id":[0-9]*'; then
+        lesson_ids=$(echo "$course_response" | grep -o '"id":[0-9]*' | cut -d':' -f2)
+        echo -e "${CYAN}  → Found direct id format in course response${NC}"
+    fi
 
-    # Get all lesson IDs from course
-    lesson_ids=$(echo "$course_response" | grep -o '"lessonId":[0-9]*' | cut -d':' -f2)
+    if [[ -z "$lesson_ids" ]]; then
+        echo -e "${RED}✗ No lesson IDs found in course response${NC}"
+        echo -e "${YELLOW}Debug - Course response sample:${NC}"
+        echo "$course_response" | head -5
+        exit 1
+    fi
 
-    # For each lesson, check its name
+    echo -e "${CYAN}  → Found lesson IDs: $lesson_ids${NC}"
+
+    # For each lesson, check its name and get questions
     for lesson_id in $lesson_ids; do
+        echo -e "${CYAN}  → Checking lesson ID: $lesson_id${NC}"
+        
         lesson_response=$(curl -s -X GET \
             -H "Authorization: Bearer ${ACCESS_TOKEN}" \
             "${BACKEND_URL}${API_BASE}/lessons/${lesson_id}")
 
-        lesson_name=$(echo "$lesson_response" | grep -o '"name":"[^"]*"' | head -1 | cut -d'"' -f4)
+        # Extract lesson name - try multiple formats
+        lesson_name=""
+        if echo "$lesson_response" | grep -q '"name":"[^"]*"'; then
+            lesson_name=$(echo "$lesson_response" | grep -o '"name":"[^"]*"' | head -1 | cut -d'"' -f4)
+        elif echo "$lesson_response" | grep -q '"lessonName":"[^"]*"'; then
+            lesson_name=$(echo "$lesson_response" | grep -o '"lessonName":"[^"]*"' | head -1 | cut -d'"' -f4)
+        fi
+
+        echo -e "${CYAN}    → Lesson name: '$lesson_name'${NC}"
+        
+        # Debug: Show lesson response sample for target lessons
+        if [[ "$lesson_name" == *"Text - Reading"* ]] || [[ "$lesson_name" == *"Choice - Reading"* ]]; then
+            echo -e "${YELLOW}    → Debug - Lesson $lesson_id response sample:${NC}"
+            echo "$lesson_response" | head -3
+            echo "    ..."
+        fi
 
         if [[ "$lesson_name" == *"Text - Reading"* ]]; then
             TEXT_LESSON_ID=$lesson_id
@@ -210,30 +280,69 @@ discover_placement_questions() {
             echo "  Lesson ID: ${TEXT_LESSON_ID}"
             echo "  Lesson Name: ${lesson_name}"
 
-            # Extract TEXT question IDs
-            question_ids=$(echo "$lesson_response" | grep -o '"questionId":[0-9]*' | cut -d':' -f2)
+            # Extract TEXT question IDs - try multiple formats
+            question_ids=""
+            if echo "$lesson_response" | grep -q '"questionIds":\['; then
+                question_ids=$(echo "$lesson_response" | grep -o '"questionIds":\[[0-9,]*\]' | sed 's/"questionIds":\[//g' | sed 's/\]//g' | tr ',' ' ')
+            elif echo "$lesson_response" | grep -q '"questionId":[0-9]*'; then
+                question_ids=$(echo "$lesson_response" | grep -o '"questionId":[0-9]*' | cut -d':' -f2)
+            elif echo "$lesson_response" | grep -q '"questions".*"id":[0-9]*'; then
+                question_ids=$(echo "$lesson_response" | grep -A 50 '"questions"' | grep -o '"id":[0-9]*' | cut -d':' -f2)
+            elif echo "$lesson_response" | grep -q '"id":[0-9]*'; then
+                # Filter out lesson ID itself
+                question_ids=$(echo "$lesson_response" | grep -o '"id":[0-9]*' | cut -d':' -f2 | grep -v "^${lesson_id}$")
+            fi
+            
             TEXT_QUESTION_IDS=($question_ids)
-            echo "  TEXT Questions: ${#TEXT_QUESTION_IDS[@]} found"
+            echo "  TEXT Questions: ${#TEXT_QUESTION_IDS[@]} found (IDs: $question_ids)"
+            
         elif [[ "$lesson_name" == *"Choice - Reading"* ]]; then
             CHOICE_LESSON_ID=$lesson_id
             echo -e "${GREEN}✓ Found CHOICE lesson${NC}"
             echo "  Lesson ID: ${CHOICE_LESSON_ID}"
             echo "  Lesson Name: ${lesson_name}"
 
-            # Extract CHOICE question IDs
-            question_ids=$(echo "$lesson_response" | grep -o '"questionId":[0-9]*' | cut -d':' -f2)
+            # Extract CHOICE question IDs - try multiple formats
+            question_ids=""
+            if echo "$lesson_response" | grep -q '"questionIds":\['; then
+                question_ids=$(echo "$lesson_response" | grep -o '"questionIds":\[[0-9,]*\]' | sed 's/"questionIds":\[//g' | sed 's/\]//g' | tr ',' ' ')
+            elif echo "$lesson_response" | grep -q '"questionId":[0-9]*'; then
+                question_ids=$(echo "$lesson_response" | grep -o '"questionId":[0-9]*' | cut -d':' -f2)
+            elif echo "$lesson_response" | grep -q '"questions".*"id":[0-9]*'; then
+                question_ids=$(echo "$lesson_response" | grep -A 50 '"questions"' | grep -o '"id":[0-9]*' | cut -d':' -f2)
+            elif echo "$lesson_response" | grep -q '"id":[0-9]*'; then
+                # Filter out lesson ID itself
+                question_ids=$(echo "$lesson_response" | grep -o '"id":[0-9]*' | cut -d':' -f2 | grep -v "^${lesson_id}$")
+            fi
+            
             CHOICE_QUESTION_IDS=($question_ids)
-            echo "  CHOICE Questions: ${#CHOICE_QUESTION_IDS[@]} found"
+            echo "  CHOICE Questions: ${#CHOICE_QUESTION_IDS[@]} found (IDs: $question_ids)"
+        else
+            echo -e "${YELLOW}  → Skipping lesson: '$lesson_name' (not target lesson)${NC}"
         fi
     done
 
+    # Validate that we found the required lessons
     if [[ -z "$TEXT_LESSON_ID" ]] || [[ -z "$CHOICE_LESSON_ID" ]]; then
         echo -e "${RED}✗ Failed to discover all required lessons${NC}"
+        echo "  TEXT_LESSON_ID: '${TEXT_LESSON_ID}'"
+        echo "  CHOICE_LESSON_ID: '${CHOICE_LESSON_ID}'"
+        echo ""
+        echo -e "${YELLOW}Available lesson names found:${NC}"
+        for lesson_id in $lesson_ids; do
+            lesson_response=$(curl -s -X GET \
+                -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                "${BACKEND_URL}${API_BASE}/lessons/${lesson_id}")
+            lesson_name=$(echo "$lesson_response" | grep -o '"name":"[^"]*"' | head -1 | cut -d'"' -f4)
+            echo "  Lesson ID $lesson_id: '$lesson_name'"
+        done
         exit 1
     fi
 
     if [[ ${#TEXT_QUESTION_IDS[@]} -eq 0 ]] || [[ ${#CHOICE_QUESTION_IDS[@]} -eq 0 ]]; then
         echo -e "${RED}✗ No questions found in lessons${NC}"
+        echo "  TEXT questions found: ${#TEXT_QUESTION_IDS[@]}"
+        echo "  CHOICE questions found: ${#CHOICE_QUESTION_IDS[@]}"
         exit 1
     fi
 
@@ -247,12 +356,21 @@ create_answer() {
     local expected_result="$3"  # "correct" or "incorrect"
     local question_type="$4"    # "TEXT" or "CHOICE"
 
-    answer_data="{
-        \"questionId\": ${question_id},
-        \"answerContent\": \"${answer_content}\",
-        \"enrollmentId\": ${ENROLLMENT_ID},
-        \"sessionId\": 1
-    }"
+    # Build answer data - handle missing enrollment ID
+    if [[ ! -z "$ENROLLMENT_ID" ]]; then
+        answer_data="{
+            \"questionId\": ${question_id},
+            \"answerContent\": \"${answer_content}\",
+            \"enrollmentId\": ${ENROLLMENT_ID},
+            \"sessionId\": 1
+        }"
+    else
+        answer_data="{
+            \"questionId\": ${question_id},
+            \"answerContent\": \"${answer_content}\",
+            \"sessionId\": 1
+        }"
+    fi
 
     response=$(curl -s -w "\n%{http_code}" -X POST \
         -H "Authorization: Bearer ${ACCESS_TOKEN}" \
