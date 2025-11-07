@@ -45,3 +45,11 @@ tôi cần tạo plan task req-6 để test api Testcase_API_GradeAnswer:
 Tóm lại, tôi cần 1 file scripts để test api grade answer tự động, từ lúc login đến tham gia khóa học placement đến tạo answer và grade answer, lưu ý chỉ grade cho các câu hỏi TEXT và CHOICE
 
 Lưu ý: đây chỉ là plan task cho claude, không thực hiện test luôn
+
+hãy đọc documents/req-1.md, req-2.md đến req-6.md để hiểu context
+sau đó hãy đọc backend-service/test-pronunciation-testcase.sh và test-grade-answer.sh, đây là hai file script tôi đã fix lại lỗi sau các req
+
+bây giờ hãy giúp tôi tạo req-7 để test 4 API: CreateQuestion, AddQuestionsToLesson, Notification và Review:
+1. đọc documents/input/API Document V2.pdf và Testcase API V2.pdf để hiểu thông tin API và testcase hiện tại
+2. đọc code trong backend-service để hiểu rõ lại 4 api, nếu thông tin document api và testcase chưa ổn thì thực hiện tạo lại
+3. tạo script auto test tương tự cho 4 API (học tập test-grade-answer.sh)
