@@ -13,8 +13,8 @@
 # CONFIGURATION
 # ============================================================================
 BACKEND_URL="${BACKEND_URL:-http://localhost:8080}"
-USERNAME="${USERNAME:-admin@gmail.com}"
-PASSWORD="${PASSWORD:-123456}"
+USERNAME="${USERNAME:-user@example.com}"
+PASSWORD="${PASSWORD:-Abc@123456}"
 ACCESS_TOKEN=""
 
 # Test data IDs (created during setup)
