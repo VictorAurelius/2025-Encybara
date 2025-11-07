@@ -1,47 +1,73 @@
 #!/bin/bash
 
-################################################################################
-# TEST SCRIPT: Review API
-# API Endpoint: POST /api/v1/reviews
-# Description: Automated testing for course review creation functionality
-# Version: 1.0
+# ============================================
+# Review API Automated Test Suite
+# ============================================
+#
+# Description:
+#   This script automatically tests the Review API
+#   for course review creation functionality.
+#   Tests three review types: CONTENT, CONTRIBUTING, and MISTAKE.
+#
+# Test Flow:
+#   1. Authenticate user (user@example.com)
+#   2. Find test course and validate access
+#   3. Create/verify sufficient enrollment (>=30% completion)
+#   4. Run validation tests (field requirements)
+#   5. Run logic tests (business rules)
+#   6. Run error code tests (HTTP responses)
+#   7. Generate test report
+#
+# Test Coverage:
+#   - Validation Tests: ~8 test cases
+#   - Logic Tests: ~10-15 test cases
+#   - Error Tests: ~6 test cases
+#   - Total: ~24-29 API calls
+#
+# Prerequisites:
+#   - Backend service running on http://localhost:8080
+#   - Database seeded with test courses
+#   - Default user created (user@example.com / Abc@123456)
+#
+# Usage:
+#   ./test-review.sh
+#
+# Output:
+#   - Colored console output (✓ PASSED, ✗ FAILED)
+#   - Detailed test results and error messages
+#
+# Author: Generated based on req-7 task plan
 # Date: 2025-11-07
 # Reference: documents/req-7.md, documents/output/API_Document_V3.md
-################################################################################
+# ============================================
 
-# ============================================================================
-# CONFIGURATION
-# ============================================================================
+# Configuration
 BACKEND_URL="${BACKEND_URL:-http://18.136.223.96:8080}"
-USERNAME="${USERNAME:-user@example.com}"
-PASSWORD="${PASSWORD:-Abc@123456}"
-ACCESS_TOKEN=""
+API_BASE="/api/v1"
+DEFAULT_EMAIL="${DEFAULT_EMAIL:-user@example.com}"
+DEFAULT_PASSWORD="${DEFAULT_PASSWORD:-Abc@123456}"
 
-# Test data IDs (created during setup)
+# Global variables
+ACCESS_TOKEN=""
 TEST_USER_ID=""
 TEST_COURSE_ID=""
 ENROLLMENT_ID_SUFFICIENT=""  # Enrollment with >=30% completion
 ENROLLMENT_ID_INSUFFICIENT="" # Enrollment with <30% completion
-SECOND_COURSE_ID=""          # For duplicate review test
+SECOND_COURSE_ID=""         # For duplicate review test
 
-# ============================================================================
-# COLOR CODES FOR OUTPUT
-# ============================================================================
+# Test tracking variables
+declare -a TEST_RESULTS
+PASSED_COUNT=0
+FAILED_COUNT=0
+TOTAL_TESTS=0
+
+# Color codes
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
-
-# ============================================================================
-# TEST TRACKING VARIABLES
-# ============================================================================
-declare -a TEST_RESULTS
-PASSED_COUNT=0
-FAILED_COUNT=0
-PENDING_COUNT=0
-TOTAL_TESTS=0
 
 # ============================================================================
 # HELPER FUNCTIONS
@@ -55,138 +81,163 @@ print_section_header() {
     echo -e "${CYAN}================================${NC}\n"
 }
 
-# Get authentication token and user ID
+# Function to get authentication token
 get_auth_token() {
-    print_section_header "AUTHENTICATION"
-    echo "Attempting to authenticate as ${USERNAME}..."
+    echo -e "${YELLOW}>>> Authenticating user...${NC}"
 
-    local response=$(curl -s -X POST \
+    login_data="{
+        \"username\": \"${DEFAULT_EMAIL}\",
+        \"password\": \"${DEFAULT_PASSWORD}\"
+    }"
+
+    response=$(curl -s -w "\n%{http_code}" -X POST \
         -H "Content-Type: application/json" \
-        -d "{\"username\":\"${USERNAME}\",\"password\":\"${PASSWORD}\"}" \
-        "${BACKEND_URL}/api/v1/auth/login")
+        -d "${login_data}" \
+        "${BACKEND_URL}${API_BASE}/auth/login")
 
-    ACCESS_TOKEN=$(echo "$response" | jq -r '.data.access_token // empty')
+    status_code=$(echo "$response" | tail -n1)
+    response_body=$(echo "$response" | head -n -1)
 
-    if [ -z "$ACCESS_TOKEN" ]; then
-        echo -e "${RED}✗ Failed to get authentication token${NC}"
-        echo "Response: $response"
-        exit 1
-    fi
-
-    # Get user ID
-    TEST_USER_ID=$(echo "$response" | jq -r '.data.user.id // empty')
-
-    # If not in login response, try to fetch from account endpoint
-    if [ -z "$TEST_USER_ID" ] || [ "$TEST_USER_ID" = "null" ]; then
-        local user_response=$(curl -s -X GET \
-            -H "Authorization: Bearer ${ACCESS_TOKEN}" \
-            "${BACKEND_URL}/api/v1/auth/account" 2>/dev/null)
-
-        TEST_USER_ID=$(echo "$user_response" | jq -r '.data.id // empty')
-    fi
-
-    # If still no user ID, use default
-    if [ -z "$TEST_USER_ID" ] || [ "$TEST_USER_ID" = "null" ]; then
-        TEST_USER_ID=1
-        echo -e "${YELLOW}⚠ Could not get user ID from API, using default: ${TEST_USER_ID}${NC}"
-    fi
-
-    echo -e "${GREEN}✓ Successfully authenticated${NC}"
-    echo "Token: ${ACCESS_TOKEN:0:20}..."
-    echo "User ID: ${TEST_USER_ID}"
-}
-
-# Find or create test course
-setup_test_course() {
-    print_section_header "TEST COURSE SETUP"
-
-    # Try to find existing courses first
-    echo "Searching for existing courses..."
-    local courses_response=$(curl -s -X GET \
-        -H "Authorization: Bearer ${ACCESS_TOKEN}" \
-        "${BACKEND_URL}/api/v1/courses?page=0&size=10" 2>/dev/null)
-
-    local existing_course_id=$(echo "$courses_response" | jq -r '.data.content[0].id // empty' 2>/dev/null)
-
-    if [ -n "$existing_course_id" ] && [ "$existing_course_id" != "null" ]; then
-        TEST_COURSE_ID="$existing_course_id"
-        echo -e "${GREEN}✓ Using existing course ID: ${TEST_COURSE_ID}${NC}"
-
-        # Try to find a second course
-        SECOND_COURSE_ID=$(echo "$courses_response" | jq -r '.data.content[1].id // empty' 2>/dev/null)
-        if [ -n "$SECOND_COURSE_ID" ] && [ "$SECOND_COURSE_ID" != "null" ]; then
-            echo -e "${GREEN}✓ Using second existing course ID: ${SECOND_COURSE_ID}${NC}"
+    if [[ "$status_code" == "200" ]]; then
+        # Extract access token
+        ACCESS_TOKEN=$(echo "$response_body" | grep -o '"access_token":"[^"]*"' | sed 's/"access_token":"//g' | sed 's/"//g')
+        if [[ -z "$ACCESS_TOKEN" ]]; then
+            ACCESS_TOKEN=$(echo "$response_body" | grep -o '"accessToken":"[^"]*"' | sed 's/"accessToken":"//g' | sed 's/"//g')
+        fi
+        if [[ ! -z "$ACCESS_TOKEN" ]]; then
+            # Get user ID from response
+            TEST_USER_ID=$(echo "$response_body" | grep -o '"id":[0-9]*' | head -1 | cut -d':' -f2)
+            if [[ -z "$TEST_USER_ID" ]]; then
+                TEST_USER_ID=1
+                echo -e "${YELLOW}⚠ Could not get user ID from API, using default: ${TEST_USER_ID}${NC}"
+            fi
+            echo -e "${GREEN}✓ Authentication successful${NC}"
+            echo "  Token: ${ACCESS_TOKEN:0:30}..."
+            echo "  User ID: ${TEST_USER_ID}"
         else
-            echo -e "${YELLOW}⚠ Only one course found, will skip some tests${NC}"
+            echo -e "${RED}✗ Failed to extract access token${NC}"
+            exit 1
         fi
     else
-        echo -e "${YELLOW}⚠ No existing courses found${NC}"
-        echo "Note: Course creation may require admin permissions"
-        echo "Using placeholder course ID (tests may fail)"
+        echo -e "${RED}✗ Authentication failed - HTTP ${status_code}${NC}"
+        echo "Response: $response_body"
+        exit 1
+    fi
+    echo ""
+}
+
+# Function to find test courses
+setup_test_course() {
+    echo -e "${YELLOW}>>> Finding test courses...${NC}"
+
+    # Try to find existing courses first
+    echo -e "${CYAN}  → Searching for existing courses...${NC}"
+    response=$(curl -s -w "\n%{http_code}" -X GET \
+        -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+        "${BACKEND_URL}${API_BASE}/courses?page=0&size=10")
+
+    status_code=$(echo "$response" | tail -n1)
+    response_body=$(echo "$response" | head -n -1)
+
+    if [[ "$status_code" == "200" ]]; then
+        # Extract first course ID
+        TEST_COURSE_ID=$(echo "$response_body" | grep -o '"id":[0-9]*' | head -1 | cut -d':' -f2)
+        if [[ ! -z "$TEST_COURSE_ID" ]]; then
+            echo -e "${GREEN}✓ Found primary test course${NC}"
+            echo "  Course ID: ${TEST_COURSE_ID}"
+
+            # Try to find a second course for additional tests
+            SECOND_COURSE_ID=$(echo "$response_body" | grep -o '"id":[0-9]*' | sed -n '2p' | cut -d':' -f2)
+            if [[ ! -z "$SECOND_COURSE_ID" ]]; then
+                echo -e "${GREEN}✓ Found secondary test course${NC}"
+                echo "  Course ID: ${SECOND_COURSE_ID}"
+            else
+                echo -e "${YELLOW}⚠ Only one course found, some tests will be skipped${NC}"
+            fi
+        else
+            echo -e "${YELLOW}⚠ No courses found, using default IDs${NC}"
+            echo "Note: Course creation may require admin permissions"
+            TEST_COURSE_ID=1
+            SECOND_COURSE_ID=2
+        fi
+    else
+        echo -e "${RED}✗ Failed to fetch courses - HTTP ${status_code}${NC}"
+        echo "Response: $response_body"
         TEST_COURSE_ID=1
         SECOND_COURSE_ID=2
     fi
+    echo ""
 }
 
-# Create enrollments with different completion levels
+# Function to setup enrollments
 setup_enrollments() {
-    print_section_header "ENROLLMENT SETUP"
+    echo -e "${YELLOW}>>> Setting up enrollments...${NC}"
 
-    # Check if user is already enrolled
-    echo "Checking existing enrollments..."
-    local enrollments_response=$(curl -s -X GET \
+    # Check existing enrollments first
+    echo -e "${CYAN}  → Checking existing enrollments...${NC}"
+    response=$(curl -s -w "\n%{http_code}" -X GET \
         -H "Authorization: Bearer ${ACCESS_TOKEN}" \
-        "${BACKEND_URL}/api/v1/enrollments/user/${TEST_USER_ID}" 2>/dev/null)
+        "${BACKEND_URL}${API_BASE}/enrollments/user/${TEST_USER_ID}")
 
-    # Try to find enrollment with sufficient completion
-    local enrolled_course=$(echo "$enrollments_response" | jq -r ".data[] | select(.comLevel >= 30) | .courseId" 2>/dev/null | head -n1)
+    status_code=$(echo "$response" | tail -n1)
+    response_body=$(echo "$response" | head -n -1)
 
-    if [ -n "$enrolled_course" ] && [ "$enrolled_course" != "null" ]; then
-        TEST_COURSE_ID="$enrolled_course"
-        echo -e "${GREEN}✓ Found enrollment with sufficient completion (>=30%) for course: ${TEST_COURSE_ID}${NC}"
-        ENROLLMENT_ID_SUFFICIENT="found"
-    else
-        echo -e "${YELLOW}⚠ No enrollment with >=30% completion found${NC}"
+    if [[ "$status_code" == "200" ]]; then
+        # Try to find enrollment with >=30% completion
+        for enroll_data in $(echo "$response_body" | grep -o '{[^}]*}'); do
+            course_id=$(echo "$enroll_data" | grep -o '"courseId":[0-9]*' | cut -d':' -f2)
+            com_level=$(echo "$enroll_data" | grep -o '"comLevel":[0-9]*' | cut -d':' -f2)
+            enroll_id=$(echo "$enroll_data" | grep -o '"id":[0-9]*' | cut -d':' -f2)
+            
+            if [[ ! -z "$com_level" ]] && [[ "$com_level" -ge 30 ]]; then
+                TEST_COURSE_ID="$course_id"
+                ENROLLMENT_ID_SUFFICIENT="$enroll_id"
+                echo -e "${GREEN}✓ Found enrollment with sufficient completion (${com_level}%)${NC}"
+                echo "  Course ID: ${TEST_COURSE_ID}"
+                echo "  Enrollment ID: ${ENROLLMENT_ID_SUFFICIENT}"
+                break
+            elif [[ ! -z "$com_level" ]] && [[ "$com_level" -lt 30 ]]; then
+                ENROLLMENT_ID_INSUFFICIENT="$enroll_id"
+                echo -e "${GREEN}✓ Found enrollment with insufficient completion (${com_level}%)${NC}"
+            fi
+        done
+    fi
 
-        # Try to create enrollment with sufficient completion
-        echo "Attempting to create enrollment with sufficient completion..."
-        local enroll_response=$(curl -s -X POST \
+    # Create new enrollment if needed
+    if [[ -z "$ENROLLMENT_ID_SUFFICIENT" ]]; then
+        echo -e "${CYAN}  → Creating new enrollment for testing...${NC}"
+        enroll_data="{\"courseId\":${TEST_COURSE_ID}}"
+        
+        response=$(curl -s -w "\n%{http_code}" -X POST \
             -H "Authorization: Bearer ${ACCESS_TOKEN}" \
             -H "Content-Type: application/json" \
-            -d "{\"userId\":${TEST_USER_ID},\"courseId\":${TEST_COURSE_ID}}" \
-            "${BACKEND_URL}/api/v1/enrollments" 2>/dev/null)
+            -d "${enroll_data}" \
+            "${BACKEND_URL}${API_BASE}/enrollments")
 
-        ENROLLMENT_ID_SUFFICIENT=$(echo "$enroll_response" | jq -r '.data.id // empty')
+        status_code=$(echo "$response" | tail -n1)
+        response_body=$(echo "$response" | head -n -1)
 
-        if [ -n "$ENROLLMENT_ID_SUFFICIENT" ] && [ "$ENROLLMENT_ID_SUFFICIENT" != "null" ]; then
-            echo -e "${GREEN}✓ Enrollment created: ${ENROLLMENT_ID_SUFFICIENT}${NC}"
-
-            # Try to update completion level to 50% (may require admin or may not be possible)
-            echo "Note: Enrollment created with 0% completion. Review tests requiring >=30% may fail."
-            echo "Manually update comLevel in database if needed: UPDATE enrollments SET com_level = 50 WHERE id = ${ENROLLMENT_ID_SUFFICIENT}"
+        if [[ "$status_code" == "200" || "$status_code" == "201" ]]; then
+            ENROLLMENT_ID_SUFFICIENT=$(echo "$response_body" | grep -o '"id":[0-9]*' | cut -d':' -f2)
+            echo -e "${GREEN}✓ Created new enrollment${NC}"
+            echo "  Enrollment ID: ${ENROLLMENT_ID_SUFFICIENT}"
+            echo -e "${YELLOW}Note: New enrollment has 0% completion. Some tests may fail.${NC}"
+            echo "Tip: Update completion level in database: UPDATE enrollments SET com_level = 50 WHERE id = ${ENROLLMENT_ID_SUFFICIENT}"
         else
-            echo -e "${YELLOW}⚠ Could not create enrollment. Tests requiring enrollment will fail.${NC}"
+            echo -e "${RED}✗ Failed to create enrollment - HTTP ${status_code}${NC}"
+            echo "Response: $response_body"
         fi
     fi
 
-    # For insufficient enrollment test
-    if [ -n "$SECOND_COURSE_ID" ] && [ "$SECOND_COURSE_ID" != "null" ]; then
-        local insufficient_enrolled=$(echo "$enrollments_response" | jq -r ".data[] | select(.comLevel < 30) | .courseId" 2>/dev/null | head -n1)
-
-        if [ -n "$insufficient_enrolled" ] && [ "$insufficient_enrolled" != "null" ]; then
-            ENROLLMENT_ID_INSUFFICIENT="$insufficient_enrolled"
-            echo -e "${GREEN}✓ Found enrollment with insufficient completion (<30%)${NC}"
-        fi
-    fi
-
-    echo -e "\n${BLUE}Enrollment Setup Summary:${NC}"
-    echo "  Test Course ID: ${TEST_COURSE_ID}"
+    echo -e "\n${BLUE}Enrollment Summary:${NC}"
+    echo "  Course ID: ${TEST_COURSE_ID}"
     echo "  Second Course ID: ${SECOND_COURSE_ID:-none}"
-    echo "  Enrollment (>=30%): ${ENROLLMENT_ID_SUFFICIENT:-not created}"
-    echo "  Enrollment (<30%): ${ENROLLMENT_ID_INSUFFICIENT:-not created}"
+    echo "  Main Enrollment ID: ${ENROLLMENT_ID_SUFFICIENT:-not created}"
+    echo "  Low Completion Enrollment ID: ${ENROLLMENT_ID_INSUFFICIENT:-none}"
+    echo ""
 }
 
-# Run a test case
+# Function to run a test case
 run_test() {
     local test_name="$1"
     local method="$2"
@@ -195,90 +246,123 @@ run_test() {
     local expected_status="$5"
     local category="$6"
     local validation_check="${7:-}"
+    local test_id="${8:-$((TOTAL_TESTS + 1))}"
 
     TOTAL_TESTS=$((TOTAL_TESTS + 1))
+    echo -e "\n${YELLOW}[TEST ${test_id}] ${test_name}${NC}"
 
-    # Build curl command
-    local curl_cmd="curl -s -w \"\\n%{http_code}\" -X ${method}"
-
-    if [ -n "$ACCESS_TOKEN" ] && [ "$ACCESS_TOKEN" != "INVALID" ]; then
-        curl_cmd="$curl_cmd -H \"Authorization: Bearer ${ACCESS_TOKEN}\""
-    elif [ "$ACCESS_TOKEN" = "INVALID" ]; then
-        curl_cmd="$curl_cmd -H \"Authorization: Bearer invalid_token_12345\""
+    # Build request
+    echo -e "${CYAN}  → Request Details:${NC}"
+    echo "    Method: ${method}"
+    echo "    Endpoint: ${BACKEND_URL}${API_BASE}${endpoint}"
+    if [ -n "$data" ] && [ "$data" != "NONE" ]; then
+        echo "    Data: $(echo "$data" | jq -c . 2>/dev/null || echo "$data")"
     fi
 
-    curl_cmd="$curl_cmd -H \"Content-Type: application/json\""
+    # Setup headers
+    local headers=(-H "Content-Type: application/json")
+    if [ -n "$ACCESS_TOKEN" ] && [ "$ACCESS_TOKEN" != "INVALID" ]; then
+        headers+=(-H "Authorization: Bearer ${ACCESS_TOKEN}")
+    elif [ "$ACCESS_TOKEN" = "INVALID" ]; then
+        headers+=(-H "Authorization: Bearer invalid_token_12345")
+    fi
 
+    # Execute request with timeout
+    local curl_cmd="curl -s -w \"\n%{http_code}\" -X ${method} ${headers[@]}"
     if [ -n "$data" ] && [ "$data" != "NONE" ]; then
         curl_cmd="$curl_cmd -d '${data}'"
     fi
+    curl_cmd="$curl_cmd \"${BACKEND_URL}${API_BASE}${endpoint}\""
 
-    curl_cmd="$curl_cmd \"${BACKEND_URL}${endpoint}\""
-
-    # Execute request with timeout
-    local response=$(eval "timeout 10s $curl_cmd 2>/dev/null")
+    echo -e "${CYAN}  → Executing request...${NC}"
+    local response=$(timeout 10s bash -c "$curl_cmd" 2>/dev/null)
     local exit_code=$?
 
     if [ $exit_code -eq 124 ]; then
-        echo -e "${RED}✗ FAIL${NC}: $test_name (Request timeout after 10s)"
-        TEST_RESULTS+=("FAIL|$category|$test_name|Timeout")
+        echo -e "  ${RED}✗ FAILED - Request timeout after 10s${NC}"
+        TEST_RESULTS+=("${test_id}|FAIL|${category}|${test_name}|Timeout")
         FAILED_COUNT=$((FAILED_COUNT + 1))
         return
     fi
 
-    local http_code=$(echo "$response" | tail -n1)
+    local status_code=$(echo "$response" | tail -n1)
     local body=$(echo "$response" | sed '$d')
 
-    # Handle multiple acceptable status codes (e.g., "200|409")
+    # Validate response format
+    local valid_response=true
+    if ! echo "$body" | jq -e '.statusCode' >/dev/null 2>&1; then
+        echo -e "  ${YELLOW}⚠ WARNING - Missing 'statusCode' field${NC}"
+        valid_response=false
+    fi
+    if ! echo "$body" | jq -e '.message' >/dev/null 2>&1; then
+        echo -e "  ${YELLOW}⚠ WARNING - Missing 'message' field${NC}"
+        valid_response=false
+    fi
+    if ! echo "$body" | jq -e '.data' >/dev/null 2>&1; then
+        echo -e "  ${YELLOW}⚠ WARNING - Missing 'data' field${NC}"
+        valid_response=false
+    fi
+
+    echo -e "${CYAN}  → Response Details:${NC}"
+    echo "    Status Code: ${status_code}"
+    if [ -n "$body" ]; then
+        echo "    Body: $(echo "$body" | jq -c . 2>/dev/null || echo "$body")"
+    fi
+
+    # Handle multiple acceptable status codes
     if [[ "$expected_status" == *"|"* ]]; then
         local status_match=false
         IFS='|' read -ra statuses <<< "$expected_status"
         for status in "${statuses[@]}"; do
-            if [ "$http_code" = "$status" ]; then
+            if [ "$status_code" = "$status" ]; then
                 status_match=true
                 break
             fi
         done
 
         if [ "$status_match" = true ]; then
-            echo -e "${GREEN}✓ PASS${NC}: $test_name"
-            TEST_RESULTS+=("PASS|$category|$test_name")
+            echo -e "  ${GREEN}✓ PASSED - Status code ${status_code} matches expected${NC}"
+            TEST_RESULTS+=("${test_id}|PASS|${category}|${test_name}")
             PASSED_COUNT=$((PASSED_COUNT + 1))
         else
-            echo -e "${RED}✗ FAIL${NC}: $test_name (Expected: $expected_status, Got: $http_code)"
-            if [ -n "$body" ]; then
-                echo "  Response: $(echo "$body" | jq -c . 2>/dev/null || echo "$body")"
-            fi
-            TEST_RESULTS+=("FAIL|$category|$test_name|Expected: $expected_status, Got: $http_code")
+            echo -e "  ${RED}✗ FAILED - Status code mismatch${NC}"
+            echo "    Expected: one of [${expected_status}]"
+            echo "    Got: ${status_code}"
+            TEST_RESULTS+=("${test_id}|FAIL|${category}|${test_name}|Status code mismatch: got ${status_code}")
             FAILED_COUNT=$((FAILED_COUNT + 1))
         fi
         return
     fi
 
-    # Check HTTP status code
-    if [ "$http_code" = "$expected_status" ]; then
-        # Additional validation check if provided
+    # Check HTTP status code and validation
+    if [ "$status_code" = "$expected_status" ]; then
         if [ -n "$validation_check" ]; then
-            if echo "$body" | jq -e "$validation_check" > /dev/null 2>&1; then
-                echo -e "${GREEN}✓ PASS${NC}: $test_name"
-                TEST_RESULTS+=("PASS|$category|$test_name")
+            if echo "$body" | jq -e "$validation_check" >/dev/null 2>&1; then
+                echo -e "  ${GREEN}✓ PASSED - Status code and validation OK${NC}"
+                if [ "$valid_response" = false ]; then
+                    echo -e "    ${YELLOW}⚠ Note: Response format has warnings${NC}"
+                fi
+                TEST_RESULTS+=("${test_id}|PASS|${category}|${test_name}")
                 PASSED_COUNT=$((PASSED_COUNT + 1))
             else
-                echo -e "${RED}✗ FAIL${NC}: $test_name (Validation check failed: $validation_check)"
-                TEST_RESULTS+=("FAIL|$category|$test_name|Validation: $validation_check failed")
+                echo -e "  ${RED}✗ FAILED - Validation check failed${NC}"
+                echo "    Check: $validation_check"
+                TEST_RESULTS+=("${test_id}|FAIL|${category}|${test_name}|Validation failed")
                 FAILED_COUNT=$((FAILED_COUNT + 1))
             fi
         else
-            echo -e "${GREEN}✓ PASS${NC}: $test_name"
-            TEST_RESULTS+=("PASS|$category|$test_name")
+            echo -e "  ${GREEN}✓ PASSED - Status code ${status_code} OK${NC}"
+            if [ "$valid_response" = false ]; then
+                echo -e "    ${YELLOW}⚠ Note: Response format has warnings${NC}"
+            fi
+            TEST_RESULTS+=("${test_id}|PASS|${category}|${test_name}")
             PASSED_COUNT=$((PASSED_COUNT + 1))
         fi
     else
-        echo -e "${RED}✗ FAIL${NC}: $test_name (Expected: $expected_status, Got: $http_code)"
-        if [ -n "$body" ]; then
-            echo "  Response: $(echo "$body" | jq -c . 2>/dev/null || echo "$body")"
-        fi
-        TEST_RESULTS+=("FAIL|$category|$test_name|Expected: $expected_status, Got: $http_code")
+        echo -e "  ${RED}✗ FAILED - Status code mismatch${NC}"
+        echo "    Expected: ${expected_status}"
+        echo "    Got: ${status_code}"
+        TEST_RESULTS+=("${test_id}|FAIL|${category}|${test_name}|Status code mismatch: got ${status_code}")
         FAILED_COUNT=$((FAILED_COUNT + 1))
     fi
 }
@@ -640,72 +724,118 @@ run_format_response_tests() {
 # ============================================================================
 # REPORT GENERATION
 # ============================================================================
+# Function to generate test report
 generate_report() {
-    print_section_header "TEST EXECUTION SUMMARY"
+    local report_date=$(date '+%Y-%m-%d %H:%M:%S')
+    local duration=$SECONDS
+    local minutes=$((duration / 60))
+    local seconds=$((duration % 60))
 
-    echo -e "${BLUE}Test Statistics:${NC}"
-    echo -e "  Total Tests:   ${TOTAL_TESTS}"
-    echo -e "  ${GREEN}Passed:        ${PASSED_COUNT}${NC}"
-    echo -e "  ${RED}Failed:        ${FAILED_COUNT}${NC}"
-    echo -e "  ${YELLOW}Pending:       ${PENDING_COUNT}${NC}"
+    echo -e "\n${BLUE}╔════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${BLUE}║                    TEST EXECUTION REPORT                ║${NC}"
+    echo -e "${BLUE}╚════════════════════════════════════════════════════════╝${NC}\n"
 
+    # Configuration Summary
+    echo -e "${CYAN}Test Configuration:${NC}"
+    echo -e "  Backend URL:  ${BACKEND_URL}"
+    echo -e "  User:         ${DEFAULT_EMAIL}"
+    echo -e "  Test Course:  ${TEST_COURSE_ID}"
+    echo -e "  Date:         ${report_date}"
+    echo -e "  Duration:     ${minutes}m ${seconds}s"
+
+    # Test Statistics
+    echo -e "\n${CYAN}Test Statistics:${NC}"
+    echo -e "┌──────────────┬────────┐"
+    echo -e "│ Total Tests  │ ${TOTAL_TESTS} │"
+    printf "│ %-12s│ ${GREEN}%-7d${NC}│\n" "Passed" "${PASSED_COUNT}"
+    printf "│ %-12s│ ${RED}%-7d${NC}│\n" "Failed" "${FAILED_COUNT}"
+    printf "│ %-12s│ ${YELLOW}%-7d${NC}│\n" "Pending" "${PENDING_COUNT}"
+    echo -e "└──────────────┴────────┘"
+
+    # Pass Rate Calculation
     if [ ${TOTAL_TESTS} -gt 0 ]; then
         local pass_rate=$((PASSED_COUNT * 100 / TOTAL_TESTS))
-        echo -e "\n  Pass Rate:     ${pass_rate}%"
+        local pass_color=$RED
+        if [ $pass_rate -ge 90 ]; then
+            pass_color=$GREEN
+        elif [ $pass_rate -ge 70 ]; then
+            pass_color=$YELLOW
+        fi
+        echo -e "\nPass Rate: ${pass_color}${pass_rate}%${NC}"
     fi
 
-    # Summary by category
-    echo -e "\n${BLUE}Results by Category:${NC}"
+    # Category Summary
+    echo -e "\n${CYAN}Results by Category:${NC}"
+    echo -e "┌────────────────┬────────┬────────┬────────┬──────────┐"
+    echo -e "│    Category    │ Passed │ Failed │ Pending│ Coverage │"
+    echo -e "├────────────────┼────────┼────────┼────────┼──────────┤"
+    
     for category in "VALIDATE" "LOGIC" "ERROR_CODE" "FORMAT_RESPONSE"; do
         local cat_total=0
         local cat_passed=0
         local cat_failed=0
+        local cat_pending=0
 
         for result in "${TEST_RESULTS[@]}"; do
             IFS='|' read -ra parts <<< "$result"
             if [ "${parts[1]}" = "$category" ]; then
                 cat_total=$((cat_total + 1))
-                if [ "${parts[0]}" = "PASS" ]; then
-                    cat_passed=$((cat_passed + 1))
-                else
-                    cat_failed=$((cat_failed + 1))
-                fi
+                case "${parts[0]}" in
+                    "PASS") cat_passed=$((cat_passed + 1)) ;;
+                    "FAIL") cat_failed=$((cat_failed + 1)) ;;
+                    "SKIP") cat_pending=$((cat_pending + 1)) ;;
+                esac
             fi
         done
 
         if [ $cat_total -gt 0 ]; then
-            echo -e "  ${category}: ${GREEN}${cat_passed} passed${NC}, ${RED}${cat_failed} failed${NC} (${cat_total} total)"
+            local coverage=$((cat_passed * 100 / cat_total))
+            local cov_color=$RED
+            if [ $coverage -ge 90 ]; then
+                cov_color=$GREEN
+            elif [ $coverage -ge 70 ]; then
+                cov_color=$YELLOW
+            fi
+            printf "│ %-14s│ ${GREEN}%-7d${NC}│ ${RED}%-7d${NC}│ ${YELLOW}%-7d${NC}│ ${cov_color}%-8d${NC}│\n" \
+                "$category" "$cat_passed" "$cat_failed" "$cat_pending" "$coverage"
         fi
     done
+    echo -e "└────────────────┴────────┴────────┴────────┴──────────┘"
 
-    # Show failed tests
+    # Failed Tests Detail
     if [ ${FAILED_COUNT} -gt 0 ]; then
-        echo -e "\n${RED}Failed Tests:${NC}"
+        echo -e "\n${RED}Failed Tests Detail:${NC}"
+        echo -e "┌─────────┬────────────┬────────────────────────────────────┐"
+        echo -e "│ Test ID │  Category  │ Description                        │"
+        echo -e "├─────────┼────────────┼────────────────────────────────────┤"
+        
         for result in "${TEST_RESULTS[@]}"; do
             if [[ $result == FAIL* ]]; then
                 IFS='|' read -ra parts <<< "$result"
-                echo -e "  ${RED}✗${NC} [${parts[1]}] ${parts[2]}"
+                local test_id="${parts[0]}"
+                printf "│ %-7s │ %-10s │ %-36s │\n" "${parts[0]}" "${parts[1]}" "${parts[2]:0:36}"
                 if [ ${#parts[@]} -ge 4 ]; then
-                    echo -e "     ${parts[3]}"
+                    printf "│         │            │ %-36s │\n" "${parts[3]:0:36}"
                 fi
             fi
         done
+        echo -e "└─────────┴────────────┴────────────────────────────────────┘"
     fi
 
-    # Final verdict
-    echo ""
+    # Final Verdict
+    echo -e "\n${CYAN}Final Verdict:${NC}"
     if [ ${FAILED_COUNT} -eq 0 ] && [ ${PENDING_COUNT} -eq 0 ]; then
-        echo -e "${GREEN}═══════════════════════════════════════${NC}"
-        echo -e "${GREEN}   ALL TESTS PASSED! ✓${NC}"
-        echo -e "${GREEN}═══════════════════════════════════════${NC}"
+        echo -e "╔═══════════════════════════════════════════════════╗"
+        echo -e "║ ${GREEN}               ALL TESTS PASSED! ✓               ${NC}║"
+        echo -e "╚═══════════════════════════════════════════════════╝"
     elif [ ${FAILED_COUNT} -eq 0 ]; then
-        echo -e "${YELLOW}═══════════════════════════════════════${NC}"
-        echo -e "${YELLOW}   ALL TESTS PASSED (some pending)${NC}"
-        echo -e "${YELLOW}═══════════════════════════════════════${NC}"
+        echo -e "╔═══════════════════════════════════════════════════╗"
+        echo -e "║ ${YELLOW}         ALL TESTS PASSED (some pending)         ${NC}║"
+        echo -e "╚═══════════════════════════════════════════════════╝"
     else
-        echo -e "${RED}═══════════════════════════════════════${NC}"
-        echo -e "${RED}   SOME TESTS FAILED ✗${NC}"
-        echo -e "${RED}═══════════════════════════════════════${NC}"
+        echo -e "╔═══════════════════════════════════════════════════╗"
+        echo -e "║ ${RED}              SOME TESTS FAILED! ✗              ${NC}║"
+        echo -e "╚═══════════════════════════════════════════════════╝"
     fi
 }
 
@@ -713,59 +843,125 @@ generate_report() {
 # MAIN EXECUTION
 # ============================================================================
 main() {
+    # Start timing
+    SECONDS=0
+    
     echo -e "${BLUE}╔════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${BLUE}║                 REVIEW API TEST SUITE                  ║${NC}"
     echo -e "${BLUE}║                                                        ║${NC}"
-    echo -e "${BLUE}║          Review API - Automated Test Suite            ║${NC}"
-    echo -e "${BLUE}║                                                        ║${NC}"
+    echo -e "${BLUE}║  Version: 1.0.0                                       ║${NC}"
+    echo -e "${BLUE}║  Date: $(date '+%Y-%m-%d')                              ║${NC}"
     echo -e "${BLUE}╚════════════════════════════════════════════════════════╝${NC}"
-    echo -e "\n${BLUE}Backend URL:${NC} ${BACKEND_URL}"
-    echo -e "${BLUE}Username:${NC}    ${USERNAME}"
-    echo -e "${BLUE}Start Time:${NC}  $(date '+%Y-%m-%d %H:%M:%S')"
 
+    # System checks
+    echo -e "\n${CYAN}System Checks:${NC}"
+    
     # Check if jq is installed
+    echo -n "  Checking jq installation... "
     if ! command -v jq &> /dev/null; then
-        echo -e "${RED}Error: jq is not installed. Please install jq to run this test suite.${NC}"
-        echo "Install with: sudo apt-get install jq (Ubuntu/Debian) or brew install jq (macOS)"
+        echo -e "${RED}✗ Not Found${NC}"
+        echo -e "\n${RED}Error: jq is required but not installed.${NC}"
+        echo "Please install jq using one of these commands:"
+        echo "  Ubuntu/Debian: sudo apt-get install jq"
+        echo "  macOS:        brew install jq"
+        echo "  Windows:      choco install jq"
         exit 1
     fi
+    echo -e "${GREEN}✓ Found${NC}"
 
+    # Check if curl is installed
+    echo -n "  Checking curl installation... "
+    if ! command -v curl &> /dev/null; then
+        echo -e "${RED}✗ Not Found${NC}"
+        echo -e "\n${RED}Error: curl is required but not installed.${NC}"
+        echo "Please install curl using your system's package manager."
+        exit 1
+    fi
+    echo -e "${GREEN}✓ Found${NC}"
+
+    # Check internet connectivity
+    echo -n "  Checking backend connectivity... "
+    if ! curl --silent --head --fail "${BACKEND_URL}" >/dev/null 2>&1; then
+        echo -e "${RED}✗ Failed${NC}"
+        echo -e "\n${RED}Error: Cannot connect to ${BACKEND_URL}${NC}"
+        echo "Please check:"
+        echo "  1. Your internet connection"
+        echo "  2. The backend service is running"
+        echo "  3. The BACKEND_URL environment variable is correct"
+        exit 1
+    fi
+    echo -e "${GREEN}✓ Connected${NC}"
+
+    echo -e "\n${CYAN}Test Environment:${NC}"
+    echo -e "  Backend URL:  ${BACKEND_URL}"
+    echo -e "  User:         ${DEFAULT_EMAIL}"
+    echo -e "  Start Time:   $(date '+%Y-%m-%d %H:%M:%S')"
+    echo -e "  Test Script:  ${0##*/}"
+
+    echo -e "\n${CYAN}Initializing Tests:${NC}"
+    
     # Authenticate
+    echo -n "  Authenticating user... "
     get_auth_token
 
     # Setup test data
+    echo -n "  Setting up test data... "
     setup_test_course
     setup_enrollments
 
-    # Run test categories
+    # Run test categories with progress tracking
+    echo -e "\n${CYAN}Executing Test Categories:${NC}"
+    local total_categories=4
+    local current_category=0
+
+    # Category 1: Validate Tests
+    ((current_category++))
+    echo -e "\n${YELLOW}[$current_category/$total_categories] Running Validate Tests${NC}"
     run_validate_tests
+
+    # Category 2: Logic Tests
+    ((current_category++))
+    echo -e "\n${YELLOW}[$current_category/$total_categories] Running Logic Tests${NC}"
     run_logic_tests
+
+    # Category 3: Error Code Tests
+    ((current_category++))
+    echo -e "\n${YELLOW}[$current_category/$total_categories] Running Error Code Tests${NC}"
     run_error_code_tests
+
+    # Category 4: Format Response Tests
+    ((current_category++))
+    echo -e "\n${YELLOW}[$current_category/$total_categories] Running Format Response Tests${NC}"
     run_format_response_tests
 
-    # Generate report
+    # Generate final report
     generate_report
 
-    echo -e "\n${BLUE}End Time:${NC}    $(date '+%Y-%m-%d %H:%M:%S')"
+    # Display important notes
+    echo -e "\n${CYAN}Important Notes:${NC}"
+    echo -e "┌────────────────────────────────────────────────────┐"
+    echo -e "│ 1. Review API Requirements:                        │"
+    echo -e "│    • User must be enrolled in the course          │"
+    echo -e "│    • Enrollment completion must be ≥30%           │"
+    echo -e "│    • One review per course per user              │"
+    echo -e "│                                                    │"
+    echo -e "│ 2. Troubleshooting Failed Tests:                  │"
+    echo -e "│    • Check enrollment:                            │"
+    echo -e "│      SELECT * FROM enrollments                    │"
+    echo -e "│      WHERE user_id = ${TEST_USER_ID}                          │"
+    echo -e "│    • Update completion level:                     │"
+    echo -e "│      UPDATE enrollments                           │"
+    echo -e "│      SET com_level = 50                          │"
+    echo -e "│      WHERE user_id = ${TEST_USER_ID}                          │"
+    echo -e "│                                                    │"
+    echo -e "│ 3. Note: Test reviews remain in the database      │"
+    echo -e "└────────────────────────────────────────────────────┘"
 
-    # Important notes
-    echo -e "\n${CYAN}═══════════════════════════════════════${NC}"
-    echo -e "${CYAN}IMPORTANT NOTES${NC}"
-    echo -e "${CYAN}═══════════════════════════════════════${NC}"
-    echo -e "${YELLOW}1. Review API requires:${NC}"
-    echo -e "   - User must be enrolled in the course"
-    echo -e "   - Enrollment completion must be ≥30%"
-    echo -e "   - User can only review a course once (409 on duplicate)"
-    echo -e "\n${YELLOW}2. If tests fail with 400/404:${NC}"
-    echo -e "   - Check enrollment exists: SELECT * FROM enrollments WHERE user_id = ${TEST_USER_ID}"
-    echo -e "   - Update completion: UPDATE enrollments SET com_level = 50 WHERE user_id = ${TEST_USER_ID}"
-    echo -e "\n${YELLOW}3. Reviews created during testing remain in database${NC}"
-
-    # Exit with appropriate code
+    # Exit with status code based on results
     if [ ${FAILED_COUNT} -gt 0 ]; then
         exit 1
-    else
-        exit 0
     fi
+    exit 0
 }
 
 # Run main function
