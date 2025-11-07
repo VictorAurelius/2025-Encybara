@@ -12,7 +12,7 @@
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
-BACKEND_URL="${BACKEND_URL:-http://localhost:8080}"
+BACKEND_URL="${BACKEND_URL:-http://18.136.223.96:8080}"
 USERNAME="${USERNAME:-user@example.com}"
 PASSWORD="${PASSWORD:-Abc@123456}"
 ACCESS_TOKEN=""
