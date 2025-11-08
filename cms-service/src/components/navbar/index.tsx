@@ -123,14 +123,14 @@ const Navbar = (props: {
   const handleNotificationClick = async (notificationId: number) => {
     navigate('/admin/forum');
   };
-  const getUserName = (userId: number) => {
-    const userInfo = user.find((u: any) => u.id === userId);
-    return userInfo ? userInfo.name : "Unknown User";
-  };
-  const getUserAvatar = (userId: number) => {
-    const userInfo = user.find((u: any) => u.id === userId);
-    return userInfo ? userInfo.avatar : "default-avatar.png";
-  };
+  // const getUserName = (userId: number) => {
+  //   const userInfo = user.find((u: any) => u.id === userId);
+  //   return userInfo ? userInfo.name : "Unknown User";
+  // };
+  // const getUserAvatar = (userId: number) => {
+  //   const userInfo = user.find((u: any) => u.id === userId);
+  //   return userInfo ? userInfo.avatar : "default-avatar.png";
+  // };
 
   const isNew = (date: string) => {
     const now = new Date();
@@ -224,7 +224,7 @@ const Navbar = (props: {
               </div>
 
               {/* Notifications List */}
-              <div className="flex flex-col max-h-[400px] overflow-y-auto">
+              {/* <div className="flex flex-col max-h-[400px] overflow-y-auto">
                 {activeTab === 'unread' && (
                   <div className="p-2">
                     {notifications.filter(n => !n.read).map((notification) => (
@@ -280,7 +280,7 @@ const Navbar = (props: {
                     ))}
                   </div>
                 )}
-              </div>
+              </div> */}
 
             </div>
           }
