@@ -122,8 +122,8 @@ class LectureService {
 
     try {
       const processedLink = materLink
-        .replace('http://0.0.0.0:8080', 'http://18.136.223.96:8080')  // ← Bỏ :8080
-        .replace('http://18.136.223.96:8080', 'http://18.136.223.96:8080')  // ← Bỏ :8080
+        .replace('http://0.0.0.0:8080', 'http://18.136.223.96')  // ← Bỏ :8080
+        .replace('http://18.136.223.96:8080', 'http://18.136.223.96')  // ← Bỏ :8080
         .replace(/ /g, '%20');
 
       console.log("Fetching from:", processedLink);
