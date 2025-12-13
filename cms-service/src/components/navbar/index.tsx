@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Dropdown from "components/dropdown";
 import { FiAlignJustify } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import avatarImage from "assets/avatar.png"
+import avatarImage from "assets/image.png"
 import { RiMoonFill, RiSunFill } from "react-icons/ri";
 import {
   IoMdNotificationsOutline,
