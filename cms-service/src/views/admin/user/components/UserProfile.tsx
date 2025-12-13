@@ -183,6 +183,17 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, courses, reviews, sched
 
     const handleViewLessons = (courseId: number) => {
         fetchLessonsByCourseId(courseId);
+
+        // Smooth scroll to lessons section after a short delay to ensure content is rendered
+        setTimeout(() => {
+            const lessonsSection = document.getElementById('lessons-section');
+            if (lessonsSection) {
+                lessonsSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }, 100);
     };
 
     return (
@@ -279,7 +290,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, courses, reviews, sched
                 </table>
 
                 {selectedCourseId && (
-                    <div className="mt-6">
+                    <div id="lessons-section" className="mt-6">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-xl font-bold">List Lessons</h3>
                             <Button type="link" onClick={() => setSelectedCourseId(null)}>Hide</Button>

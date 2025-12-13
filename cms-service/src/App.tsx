@@ -5,6 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "layouts/admin";
 import AuthLayout from "layouts/auth";
 import UserProfilePage from "views/admin/user";
+import CourseDetail from "views/admin/courses/CourseDetail";
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
             <Route key={path} path={path} element={component} />
           ))}
         <Route key={"profile/:userId"} path={"profile/:userId"} element={<UserProfilePage />} />
+        <Route path="courses/:courseId" element={<CourseDetail />} />
       </Route>
 
       {/* Default Route */}

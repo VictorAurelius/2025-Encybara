@@ -72,7 +72,7 @@ public class GameControllerV2 {
     
     @PostMapping("/{gameId}/start")
     public ResponseEntity<RestResponse<Map<String, Object>>> startGame(
-            @PathVariable Long gameId,
+            @PathVariable("gameId") Long gameId,
             Authentication authentication) {
         try {
             User user = userService.handleGetUserByUsername(authentication.getName());
@@ -130,7 +130,7 @@ public class GameControllerV2 {
 
     @PostMapping("/{sessionId}/answer")
     public ResponseEntity<RestResponse<Map<String, Object>>> submitAnswer(
-            @PathVariable Long sessionId,
+            @PathVariable("sessionId") Long sessionId,
             @RequestBody Map<String, Object> request) {
         try {
             Long questionId = Long.valueOf(request.get("questionId").toString());
@@ -152,7 +152,7 @@ public class GameControllerV2 {
     }
 
     @PostMapping("/{sessionId}/end")
-    public ResponseEntity<RestResponse<Map<String, Object>>> endGame(@PathVariable Long sessionId) {
+    public ResponseEntity<RestResponse<Map<String, Object>>> endGame(@PathVariable("sessionId") Long sessionId) {
         try {
             gameService.endGame(sessionId);
             GameSession session = gameService.getGameSession(sessionId);
@@ -175,11 +175,65 @@ public class GameControllerV2 {
             return ResponseEntity.badRequest().body(errorResponse);
         }
     }
+    @PutMapping("/{gameId}")
+    public ResponseEntity<RestResponse<Game>> updateGame(@PathVariable("gameId") Long gameId, @RequestBody Map<String, Object> request) {
+        try {
+            String name = request.get("name").toString();
+            String description = request.get("description").toString();
+            GameTypeEnum gameType = GameTypeEnum.valueOf(request.get("gameType").toString());
+            int maxQuestions = Integer.parseInt(request.get("maxQuestions").toString());
+            int timeLimit = Integer.parseInt(request.get("timeLimit").toString());
+
+            Game updated = gameService.updateGame(gameId, name, description, gameType, maxQuestions, timeLimit);
+
+            RestResponse<Game> response = new RestResponse<>();
+            response.setStatusCode(200);
+            response.setMessage("Game updated successfully");
+            response.setData(updated);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            RestResponse<Game> errorResponse = new RestResponse<>();
+            errorResponse.setStatusCode(400);
+            errorResponse.setError(e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
+    @DeleteMapping("/{gameId}")
+    public ResponseEntity<RestResponse<Void>> deleteGame(@PathVariable("gameId") Long gameId) {
+        try {
+            gameService.deleteGame(gameId);
+
+            RestResponse<Void> response = new RestResponse<>();
+            response.setStatusCode(200);
+            response.setMessage("Game deleted successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            RestResponse<Void> errorResponse = new RestResponse<>();
+            errorResponse.setStatusCode(400);
+            errorResponse.setError(e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
 
     @GetMapping("/leaderboard")
     public ResponseEntity<RestResponse<Map<String, Object>>> getLeaderboard(Authentication authentication) {
         try {
+            // Kiểm tra xem authentication có tồn tại và có tên người dùng không
+            if (authentication == null || authentication.getName() == null) {
+                RestResponse<Map<String, Object>> errorResponse = new RestResponse<>();
+                errorResponse.setStatusCode(401);
+                errorResponse.setError("Unauthorized: No authentication information provided.");
+                return ResponseEntity.status(401).body(errorResponse);
+            }
+
             User user = userService.handleGetUserByUsername(authentication.getName());
+            if (user == null) {
+                RestResponse<Map<String, Object>> errorResponse = new RestResponse<>();
+                errorResponse.setStatusCode(404);
+                errorResponse.setError("User not found for the given authentication.");
+                return ResponseEntity.status(404).body(errorResponse);
+            }
+
             Map<String, Object> leaderboard = gameService.getLeaderboard(user.getId());
             
             RestResponse<Map<String, Object>> response = new RestResponse<>();
@@ -196,7 +250,7 @@ public class GameControllerV2 {
     }
 
     @GetMapping("/{sessionId}/status")
-    public ResponseEntity<RestResponse<GameSessionStatusResponse>> getGameStatus(@PathVariable Long sessionId) {
+    public ResponseEntity<RestResponse<GameSessionStatusResponse>> getGameStatus(@PathVariable("sessionId") Long sessionId) {
         try {
             GameSession session = gameService.getGameSession(sessionId);
             GameSessionStatusResponse statusResponse = GameSessionStatusResponse.fromGameSession(session);

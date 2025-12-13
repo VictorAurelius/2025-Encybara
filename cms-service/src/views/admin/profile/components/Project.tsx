@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { MdAddCircleOutline, MdDelete, MdModeEditOutline } from "react-icons/md";
+import { EyeOutlined } from "@ant-design/icons";
 import Card from "components/card";
 import LessonList from "./LessonList";
 import { useAuth } from "hooks/useAuth";
@@ -8,6 +9,7 @@ import Access from "views/admin/access";
 import { message, Pagination, Spin, Modal } from "antd";
 import { Select, Input, Button, Space, Row, Col, Tooltip } from 'antd';
 import { SearchOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import profileService, { Course, CourseFilters } from "../../../../service/profile.service";
 import { useCache } from "../../../../hooks/useCache";
 type RowObj = {
@@ -18,8 +20,8 @@ type RowObj = {
   recomLevel: number;
   courseType: string;
   speciField: string;
-  courseStatus: string; 
-  group: string; 
+  courseStatus: string;
+  group: string;
 };
 
 interface ProjectProps {
@@ -29,7 +31,7 @@ interface ProjectProps {
 const Project: React.FC<ProjectProps> = ({ tableData }) => {
   const { token } = useAuth();
   const { getCacheStats } = useCache();
-  
+
   // States
   const [showModal, setShowModal] = useState(false);
   const [lessons, setLessons] = useState<any[]>([]);
@@ -51,15 +53,16 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
   const [total, setTotal] = useState<number>(0);
   const [groupOptions, setGroupOptions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const fetchCourses = async () => {
     try {
-      setLoading(true);      
+      setLoading(true);
       const coursesData = await profileService.getCourses(
         selectedFilters,
         { page: currentPage, size: pageSize }
       );
-      
+
       setCourses(coursesData.content);
       setTotal(coursesData.totalElements);
     } catch (error) {
@@ -104,7 +107,7 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
   // Event handlers
   const handleToggleStatus = async (course: RowObj) => {
     try {
-      
+
       await profileService.toggleCourseStatus(course.id, course.courseStatus);
       message.success(`Course status updated successfully`);
       fetchCourses(); // Reload courses
@@ -148,8 +151,8 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
   };
 
   const handleDelete = async (row: RowObj) => {
-    try {      
-      await profileService.deleteCourse(row.id);    
+    try {
+      await profileService.deleteCourse(row.id);
       message.success("Course deleted successfully");
       fetchCourses(); // Reload courses
     } catch (error) {
@@ -164,13 +167,13 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
     >
       <Card extra={"w-full p-4 h-full"}>
         <div className="mb-8 w-full">
-              <h4 className="text-xl font-bold text-navy-700 dark:text-white">
-                All Courses
-              </h4>
-              <p className="mt-2 text-base text-gray-600">
-                Here you can find more details about your courses. Keep your users
-                engaged by providing meaningful information.
-              </p>
+          <h4 className="text-xl font-bold text-navy-700 dark:text-white">
+            All Courses
+          </h4>
+          <p className="mt-2 text-base text-gray-600">
+            Here you can find more details about your courses. Keep your users
+            engaged by providing meaningful information.
+          </p>
         </div>
 
         {/* Filter section - centered */}
@@ -289,10 +292,10 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
           footer={null}
           className="lesson-modal"
         >
-          <LessonList 
-            lessons={lessons} 
-            courseId={courseId} 
-            fetchLessons={() => fetchLessonsForCourse(courseId || 1)} 
+          <LessonList
+            lessons={lessons}
+            courseId={courseId}
+            fetchLessons={() => fetchLessonsForCourse(courseId || 1)}
           />
         </Modal>
 
@@ -300,10 +303,10 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
         {showEditCourse && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-white p-6 rounded-lg w-3/4 max-w-4xl mt-10 max-h-[90vh] overflow-y-auto">
-              <EditCourse 
-                courseId={editingCourseId} 
-                onClose={handleCloseEdit} 
-                onSuccess={handleSuccess} 
+              <EditCourse
+                courseId={editingCourseId}
+                onClose={handleCloseEdit}
+                onSuccess={handleSuccess}
               />
             </div>
           </div>
@@ -314,73 +317,93 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
             <div className="overflow-hidden rounded-lg border border-gray-200 shadow-md">
               <div className="overflow-x-auto">
                 <table className="w-full table-fixed border-collapse bg-white text-left text-sm text-gray-500">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[3%]">ID</th>
-                    <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[17%]">Name</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[33%]">Intro</th>
-                    <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]">Diff Level</th>
-                    <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]">Recom Level</th>
-                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]">Course Type</th>
-                    {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]">Special Field</th> */}
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[9%]">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]">Group</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[14%]">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-                  {courses.map((course, index) => (
-                    <tr key={course.id} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                      <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-900">{course.id}</td>
-                      <td className="px-2 py-4 text-sm text-gray-900">
-                        <div className="font-medium text-gray-700">{course.name}</div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
-                        <div className="max-h-24 overflow-y-auto pr-2">
-                          {course.intro}
-                        </div>
-                      </td>
-                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900">{course.diffLevel}</td>
-                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900">{course.recomLevel}</td>
-                      <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-900">{course.courseType}</td>
-                      {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{course.speciField}</td> */}
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <button
-                          onClick={() => handleToggleStatus(course)}
-                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full cursor-pointer hover:opacity-80 ${course.courseStatus === "PUBLIC"
-                            ? "bg-green-100 text-green-800 hover:bg-green-200"
-                            : course.courseStatus === "DRAFT"
-                              ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
-                              : "bg-red-100 text-red-800 hover:bg-red-200"
-                            }`}
-                          title={`Click to change to ${course.courseStatus === "PUBLIC" ? "Private" : "Public"}`}
-                        > 
-                          {course.courseStatus}
-                        </button>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-900">{course.group}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={() => handleAddLesson(course.id)}
-                            className="text-blue-600 hover:text-blue-900"
-                          >
-                            <MdAddCircleOutline size={20} />
-                          </button>
-                          <button
-                            onClick={() => handleEdit(course.id)}
-                            className="text-yellow-600 hover:text-yellow-900"
-                          >
-                            <MdModeEditOutline size={20} />
-                          </button>
-                        </div>
-                      </td>
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[3%]">ID</th>
+                      <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[17%]">Name</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[33%]">Intro</th>
+                      <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]">Diff Level</th>
+                      <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]">Recom Level</th>
+                      <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]">Course Type</th>
+                      {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]">Special Field</th> */}
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[9%]">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]">Group</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[14%]">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100 border-t border-gray-100">
+                    {courses.map((course, index) => (
+                      <tr key={course.id} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                        <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-900">{course.id}</td>
+                        <td className="px-2 py-4 text-sm text-gray-900">
+                          <div className="font-medium text-gray-700">{course.name}</div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          <div className="max-h-24 overflow-y-auto pr-2">
+                            {course.intro}
+                          </div>
+                        </td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900">{course.diffLevel}</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900">{course.recomLevel}</td>
+                        <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-900">{course.courseType}</td>
+                        {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{course.speciField}</td> */}
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          <button
+                            onClick={() => handleToggleStatus(course)}
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full cursor-pointer hover:opacity-80 ${course.courseStatus === "PUBLIC"
+                              ? "bg-green-100 text-green-800 hover:bg-green-200"
+                              : course.courseStatus === "DRAFT"
+                                ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+                                : "bg-red-100 text-red-800 hover:bg-red-200"
+                              }`}
+                            title={`Click to change to ${course.courseStatus === "PUBLIC" ? "Private" : "Public"}`}
+                          >
+                            {course.courseStatus}
+                          </button>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-900">{course.group}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          <div className="flex space-x-2">
+                            <Tooltip title="View Course Details">
+                              <button
+                                onClick={() => navigate(`/admin/courses/${course.id}`)}
+                                className="text-green-600 hover:text-green-900"
+                              >
+                                <EyeOutlined size={20} />
+                              </button>
+                            </Tooltip>
+                            <Tooltip title="Add Lesson">
+                              <button
+                                onClick={() => handleAddLesson(course.id)}
+                                className="text-blue-600 hover:text-blue-900"
+                              >
+                                <MdAddCircleOutline size={20} />
+                              </button>
+                            </Tooltip>
+                            <Tooltip title="Edit Course">
+                              <button
+                                onClick={() => handleEdit(course.id)}
+                                className="text-yellow-600 hover:text-yellow-900"
+                              >
+                                <MdModeEditOutline size={20} />
+                              </button>
+                            </Tooltip>
+                            <Tooltip title="Delete Course">
+                              <button
+                                onClick={() => handleDelete(course)}
+                                className="text-red-600 hover:text-red-900"
+                              >
+                                <MdDelete size={20} />
+                              </button>
+                            </Tooltip>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
           </Spin>
         </div>
 
