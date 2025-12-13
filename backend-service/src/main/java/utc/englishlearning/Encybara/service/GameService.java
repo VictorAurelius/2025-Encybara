@@ -252,6 +252,22 @@ public class GameService {
             
         return result;
     }
+    @Transactional
+    public Game updateGame(Long gameId, String name, String description, GameTypeEnum gameType, int maxQuestions, int timeLimit) {
+        Game game = gameRepository.findById(gameId)
+            .orElseThrow(() -> new ResourceNotFoundException("Game not found."));
+        game.setName(name);
+        game.setDescription(description);
+        game.setGameType(gameType);
+        game.setMaxQuestions(maxQuestions);
+        game.setTimeLimit(timeLimit);
+        return gameRepository.save(game);
+    }
+
+    @Transactional
+    public void deleteGame(Long gameId) {
+        gameRepository.deleteById(gameId);
+    }
 
     @Transactional(readOnly = true)
     public GameSession getGameSession(Long sessionId) {

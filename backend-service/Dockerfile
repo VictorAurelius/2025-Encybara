@@ -12,7 +12,7 @@ COPY . .
 RUN gradle clean build -x test --no-daemon
 
 # Stage 2: Run the application
-FROM openjdk:17-slim
+FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /backend-app
 EXPOSE 8080
 
