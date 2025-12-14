@@ -134,8 +134,9 @@ public class LessonResultService {
                 User user = userRepository.findById(userId)
                                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-                List<Answer> answers = answerRepository.findByUserAndQuestionInAndSessionId(
-                                user, questions, reqDto.getSessionId());
+                // FIX: Use enrollment-based query to ensure answers from correct enrollment are counted
+                List<Answer> answers = answerRepository.findByEnrollmentAndQuestionInAndSessionId(
+                                enrollment, questions, reqDto.getSessionId());
 
                 int totalPointsAchieved = answers.stream().mapToInt(Answer::getPoint_achieved).sum();
                 int totalPointsPossible = questions.stream()

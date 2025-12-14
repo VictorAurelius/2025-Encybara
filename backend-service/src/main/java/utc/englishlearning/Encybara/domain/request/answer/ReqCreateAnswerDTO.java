@@ -6,6 +6,7 @@ public class ReqCreateAnswerDTO {
     private Integer pointAchieved;
     private String improvement;
     private Long enrollmentId; // Added enrollment ID
+    private Long sessionId; // Added session ID
 
     // Getters and Setters
     public Long getQuestionId() {
@@ -46,5 +47,13 @@ public class ReqCreateAnswerDTO {
 
     public void setEnrollmentId(Long enrollmentId) {
         this.enrollmentId = enrollmentId;
+    }
+
+    public Long getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(Long sessionId) {
+        this.sessionId = sessionId;
     }
 }

@@ -56,9 +56,15 @@ public class AnswerService {
                         }
                 }
 
-                // Get previous answers to calculate session ID
-                List<Answer> previousAnswers = answerRepository.findByUserAndQuestion(user, question);
-                long newSessionId = previousAnswers.size() + 1;
+                // Use provided session ID or generate new one
+                long sessionId;
+                if (reqDto.getSessionId() != null) {
+                        sessionId = reqDto.getSessionId();
+                } else {
+                        // Fallback: calculate session ID from previous answers
+                        List<Answer> previousAnswers = answerRepository.findByUserAndQuestion(user, question);
+                        sessionId = previousAnswers.size() + 1;
+                }
 
                 // Create and save answer
                 Answer answer = new Answer();
@@ -67,7 +73,7 @@ public class AnswerService {
                 answer.setEnrollment(enrollment);
                 answer.setPoint_achieved(reqDto.getPointAchieved() != null ? reqDto.getPointAchieved() : 0);
                 answer.setImprovement(reqDto.getImprovement());
-                answer.setSessionId(newSessionId);
+                answer.setSessionId(sessionId);
                 answer.setAnsContent(reqDto.getAnswerContent());
                 answer = answerRepository.save(answer);
 
