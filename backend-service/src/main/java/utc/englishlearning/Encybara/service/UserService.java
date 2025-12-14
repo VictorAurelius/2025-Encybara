@@ -84,6 +84,11 @@ public class UserService {
         return this.userRepository.findByEmail(username);
     }
 
+    // Convenience method used by controllers to fetch by id
+    public User handleGetUserById(Long id) {
+        return this.fetchUserById(id != null ? id.longValue() : null);
+    }
+
     public boolean isEmailExist(String email) {
         return this.userRepository.existsByEmail(email);
     }

@@ -9,7 +9,7 @@ interface Game {
     id: number;
     name: string;
     description: string;
-    gameType: 'FLASHCARD' | 'QUIZ' | 'MATCHING'; // Cần match với enum ở backend
+    gameType: 'REVIEW' | 'PRACTICE' | 'CHALLENGE'; // Cần match với enum ở backend
     maxQuestions: number;
     timeLimit: number; // In minutes
     // Thêm các trường nội dung game nếu có, ví dụ:
@@ -224,9 +224,9 @@ const CourseGamesManager: React.FC<CourseGamesManagerProps> = ({ courseId }) => 
                     </Form.Item>
                     <Form.Item name="gameType" label="Game Type" rules={[{ required: true, message: 'Please select game type!' }]}>
                         <Select placeholder="Select a game type">
-                            <Option value="FLASHCARD">Flashcard</Option>
-                            <Option value="QUIZ">Quiz</Option>
-                            <Option value="MATCHING">Matching</Option>
+                            <Option value="PRACTICE">Practice</Option>
+                            <Option value="REVIEW">Review</Option>
+                            <Option value="CHALLENGE">Challenge</Option>
                             {/* Thêm các loại game khác nếu có */}
                         </Select>
                     </Form.Item>
@@ -237,9 +237,7 @@ const CourseGamesManager: React.FC<CourseGamesManagerProps> = ({ courseId }) => 
                         <InputNumber min={1} style={{ width: '100%' }} />
                     </Form.Item>
 
-                    {/* Conditional rendering for game content based on selected game type */}
-                    {renderGameContentForm(form.getFieldValue('gameType'))}
-
+            
                     <Form.Item>
                         <Button type="primary" htmlType="submit" loading={loading}>
                             {editingGame ? 'Update Game' : 'Create Game'}

@@ -49,6 +49,25 @@ public class GameControllerV2 {
             return ResponseEntity.badRequest().body(errorResponse);
         }
     }
+    // API lấy leaderboard theo course
+    @GetMapping("/leaderboard/course/{courseId}")
+    public ResponseEntity<RestResponse<Map<String, Object>>> getLeaderboardByCourse(@PathVariable Long courseId) {
+        try {
+            // Lấy tất cả game sessions của course và xếp hạng theo score
+            Map<String, Object> leaderboard = gameService.getLeaderboardByCourse(courseId);
+
+            RestResponse<Map<String, Object>> response = new RestResponse<>();
+            response.setStatusCode(200);
+            response.setMessage("Course leaderboard retrieved successfully");
+            response.setData(leaderboard);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            RestResponse<Map<String, Object>> errorResponse = new RestResponse<>();
+            errorResponse.setStatusCode(400);
+            errorResponse.setError(e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
     
     @GetMapping("/course/{courseId}")
     public ResponseEntity<RestResponse<List<Game>>> getGamesByCourse(@PathVariable Long courseId) {

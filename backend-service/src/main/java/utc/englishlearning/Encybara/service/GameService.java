@@ -252,6 +252,48 @@ public class GameService {
             
         return result;
     }
+
+    // Lấy leaderboard theo course
+    public Map<String, Object> getLeaderboardByCourse(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+            .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
+        
+        // Lấy tất cả games của course
+        List<Game> games = gameRepository.findActiveByCourseId(courseId);
+        List<Long> gameIds = games.stream().map(Game::getId).toList();
+        
+        // Nếu không có game nào, trả về empty leaderboard
+        if (gameIds.isEmpty()) {
+            Map<String, Object> result = new HashMap<>();
+            result.put("courseName", course.getName());
+            result.put("topScores", new ArrayList<>());
+            return result;
+        }
+        
+        // Lấy top scores từ tất cả game sessions của course này
+        List<GameSession> topSessions = gameSessionRepository.findTopScoresByCourseGames(gameIds)
+            .stream()
+            .limit(10)
+            .toList();
+        
+        // Format output
+        Map<String, Object> result = new HashMap<>();
+        result.put("courseName", course.getName());
+        result.put("topScores", topSessions.stream()
+            .map(session -> {
+                Map<String, Object> scoreEntry = new HashMap<>();
+                scoreEntry.put("rank", topSessions.indexOf(session) + 1);
+                scoreEntry.put("userName", session.getUser().getName());
+                scoreEntry.put("score", session.getScore());
+                scoreEntry.put("accuracy", session.getAccuracy());
+                scoreEntry.put("gameName", session.getGame().getName());
+                return scoreEntry;
+            })
+            .toList());
+        
+        return result;
+    }
+
     @Transactional
     public Game updateGame(Long gameId, String name, String description, GameTypeEnum gameType, int maxQuestions, int timeLimit) {
         Game game = gameRepository.findById(gameId)

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { MdAddCircleOutline, MdDelete, MdModeEditOutline } from "react-icons/md";
-import { EyeOutlined } from "@ant-design/icons";
+import { EyeOutlined, FilterOutlined } from "@ant-design/icons";
 import Card from "components/card";
 import LessonList from "./LessonList";
 import { useAuth } from "hooks/useAuth";
@@ -53,6 +53,7 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
   const [total, setTotal] = useState<number>(0);
   const [groupOptions, setGroupOptions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();
 
   const fetchCourses = async () => {
@@ -150,45 +151,47 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
     fetchCourses();
   };
 
-  const handleDelete = async (row: RowObj) => {
-    try {
-      await profileService.deleteCourse(row.id);
-      message.success("Course deleted successfully");
-      fetchCourses(); // Reload courses
-    } catch (error) {
-      console.error("Error deleting course:", error);
-      message.error("Failed to delete course");
-    }
-  };
 
   return (
     <Access
       permission={{ module: "CONTENT_MANAGEMENT" }}
     >
       <Card extra={"w-full p-4 h-full"}>
-        <div className="mb-8 w-full">
-          <h4 className="text-xl font-bold text-navy-700 dark:text-white">
-            All Courses
-          </h4>
-          <p className="mt-2 text-base text-gray-600">
-            Here you can find more details about your courses. Keep your users
-            engaged by providing meaningful information.
-          </p>
+        <div className="mb-8 w-full flex items-center justify-between">
+          <div>
+            <h4 className="text-xl font-bold text-navy-700 dark:text-white">
+              All Courses
+            </h4>
+            <p className="mt-2 text-base text-gray-600">
+              Here you can find more details about your courses. Keep your users
+              engaged by providing meaningful information.
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Tooltip title="Toggle Filters">
+              <Button
+                type={showFilters ? "primary" : "default"}
+                icon={<FilterOutlined />}
+                onClick={() => setShowFilters(!showFilters)}
+                size="large"
+                shape="circle"
+              />
+            </Tooltip>
+            <Button
+              type="primary"
+              size="large"
+              onClick={handleAddCourse}
+              className="bg-blue-500 hover:bg-blue-600"
+            >
+              Add New Course
+            </Button>
+          </div>
         </div>
 
-        {/* Filter section - centered */}
-        <div className="mb-6 flex flex-col items-center">
-          <div className="w-full max-w-4xl">
-            <div className="flex justify-center mb-4">
-              <Button
-                type="primary"
-                size="large"
-                onClick={handleAddCourse}
-                className="bg-blue-500 hover:bg-blue-600"
-              >
-                Add New Course
-              </Button>
-            </div>
+        {/* Filter section - conditionally rendered */}
+        {showFilters && (
+          <div className="mb-6 flex flex-col items-center">
+            <div className="w-full max-w-4xl">
 
 
 
@@ -280,8 +283,9 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
                 </Button>
               </Col>
             </Row>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Lesson Modal using Ant Design */}
         <Modal
@@ -388,14 +392,7 @@ const Project: React.FC<ProjectProps> = ({ tableData }) => {
                                 <MdModeEditOutline size={20} />
                               </button>
                             </Tooltip>
-                            <Tooltip title="Delete Course">
-                              <button
-                                onClick={() => handleDelete(course)}
-                                className="text-red-600 hover:text-red-900"
-                              >
-                                <MdDelete size={20} />
-                              </button>
-                            </Tooltip>
+                      
                           </div>
                         </td>
                       </tr>

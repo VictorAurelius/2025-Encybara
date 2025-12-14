@@ -94,7 +94,7 @@ const CourseDetail: React.FC = () => {
                     tab={<span><TrophyOutlined />Leaderboard</span>}
                     key="1"
                 >
-                    <CourseLeaderboard />
+                    <CourseLeaderboard courseId={course.id} />
                 </TabPane>
                 <TabPane
                     tab={
